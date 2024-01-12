@@ -51,9 +51,16 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$this->die_with_404();
 		}
 		$event = get_post( $event_id );
-		if ( ! $event || 'event' !== $event->post_type ) {
+		if ( ! $event || 'event' !== $event->post_type || ! current_user_can( 'edit_post', $event_id ) ) {
 			$this->die_with_404();
 		}
+
+		$event_title        = $event->post_title;
+		$event_description  = $event->post_content;
+		$event_start_date   = get_post_meta( $event_id, '_event_start_date', true ) ?? '';
+		$event_end_date     = get_post_meta( $event_id, '_event_end_date', true ) ?? '';
+		$event_locale       = get_post_meta( $event_id, '_event_locale', true ) ?? '';
+		$event_project_name = get_post_meta( $event_id, '_event_project_name', true ) ?? '';
 		$this->tmpl( 'events-edit', get_defined_vars() );
 	}
 }
