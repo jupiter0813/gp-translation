@@ -117,6 +117,81 @@ function save_event_meta_boxes( $post_id ) {
 	}
 }
 
+function submit_event_ajax() {
+	$event_id;
+	if ( 'create_event' === $_POST['form_name'] ) {
+		if ( ! isset( $_POST['create_event_nonce'] ) || ! wp_verify_nonce( $_POST['create_event_nonce'], 'create_event_nonce' ) ) {
+			wp_send_json_error( 'Nonce verification failed' );
+		}
+	}
+	if ( 'edit_event' === $_POST['form_name'] ) {
+		if ( ! isset( $_POST['edit_event_nonce'] ) || ! wp_verify_nonce( $_POST['edit_event_nonce'], 'edit_event_nonce' ) ) {
+			wp_send_json_error( 'Nonce verification failed' );
+		}
+	}
+
+	$title        = sanitize_text_field( $_POST['event_title'] );
+	$description  = sanitize_text_field( $_POST['event_description'] );
+	$start_date   = sanitize_text_field( $_POST['event_start_date'] );
+	$end_date     = sanitize_text_field( $_POST['event_end_date'] );
+	$locale       = sanitize_text_field( $_POST['event_locale'] );
+	$project_name = sanitize_text_field( $_POST['event_project_name'] );
+
+	if ( 'create_event' === $_POST['form_name'] ) {
+		$event_id = wp_insert_post(
+			array(
+				'post_type'    => 'event',
+				'post_title'   => $title,
+				'post_content' => $description,
+				'post_status'  => 'publish',
+			)
+		);
+	}
+	if ( 'edit_event' === $_POST['form_name'] ) {
+		$event_id = $_POST['event_id'];
+		$event    = get_post( $event_id );
+		if ( ! $event || 'event' !== $event->post_type || ! current_user_can( 'edit_post', $event_id ) ) {
+			wp_send_json_error( 'Event does not exist' );
+		}
+		wp_update_post(
+			array(
+				'ID'           => $event_id,
+				'post_title'   => $title,
+				'post_content' => $description,
+			)
+		);
+	}
+	update_post_meta( $event_id, '_event_start_date', $start_date );
+	update_post_meta( $event_id, '_event_end_date', $end_date );
+	if ( $locale ) {
+		update_post_meta( $event_id, '_event_locale', $locale );
+	}
+	if ( $project_name ) {
+		update_post_meta( $event_id, '_event_project_name', $project_name );
+	}
+
+	wp_send_json_success( 'success' );
+}
+
+add_action( 'wp_ajax_submit_event_ajax', 'submit_event_ajax' );
+add_action( 'wp_ajax_nopriv_submit_event_ajax', 'submit_event_ajax' );
+
+
+function register_translation_event_js() {
+	wp_register_script( 'translation-event-js', plugins_url( 'assets/js/translation_event.js', __FILE__ ), array( 'jquery', 'gp-common' ), filemtime( __DIR__ . '/assets/js/translation_event.js' ), false );
+	gp_enqueue_script( 'translation-event-js' );
+	wp_localize_script(
+		'translation-event-js',
+		'$translation_event',
+		array(
+			'url'          => admin_url( 'admin-ajax.php' ),
+			'create_nonce' => wp_create_nonce( 'create_translation_event' ),
+			'edit_nonce'   => wp_create_nonce( 'edit_translation_event' ),
+		)
+	);
+}
+
+add_action( 'wp_enqueue_scripts', 'register_translation_event_js' );
 add_action( 'init', 'register_event_post_type' );
 add_action( 'add_meta_boxes', 'event_meta_boxes' );
 add_action( 'save_post', 'save_event_meta_boxes' );
