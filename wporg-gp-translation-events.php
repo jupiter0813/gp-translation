@@ -16,7 +16,10 @@ require_once __DIR__ . '/includes/class-wporg-gp-translation-events-route.php';
 
 function register_routes() {
 	GP::$router->prepend( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ), 'get' );
+	GP::$router->prepend( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ), 'get' );
+	GP::$router->prepend( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ), 'get' );
 }
+
 /**
  * Register the event post type.
  */
@@ -117,5 +120,4 @@ function save_event_meta_boxes( $post_id ) {
 add_action( 'init', 'register_event_post_type' );
 add_action( 'add_meta_boxes', 'event_meta_boxes' );
 add_action( 'save_post', 'save_event_meta_boxes' );
-
 register_routes();
