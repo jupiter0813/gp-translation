@@ -178,10 +178,12 @@ add_action( 'wp_ajax_nopriv_submit_event_ajax', 'submit_event_ajax' );
 
 
 function register_translation_event_js() {
-	wp_register_script( 'translation-event-js', plugins_url( 'assets/js/translation_event.js', __FILE__ ), array( 'jquery', 'gp-common' ), filemtime( __DIR__ . '/assets/js/translation_event.js' ), false );
-	gp_enqueue_script( 'translation-event-js' );
+	wp_register_style( 'translation-events-css', plugins_url( 'assets/css/translation-events.css', __FILE__ ), array(), filemtime( __DIR__ . '/assets/css/translation-events.css' ) );
+	gp_enqueue_style( 'translation-events-css' );
+	wp_register_script( 'translation-events-js', plugins_url( 'assets/js/translation-events.js', __FILE__ ), array( 'jquery', 'gp-common' ), filemtime( __DIR__ . '/assets/js/translation-events.js' ), false );
+	gp_enqueue_script( 'translation-events-js' );
 	wp_localize_script(
-		'translation-event-js',
+		'translation-events-js',
 		'$translation_event',
 		array(
 			'url'          => admin_url( 'admin-ajax.php' ),
