@@ -9,4 +9,4 @@ Then you can run a local WordPress instance with the plugin installed:
 composer dev:start
 ```
 
-WordPress is now running at http://localhost:8888, user: `admin`, password: `passord`.
+WordPress is now running at http://localhost:8888, user: `admin`, password: `password`.
