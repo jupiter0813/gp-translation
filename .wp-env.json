@@ -1,4 +1,4 @@
 {
   "core": "WordPress/WordPress#master",
-  "plugins": [ "GlotPress/GlotPress", "." ]
+  "plugins": [ "GlotPress/GlotPress#local", "." ]
 }
