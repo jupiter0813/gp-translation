@@ -18,3 +18,7 @@
     margin-top: 1em;
     display: block;
 }
+.event_page_title {
+    border-bottom: #d9d8d8 thin solid;
+    padding-bottom: .5em;
+}

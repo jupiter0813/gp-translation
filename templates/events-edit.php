@@ -4,7 +4,7 @@ gp_tmpl_header();
 
 ?>
 
-<h2>Edit Translation Event</h2>
+<h2  class="event_page_title">Edit Translation Event</h2>
 <form class="translation_event_form" action="" method="post">
 	<?php wp_nonce_field( 'edit_event_nonce', 'edit_event_nonce' ); ?>
 	<input type="hidden" name="action" value="submit_event_ajax">

@@ -4,7 +4,7 @@ gp_tmpl_header();
 
 ?>
 
-<h2>Create a new Translation Event</h2>
+<h2  class="event_page_title">Create a new Translation Event</h2>
 
 <form class="translation_event_form" action="" method="post">
 	<?php wp_nonce_field( 'create_event_nonce', 'create_event_nonce' ); ?>
