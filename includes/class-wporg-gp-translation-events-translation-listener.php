@@ -18,11 +18,11 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		$events        = $this->select_events_user_is_registered_for( $active_events, $translation->user_id );
 
 		foreach ( $events as $event ) {
-			$this->persist( $translation, $event );
+			$this->persist( $translation, $event, $action_type );
 		}
 	}
 
-	private function persist( GP_Translation $translation, WP_Post $event ): void {
+	private function persist( GP_Translation $translation, WP_Post $event, string $action_type ): void {
 		// TODO.
 	}
 
