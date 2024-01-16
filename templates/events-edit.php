@@ -5,7 +5,7 @@ gp_tmpl_header();
 ?>
 
 <h2>Edit Translation Event</h2>
-<form id="translation_event_form" action="" method="post">
+<form class="translation_event_form" action="" method="post">
 	<?php wp_nonce_field( 'edit_event_nonce', 'edit_event_nonce' ); ?>
 	<input type="hidden" name="action" value="submit_event_ajax">
 	<input type="hidden" name="form_name" value="edit_event">
@@ -34,5 +34,5 @@ gp_tmpl_header();
 		<label for="event_project_name">Project Name:</label>
 		<input type="text" id="event_project_name" name="event_project_name" value="<?php echo esc_attr( $event_project_name ); ?>" required>
 	</div>
-	<button type="button" id="edit_translation_event">Submit Event</button>
+	<button class="button is-primary" type="button" id="edit_translation_event">Submit Event</button>
 </form>
