@@ -15,7 +15,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	private function handle_action( GP_Translation $translation, string $action_type ): void {
 		// Get events that are active now, for which the user is registered for.
 		$active_events = $this->get_active_events( new DateTime() );
-		$events = $this->select_events_user_is_registered_for( $active_events, $translation->user_id );
+		$events        = $this->select_events_user_is_registered_for( $active_events, $translation->user_id );
 
 		foreach ( $events as $event ) {
 			$this->persist( $translation, $event );
@@ -30,8 +30,26 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	 * @return WP_Post[]
 	 */
 	private function get_active_events( DateTime $at ): array {
-		// TODO.
-		return [];
+		return get_posts(
+			[
+				'post_type'   => 'event',
+				'post_status' => 'publish',
+				'meta_query'  => [
+					[
+						'key'     => '_event_start_date',
+						'value'   => $at->format( 'Y-m-d' ),
+						'compare' => '<=',
+						'type'    => 'DATETIME',
+					],
+					[
+						'key'     => '_event_end_date',
+						'value'   => $at->format( 'Y-m-d' ),
+						'compare' => '>=',
+						'type'    => 'DATETIME',
+					],
+				],
+			],
+		);
 	}
 
 	/**
