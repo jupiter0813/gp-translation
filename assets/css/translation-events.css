@@ -1,0 +1,20 @@
+.translation_event_form label {
+    width: 10%;
+}
+.translation_event_form #event_title, 
+.translation_event_form #event_description {
+    width: 30%;
+}
+.translation_event_form input[type="text"],
+.translation_event_form input[type="date"] {
+    width: 13%;
+}
+.translation_event_form div {
+    margin-top: 1em;
+}
+.translation_event_form #submit_event {
+    margin-left: 10%;
+    width: 30%;
+    margin-top: 1em;
+    display: block;
+}
