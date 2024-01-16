@@ -12,19 +12,6 @@
  * @package Translation Events
  */
 
-if ( class_exists( GP_Route::class ) ) {
-	require_once __DIR__ . '/includes/class-wporg-gp-translation-events-route.php';
-}
-
-function register_routes() {
-	if ( class_exists( GP_Route::class ) ) {
-		GP::$router->prepend( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ), 'get' );
-		GP::$router->prepend( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ), 'get' );
-		GP::$router->prepend( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ), 'get' );
-	}
-}
-
-
 /**
  * Register the event post type.
  */
@@ -200,4 +187,17 @@ add_action( 'wp_enqueue_scripts', 'register_translation_event_js' );
 add_action( 'init', 'register_event_post_type' );
 add_action( 'add_meta_boxes', 'event_meta_boxes' );
 add_action( 'save_post', 'save_event_meta_boxes' );
+
+if ( class_exists( GP_Route::class ) ) {
+	require_once __DIR__ . '/includes/class-wporg-gp-translation-events-route.php';
+}
+
+function register_routes() {
+	if ( class_exists( GP_Route::class ) ) {
+		GP::$router->prepend( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ), 'get' );
+		GP::$router->prepend( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ), 'get' );
+		GP::$router->prepend( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ), 'get' );
+	}
+}
+
 register_routes();
