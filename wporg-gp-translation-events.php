@@ -188,9 +188,13 @@ add_action( 'init', 'register_event_post_type' );
 add_action( 'add_meta_boxes', 'event_meta_boxes' );
 add_action( 'save_post', 'save_event_meta_boxes' );
 
-if ( class_exists( GP_Route::class ) ) {
+if ( class_exists( GP::class ) ) {
 	require_once __DIR__ . '/includes/class-wporg-gp-translation-events-route.php';
 	GP::$router->prepend( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ), 'get' );
 	GP::$router->prepend( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ), 'get' );
 	GP::$router->prepend( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ), 'get' );
+
+	require_once __DIR__ . '/includes/class-wporg-gp-translation-events-translation-listener.php';
+	$wporg_gp_translation_events_listener = new WPORG_GP_Translation_Events_Translation_Listener();
+	$wporg_gp_translation_events_listener->start();
 }
