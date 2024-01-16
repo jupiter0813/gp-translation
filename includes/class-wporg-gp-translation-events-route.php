@@ -63,4 +63,16 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_project_name = get_post_meta( $event_id, '_event_project_name', true ) ?? '';
 		$this->tmpl( 'events-edit', get_defined_vars() );
 	}
+
+	/**
+	 * Loads the 'event' template.
+	 *
+	 * @return void
+	 */
+	public function events_details() {
+		if ( ! is_user_logged_in() ) {
+			$this->die_with_404();
+		}
+		$this->tmpl( 'event' );
+	}
 }
