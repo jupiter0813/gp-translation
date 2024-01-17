@@ -27,10 +27,10 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	private function persist(
 		WP_Post $event,
 		GP_Translation $translation,
-		DateTime $occurred_at
+		DateTime $created_at
 	): void {
 		/** @var GP_Translation_Set $translation_set */
-		$translation_set = (new GP_Translation_Set)->find_one( [ 'id' => $translation->translation_set_id ] );
+		$translation_set = ( new GP_Translation_Set )->find_one( [ 'id' => $translation->translation_set_id ] );
 
 		global $wpdb;
 		$wpdb->insert(
@@ -39,7 +39,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 				'event_id'       => $event->ID,
 				'user_id'        => $translation->user_id,
 				'translation_id' => $translation->id,
-				'occurred_at'    => $occurred_at->format('Y-m-d H:i:s'),
+				'created_at'     => $created_at->format( 'Y-m-d H:i:s' ),
 				'locale'         => $translation_set->locale,
 			]
 		);
