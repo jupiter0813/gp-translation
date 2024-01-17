@@ -1,6 +1,7 @@
 <?php
 
 class WPORG_GP_Translation_Events_Translation_Listener {
+	const ACTIONS_TABLE_NAME = 'wp_wporg_gp_translation_events_actions';
 	const ACTION_TYPE_CREATED = 'created';
 
 	public function start(): void {
@@ -13,17 +14,38 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	}
 
 	private function handle_action( GP_Translation $translation, string $action_type ): void {
+		$now = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+
 		// Get events that are active now, for which the user is registered for.
-		$active_events = $this->get_active_events( new DateTime() );
+		$active_events = $this->get_active_events( $now );
 		$events        = $this->select_events_user_is_registered_for( $active_events, $translation->user_id );
 
 		foreach ( $events as $event ) {
-			$this->persist( $translation, $event, $action_type );
+			$this->persist( $event, $translation, $now, $action_type );
 		}
 	}
 
-	private function persist( GP_Translation $translation, WP_Post $event, string $action_type ): void {
-		// TODO.
+	private function persist(
+		WP_Post $event,
+		GP_Translation $translation,
+		DateTime $occurred_at,
+		string $action_type
+	): void {
+		/** @var GP_Translation_Set $translation_set */
+		$translation_set = (new GP_Translation_Set)->find_one( [ 'id' => $translation->translation_set_id ] );
+
+		global $wpdb;
+		$wpdb->insert(
+			self::ACTIONS_TABLE_NAME,
+			[
+				'event_id'       => $event->ID,
+				'user_id'        => $translation->user_id,
+				'translation_id' => $translation->id,
+				'occurred_at'    => $occurred_at->format('Y-m-d H:i:s'),
+				'action_type'    => $action_type,
+				'locale'         => $translation_set->locale,
+			]
+		);
 	}
 
 	/**
