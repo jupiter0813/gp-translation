@@ -69,10 +69,14 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 *
 	 * @return void
 	 */
-	public function events_details() {
+	public function events_details( $event_id ) {
 		if ( ! is_user_logged_in() ) {
 			$this->die_with_404();
 		}
-		$this->tmpl( 'event' );
+		$event = get_post( $event_id );
+		if ( ! $event || 'event' !== $event->post_type ) {
+			$this->die_with_404();
+		}
+		$this->tmpl( 'event', get_defined_vars() );
 	}
 }
