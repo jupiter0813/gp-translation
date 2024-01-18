@@ -4,7 +4,7 @@ gp_tmpl_header();
 
 ?>
 
-<div>List of events</div>
+<h2 class="event_page_title">Upcoming Translation Events</h2>
 <?php
 
 
