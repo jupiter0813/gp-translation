@@ -1,24 +1,24 @@
-.translation_event_form label {
+.translation-event-form label {
     width: 10%;
 }
-.translation_event_form #event_title, 
-.translation_event_form #event_description {
+.translation-event-form #event-title, 
+.translation-event-form #event-description {
     width: 30%;
 }
-.translation_event_form input[type="text"],
-.translation_event_form input[type="date"] {
+.translation-event-form input[type="text"],
+.translation-event-form input[type="date"] {
     width: 13%;
 }
-.translation_event_form div {
+.translation-event-form div {
     margin-top: 1em;
 }
-.translation_event_form #submit_event {
+.translation-event-form #submit-event {
     margin-left: 10%;
     width: 30%;
     margin-top: 1em;
     display: block;
 }
-.event_page_title {
+.event-page-title {
     border-bottom: #d9d8d8 thin solid;
     padding-bottom: .5em;
 }
