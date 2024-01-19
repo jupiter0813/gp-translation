@@ -3,7 +3,6 @@ gp_title( __( 'Translation Events - Create new event' ) );
 gp_tmpl_header();
 
 ?>
-
 <h2  class="event-page-title">Create a new Translation Event</h2>
 
 <form class="translation-event-form" action="" method="post">
@@ -20,11 +19,17 @@ gp_tmpl_header();
 	</div>
 	<div>
 		<label for="event-start-date">Start Date:</label>
-		<input type="datetime-local" id="event-start_date" name="event_start_date" required>
+		<input type="datetime-local" id="event-start-date" name="event_start_date" required>
 	</div>
 	<div>
 		<label for="event-end-date">End Date:</label>
 		<input type="datetime-local" id="event-end-date" name="event_end_date" required>
+	</div>
+	<div>
+		<label for="event-timezone">Event Timezone:</label>
+		<select id="event-timezone" name="event_timezone" required>
+			<?php echo esc_html( wp_timezone_choice( 'UTC', get_user_locale() ) ); ?>
+    	</select>
 	</div>
 	<div>
 		<label for="event-locale">Locale:</label>

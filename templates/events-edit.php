@@ -26,6 +26,12 @@ gp_tmpl_header();
 		<label for="event-end-date">End Date:</label>
 		<input type="datetime-local" id="event-end-date" name="event_end_date" value="<?php echo esc_attr( $event_end_date ); ?>" required>
 	</div>
+    <div>
+		<label for="event-timezone">Event Timezone:</label>
+		<select id="event-timezone" name="event_timezone"  required>
+			<?php echo esc_html( wp_timezone_choice( $event_timezone, get_user_locale() ) ); ?>
+    	</select>
+	</div>
 	<div>
 		<label for="event-locale">Locale:</label>
 		<input type="text" id="event-locale" name="event_locale" value="<?php echo esc_attr( $event_locale ); ?>" required>

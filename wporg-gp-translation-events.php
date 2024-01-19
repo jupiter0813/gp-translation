@@ -147,12 +147,13 @@ function submit_event_ajax() {
 		}
 	}
 
-	$title        = sanitize_text_field( $_POST['event_title'] );
-	$description  = sanitize_text_field( $_POST['event_description'] );
-	$start_date   = sanitize_text_field( $_POST['event_start_date'] );
-	$end_date     = sanitize_text_field( $_POST['event_end_date'] );
-	$locale       = sanitize_text_field( $_POST['event_locale'] );
-	$project_name = sanitize_text_field( $_POST['event_project_name'] );
+	$title          = sanitize_text_field( $_POST['event_title'] );
+	$description    = sanitize_text_field( $_POST['event_description'] );
+	$start_date     = sanitize_text_field( $_POST['event_start_date'] );
+	$end_date       = sanitize_text_field( $_POST['event_end_date'] );
+	$locale         = sanitize_text_field( $_POST['event_locale'] );
+	$project_name   = sanitize_text_field( $_POST['event_project_name'] );
+	$event_timezone = sanitize_text_field( $_POST['event_timezone'] );
 
 	if ( 'create_event' === $_POST['form_name'] ) {
 		$event_id = wp_insert_post(
@@ -180,6 +181,7 @@ function submit_event_ajax() {
 	}
 	update_post_meta( $event_id, '_event_start_date', $start_date );
 	update_post_meta( $event_id, '_event_end_date', $end_date );
+	update_post_meta( $event_id, '_event_timezone', $event_timezone );
 	if ( $locale ) {
 		update_post_meta( $event_id, '_event_locale', $locale );
 	}
