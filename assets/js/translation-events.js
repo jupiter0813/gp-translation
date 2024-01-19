@@ -1,7 +1,13 @@
 ( function( $, $gp ) {
 jQuery(document).ready(function($) {
-    $gp.notices.init(),
+    $gp.notices.init();
+    validateEventDates();
     $('#submit-event, #edit-translation-event').on('click', function(e) {
+        if ( $('#event-end-date').val() <= $('#event-start-date').val() ) {
+            $gp.notices.error( 'Event end date and time must be later than event start date and time.' );
+            return;
+        }
+
         e.preventDefault();
         var $form = $('.translation-event-form');
         $.ajax({
@@ -16,6 +22,18 @@ jQuery(document).ready(function($) {
             }
         });
     });
+
+    function validateEventDates() {
+        var startDateTimeInput = $('#event-start-date');
+        var endDateTimeInput = $('#event-end-date');
+    
+        startDateTimeInput.add(endDateTimeInput).on('input', function () {
+            endDateTimeInput.prop('min', startDateTimeInput.val());
+            if (endDateTimeInput.val() < startDateTimeInput.val()) {
+                endDateTimeInput.val(startDateTimeInput.val());
+            }
+        });
+    }
 
 });
 }( jQuery, $gp )
