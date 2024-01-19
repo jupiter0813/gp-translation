@@ -1,0 +1,9 @@
+{
+    "name": "wordpress/wporg-gp-translation-events",
+    "description": "",
+    "license": "GPL-2.0-only",
+    "require": {},
+    "scripts":{
+        "dev:start": "wp-env start && wp-env run cli wp rewrite structure '/%postname%/'"
+    }
+}
