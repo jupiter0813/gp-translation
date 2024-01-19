@@ -20,11 +20,11 @@ gp_tmpl_header();
 	</div>
 	<div>
 		<label for="event-start-date">Start Date:</label>
-		<input type="date" id="event-start_date" name="event_start_date" required>
+		<input type="datetime-local" id="event-start_date" name="event_start_date" required>
 	</div>
 	<div>
 		<label for="event-end-date">End Date:</label>
-		<input type="date" id="event-end-date" name="event_end_date" required>
+		<input type="datetime-local" id="event-end-date" name="event_end_date" required>
 	</div>
 	<div>
 		<label for="event-locale">Locale:</label>
