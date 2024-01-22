@@ -13,12 +13,3 @@ create or replace table wp_wporg_gp_translation_events_actions
     primary key (event_id, translation_id, user_id, action)
 )
     comment 'Tracks translation actions that happened during a translation event';
-
-create index wp_wporg_gp_translation_events_actions_event_id_index
-    on wp_wporg_gp_translation_events_actions (event_id);
-
-create index wp_wporg_gp_translation_events_actions_happened_at_index
-    on wp_wporg_gp_translation_events_actions (happened_at);
-
-create index wp_wporg_gp_translation_events_actions_user_id_index
-    on wp_wporg_gp_translation_events_actions (user_id);
