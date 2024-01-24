@@ -2,13 +2,13 @@
 
 class WPORG_GP_Translation_Events_Translation_Listener {
 	const ACTIONS_TABLE_NAME = 'wp_wporg_gp_translation_events_actions';
-	const ACTION_CREATED = 'created';
+	const ACTION_CREATE = 'create';
 
 	public function start(): void {
 		add_action(
 			'gp_translation_created',
 			function ( $translation ) {
-				$this->handle_action( $translation, self::ACTION_CREATED );
+				$this->handle_action( $translation, self::ACTION_CREATE );
 			},
 		);
 	}
