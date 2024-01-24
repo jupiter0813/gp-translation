@@ -3,6 +3,7 @@
 class WPORG_GP_Translation_Events_Translation_Listener {
 	const ACTIONS_TABLE_NAME = 'wp_wporg_gp_translation_events_actions';
 	const ACTION_CREATE = 'create';
+	const ACTION_APPROVE = 'approve';
 
 	public function start(): void {
 		add_action(
@@ -10,6 +11,20 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			function ( $translation ) {
 				$this->handle_action( $translation, self::ACTION_CREATE );
 			},
+		);
+
+		add_action(
+			'gp_translation_saved',
+			function ( $translation, $translation_before ) {
+				$status = $translation->status;
+				$status_before = $translation_before->status;
+
+				if ($status === 'current' && $status_before !== 'current') {
+					$this->handle_action( $translation, self::ACTION_APPROVE );
+				}
+			},
+			10,
+			2,
 		);
 	}
 
