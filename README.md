@@ -9,4 +9,10 @@ Then you can run a local WordPress instance with the plugin installed:
 composer dev:start
 ```
 
+Once the environment is running, you must create the database tables needed by this plugin:
+
+```shell
+composer dev:db:schema
+```
+
 WordPress is now running at http://localhost:8888, user: `admin`, password: `password`.

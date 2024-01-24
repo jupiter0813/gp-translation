@@ -1,4 +1,7 @@
 {
   "core": "WordPress/WordPress#master",
-  "plugins": [ "GlotPress/GlotPress#local", "." ]
+  "plugins": [ "GlotPress/GlotPress#local", "." ],
+  "config": {
+    "SAVEQUERIES": true
+  }
 }
