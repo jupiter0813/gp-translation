@@ -133,6 +133,24 @@ function save_event_meta_boxes( $post_id ) {
 		}
 	}
 }
+/**
+ * Validate the event dates.
+ *
+ * @param  string $event_start_date The event start date.
+ * @param  string $event_end_date   The event end date.
+ * @return bool                     Whether the event dates are valid.
+ */
+function validate_event_dates( $event_start_date, $event_end_date ) {
+	if ( ! $event_start_date || ! $event_end_date ) {
+		return false;
+	}
+	$start_date = new DateTime( $event_start_date );
+	$end_date   = new DateTime( $event_end_date );
+	if ( $start_date < $end_date ) {
+		return true;
+	}
+	return false;
+}
 
 function submit_event_ajax() {
 	$event_id;
@@ -155,6 +173,11 @@ function submit_event_ajax() {
 	$project_name   = sanitize_text_field( $_POST['event_project_name'] );
 	$event_timezone = sanitize_text_field( $_POST['event_timezone'] );
 
+	$is_valid_event_date = validate_event_dates( $start_date, $end_date );
+
+	if ( ! $is_valid_event_date ) {
+		wp_send_json_error( 'Invalid event dates' );
+	}
 	if ( 'create_event' === $_POST['form_name'] ) {
 		$event_id = wp_insert_post(
 			array(
