@@ -29,7 +29,7 @@ gp_tmpl_header();
     <div>
 		<label for="event-timezone">Event Timezone:</label>
 		<select id="event-timezone" name="event_timezone"  required>
-			<?php echo wp_kses( wp_timezone_choice( $event_timezone, get_user_locale() ), array( 'optgroup' => array('label' => array()), 'option' => array('value' => array() ) ) ); ?>
+			<?php echo wp_kses( wp_timezone_choice( $event_timezone, get_user_locale() ), array( 'optgroup' => array('label' => array()), 'option' => array('value' => array(), 'selected' => array() ) ) ); ?>
         </select>
 	</div>
 	<div>
