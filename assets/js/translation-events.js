@@ -1,6 +1,7 @@
 ( function( $, $gp ) {
 jQuery(document).ready(function($) {
     $gp.notices.init();
+    selectUserTimezone();
     validateEventDates();
     $('#submit-event, #edit-translation-event').on('click', function(e) {
         if ( $('#event-end-date').val() <= $('#event-start-date').val() ) {
@@ -33,6 +34,9 @@ jQuery(document).ready(function($) {
                 endDateTimeInput.val(startDateTimeInput.val());
             }
         });
+    }
+    function selectUserTimezone() {
+        document.querySelector(`#event-timezone option[value="${Intl.DateTimeFormat().resolvedOptions().timeZone}"]`).selected = true 
     }
 
 });
