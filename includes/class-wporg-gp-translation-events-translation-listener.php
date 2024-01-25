@@ -9,18 +9,19 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		add_action(
 			'gp_translation_created',
 			function ( $translation ) {
-				$this->handle_action( $translation, self::ACTION_CREATE );
+				$this->handle_action( $translation, $translation->user_id, self::ACTION_CREATE );
 			},
 		);
 
 		add_action(
 			'gp_translation_saved',
 			function ( $translation, $translation_before ) {
+				$user_id = $translation->user_id_last_modified;
 				$status = $translation->status;
 				$status_before = $translation_before->status;
 
 				if ($status === 'current' && $status_before !== 'current') {
-					$this->handle_action( $translation, self::ACTION_APPROVE );
+					$this->handle_action( $translation, $user_id, self::ACTION_APPROVE );
 				}
 			},
 			10,
@@ -28,21 +29,22 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		);
 	}
 
-	private function handle_action( GP_Translation $translation, string $action ): void {
+	private function handle_action( GP_Translation $translation, int $user_id, string $action ): void {
 		$now = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 
 		// Get events that are active now, for which the user is registered for.
 		$active_events = $this->get_active_events( $now );
-		$events        = $this->select_events_user_is_registered_for( $active_events, $translation->user_id );
+		$events        = $this->select_events_user_is_registered_for( $active_events, $user_id );
 
 		foreach ( $events as $event ) {
-			$this->persist( $event, $translation, $now, $action );
+			$this->persist( $event, $translation, $user_id, $now, $action );
 		}
 	}
 
 	private function persist(
 		WP_Post $event,
 		GP_Translation $translation,
+		int $user_id,
 		DateTime $happened_at,
 		string $action
 	): void {
@@ -58,7 +60,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			[
 				// start primary key
 				'event_id'       => $event->ID,
-				'user_id'        => $translation->user_id,
+				'user_id'        => $user_id,
 				'translation_id' => $translation->id,
 				'action'         => $action,
 				// end primary key
