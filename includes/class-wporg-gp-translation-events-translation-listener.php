@@ -4,6 +4,8 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	const ACTIONS_TABLE_NAME = 'wp_wporg_gp_translation_events_actions';
 	const ACTION_CREATE = 'create';
 	const ACTION_APPROVE = 'approve';
+	const ACTION_REJECT = 'reject';
+	const ACTION_MARK_FUZZY = 'mark_fuzzy';
 
 	public function start(): void {
 		add_action(
@@ -30,6 +32,12 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 				switch ( $status ) {
 					case 'current':
 						$action = self::ACTION_APPROVE;
+						break;
+					case 'rejected':
+						$action = self::ACTION_REJECT;
+						break;
+					case 'fuzzy':
+						$action = self::ACTION_MARK_FUZZY;
 						break;
 				}
 
