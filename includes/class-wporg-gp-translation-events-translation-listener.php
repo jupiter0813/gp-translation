@@ -37,37 +37,27 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		$events        = $this->select_events_user_is_registered_for( $active_events, $user_id );
 
 		foreach ( $events as $event ) {
-			$this->persist( $event, $translation, $user_id, $happened_at, $action );
+			/** @var GP_Translation_Set $translation_set */
+			$translation_set = ( new GP_Translation_Set )->find_one( [ 'id' => $translation->translation_set_id ] );
+
+			global $wpdb;
+
+			// A given user can only do one action of a given type on a specific translation.
+			// So we replace instead of insert, which will enforce the primary key.
+			$wpdb->replace(
+				self::ACTIONS_TABLE_NAME,
+				[
+					// start primary key
+					'event_id'       => $event->ID,
+					'user_id'        => $user_id,
+					'translation_id' => $translation->id,
+					'action'         => $action,
+					// end primary key
+					'locale'         => $translation_set->locale,
+					'happened_at'    => $happened_at->format( 'Y-m-d H:i:s' ),
+				]
+			);
 		}
-	}
-
-	private function persist(
-		WP_Post $event,
-		GP_Translation $translation,
-		int $user_id,
-		DateTime $happened_at,
-		string $action
-	): void {
-		/** @var GP_Translation_Set $translation_set */
-		$translation_set = ( new GP_Translation_Set )->find_one( [ 'id' => $translation->translation_set_id ] );
-
-		global $wpdb;
-
-		// A given user can only do one action of a given type on a specific translation.
-		// So we replace instead of insert, which will enforce the primary key.
-		$wpdb->replace(
-			self::ACTIONS_TABLE_NAME,
-			[
-				// start primary key
-				'event_id'       => $event->ID,
-				'user_id'        => $user_id,
-				'translation_id' => $translation->id,
-				'action'         => $action,
-				// end primary key
-				'locale'         => $translation_set->locale,
-				'happened_at'    => $happened_at->format( 'Y-m-d H:i:s' ),
-			]
-		);
 	}
 
 	/**
