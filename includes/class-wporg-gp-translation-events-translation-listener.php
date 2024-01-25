@@ -17,12 +17,16 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		add_action(
 			'gp_translation_saved',
 			function ( $translation, $translation_before ) {
-				$user_id       = $translation->user_id_last_modified;
-				$status        = $translation->status;
-				$status_before = $translation_before->status;
-				$happened_at   = DateTime::createFromFormat( 'Y-m-d H:i:s', $translation->date_modified, new DateTimeZone( 'UTC' ) );
+				$user_id     = $translation->user_id_last_modified;
+				$status      = $translation->status;
+				$happened_at = DateTime::createFromFormat( 'Y-m-d H:i:s', $translation->date_modified, new DateTimeZone( 'UTC' ) );
 
-				if ( 'current' === $status && 'current' !== $status_before ) {
+				if ( $translation_before->status === $status ) {
+					// Translation hasn't changed status, so there's nothing for us to track.
+					return;
+				}
+
+				if ( 'current' === $status ) {
 					$this->handle_action( $translation, $user_id, self::ACTION_APPROVE, $happened_at );
 				}
 			},
