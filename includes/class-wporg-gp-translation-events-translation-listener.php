@@ -9,7 +9,8 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		add_action(
 			'gp_translation_created',
 			function ( $translation ) {
-				$this->handle_action( $translation, $translation->user_id, self::ACTION_CREATE );
+				$happened_at = DateTime::createFromFormat( 'Y-m-d H:i:s', $translation->date_created, DateTimeZone::UTC );
+				$this->handle_action( $translation, $translation->user_id, self::ACTION_CREATE, $happened_at );
 			},
 		);
 
@@ -19,9 +20,10 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 				$user_id       = $translation->user_id_last_modified;
 				$status        = $translation->status;
 				$status_before = $translation_before->status;
+				$happened_at   = DateTime::createFromFormat( 'Y-m-d H:i:s', $translation->date_modified, DateTimeZone::UTC );
 
 				if ( 'current' === $status && 'current' !== $status_before ) {
-					$this->handle_action( $translation, $user_id, self::ACTION_APPROVE );
+					$this->handle_action( $translation, $user_id, self::ACTION_APPROVE, $happened_at );
 				}
 			},
 			10,
@@ -29,15 +31,13 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		);
 	}
 
-	private function handle_action( GP_Translation $translation, int $user_id, string $action ): void {
-		$now = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
-
-		// Get events that are active now, for which the user is registered for.
-		$active_events = $this->get_active_events( $now );
+	private function handle_action( GP_Translation $translation, int $user_id, string $action, DateTime $happened_at ): void {
+		// Get events that are active when the action happened, for which the user is registered for.
+		$active_events = $this->get_active_events( $happened_at );
 		$events        = $this->select_events_user_is_registered_for( $active_events, $user_id );
 
 		foreach ( $events as $event ) {
-			$this->persist( $event, $translation, $user_id, $now, $action );
+			$this->persist( $event, $translation, $user_id, $happened_at, $action );
 		}
 	}
 
