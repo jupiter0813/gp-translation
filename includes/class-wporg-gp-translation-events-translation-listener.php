@@ -36,12 +36,11 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		$active_events = $this->get_active_events( $happened_at );
 		$events        = $this->select_events_user_is_registered_for( $active_events, $user_id );
 
+		/** @var GP_Translation_Set $translation_set */
+		$translation_set = ( new GP_Translation_Set )->find_one( [ 'id' => $translation->translation_set_id ] );
+		global $wpdb;
+
 		foreach ( $events as $event ) {
-			/** @var GP_Translation_Set $translation_set */
-			$translation_set = ( new GP_Translation_Set )->find_one( [ 'id' => $translation->translation_set_id ] );
-
-			global $wpdb;
-
 			// A given user can only do one action of a given type on a specific translation.
 			// So we replace instead of insert, which will enforce the primary key.
 			$wpdb->replace(
