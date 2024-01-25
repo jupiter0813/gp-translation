@@ -11,7 +11,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		add_action(
 			'gp_translation_created',
 			function ( $translation ) {
-				$happened_at = DateTime::createFromFormat( 'Y-m-d H:i:s', $translation->date_addedd, new DateTimeZone( 'UTC' ) );
+				$happened_at = DateTime::createFromFormat( 'Y-m-d H:i:s', $translation->date_added, new DateTimeZone( 'UTC' ) );
 				$this->handle_action( $translation, $translation->user_id, self::ACTION_CREATE, $happened_at );
 			},
 		);
