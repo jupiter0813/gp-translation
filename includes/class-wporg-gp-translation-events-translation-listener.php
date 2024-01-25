@@ -16,11 +16,11 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		add_action(
 			'gp_translation_saved',
 			function ( $translation, $translation_before ) {
-				$user_id = $translation->user_id_last_modified;
-				$status = $translation->status;
+				$user_id       = $translation->user_id_last_modified;
+				$status        = $translation->status;
 				$status_before = $translation_before->status;
 
-				if ($status === 'current' && $status_before !== 'current') {
+				if ( 'current' === $status && 'current' !== $status_before ) {
 					$this->handle_action( $translation, $user_id, self::ACTION_APPROVE );
 				}
 			},
