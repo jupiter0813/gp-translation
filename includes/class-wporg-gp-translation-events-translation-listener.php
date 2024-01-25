@@ -26,8 +26,15 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 					return;
 				}
 
-				if ( 'current' === $status ) {
-					$this->handle_action( $translation, $user_id, self::ACTION_APPROVE, $happened_at );
+				$action = null;
+				switch ( $status ) {
+					case 'current':
+						$action = self::ACTION_APPROVE;
+						break;
+				}
+
+				if ( $action ) {
+					$this->handle_action( $translation, $user_id, $action, $happened_at );
 				}
 			},
 			10,
