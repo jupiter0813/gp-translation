@@ -67,23 +67,24 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	/**
 	 * Loads the 'event' template.
 	 *
-	 * @param int $event_id The event ID.
+	 * @param string $event_slug The event slug.
 	 * @return void
 	 */
-	public function events_details( $event_id ) {
+	public function events_details( $event_slug ) {
 		if ( ! is_user_logged_in() ) {
 			$this->die_with_404();
 		}
-		$event = get_post( $event_id );
-		if ( ! $event || 'event' !== $event->post_type ) {
+		$event = get_page_by_path( $event_slug, OBJECT, 'event' );
+
+		if ( ! $event ) {
 			$this->die_with_404();
 		}
 		$event_title        = $event->post_title;
 		$event_description  = $event->post_content;
-		$event_start_date   = get_post_meta( $event_id, '_event_start_date', true ) ?? '';
-		$event_end_date     = get_post_meta( $event_id, '_event_end_date', true ) ?? '';
-		$event_locale       = get_post_meta( $event_id, '_event_locale', true ) ?? '';
-		$event_project_name = get_post_meta( $event_id, '_event_project_name', true ) ?? '';
+		$event_start_date   = get_post_meta( $event->ID, '_event_start_date', true ) ?? '';
+		$event_end_date     = get_post_meta( $event->ID, '_event_end_date', true ) ?? '';
+		$event_locale       = get_post_meta( $event->ID, '_event_locale', true ) ?? '';
+		$event_project_name = get_post_meta( $event->ID, '_event_project_name', true ) ?? '';
 		$this->tmpl( 'event', get_defined_vars() );
 	}
 }
