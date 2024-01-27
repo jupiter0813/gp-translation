@@ -37,7 +37,8 @@ function slug_exists( $slug ) {
 function register_event_post_type() {
 	$slug = 'events';
 	if ( slug_exists( $slug ) ) {
-		$slug = 'translation-events';
+		echo 'The slug "' . esc_html( $slug ) . '" is already in use by another post type.';
+		return;
 	}
 	$labels = array(
 		'name'               => 'Translation Events',
