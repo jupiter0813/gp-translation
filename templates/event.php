@@ -1,5 +1,6 @@
 <?php
-gp_title( __( 'Translation Events - Create new event' ) );
+/* translators: %s: Event title. */
+gp_title( sprintf( __( 'Translation Events - %s' ), esc_html( $event_title ) ) );
 gp_tmpl_header();
 ?>
 
