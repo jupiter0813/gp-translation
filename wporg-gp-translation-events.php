@@ -12,10 +12,33 @@
  * @package Translation Events
  */
 
+
+/**
+ * Check if a slug is being used by another post type.
+ *
+ * @param string $slug The slug to check.
+ * @return bool
+ */
+function slug_exists( $slug ) {
+	$post_types = get_post_types( array( '_builtin' => false ) );
+	foreach ( $post_types as $post_type ) {
+		$post_type_object = get_post_type_object( $post_type );
+
+		if ( is_array( $post_type_object->rewrite ) && isset( $post_type_object->rewrite['slug'] ) ) {
+			return ( $post_type_object->rewrite['slug'] === $slug );
+		}
+	}
+	return false;
+}
+
 /**
  * Register the event post type.
  */
 function register_event_post_type() {
+	$slug = 'events';
+	if ( slug_exists( $slug ) ) {
+		$slug = 'translation-events';
+	}
 	$labels = array(
 		'name'               => 'Translation Events',
 		'singular_name'      => 'Translation Event',
@@ -36,6 +59,7 @@ function register_event_post_type() {
 		'has_archive' => true,
 		'menu_icon'   => 'dashicons-calendar',
 		'supports'    => array( 'title', 'editor', 'thumbnail' ),
+		'rewrite'     => array( 'slug' => $slug ),
 	);
 
 	register_post_type( 'event', $args );
@@ -190,13 +214,16 @@ add_action( 'init', 'register_event_post_type' );
 add_action( 'add_meta_boxes', 'event_meta_boxes' );
 add_action( 'save_post', 'save_event_meta_boxes' );
 
-add_action( 'gp_init', function() {
-	require_once __DIR__ . '/includes/class-wporg-gp-translation-events-route.php';
-	GP::$router->prepend( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ), 'get' );
-	GP::$router->prepend( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ), 'get' );
-	GP::$router->prepend( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ), 'get' );
+add_action(
+	'gp_init',
+	function() {
+		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-route.php';
+		GP::$router->prepend( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ), 'get' );
+		GP::$router->prepend( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ), 'get' );
+		GP::$router->prepend( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ), 'get' );
 
-	require_once __DIR__ . '/includes/class-wporg-gp-translation-events-translation-listener.php';
-	$wporg_gp_translation_events_listener = new WPORG_GP_Translation_Events_Translation_Listener();
-	$wporg_gp_translation_events_listener->start();
-});
+		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-translation-listener.php';
+		$wporg_gp_translation_events_listener = new WPORG_GP_Translation_Events_Translation_Listener();
+		$wporg_gp_translation_events_listener->start();
+	}
+);
