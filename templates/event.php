@@ -31,6 +31,9 @@ gp_tmpl_header();
 		</div>
 	</div>
 	<div class="event-details-stats">
-		<?php echo var_export( $event_stats->created->value(), true ); // TODO ?>
+		<?php echo var_export( $event_stats->created->value(), true ); ?>
+		<?php echo var_export( $event_stats->approved->value(), true ); ?>
+		<?php echo var_export( $event_stats->rejected->value(), true ); ?>
+		<?php echo var_export( $event_stats->marked_fuzzy->value(), true ); ?>
 	</div>
 </div>
