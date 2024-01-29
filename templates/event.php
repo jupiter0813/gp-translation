@@ -1,4 +1,11 @@
 <?php
+
+/** @var WP_Post $event */
+/** @var string $event_title */
+/** @var string $event_description */
+/** @var string $event_start_date */
+/** @var WPORG_GP_Translation_Events_Event_Stats $event_stats */
+
 /* translators: %s: Event title. */
 gp_title( sprintf( __( 'Translation Events - %s' ), esc_html( $event_title ) ) );
 gp_tmpl_header();
