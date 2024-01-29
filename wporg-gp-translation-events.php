@@ -202,8 +202,8 @@ function submit_event_ajax() {
 			)
 		);
 	}
-	update_post_meta( $event_id, '_event_start', $event_start );
-	update_post_meta( $event_id, '_event_end', $event_end );
+	update_post_meta( $event_id, '_event_start', convert_to_UTC( $event_start, $event_timezone ) );
+	update_post_meta( $event_id, '_event_end', convert_to_UTC( $event_end, $event_timezone ) );
 	update_post_meta( $event_id, '_event_timezone', $event_timezone );
 	if ( $locale ) {
 		update_post_meta( $event_id, '_event_locale', $locale );
@@ -218,6 +218,19 @@ function submit_event_ajax() {
 add_action( 'wp_ajax_submit_event_ajax', 'submit_event_ajax' );
 add_action( 'wp_ajax_nopriv_submit_event_ajax', 'submit_event_ajax' );
 
+/**
+ * Convert a date time in a time zone to UTC.
+ *
+ * @param  string $date_time The date time in the time zone.
+ * @param  string $time_zone The time zone.
+ *
+ * @return string            The date time in UTC.
+ */
+function convert_to_UTC( $date_time, $time_zone ) {
+	$date_time = new DateTime( $date_time, new DateTimeZone( $time_zone ) );
+	$date_time->setTimezone( new DateTimeZone( 'UTC' ) );
+	return $date_time->format( 'Y-m-d H:i:s' );
+}
 
 function register_translation_event_js() {
 	wp_register_style( 'translation-events-css', plugins_url( 'assets/css/translation-events.css', __FILE__ ), array(), filemtime( __DIR__ . '/assets/css/translation-events.css' ) );
