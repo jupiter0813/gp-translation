@@ -91,7 +91,11 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_project_name = get_post_meta( $event->ID, '_event_project_name', true ) ?? '';
 
 		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
-		$event_stats = $stats_calculator->for_event( $event );
+		try {
+			$event_stats = $stats_calculator->for_event( $event );
+		} catch ( Exception $e ) {
+			$this->die_with_error( "Failed to calculate event stats" );
+		}
 
 		$this->tmpl( 'event', get_defined_vars() );
 	}
