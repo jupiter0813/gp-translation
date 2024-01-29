@@ -34,6 +34,10 @@ gp_tmpl_header();
 		<table>
 			<tbody>
 			<tr>
+				<td>Contributors</td>
+				<td><?php echo esc_html( $event_stats->users->value() ) ?></td>
+			</tr>
+			<tr>
 				<td>Translations created</td>
 				<td><?php echo esc_html( $event_stats->created->value() ) ?></td>
 			</tr>

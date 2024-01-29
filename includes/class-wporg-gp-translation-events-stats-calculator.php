@@ -10,9 +10,18 @@ class WPORG_GP_Translation_Events_Stat {
 	public function value(): int {
 		return $this->value;
 	}
+
+	public function set( int $value ): void {
+		$this->value = $value;
+	}
 }
 
 class WPORG_GP_Translation_Events_Event_Stats {
+	/**
+	 * Number of users who performed an action during the event.
+	 */
+	public WPORG_GP_Translation_Events_Stat $users;
+
 	/**
 	 * Number of translations created during the event.
 	 */
@@ -34,6 +43,7 @@ class WPORG_GP_Translation_Events_Event_Stats {
 	public WPORG_GP_Translation_Events_Stat $marked_fuzzy;
 
 	public function __construct() {
+		$this->users        = new WPORG_GP_Translation_Events_Stat;
 		$this->created      = new WPORG_GP_Translation_Events_Stat;
 		$this->approved     = new WPORG_GP_Translation_Events_Stat;
 		$this->rejected     = new WPORG_GP_Translation_Events_Stat;
@@ -55,7 +65,7 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 
 		$query = $wpdb->prepare(
 			"
-				select action
+				select action, user_id
 				from $this->ACTIONS_TABLE_NAME
 				where event_id = %d
 				  and happened_at between cast('%s' as datetime) and cast('%s' as datetime)
@@ -68,6 +78,8 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 		);
 
 		$stats = new WPORG_GP_Translation_Events_Event_Stats;
+		$users = [];
+
 		$results = $wpdb->get_results( $query );
 		foreach ( $results as $result ) {
 			/** @var WPORG_GP_Translation_Events_Stat $stat */
@@ -92,9 +104,11 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 
 			if ( $stat ) {
 				$stat->increment();
+				$users[$result->user_id] = true;
 			}
 		}
 
+		$stats->users->set(count($users));
 		return $stats;
 	}
 }
