@@ -45,4 +45,9 @@ button#join-event {
 }
 .event-details-stats {
     clear: both;
+    margin: 1em;
+}
+.event-details-stats table, .event-details-stats table td {
+    border: 0.2em solid var(--gp-color-primary);
+    padding: 1em;
 }

@@ -31,9 +31,25 @@ gp_tmpl_header();
 		</div>
 	</div>
 	<div class="event-details-stats">
-		<?php echo var_export( $event_stats->created->value(), true ); ?>
-		<?php echo var_export( $event_stats->approved->value(), true ); ?>
-		<?php echo var_export( $event_stats->rejected->value(), true ); ?>
-		<?php echo var_export( $event_stats->marked_fuzzy->value(), true ); ?>
+		<table>
+			<tbody>
+			<tr>
+				<td>Translations created</td>
+				<td><?php echo esc_html( $event_stats->created->value() ) ?></td>
+			</tr>
+			<tr>
+				<td>Translations approved</td>
+				<td><?php echo esc_html( $event_stats->approved->value() ) ?></td>
+			</tr>
+			<tr>
+				<td>Translations rejected</td>
+				<td><?php echo esc_html( $event_stats->rejected->value() ) ?></td>
+			</tr>
+			<tr>
+				<td>Translations marked as fuzzy</td>
+				<td><?php echo esc_html( $event_stats->marked_fuzzy->value() ) ?></td>
+			</tr>
+			</tbody>
+		</table>
 	</div>
 </div>
