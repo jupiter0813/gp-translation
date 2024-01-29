@@ -22,3 +22,24 @@
     border-bottom: #d9d8d8 thin solid;
     padding-bottom: .5em;
 }
+.event-details-page {
+    border-bottom: #cfd4d4 thin solid;
+    width: 60%;
+    margin: 0 auto;
+}
+.event-details-left {
+    width: 77%;
+    float: left;
+    border-right: #dadfdf thin solid;
+    margin-right: 1%;
+    padding-right: 1em;
+}
+.event-details-right {
+    width: 22%;
+    float: left;
+    padding: 1em;
+}
+button#join-event {
+    width: 100%;
+    display: block;
+}

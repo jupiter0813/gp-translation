@@ -63,4 +63,28 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_project_name = get_post_meta( $event_id, '_event_project_name', true ) ?? '';
 		$this->tmpl( 'events-edit', get_defined_vars() );
 	}
+
+	/**
+	 * Loads the 'event' template.
+	 *
+	 * @param string $event_slug The event slug.
+	 * @return void
+	 */
+	public function events_details( $event_slug ) {
+		if ( ! is_user_logged_in() ) {
+			$this->die_with_404();
+		}
+		$event = get_page_by_path( $event_slug, OBJECT, 'event' );
+
+		if ( ! $event ) {
+			$this->die_with_404();
+		}
+		$event_title        = $event->post_title;
+		$event_description  = $event->post_content;
+		$event_start_date   = get_post_meta( $event->ID, '_event_start_date', true ) ?? '';
+		$event_end_date     = get_post_meta( $event->ID, '_event_end_date', true ) ?? '';
+		$event_locale       = get_post_meta( $event->ID, '_event_locale', true ) ?? '';
+		$event_project_name = get_post_meta( $event->ID, '_event_project_name', true ) ?? '';
+		$this->tmpl( 'event', get_defined_vars() );
+	}
 }
