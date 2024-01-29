@@ -81,12 +81,12 @@ function event_meta_boxes() {
  */
 function event_dates_meta_box( $post ) {
 	wp_nonce_field( 'event_dates_nonce', 'event_dates_nonce' );
-	$start_date = get_post_meta( $post->ID, '_event_start_date', true );
-	$end_date   = get_post_meta( $post->ID, '_event_end_date', true );
-	echo '<label for="event_start_date">Start Date: </label>';
-	echo '<input type="date" id="event_start_date" name="event_start_date" value="' . esc_attr( $start_date ) . '" required>';
-	echo '<label for="event_end_date">End Date: </label>';
-	echo '<input type="date" id="event_end_date" name="event_end_date" value="' . esc_attr( $end_date ) . '" required>';
+	$event_start = get_post_meta( $post->ID, '_event_start', true );
+	$event_end   = get_post_meta( $post->ID, '_event_end', true );
+	echo '<label for="event_start">Start Date: </label>';
+	echo '<input type="date" id="event_start" name="event_start" value="' . esc_attr( $event_start ) . '" required>';
+	echo '<label for="event_end">End Date: </label>';
+	echo '<input type="date" id="event_end" name="event_end" value="' . esc_attr( $event_end ) . '" required>';
 }
 
 /**
@@ -126,7 +126,7 @@ function save_event_meta_boxes( $post_id ) {
 		}
 	}
 
-	$fields = array( 'event_start_date', 'event_end_date', 'event_locale', 'event_project_name' );
+	$fields = array( 'event_start', 'event_end', 'event_locale', 'event_project_name' );
 	foreach ( $fields as $field ) {
 		if ( isset( $_POST[ $field ] ) ) {
 			update_post_meta( $post_id, '_' . $field, sanitize_text_field( $_POST[ $field ] ) );
@@ -136,17 +136,17 @@ function save_event_meta_boxes( $post_id ) {
 /**
  * Validate the event dates.
  *
- * @param  string $event_start_date The event start date.
- * @param  string $event_end_date   The event end date.
+ * @param  string $event_start The event start date.
+ * @param  string $event_end   The event end date.
  * @return bool                     Whether the event dates are valid.
  */
-function validate_event_dates( $event_start_date, $event_end_date ) {
-	if ( ! $event_start_date || ! $event_end_date ) {
+function validate_event_dates( $event_start, $event_end ) {
+	if ( ! $event_start || ! $event_end ) {
 		return false;
 	}
-	$start_date = new DateTime( $event_start_date );
-	$end_date   = new DateTime( $event_end_date );
-	if ( $start_date < $end_date ) {
+	$event_start = new DateTime( $event_start );
+	$event_end   = new DateTime( $event_end );
+	if ( $event_start < $event_end ) {
 		return true;
 	}
 	return false;
@@ -167,13 +167,13 @@ function submit_event_ajax() {
 
 	$title          = sanitize_text_field( $_POST['event_title'] );
 	$description    = sanitize_text_field( $_POST['event_description'] );
-	$start_date     = sanitize_text_field( $_POST['event_start_date'] );
-	$end_date       = sanitize_text_field( $_POST['event_end_date'] );
+	$event_start    = sanitize_text_field( $_POST['event_start'] );
+	$event_end      = sanitize_text_field( $_POST['event_end'] );
 	$locale         = sanitize_text_field( $_POST['event_locale'] );
 	$project_name   = sanitize_text_field( $_POST['event_project_name'] );
 	$event_timezone = sanitize_text_field( $_POST['event_timezone'] );
 
-	$is_valid_event_date = validate_event_dates( $start_date, $end_date );
+	$is_valid_event_date = validate_event_dates( $event_start, $event_end );
 
 	if ( ! $is_valid_event_date ) {
 		wp_send_json_error( 'Invalid event dates' );
@@ -202,8 +202,8 @@ function submit_event_ajax() {
 			)
 		);
 	}
-	update_post_meta( $event_id, '_event_start_date', $start_date );
-	update_post_meta( $event_id, '_event_end_date', $end_date );
+	update_post_meta( $event_id, '_event_start', $event_start );
+	update_post_meta( $event_id, '_event_end', $event_end );
 	update_post_meta( $event_id, '_event_timezone', $event_timezone );
 	if ( $locale ) {
 		update_post_meta( $event_id, '_event_locale', $locale );

@@ -18,12 +18,12 @@ gp_tmpl_header();
 		<textarea id="event-description" name="event_description" rows="4" required></textarea>
 	</div>
 	<div>
-		<label for="event-start-date">Start Date:</label>
-		<input type="datetime-local" id="event-start-date" name="event_start_date" required>
+		<label for="event-start">Start Date:</label>
+		<input type="datetime-local" id="event-start" name="event_start" required>
 	</div>
 	<div>
-		<label for="event-end-date">End Date:</label>
-		<input type="datetime-local" id="event-end-date" name="event_end_date" required>
+		<label for="event-end">End Date:</label>
+		<input type="datetime-local" id="event-end" name="event_end" required>
 	</div>
 	<div>
 		<label for="event-timezone">Event Timezone:</label>

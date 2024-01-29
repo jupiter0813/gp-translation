@@ -4,7 +4,7 @@ jQuery(document).ready(function($) {
     selectUserTimezone();
     validateEventDates();
     $('#submit-event, #edit-translation-event').on('click', function(e) {
-        if ( $('#event-end-date').val() <= $('#event-start-date').val() ) {
+        if ( $('#event-end').val() <= $('#event-start').val() ) {
             $gp.notices.error( 'Event end date and time must be later than event start date and time.' );
             return;
         }
@@ -25,8 +25,8 @@ jQuery(document).ready(function($) {
     });
 
     function validateEventDates() {
-        var startDateTimeInput = $('#event-start-date');
-        var endDateTimeInput = $('#event-end-date');
+        var startDateTimeInput = $('#event-start');
+        var endDateTimeInput = $('#event-end');
     
         startDateTimeInput.add(endDateTimeInput).on('input', function () {
             endDateTimeInput.prop('min', startDateTimeInput.val());

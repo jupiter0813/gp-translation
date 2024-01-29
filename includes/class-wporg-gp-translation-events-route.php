@@ -57,8 +57,8 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 
 		$event_title        = $event->post_title;
 		$event_description  = $event->post_content;
-		$event_start_date   = get_post_meta( $event_id, '_event_start_date', true ) ?? '';
-		$event_end_date     = get_post_meta( $event_id, '_event_end_date', true ) ?? '';
+		$event_start        = get_post_meta( $event_id, '_event_start', true ) ?? '';
+		$event_end          = get_post_meta( $event_id, '_event_end', true ) ?? '';
 		$event_locale       = get_post_meta( $event_id, '_event_locale', true ) ?? '';
 		$event_project_name = get_post_meta( $event_id, '_event_project_name', true ) ?? '';
 		$event_timezone     = get_post_meta( $event_id, '_event_timezone', true ) ?? '';
