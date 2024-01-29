@@ -5,7 +5,7 @@ gp_tmpl_header();
 ?>
 <h2  class="event-page-title">Create a new Translation Event</h2>
 
-<form class="translation-event-form" action="" method="post">
+<form class="translation-event-form" id="create-event-form" action="" method="post">
 	<?php wp_nonce_field( 'create_event_nonce', 'create_event_nonce' ); ?>
 	<input type="hidden" name="action" value="submit_event_ajax">
 	<input type="hidden" name="form_name" value="create_event">

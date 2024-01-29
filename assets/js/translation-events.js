@@ -1,7 +1,9 @@
 ( function( $, $gp ) {
 jQuery(document).ready(function($) {
     $gp.notices.init();
-    selectUserTimezone();
+    if ( $('#create-event-form').length ) {
+        selectUserTimezone();
+    }
     validateEventDates();
     $('#submit-event, #edit-translation-event').on('click', function(e) {
         if ( $('#event-end').val() <= $('#event-start').val() ) {
