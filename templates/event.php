@@ -31,6 +31,6 @@ gp_tmpl_header();
 		</div>
 	</div>
 	<div class="event-details-stats">
-		<?php echo var_export( $event_stats->created, true ); // TODO ?>
+		<?php echo var_export( $event_stats->created->value(), true ); // TODO ?>
 	</div>
 </div>

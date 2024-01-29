@@ -1,13 +1,25 @@
 <?php
 
+class WPORG_GP_Translation_Events_Stat {
+	private int $value = 0;
+
+	public function increment(): void {
+		$this->value++;
+	}
+
+	public function value(): int {
+		return $this->value;
+	}
+}
+
 class WPORG_GP_Translation_Events_Event_Stats {
 	/**
 	 * Number of translations created during the event.
 	 */
-	public int $created;
+	public WPORG_GP_Translation_Events_Stat $created;
 
-	public function __construct( int $created ) {
-		$this->created = $created;
+	public function __construct() {
+		$this->created = new WPORG_GP_Translation_Events_Stat;
 	}
 }
 
@@ -37,12 +49,12 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 			]
 		);
 
-		$created = 0;
+		$stats = new WPORG_GP_Translation_Events_Event_Stats;
 		$results = $wpdb->get_results( $query );
 		foreach ( $results as $result ) {
 			switch ( $result->action ) {
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_CREATE:
-					$created ++;
+					$stats->created->increment();
 					break;
 				default:
 					// Unknown action. Should not happen.
@@ -50,6 +62,6 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 			}
 		}
 
-		return new WPORG_GP_Translation_Events_Event_Stats( $created );
+		return $stats;
 	}
 }
