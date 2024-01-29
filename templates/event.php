@@ -23,4 +23,7 @@ gp_tmpl_header();
 			<button class="button is-primary" id="join-event">Attend Event</button>
 		</div>
 	</div>
+	<div class="event-details-stats">
+		<?php echo var_export( $event_stats->created, true ); // TODO ?>
+	</div>
 </div>

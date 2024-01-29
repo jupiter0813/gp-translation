@@ -43,3 +43,6 @@ button#join-event {
     width: 100%;
     display: block;
 }
+.event-details-stats {
+    clear: both;
+}
