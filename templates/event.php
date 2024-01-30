@@ -32,17 +32,19 @@ gp_tmpl_header();
 	</div>
 	<div class="event-details-stats">
 		<table>
+			<thead>
+			<tr>
+				<th scope="col">Locale</th>
+				<th scope="col">Translations created</th>
+				<th scope="col">Translations reviewed</th>
+				<th scope="col">Contributors</th>
+			</tr>
+			</thead>
 			<tbody>
 			<tr>
-				<td>Contributors</td>
+				<td><strong>Total</strong></td>
 				<td><?php echo esc_html( $event_stats->totals->users()->value() ) ?></td>
-			</tr>
-			<tr>
-				<td>Translations created</td>
 				<td><?php echo esc_html( $event_stats->totals->created()->value() ) ?></td>
-			</tr>
-			<tr>
-				<td>Translations reviewed</td>
 				<td><?php echo esc_html( $event_stats->totals->reviewed()->value() ) ?></td>
 			</tr>
 			</tbody>
