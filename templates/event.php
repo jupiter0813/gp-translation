@@ -49,8 +49,8 @@ gp_tmpl_header();
 				<td><?php echo esc_html( $stats->users()->value() ) ?></td>
 			</tr>
 			<?php endforeach ?>
-			<tr>
-				<td><strong>Total</strong></td>
+			<tr class="event-details-stats-totals">
+				<td>Total</td>
 				<td><?php echo esc_html( $event_stats->totals->created()->value() ) ?></td>
 				<td><?php echo esc_html( $event_stats->totals->reviewed()->value() ) ?></td>
 				<td><?php echo esc_html( $event_stats->totals->users()->value() ) ?></td>

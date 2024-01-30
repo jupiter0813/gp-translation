@@ -51,3 +51,6 @@ button#join-event {
     border: 0.2em solid var(--gp-color-primary);
     padding: 1em;
 }
+.event-details-stats-totals {
+    font-weight: bold;
+}
