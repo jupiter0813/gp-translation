@@ -31,6 +31,7 @@ gp_tmpl_header();
 		</div>
 	</div>
 	<div class="event-details-stats">
+		<h2>Stats</h2>
 		<table>
 			<thead>
 			<tr>
