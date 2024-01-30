@@ -42,16 +42,8 @@ gp_tmpl_header();
 				<td><?php echo esc_html( $event_stats->created->value() ) ?></td>
 			</tr>
 			<tr>
-				<td>Translations approved</td>
-				<td><?php echo esc_html( $event_stats->approved->value() ) ?></td>
-			</tr>
-			<tr>
-				<td>Translations rejected</td>
-				<td><?php echo esc_html( $event_stats->rejected->value() ) ?></td>
-			</tr>
-			<tr>
-				<td>Translations marked as fuzzy</td>
-				<td><?php echo esc_html( $event_stats->marked_fuzzy->value() ) ?></td>
+				<td>Translations reviewed</td>
+				<td><?php echo esc_html( $event_stats->reviewed->value() ) ?></td>
 			</tr>
 			</tbody>
 		</table>
