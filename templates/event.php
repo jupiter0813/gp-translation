@@ -35,15 +35,15 @@ gp_tmpl_header();
 			<tbody>
 			<tr>
 				<td>Contributors</td>
-				<td><?php echo esc_html( $event_stats->users->value() ) ?></td>
+				<td><?php echo esc_html( $event_stats->users()->value() ) ?></td>
 			</tr>
 			<tr>
 				<td>Translations created</td>
-				<td><?php echo esc_html( $event_stats->created->value() ) ?></td>
+				<td><?php echo esc_html( $event_stats->created()->value() ) ?></td>
 			</tr>
 			<tr>
 				<td>Translations reviewed</td>
-				<td><?php echo esc_html( $event_stats->reviewed->value() ) ?></td>
+				<td><?php echo esc_html( $event_stats->reviewed()->value() ) ?></td>
 			</tr>
 			</tbody>
 		</table>

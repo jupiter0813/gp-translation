@@ -20,22 +20,34 @@ class WPORG_GP_Translation_Events_Event_Stats {
 	/**
 	 * Number of users who performed an action during the event.
 	 */
-	public WPORG_GP_Translation_Events_Stat $users;
+	private WPORG_GP_Translation_Events_Stat $users;
 
 	/**
 	 * Number of translations created during the event.
 	 */
-	public WPORG_GP_Translation_Events_Stat $created;
+	private WPORG_GP_Translation_Events_Stat $created;
 
 	/**
 	 * Number of translations reviewed (approved, rejected, etc) during the event.
 	 */
-	public WPORG_GP_Translation_Events_Stat $reviewed;
+	private WPORG_GP_Translation_Events_Stat $reviewed;
 
 	public function __construct() {
 		$this->users        = new WPORG_GP_Translation_Events_Stat;
 		$this->created      = new WPORG_GP_Translation_Events_Stat;
 		$this->reviewed     = new WPORG_GP_Translation_Events_Stat;
+	}
+
+	public function users(): WPORG_GP_Translation_Events_Stat {
+		return $this->users;
+	}
+
+	public function created(): WPORG_GP_Translation_Events_Stat {
+		return $this->created;
+	}
+
+	public function reviewed(): WPORG_GP_Translation_Events_Stat {
+		return $this->reviewed;
 	}
 }
 
@@ -74,12 +86,12 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 			$stat = null;
 			switch ( $result->action ) {
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_CREATE:
-					$stat = $stats->created;
+					$stat = $stats->created();
 					break;
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_APPROVE:
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_REJECT:
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_MARK_FUZZY:
-					$stat = $stats->reviewed;
+					$stat = $stats->reviewed();
 					break;
 				default:
 					// Unknown action. Should not happen.
@@ -92,7 +104,7 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 			}
 		}
 
-		$stats->users->set(count($users));
+		$stats->users()->set(count($users));
 		return $stats;
 	}
 }
