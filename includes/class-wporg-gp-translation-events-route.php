@@ -57,8 +57,9 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 
 		$event_title        = $event->post_title;
 		$event_description  = $event->post_content;
-		$event_start_date   = get_post_meta( $event_id, '_event_start_date', true ) ?? '';
-		$event_end_date     = get_post_meta( $event_id, '_event_end_date', true ) ?? '';
+		$event_timezone     = get_post_meta( $event_id, '_event_timezone', true ) ?? '';
+		$event_start        = self::convertToTimezone( get_post_meta( $event_id, '_event_start', true ), $event_timezone ) ?? '';
+		$event_end          = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone ) ?? '';
 		$event_locale       = get_post_meta( $event_id, '_event_locale', true ) ?? '';
 		$event_project_name = get_post_meta( $event_id, '_event_project_name', true ) ?? '';
 		$this->tmpl( 'events-edit', get_defined_vars() );
@@ -86,5 +87,17 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_locale       = get_post_meta( $event->ID, '_event_locale', true ) ?? '';
 		$event_project_name = get_post_meta( $event->ID, '_event_project_name', true ) ?? '';
 		$this->tmpl( 'event', get_defined_vars() );
+	}
+
+	/**
+	 * Convert date time stored in UTC to a date time in a time zone.
+	 *
+	 * @param string $date_time The date time in UTC.
+	 * @param string $time_zone The time zone.
+	 *
+	 * @return string The date time in the time zone.
+	 */
+	public static function convertToTimezone( $date_time, $time_zone ) {
+		return ( new DateTime( $date_time, new DateTimeZone( 'UTC' ) ) )->setTimezone( new DateTimeZone( $time_zone ) )->format( 'Y-m-d H:i:s' );
 	}
 }
