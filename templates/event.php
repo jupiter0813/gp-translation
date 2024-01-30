@@ -44,16 +44,16 @@ gp_tmpl_header();
 			<?php foreach ( $event_stats->by_locale as $locale => $stats ): ?>
 			<tr>
 				<td><?php echo esc_html( $locale ) ?></td>
-				<td><?php echo esc_html( $stats->users()->value() ) ?></td>
 				<td><?php echo esc_html( $stats->created()->value() ) ?></td>
 				<td><?php echo esc_html( $stats->reviewed()->value() ) ?></td>
+				<td><?php echo esc_html( $stats->users()->value() ) ?></td>
 			</tr>
 			<?php endforeach ?>
 			<tr>
 				<td><strong>Total</strong></td>
-				<td><?php echo esc_html( $event_stats->totals->users()->value() ) ?></td>
 				<td><?php echo esc_html( $event_stats->totals->created()->value() ) ?></td>
 				<td><?php echo esc_html( $event_stats->totals->reviewed()->value() ) ?></td>
+				<td><?php echo esc_html( $event_stats->totals->users()->value() ) ?></td>
 			</tr>
 			</tbody>
 		</table>
