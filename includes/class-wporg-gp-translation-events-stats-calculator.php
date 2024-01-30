@@ -8,7 +8,7 @@ class WPORG_GP_Translation_Events_Stat {
 	}
 
 	public function increment(): void {
-		$this->value++;
+		$this->value ++;
 	}
 
 	public function value(): int {
@@ -39,11 +39,11 @@ class WPORG_GP_Translation_Events_Event_Stats {
 	}
 
 	public function add_user( int $user_id ) {
-		$this->users[$user_id] = true;
+		$this->users[ $user_id ] = true;
 	}
 
 	public function users(): WPORG_GP_Translation_Events_Stat {
-		return new WPORG_GP_Translation_Events_Stat(count($this->users));
+		return new WPORG_GP_Translation_Events_Stat( count( $this->users ) );
 	}
 
 	public function created(): WPORG_GP_Translation_Events_Stat {
@@ -69,7 +69,7 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 
 		$query = $wpdb->prepare(
 			"
-				select action, user_id
+				select locale, action, user_id
 				from $this->ACTIONS_TABLE_NAME
 				where event_id = %d
 				  and happened_at between cast('%s' as datetime) and cast('%s' as datetime)
@@ -81,18 +81,28 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 			]
 		);
 
-		$total_stats = new WPORG_GP_Translation_Events_Event_Stats;
+		$stats_by_locale = [];
+		$total_stats     = new WPORG_GP_Translation_Events_Event_Stats;
 
 		$results = $wpdb->get_results( $query );
 		foreach ( $results as $result ) {
+			$locale = $result->locale;
+			if ( ! array_key_exists( $locale, $stats_by_locale ) ) {
+				$stats_by_locale[ $locale ] = new WPORG_GP_Translation_Events_Event_Stats;
+			}
+
+			$locale_stats = $stats_by_locale[ $locale ];
 			$ignore = false;
+
 			switch ( $result->action ) {
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_CREATE:
+					$locale_stats->created()->increment();
 					$total_stats->created()->increment();
 					break;
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_APPROVE:
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_REJECT:
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_MARK_FUZZY:
+					$locale_stats->reviewed()->increment();
 					$total_stats->reviewed()->increment();
 					break;
 				default:
@@ -105,7 +115,8 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 				continue;
 			}
 
-			$total_stats->add_user($result->user_id);
+			$locale_stats->add_user( $result->user_id );
+			$total_stats->add_user( $result->user_id );
 		}
 
 		return $total_stats;
