@@ -16,7 +16,7 @@ class WPORG_GP_Translation_Events_Stat {
 	}
 }
 
-class WPORG_GP_Translation_Events_Event_Stats {
+class WPORG_GP_Translation_Events_Stats_Row {
 	/**
 	 * Ids of users who participated in the event.
 	 * @var int[]
@@ -61,7 +61,7 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 	/**
 	 * @throws Exception
 	 */
-	function for_event( WP_Post $event ): WPORG_GP_Translation_Events_Event_Stats {
+	function for_event( WP_Post $event ): WPORG_GP_Translation_Events_Stats_Row {
 		$start = new DateTime( get_post_meta( $event->ID, '_event_start', true ), new DateTimeZone( 'UTC' ) );
 		$end   = new DateTime( get_post_meta( $event->ID, '_event_end', true ), new DateTimeZone( 'UTC' ) );
 
@@ -82,17 +82,17 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 		);
 
 		$stats_by_locale = [];
-		$total_stats     = new WPORG_GP_Translation_Events_Event_Stats;
+		$total_stats     = new WPORG_GP_Translation_Events_Stats_Row;
 
 		$results = $wpdb->get_results( $query );
 		foreach ( $results as $result ) {
 			$locale = $result->locale;
 			if ( ! array_key_exists( $locale, $stats_by_locale ) ) {
-				$stats_by_locale[ $locale ] = new WPORG_GP_Translation_Events_Event_Stats;
+				$stats_by_locale[ $locale ] = new WPORG_GP_Translation_Events_Stats_Row;
 			}
 
 			$locale_stats = $stats_by_locale[ $locale ];
-			$ignore = false;
+			$ignore       = false;
 
 			switch ( $result->action ) {
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_CREATE:
