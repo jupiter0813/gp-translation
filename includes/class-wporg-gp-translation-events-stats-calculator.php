@@ -55,13 +55,36 @@ class WPORG_GP_Translation_Events_Stats_Row {
 	}
 }
 
+class WPORG_GP_Translation_Events_Event_Stats {
+	/**
+	 * Associative array with locale as key.
+	 *
+	 * @var WPORG_GP_Translation_Events_Stats_Row[]
+	 */
+	public array $by_locale = [];
+
+	public WPORG_GP_Translation_Events_Stats_Row $totals;
+
+	public function __construct() {
+		$this->totals = new WPORG_GP_Translation_Events_Stats_Row;
+	}
+
+	public function by_locale( $locale ): WPORG_GP_Translation_Events_Stats_Row {
+		if ( ! array_key_exists( $locale, $this->by_locale ) ) {
+			$this->by_locale[ $locale ] = new WPORG_GP_Translation_Events_Stats_Row;
+		}
+
+		return $this->by_locale[ $locale ];
+	}
+}
+
 class WPORG_GP_Translation_Events_Stats_Calculator {
 	private string $ACTIONS_TABLE_NAME = WPORG_GP_Translation_Events_Translation_Listener::ACTIONS_TABLE_NAME;
 
 	/**
 	 * @throws Exception
 	 */
-	function for_event( WP_Post $event ): WPORG_GP_Translation_Events_Stats_Row {
+	function for_event( WP_Post $event ): WPORG_GP_Translation_Events_Event_Stats {
 		$start = new DateTime( get_post_meta( $event->ID, '_event_start', true ), new DateTimeZone( 'UTC' ) );
 		$end   = new DateTime( get_post_meta( $event->ID, '_event_end', true ), new DateTimeZone( 'UTC' ) );
 
@@ -81,17 +104,12 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 			]
 		);
 
-		$stats_by_locale = [];
-		$total_stats     = new WPORG_GP_Translation_Events_Stats_Row;
+		$event_stats = new WPORG_GP_Translation_Events_Event_Stats;
 
 		$results = $wpdb->get_results( $query );
 		foreach ( $results as $result ) {
-			$locale = $result->locale;
-			if ( ! array_key_exists( $locale, $stats_by_locale ) ) {
-				$stats_by_locale[ $locale ] = new WPORG_GP_Translation_Events_Stats_Row;
-			}
-
-			$locale_stats = $stats_by_locale[ $locale ];
+			$locale_stats = $event_stats->by_locale( $result->locale );
+			$total_stats  = $event_stats->totals;
 			$ignore       = false;
 
 			switch ( $result->action ) {
@@ -119,6 +137,6 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 			$total_stats->add_user( $result->user_id );
 		}
 
-		return $total_stats;
+		return $event_stats;
 	}
 }
