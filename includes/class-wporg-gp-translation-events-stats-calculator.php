@@ -81,19 +81,19 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 			]
 		);
 
-		$stats_total = new WPORG_GP_Translation_Events_Event_Stats;
+		$total_stats = new WPORG_GP_Translation_Events_Event_Stats;
 
 		$results = $wpdb->get_results( $query );
 		foreach ( $results as $result ) {
 			$ignore = false;
 			switch ( $result->action ) {
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_CREATE:
-					$stats_total->created()->increment();
+					$total_stats->created()->increment();
 					break;
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_APPROVE:
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_REJECT:
 				case WPORG_GP_Translation_Events_Translation_Listener::ACTION_MARK_FUZZY:
-					$stats_total->reviewed()->increment();
+					$total_stats->reviewed()->increment();
 					break;
 				default:
 					// Unknown action. Should not happen.
@@ -105,9 +105,9 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 				continue;
 			}
 
-			$stats_total->add_user($result->user_id);
+			$total_stats->add_user($result->user_id);
 		}
 
-		return $stats_total;
+		return $total_stats;
 	}
 }
