@@ -1,7 +1,11 @@
 <?php
 
 class WPORG_GP_Translation_Events_Stat {
-	private int $value = 0;
+	private int $value;
+
+	public function __construct( int $value = 0 ) {
+		$this->value = $value;
+	}
 
 	public function increment(): void {
 		$this->value++;
@@ -10,17 +14,14 @@ class WPORG_GP_Translation_Events_Stat {
 	public function value(): int {
 		return $this->value;
 	}
-
-	public function set( int $value ): void {
-		$this->value = $value;
-	}
 }
 
 class WPORG_GP_Translation_Events_Event_Stats {
 	/**
-	 * Number of users who performed an action during the event.
+	 * Ids of users who participated in the event.
+	 * @var int[]
 	 */
-	private WPORG_GP_Translation_Events_Stat $users;
+	private array $users;
 
 	/**
 	 * Number of translations created during the event.
@@ -28,18 +29,21 @@ class WPORG_GP_Translation_Events_Event_Stats {
 	private WPORG_GP_Translation_Events_Stat $created;
 
 	/**
-	 * Number of translations reviewed (approved, rejected, etc) during the event.
+	 * Number of translations reviewed (approved, rejected, etc.) during the event.
 	 */
 	private WPORG_GP_Translation_Events_Stat $reviewed;
 
 	public function __construct() {
-		$this->users        = new WPORG_GP_Translation_Events_Stat;
-		$this->created      = new WPORG_GP_Translation_Events_Stat;
-		$this->reviewed     = new WPORG_GP_Translation_Events_Stat;
+		$this->created  = new WPORG_GP_Translation_Events_Stat;
+		$this->reviewed = new WPORG_GP_Translation_Events_Stat;
+	}
+
+	public function add_user( int $user_id ) {
+		$this->users[$user_id] = true;
 	}
 
 	public function users(): WPORG_GP_Translation_Events_Stat {
-		return $this->users;
+		return new WPORG_GP_Translation_Events_Stat(count($this->users));
 	}
 
 	public function created(): WPORG_GP_Translation_Events_Stat {
@@ -78,7 +82,6 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 		);
 
 		$stats = new WPORG_GP_Translation_Events_Event_Stats;
-		$users = [];
 
 		$results = $wpdb->get_results( $query );
 		foreach ( $results as $result ) {
@@ -100,11 +103,10 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 
 			if ( $stat ) {
 				$stat->increment();
-				$users[$result->user_id] = true;
+				$stats->add_user($result->user_id);
 			}
 		}
 
-		$stats->users()->set(count($users));
 		return $stats;
 	}
 }
