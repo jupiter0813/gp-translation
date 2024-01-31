@@ -42,7 +42,7 @@ gp_tmpl_header();
 			</tr>
 			</thead>
 			<tbody>
-			<?php /** @var $stats WPORG_GP_Translation_Events_Stats_Row */?>
+			<?php /** @var $row WPORG_GP_Translation_Events_Stats_Row */?>
 			<?php foreach ( $event_stats->rows() as $locale => $row ): ?>
 			<tr>
 				<td><?php echo esc_html( $locale ) ?></td>
