@@ -42,19 +42,20 @@ gp_tmpl_header();
 			</tr>
 			</thead>
 			<tbody>
-			<?php foreach ( $event_stats->by_locale as $locale => $stats ): ?>
+			<?php /** @var $stats WPORG_GP_Translation_Events_Stats_Row */?>
+			<?php foreach ( $event_stats->rows() as $locale => $row ): ?>
 			<tr>
 				<td><?php echo esc_html( $locale ) ?></td>
-				<td><?php echo esc_html( $stats->created()->value() ) ?></td>
-				<td><?php echo esc_html( $stats->reviewed()->value() ) ?></td>
-				<td><?php echo esc_html( $stats->users()->value() ) ?></td>
+				<td><?php echo esc_html( $row->created ) ?></td>
+				<td><?php echo esc_html( $row->reviewed ) ?></td>
+				<td><?php echo esc_html( $row->users ) ?></td>
 			</tr>
 			<?php endforeach ?>
 			<tr class="event-details-stats-totals">
 				<td>Total</td>
-				<td><?php echo esc_html( $event_stats->totals->created()->value() ) ?></td>
-				<td><?php echo esc_html( $event_stats->totals->reviewed()->value() ) ?></td>
-				<td><?php echo esc_html( $event_stats->totals->users()->value() ) ?></td>
+				<td><?php echo esc_html( $event_stats->totals()->created ) ?></td>
+				<td><?php echo esc_html( $event_stats->totals()->reviewed ) ?></td>
+				<td><?php echo esc_html( $event_stats->totals()->users ) ?></td>
 			</tr>
 			</tbody>
 		</table>
