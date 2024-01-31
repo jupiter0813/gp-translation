@@ -5,6 +5,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	const ACTION_CREATE = 'create';
 	const ACTION_APPROVE = 'approve';
 	const ACTION_REJECT = 'reject';
+	const ACTION_REQUEST_CHANGES = 'request_changes';
 	const ACTION_MARK_FUZZY = 'mark_fuzzy';
 
 	public function start(): void {
@@ -35,6 +36,9 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 						break;
 					case 'rejected':
 						$action = self::ACTION_REJECT;
+						break;
+					case 'changesrequested':
+						$action = self::ACTION_REQUEST_CHANGES;
 						break;
 					case 'fuzzy':
 						$action = self::ACTION_MARK_FUZZY;
