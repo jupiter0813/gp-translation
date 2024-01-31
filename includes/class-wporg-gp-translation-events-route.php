@@ -94,6 +94,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		try {
 			$event_stats = $stats_calculator->for_event( $event );
 		} catch ( Exception $e ) {
+			error_log( $e );
 			$this->die_with_error( "Failed to calculate event stats" );
 		}
 
