@@ -92,14 +92,14 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 				'post_status' => 'publish',
 				'meta_query'  => [
 					[
-						'key'     => '_event_start_date',
-						'value'   => $at->format( 'Y-m-d' ),
+						'key'     => '_event_start',
+						'value'   => $at->format( 'Y-m-d H:i:s' ),
 						'compare' => '<=',
 						'type'    => 'DATETIME',
 					],
 					[
-						'key'     => '_event_end_date',
-						'value'   => $at->format( 'Y-m-d' ),
+						'key'     => '_event_end',
+						'value'   => $at->format( 'Y-m-d H:i:s' ),
 						'compare' => '>=',
 						'type'    => 'DATETIME',
 					],
