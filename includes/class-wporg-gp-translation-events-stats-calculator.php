@@ -81,8 +81,8 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 
 		$rows = $wpdb->get_results( $query );
 		foreach ( $rows as $index => $row ) {
-			$is_last_row = $row->locale === null;
-			if ( $is_last_row && $index !== array_key_last( $rows ) ) {
+			$is_totals = $row->locale === null;
+			if ( $is_totals && $index !== array_key_last( $rows ) ) {
 				// If this is not the last row, something is wrong in the data in the database table
 				// or there's a bug in the query above.
 				throw new Exception(
@@ -96,7 +96,7 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 				$row->users,
 			);
 
-			if ( ! $is_last_row ) {
+			if ( ! $is_totals ) {
 				$stats->add_row( $row->locale, $stats_row );
 			} else {
 				$stats->set_totals( $stats_row );
