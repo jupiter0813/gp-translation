@@ -12,7 +12,7 @@ gp_tmpl_header();
 	<input type="hidden" name="event_id" value="<?php echo esc_attr( $event->ID ); ?>">
 	<div>
 		<label for="event-title">Event Title:</label>
-		<input type="text" id="event-title" name="event_title" value="<?php echo esc_html( $event_title ); ?>" required>
+		<input type="text" id="event-title" name="event_title" value="<?php echo esc_html( $event_title ); ?>" required = "required">
 	</div>
 	<div>
 		<label for="event-description">Event Description:</label>
@@ -40,5 +40,5 @@ gp_tmpl_header();
 		<label for="event-project-name">Project Name:</label>
 		<input type="text" id="event-project-name" name="event_project_name" value="<?php echo esc_attr( $event_project_name ); ?>">
 	</div>
-	<button class="button is-primary" type="button" id="edit-translation-event">Submit Event</button>
+	<button class="button is-primary" type="submit" id="edit-translation-event">Submit Event</button>
 </form>
