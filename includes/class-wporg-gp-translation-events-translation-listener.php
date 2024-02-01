@@ -2,55 +2,84 @@
 
 class WPORG_GP_Translation_Events_Translation_Listener {
 	const ACTIONS_TABLE_NAME = 'wp_wporg_gp_translation_events_actions';
-	const ACTION_CREATED = 'created';
+	const ACTION_CREATE = 'create';
+	const ACTION_APPROVE = 'approve';
+	const ACTION_REJECT = 'reject';
+	const ACTION_REQUEST_CHANGES = 'request_changes';
+	const ACTION_MARK_FUZZY = 'mark_fuzzy';
 
 	public function start(): void {
 		add_action(
 			'gp_translation_created',
 			function ( $translation ) {
-				$this->handle_action( $translation, self::ACTION_CREATED );
+				$happened_at = DateTime::createFromFormat( 'Y-m-d H:i:s', $translation->date_added, new DateTimeZone( 'UTC' ) );
+				$this->handle_action( $translation, $translation->user_id, self::ACTION_CREATE, $happened_at );
 			},
 		);
+
+		add_action(
+			'gp_translation_saved',
+			function ( $translation, $translation_before ) {
+				$user_id     = $translation->user_id_last_modified;
+				$status      = $translation->status;
+				$happened_at = DateTime::createFromFormat( 'Y-m-d H:i:s', $translation->date_modified, new DateTimeZone( 'UTC' ) );
+
+				if ( $translation_before->status === $status ) {
+					// Translation hasn't changed status, so there's nothing for us to track.
+					return;
+				}
+
+				$action = null;
+				switch ( $status ) {
+					case 'current':
+						$action = self::ACTION_APPROVE;
+						break;
+					case 'rejected':
+						$action = self::ACTION_REJECT;
+						break;
+					case 'changesrequested':
+						$action = self::ACTION_REQUEST_CHANGES;
+						break;
+					case 'fuzzy':
+						$action = self::ACTION_MARK_FUZZY;
+						break;
+				}
+
+				if ( $action ) {
+					$this->handle_action( $translation, $user_id, $action, $happened_at );
+				}
+			},
+			10,
+			2,
+		);
 	}
 
-	private function handle_action( GP_Translation $translation, string $action ): void {
-		$now = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+	private function handle_action( GP_Translation $translation, int $user_id, string $action, DateTime $happened_at ): void {
+		// Get events that are active when the action happened, for which the user is registered for.
+		$active_events = $this->get_active_events( $happened_at );
+		$events        = $this->select_events_user_is_registered_for( $active_events, $user_id );
 
-		// Get events that are active now, for which the user is registered for.
-		$active_events = $this->get_active_events( $now );
-		$events        = $this->select_events_user_is_registered_for( $active_events, $translation->user_id );
-
-		foreach ( $events as $event ) {
-			$this->persist( $event, $translation, $now, $action );
-		}
-	}
-
-	private function persist(
-		WP_Post $event,
-		GP_Translation $translation,
-		DateTime $happened_at,
-		string $action
-	): void {
 		/** @var GP_Translation_Set $translation_set */
 		$translation_set = ( new GP_Translation_Set )->find_one( [ 'id' => $translation->translation_set_id ] );
-
 		global $wpdb;
 
-		// A given user can only do one action of a given type on a specific translation.
-		// So we replace instead of insert, which will enforce the primary key.
-		$wpdb->replace(
-			self::ACTIONS_TABLE_NAME,
-			[
-				// start primary key
-				'event_id'       => $event->ID,
-				'user_id'        => $translation->user_id,
-				'translation_id' => $translation->id,
-				'action'         => $action,
-				// end primary key
-				'locale'         => $translation_set->locale,
-				'happened_at'    => $happened_at->format( 'Y-m-d H:i:s' ),
-			]
-		);
+		foreach ( $events as $event ) {
+			// A given user can only do one action of a given type on a specific translation.
+			// So we replace instead of insert, which will enforce the primary key.
+			$wpdb->replace(
+				self::ACTIONS_TABLE_NAME,
+				[
+					// start primary key
+					'event_id'       => $event->ID,
+					'user_id'        => $user_id,
+					'translation_id' => $translation->id,
+					'action'         => $action,
+					// end primary key
+					'locale'         => $translation_set->locale,
+					'happened_at'    => $happened_at->format( 'Y-m-d H:i:s' ),
+				]
+			);
+		}
 	}
 
 	/**
@@ -63,14 +92,14 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 				'post_status' => 'publish',
 				'meta_query'  => [
 					[
-						'key'     => '_event_start_date',
-						'value'   => $at->format( 'Y-m-d' ),
+						'key'     => '_event_start',
+						'value'   => $at->format( 'Y-m-d H:i:s' ),
 						'compare' => '<=',
 						'type'    => 'DATETIME',
 					],
 					[
-						'key'     => '_event_end_date',
-						'value'   => $at->format( 'Y-m-d' ),
+						'key'     => '_event_end',
+						'value'   => $at->format( 'Y-m-d H:i:s' ),
 						'compare' => '>=',
 						'type'    => 'DATETIME',
 					],
