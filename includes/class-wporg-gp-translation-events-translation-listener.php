@@ -60,8 +60,8 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		global $wpdb;
 
 		foreach ( $events as $event ) {
-			// A given user can only do one action of a given type on a specific translation.
-			// So we replace instead of insert, which will enforce the primary key.
+			// A given user can only do one action on a specific translation.
+			// So we replace instead of insert, which will keep only the last action.
 			$wpdb->replace(
 				self::ACTIONS_TABLE_NAME,
 				[
@@ -69,8 +69,8 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 					'event_id'       => $event->ID,
 					'user_id'        => $user_id,
 					'translation_id' => $translation->id,
-					'action'         => $action,
 					// end primary key
+					'action'         => $action,
 					'locale'         => $translation_set->locale,
 					'happened_at'    => $happened_at->format( 'Y-m-d H:i:s' ),
 				]

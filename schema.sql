@@ -9,7 +9,7 @@ create or replace table wp_wporg_gp_translation_events_actions
     action         varchar(16) not null comment 'The action that the user made (create, reject, etc)',
     locale         varchar(10) not null comment 'Locale of the translation',
     happened_at    datetime    not null comment 'When the action happened, in UTC',
-    # Make sure that for a given event and translation, the user cannot do multiple actions of the same type.
-    primary key (event_id, translation_id, user_id, action)
+    # Make sure that for a given event and translation, the user cannot do multiple actions.
+    primary key (event_id, translation_id, user_id)
 )
     comment 'Tracks translation actions that happened during a translation event';
