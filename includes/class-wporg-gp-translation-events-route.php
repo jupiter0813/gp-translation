@@ -38,7 +38,8 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$this->die_with_404();
 		}
 		$event_form_title   = 'Create Event';
-		$event_form_id      = 'create-event-form';
+		$event_form_name    = 'create_event';
+		$event_id           = null;
 		$event_title        = '';
 		$event_description  = '';
 		$event_timezone     = '';
@@ -65,7 +66,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$this->die_with_404();
 		}
 		$event_form_title   = 'Edit Event';
-		$event_form_id      = 'edit-event-form';
+		$event_form_name    = 'edit_event';
 		$event_title        = $event->post_title;
 		$event_description  = $event->post_content;
 		$event_timezone     = get_post_meta( $event_id, '_event_timezone', true ) ?? '';

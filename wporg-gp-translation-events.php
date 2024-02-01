@@ -154,17 +154,9 @@ function validate_event_dates( $event_start, $event_end ) {
 
 function submit_event_ajax() {
 	$event_id;
-	if ( 'create_event' === $_POST['form_name'] ) {
-		if ( ! isset( $_POST['create_event_nonce'] ) || ! wp_verify_nonce( $_POST['create_event_nonce'], 'create_event_nonce' ) ) {
-			wp_send_json_error( 'Nonce verification failed' );
-		}
+	if ( ! isset( $_POST['_event_nonce'] ) || ! wp_verify_nonce( $_POST['_event_nonce'], '_event_nonce' ) ) {
+		wp_send_json_error( 'Nonce verification failed' );
 	}
-	if ( 'edit_event' === $_POST['form_name'] ) {
-		if ( ! isset( $_POST['edit_event_nonce'] ) || ! wp_verify_nonce( $_POST['edit_event_nonce'], 'edit_event_nonce' ) ) {
-			wp_send_json_error( 'Nonce verification failed' );
-		}
-	}
-
 	$title          = sanitize_text_field( $_POST['event_title'] );
 	$description    = sanitize_text_field( $_POST['event_description'] );
 	$event_start    = sanitize_text_field( $_POST['event_start'] );
@@ -173,6 +165,7 @@ function submit_event_ajax() {
 	$project_name   = sanitize_text_field( $_POST['event_project_name'] );
 	$event_timezone = sanitize_text_field( $_POST['event_timezone'] );
 
+	
 	$is_valid_event_date = validate_event_dates( $event_start, $event_end );
 
 	if ( ! $is_valid_event_date ) {
@@ -212,7 +205,7 @@ function submit_event_ajax() {
 		update_post_meta( $event_id, '_event_project_name', $project_name );
 	}
 
-	wp_send_json_success( 'success' );
+	wp_send_json_success( get_post( $event_id ) );
 }
 
 add_action( 'wp_ajax_submit_event_ajax', 'submit_event_ajax' );
@@ -242,8 +235,7 @@ function register_translation_event_js() {
 		'$translation_event',
 		array(
 			'url'          => admin_url( 'admin-ajax.php' ),
-			'create_nonce' => wp_create_nonce( 'create_translation_event' ),
-			'edit_nonce'   => wp_create_nonce( 'edit_translation_event' ),
+			'_event_nonce' => wp_create_nonce( 'translation_event' ),
 		)
 	);
 }

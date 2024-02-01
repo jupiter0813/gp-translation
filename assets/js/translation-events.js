@@ -1,7 +1,7 @@
 ( function( $, $gp ) {
 jQuery(document).ready(function($) {
     $gp.notices.init();
-    if ( $('#create-event-form').length ) {
+    if ( ! $('#event-timezone').val() ) {
         selectUserTimezone();
     }
     validateEventDates();
@@ -18,7 +18,12 @@ jQuery(document).ready(function($) {
             url: $translation_event.url,
             data:$form.serialize(),
             success: function(response) {
-                $gp.notices.success(response.data);
+                if(response.data.ID) {
+                    $('#event-id').val(response.data.ID);
+                    $('#form-name').val('edit_event');
+                    history.replaceState('','', '/events/edit/' + response.data.ID)
+                }
+                $gp.notices.success("Success!");
             },
             error: function(error) {
                 $gp.notices.error(response.data);

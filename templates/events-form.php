@@ -5,14 +5,14 @@ gp_tmpl_header();
 ?>
 
 <h2  class="event-page-title"><?php echo esc_html( $event_form_title ); ?></h2>
-<form class="translation-event-form" id="<?php echo esc_attr( $event_form_id ); ?>" action="" method="post">
-	<?php wp_nonce_field( 'edit_event_nonce', 'edit_event_nonce' ); ?>
+<form class="translation-event-form" action="" method="post">
+	<?php wp_nonce_field( '_event_nonce', '_event_nonce' ); ?>
 	<input type="hidden" name="action" value="submit_event_ajax">
-	<input type="hidden" name="form_name" value="edit_event">
-	<input type="hidden" name="event_id" value="<?php echo esc_attr( $event->ID ); ?>">
+	<input type="hidden" id="form-name" name="form_name" value="<?php echo esc_attr( $event_form_name ); ?>">
+	<input type="hidden" id="event-id" name="event_id" value="<?php echo esc_attr( $event_id ); ?>">
 	<div>
 		<label for="event-title">Event Title:</label>
-		<input type="text" id="event-title" name="event_title" value="<?php echo esc_html( $event_title ); ?>" required = "required">
+		<input type="text" id="event-title" name="event_title" value="<?php echo esc_html( $event_title ); ?>" required>
 	</div>
 	<div>
 		<label for="event-description">Event Description:</label>
