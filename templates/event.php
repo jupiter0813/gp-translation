@@ -30,6 +30,7 @@ gp_tmpl_header();
 			<button class="button is-primary" id="join-event">Attend Event</button>
 		</div>
 	</div>
+<?php if ( ! empty( $event_stats->rows() ) ):?>
 	<div class="event-details-stats">
 		<h2>Stats</h2>
 		<table>
@@ -43,14 +44,14 @@ gp_tmpl_header();
 			</thead>
 			<tbody>
 			<?php /** @var $row WPORG_GP_Translation_Events_Stats_Row */?>
-			<?php foreach ( $event_stats->rows() as $locale => $row ): ?>
+		<?php foreach ( $event_stats->rows() as $locale => $row ): ?>
 			<tr>
 				<td><?php echo esc_html( $locale ) ?></td>
 				<td><?php echo esc_html( $row->created ) ?></td>
 				<td><?php echo esc_html( $row->reviewed ) ?></td>
 				<td><?php echo esc_html( $row->users ) ?></td>
 			</tr>
-			<?php endforeach ?>
+		<?php endforeach ?>
 			<tr class="event-details-stats-totals">
 				<td>Total</td>
 				<td><?php echo esc_html( $event_stats->totals()->created ) ?></td>
@@ -60,4 +61,5 @@ gp_tmpl_header();
 			</tbody>
 		</table>
 	</div>
+<?php endif ?>
 </div>
