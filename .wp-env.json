@@ -1,6 +1,10 @@
 {
   "core": "WordPress/WordPress#master",
-  "plugins": [ "GlotPress/GlotPress#local", "." ],
+  "plugins": [
+    "GlotPress/GlotPress#local",
+    "https://downloads.wordpress.org/plugin/sqlite-object-cache.1.3.7.zip",
+    "."
+  ],
   "config": {
     "SAVEQUERIES": true
   }
