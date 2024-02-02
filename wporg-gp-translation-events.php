@@ -165,7 +165,6 @@ function submit_event_ajax() {
 	$project_name   = sanitize_text_field( $_POST['event_project_name'] );
 	$event_timezone = sanitize_text_field( $_POST['event_timezone'] );
 
-	
 	$is_valid_event_date = validate_event_dates( $event_start, $event_end );
 
 	if ( ! $is_valid_event_date ) {
@@ -205,7 +204,13 @@ function submit_event_ajax() {
 		update_post_meta( $event_id, '_event_project_name', $project_name );
 	}
 
-	wp_send_json_success( get_post( $event_id ) );
+	wp_send_json_success(
+		array(
+			'message'  => 'Event created successfully!',
+			'eventId'  => $event_id,
+			'eventUrl' => get_permalink( $event_id ),
+		)
+	);
 }
 
 add_action( 'wp_ajax_submit_event_ajax', 'submit_event_ajax' );

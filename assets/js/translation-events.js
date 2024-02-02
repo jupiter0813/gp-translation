@@ -18,15 +18,15 @@ jQuery(document).ready(function($) {
             url: $translation_event.url,
             data:$form.serialize(),
             success: function(response) {
-                if(response.data.ID) {
-                    $('#event-id').val(response.data.ID);
+                if ( response.data.eventId ) {
+                    history.replaceState('','', '/glotpress/events/edit/' + response.data.eventId)
                     $('#form-name').val('edit_event');
-                    history.replaceState('','', '/events/edit/' + response.data.ID)
+                    $('#event-url').removeClass('hide-event-url').find('a').attr('href', response.data.eventUrl).text(response.data.eventUrl);
+                    $gp.notices.success(response.data.message);
                 }
-                $gp.notices.success("Success!");
             },
             error: function(error) {
-                $gp.notices.error(response.data);
+                $gp.notices.error(response.data.message);
             }
         });
     });
