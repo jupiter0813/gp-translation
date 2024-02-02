@@ -59,7 +59,7 @@ function register_event_post_type() {
 		'public'      => true,
 		'has_archive' => true,
 		'menu_icon'   => 'dashicons-calendar',
-		'supports'    => array( 'title', 'editor', 'thumbnail' ),
+		'supports'    => array( 'title', 'editor', 'thumbnail', 'revisions' ),
 		'rewrite'     => array( 'slug' => $slug ),
 	);
 
