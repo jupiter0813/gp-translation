@@ -21,6 +21,8 @@ jQuery(document).ready(function($) {
                 if ( response.data.eventId ) {
                     history.replaceState('','', '/glotpress/events/edit/' + response.data.eventId)
                     $('#form-name').val('edit_event');
+                    $('.event-page-title').text('Edit Translation Event');
+                    $('#event-id').val(response.data.eventId);
                     $('#event-url').removeClass('hide-event-url').find('a').attr('href', response.data.eventUrl).text(response.data.eventUrl);
                     $gp.notices.success(response.data.message);
                 }
