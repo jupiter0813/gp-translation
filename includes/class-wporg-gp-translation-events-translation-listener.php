@@ -88,7 +88,12 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	 * @return WP_Post[]
 	 */
 	private function get_active_events( DateTime $at ): array {
-		return get_posts(
+		$event_ids = $this->active_events_cache->get();
+		if ( null !== $event_ids ) {
+			return $event_ids;
+		}
+
+		$event_ids = get_posts(
 			[
 				'post_type'   => 'event',
 				'post_status' => 'publish',
@@ -108,6 +113,9 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 				],
 			],
 		);
+
+		$this->active_events_cache->cache( $event_ids );
+		return $event_ids;
 	}
 
 	/**
