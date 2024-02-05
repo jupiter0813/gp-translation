@@ -1,24 +1,44 @@
 <?php
 
 class WPORG_GP_Translation_Events_Active_Events_Cache {
+	private const KEY = 'translation-events-active-events';
+
 	/**
 	 * @param int[] $event_ids
+	 *
+	 * @throws Exception
 	 */
 	public function cache( array $event_ids ): void {
-		// TODO
+		if ( ! wp_cache_set( self::KEY, $event_ids ) ) {
+			throw new Exception( 'Failed to cache active events' );
+		}
 	}
 
 	/**
 	 * Returns the cached event ids, or null if nothing is cached.
 	 *
 	 * @return int[]|null
+	 * @throws Exception
 	 */
 	public function get(): ?array {
-		// TODO
-		return null;
+		$result = wp_cache_get( self::KEY, '', false, $found );
+		if ( ! $found ) {
+			return null;
+		}
+
+		if ( ! is_array( $result ) ) {
+			throw new Exception( 'Cached event ids is not array, something is wrong' );
+		}
+
+		return $result;
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function invalidate(): void {
-		// TODO
+		if ( ! wp_cache_delete( self::KEY ) ) {
+			throw new Exception( 'Failed to invalidate cached event ids' );
+		}
 	}
 }

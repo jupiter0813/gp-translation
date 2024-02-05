@@ -90,6 +90,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 
 	/**
 	 * @return int[]
+	 * @throws Exception
 	 */
 	private function get_active_events( DateTime $at ): array {
 		$event_ids = $this->active_events_cache->get();
