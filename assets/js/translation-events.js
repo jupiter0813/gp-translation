@@ -5,14 +5,16 @@ jQuery(document).ready(function($) {
         selectUserTimezone();
     }
     validateEventDates();
-    $('#submit-event, #edit-translation-event').on('click', function(e) {
+
+    $('.submit-event').on('click', function(e) {
+        e.preventDefault();
         if ( $('#event-end').val() <= $('#event-start').val() ) {
             $gp.notices.error( 'Event end date and time must be later than event start date and time.' );
             return;
         }
-
-        e.preventDefault();
+        $('#event-form-action').val($(this).attr('id'));
         var $form = $('.translation-event-form');
+        
         $.ajax({
             type: 'POST',
             url: $translation_event.url,

@@ -154,6 +154,7 @@ function validate_event_dates( $event_start, $event_end ) {
 
 function submit_event_ajax() {
 	$event_id;
+	$event_status = 'draft';
 	if ( ! isset( $_POST['_event_nonce'] ) || ! wp_verify_nonce( $_POST['_event_nonce'], '_event_nonce' ) ) {
 		wp_send_json_error( 'Nonce verification failed' );
 	}
@@ -170,13 +171,17 @@ function submit_event_ajax() {
 	if ( ! $is_valid_event_date ) {
 		wp_send_json_error( 'Invalid event dates' );
 	}
+
+	if ( isset( $_POST['event_form_action'] ) && 'publish' === $_POST['event_form_action'] ) {
+		$event_status = 'publish';
+	}
 	if ( 'create_event' === $_POST['form_name'] ) {
 		$event_id = wp_insert_post(
 			array(
 				'post_type'    => 'event',
 				'post_title'   => $title,
 				'post_content' => $description,
-				'post_status'  => 'publish',
+				'post_status'  => $event_status,
 			)
 		);
 	}
@@ -191,6 +196,7 @@ function submit_event_ajax() {
 				'ID'           => $event_id,
 				'post_title'   => $title,
 				'post_content' => $description,
+				'post_status'  => $event_status,
 			)
 		);
 	}
@@ -209,6 +215,7 @@ function submit_event_ajax() {
 			'message'  => 'Event created successfully!',
 			'eventId'  => $event_id,
 			'eventUrl' => get_permalink( $event_id ),
+			'status'   => $event_status,
 		)
 	);
 }

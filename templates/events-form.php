@@ -11,6 +11,7 @@ gp_tmpl_header();
 	<input type="hidden" name="action" value="submit_event_ajax">
 	<input type="hidden" id="form-name" name="form_name" value="<?php echo esc_attr( $event_form_name ); ?>">
 	<input type="hidden" id="event-id" name="event_id" value="<?php echo esc_attr( $event_id ); ?>">
+	<input type="hidden" id="event-form-action" name="event_form_action">
 	<div>
 		<label for="event-title">Event Title:</label>
 		<input type="text" id="event-title" name="event_title" value="<?php echo esc_html( $event_title ); ?>" required>
@@ -41,5 +42,6 @@ gp_tmpl_header();
 		<label for="event-project-name">Project Name:</label>
 		<input type="text" id="event-project-name" name="event_project_name" value="<?php echo esc_attr( $event_project_name ); ?>">
 	</div>
-	<button class="button is-primary" type="submit" id="edit-translation-event">Submit Event</button>
+	<button class="button is-primary submit-event" type="submit" id="save-draft" >Save Draft</button>
+	<button class="button is-primary submit-event" type="submit" id="publish">Publish Event</button>
 </form>
