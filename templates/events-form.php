@@ -42,6 +42,8 @@ gp_tmpl_header();
 		<label for="event-project-name">Project Name:</label>
 		<input type="text" id="event-project-name" name="event_project_name" value="<?php echo esc_attr( $event_project_name ); ?>">
 	</div>
-	<button class="button is-primary submit-event" type="submit" id="save-draft" >Save Draft</button>
-	<button class="button is-primary submit-event" type="submit" id="publish">Publish Event</button>
+	<div class="submit-btn-group">
+		<button class="button is-primary submit-event" type="submit" id="save-draft">Save Draft</button>
+		<button class="button is-primary submit-event" type="submit" id="publish">Publish Event</button>
+	</div>
 </form>
