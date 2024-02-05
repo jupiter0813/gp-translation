@@ -12,9 +12,16 @@ jQuery(document).ready(function($) {
             $gp.notices.error( 'Event end date and time must be later than event start date and time.' );
             return;
         }
-        $('#event-form-action').val($(this).attr('id'));
+        var btnClicked = $(this).attr('id');
+        if ( btnClicked == 'publish' ) {
+            var submitPrompt = 'Are you sure you want to publish this event?';
+            if ( ! confirm( submitPrompt ) ) {
+                return;
+            }
+        }
+        $('#event-form-action').val( btnClicked );
         var $form = $('.translation-event-form');
-        
+
         $.ajax({
             type: 'POST',
             url: $translation_event.url,
