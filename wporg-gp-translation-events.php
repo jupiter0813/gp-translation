@@ -153,18 +153,18 @@ function validate_event_dates( $event_start, $event_end ) {
 }
 
 function submit_event_ajax() {
-	$event_id;
-	$event_status = 'draft';
+	$event_id     = null;
+	$form_actions = array( 'draft', 'publish' );
 	if ( ! isset( $_POST['_event_nonce'] ) || ! wp_verify_nonce( $_POST['_event_nonce'], '_event_nonce' ) ) {
 		wp_send_json_error( 'Nonce verification failed' );
 	}
-	$title          = sanitize_text_field( $_POST['event_title'] );
-	$description    = sanitize_text_field( $_POST['event_description'] );
-	$event_start    = sanitize_text_field( $_POST['event_start'] );
-	$event_end      = sanitize_text_field( $_POST['event_end'] );
-	$locale         = sanitize_text_field( $_POST['event_locale'] );
-	$project_name   = sanitize_text_field( $_POST['event_project_name'] );
-	$event_timezone = sanitize_text_field( $_POST['event_timezone'] );
+	$title          = isset( $_POST['event_title'] ) ? sanitize_text_field( $_POST['event_title'] ) : '';
+	$description    = isset( $_POST['event_description'] ) ? sanitize_text_field( $_POST['event_description'] ) : '';
+	$event_start    = isset( $_POST['event_start'] ) ? sanitize_text_field( $_POST['event_start'] ) : '';
+	$event_end      = isset( $_POST['event_end'] ) ? sanitize_text_field( $_POST['event_end'] ) : '';
+	$locale         = isset( $_POST['event_locale'] ) ? sanitize_text_field( $_POST['event_locale'] ) : '';
+	$project_name   = isset( $_POST['event_project_name'] ) ? sanitize_text_field( $_POST['event_project_name'] ) : '';
+	$event_timezone = isset( $_POST['event_timezone'] ) ? sanitize_text_field( $_POST['event_timezone'] ) : '';
 
 	$is_valid_event_date = validate_event_dates( $event_start, $event_end );
 
@@ -172,8 +172,8 @@ function submit_event_ajax() {
 		wp_send_json_error( 'Invalid event dates' );
 	}
 
-	if ( isset( $_POST['event_form_action'] ) && 'publish' === $_POST['event_form_action'] ) {
-		$event_status = 'publish';
+	if ( isset( $_POST['event_form_action'] ) && in_array( $_POST['event_form_action'], $form_actions ) ) {
+		$event_status = sanitize_text_field( $_POST['event_form_action'] );
 	}
 	if ( 'create_event' === $_POST['form_name'] ) {
 		$event_id = wp_insert_post(
@@ -199,6 +199,9 @@ function submit_event_ajax() {
 				'post_status'  => $event_status,
 			)
 		);
+	}
+	if ( ! $event_id ) {
+		wp_send_json_error( 'Event could not be created or updated' );
 	}
 	update_post_meta( $event_id, '_event_start', convert_to_UTC( $event_start, $event_timezone ) );
 	update_post_meta( $event_id, '_event_end', convert_to_UTC( $event_end, $event_timezone ) );
