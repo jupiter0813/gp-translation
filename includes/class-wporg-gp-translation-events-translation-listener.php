@@ -7,6 +7,12 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	const ACTION_REJECT = 'reject';
 	const ACTION_REQUEST_CHANGES = 'request_changes';
 
+	private WPORG_GP_Translation_Events_Active_Events_Cache $active_events_cache;
+
+	public function __construct( WPORG_GP_Translation_Events_Active_Events_Cache $active_events_cache ) {
+		$this->active_events_cache = $active_events_cache;
+	}
+
 	public function start(): void {
 		add_action(
 			'gp_translation_created',
