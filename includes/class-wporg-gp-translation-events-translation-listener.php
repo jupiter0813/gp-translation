@@ -95,9 +95,10 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 
 		$event_ids = get_posts(
 			[
-				'post_type'   => 'event',
-				'post_status' => 'publish',
-				'meta_query'  => [
+				'post_type'      => 'event',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'meta_query'     => [
 					[
 						'key'     => '_event_start',
 						'value'   => $at->format( 'Y-m-d H:i:s' ),
@@ -115,6 +116,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		);
 
 		$this->active_events_cache->cache( $event_ids );
+
 		return $event_ids;
 	}
 
