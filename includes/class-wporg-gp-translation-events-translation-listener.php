@@ -93,16 +93,23 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	 * @throws Exception
 	 */
 	private function get_active_events( DateTimeImmutable $at ): array {
-		$event_ids = $this->active_events_cache->get();
-		if ( null !== $event_ids ) {
-			return $event_ids;
+		$cache_entries = $this->active_events_cache->get();
+		if ( null === $cache_entries ) {
+			$cache_entries = $this->cache_events( $at );
 		}
 
-		$event_ids = $this->cache_events( $at );
-
-		return $event_ids;
+		return array_map(
+			function ( $cache_entry ) {
+				return $cache_entry->event_id;
+			},
+			$cache_entries
+		);
 	}
 
+	/**
+	 * @return WPORG_GP_Translation_Events_Active_Events_Cache_Entry[]
+	 * @throws Exception
+	 */
 	private function cache_events( DateTimeImmutable $at ): array {
 		$cache_duration = WPORG_GP_Translation_Events_Active_Events_Cache::CACHE_DURATION;
 		$boundary_start = $at;
@@ -132,9 +139,22 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			],
 		);
 
-		$this->active_events_cache->cache( $event_ids );
+		$cache_entries = [];
+		foreach ( $event_ids as $event_id ) {
+			$meta = get_post_meta( $event_id );
+			if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) ) {
+				throw new Exception( 'Invalid event meta' );
+			}
+			$cache_entries[] = new WPORG_GP_Translation_Events_Active_Events_Cache_Entry(
+				$event_id,
+				DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
+				DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
+			);
+		}
 
-		return $event_ids;
+		$this->active_events_cache->cache( $cache_entries );
+
+		return $cache_entries;
 	}
 
 	/**

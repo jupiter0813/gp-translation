@@ -1,5 +1,17 @@
 <?php
 
+class WPORG_GP_Translation_Events_Active_Events_Cache_Entry {
+	public int $event_id;
+	public DateTimeImmutable $start;
+	public DateTimeImmutable $end;
+
+	public function __construct( int $event_id, DateTimeImmutable $start, DateTimeImmutable $end ) {
+		$this->event_id = $event_id;
+		$this->start    = $start;
+		$this->end      = $end;
+	}
+}
+
 class WPORG_GP_Translation_Events_Active_Events_Cache {
 	public const CACHE_DURATION = 60 * 60 * 24; // 24 hours.
 	private const KEY = 'translation-events-active-events';
@@ -32,20 +44,20 @@ class WPORG_GP_Translation_Events_Active_Events_Cache {
 	}
 
 	/**
-	 * @param int[] $event_ids
+	 * @param WPORG_GP_Translation_Events_Active_Events_Cache_Entry[] $cache_entries
 	 *
 	 * @throws Exception
 	 */
-	public function cache( array $event_ids ): void {
-		if ( ! wp_cache_set( self::KEY, $event_ids, '', self::CACHE_DURATION ) ) {
+	public function cache( array $cache_entries ): void {
+		if ( ! wp_cache_set( self::KEY, $cache_entries, '', self::CACHE_DURATION ) ) {
 			throw new Exception( 'Failed to cache active events' );
 		}
 	}
 
 	/**
-	 * Returns the cached event ids, or null if nothing is cached.
+	 * Returns the cached entries, or null if nothing is cached.
 	 *
-	 * @return int[]|null
+	 * @return WPORG_GP_Translation_Events_Active_Events_Cache_Entry[]|null
 	 * @throws Exception
 	 */
 	public function get(): ?array {
