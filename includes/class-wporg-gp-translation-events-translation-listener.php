@@ -98,11 +98,19 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			$cache_entries = $this->cache_events( $at );
 		}
 
+		// Filter out events that aren't actually active at $at.
+		$events = array_filter(
+			$cache_entries,
+			function ( $cache_entry ) use ( $at ) {
+				return $at >= $cache_entry->start && $at <= $cache_entry->end;
+			}
+		);
+
 		return array_map(
 			function ( $cache_entry ) {
 				return $cache_entry->event_id;
 			},
-			$cache_entries
+			$events
 		);
 	}
 
