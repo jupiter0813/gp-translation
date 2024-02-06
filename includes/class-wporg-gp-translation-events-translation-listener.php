@@ -98,6 +98,12 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			return $event_ids;
 		}
 
+		$event_ids = $this->cache_events( $at );
+
+		return $event_ids;
+	}
+
+	private function cache_events( DateTimeImmutable $at ): array {
 		$cache_duration = WPORG_GP_Translation_Events_Active_Events_Cache::CACHE_DURATION;
 		$boundary_start = $at;
 		$boundary_end   = $at->modify( "+$cache_duration seconds" );
