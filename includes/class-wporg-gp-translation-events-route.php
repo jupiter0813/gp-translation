@@ -76,6 +76,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_end          = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone ) ?? '';
 		$event_locale       = get_post_meta( $event_id, '_event_locale', true ) ?? '';
 		$event_project_name = get_post_meta( $event_id, '_event_project_name', true ) ?? '';
+		$event_status       = $event->post_status;
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
 

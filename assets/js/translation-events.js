@@ -12,7 +12,7 @@ jQuery(document).ready(function($) {
             $gp.notices.error( 'Event end date and time must be later than event start date and time.' );
             return;
         }
-        var btnClicked = $(this).attr('id');
+        var btnClicked = $(this).data('event-status');
         if ( btnClicked == 'publish' ) {
             var submitPrompt = 'Are you sure you want to publish this event?';
             if ( ! confirm( submitPrompt ) ) {
@@ -30,8 +30,12 @@ jQuery(document).ready(function($) {
                 if ( response.data.eventId ) {
                     history.replaceState('','', '/glotpress/events/edit/' + response.data.eventId)
                     $('#form-name').val('edit_event');
-                    $('.event-page-title').text('Edit Translation Event');
+                    $('.event-page-title').text('Edit Event');
                     $('#event-id').val(response.data.eventId);
+                    if( btnClicked == 'publish' ) {
+                        $('button[data-event-status="draft"]').hide();
+                        $('button[data-event-status="publish"]').text('Update Event');
+                    }
                     $('#event-url').removeClass('hide-event-url').find('a').attr('href', response.data.eventUrl).text(response.data.eventUrl);
                     $gp.notices.success(response.data.message);
                 }

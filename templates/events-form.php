@@ -28,11 +28,22 @@ gp_tmpl_header();
 		<label for="event-end">End Date:</label>
 		<input type="datetime-local" id="event-end" name="event_end" value="<?php echo esc_attr( $event_end ); ?>" required>
 	</div>
-    <div>
+	<div>
 		<label for="event-timezone">Event Timezone:</label>
 		<select id="event-timezone" name="event_timezone"  required>
-			<?php echo wp_kses( wp_timezone_choice( $event_timezone, get_user_locale() ), array( 'optgroup' => array('label' => array()), 'option' => array('value' => array(), 'selected' => array() ) ) ); ?>
-        </select>
+			<?php
+			echo wp_kses(
+				wp_timezone_choice( $event_timezone, get_user_locale() ),
+				array(
+					'optgroup' => array( 'label' => array() ),
+					'option'   => array(
+						'value'    => array(),
+						'selected' => array(),
+					),
+				)
+			);
+			?>
+		</select>
 	</div>
 	<div>
 		<label for="event-locale">Locale:</label>
@@ -43,7 +54,11 @@ gp_tmpl_header();
 		<input type="text" id="event-project-name" name="event_project_name" value="<?php echo esc_attr( $event_project_name ); ?>">
 	</div>
 	<div class="submit-btn-group">
-		<button class="button is-primary save-draft submit-event" type="submit" id="draft">Save Draft</button>
-		<button class="button is-primary submit-event" type="submit" id="publish">Publish Event</button>
+		<?php if ( ( isset( $event_status ) && 'draft' === $event_status ) || ! $event_id ) : ?>
+			<button class="button is-primary save-draft submit-event" type="submit" data-event-status="draft">Save Draft</button>
+			<button class="button is-primary submit-event" type="submit"  data-event-status="publish">Publish Event</button>
+		<?php else : ?>
+		<button class="button is-primary submit-event" type="submit"  data-event-status="publish">Update Event</button>
+		<?php endif; ?>
 	</div>
 </form>
