@@ -98,6 +98,11 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			return $event_ids;
 		}
 
+		$cache_duration = WPORG_GP_Translation_Events_Active_Events_Cache::CACHE_DURATION;
+		$boundary_start = $at;
+		$boundary_end   = $at->modify( "+$cache_duration seconds" );
+
+		// Get events for which start is before $boundary_end AND end is after $boundary_start.
 		$event_ids = get_posts(
 			[
 				'post_type'      => 'event',
@@ -107,14 +112,14 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 				'meta_query'     => [
 					[
 						'key'     => '_event_start',
-						'value'   => $at->format( 'Y-m-d H:i:s' ),
-						'compare' => '<=',
+						'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
+						'compare' => '<',
 						'type'    => 'DATETIME',
 					],
 					[
 						'key'     => '_event_end',
-						'value'   => $at->format( 'Y-m-d H:i:s' ),
-						'compare' => '>=',
+						'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
+						'compare' => '>',
 						'type'    => 'DATETIME',
 					],
 				],
