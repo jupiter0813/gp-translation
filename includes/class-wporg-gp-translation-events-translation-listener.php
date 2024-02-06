@@ -17,7 +17,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		add_action(
 			'gp_translation_created',
 			function ( $translation ) {
-				$happened_at = DateTime::createFromFormat( 'Y-m-d H:i:s', $translation->date_added, new DateTimeZone( 'UTC' ) );
+				$happened_at = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $translation->date_added, new DateTimeZone( 'UTC' ) );
 				$this->handle_action( $translation, $translation->user_id, self::ACTION_CREATE, $happened_at );
 			},
 		);
@@ -27,7 +27,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			function ( $translation, $translation_before ) {
 				$user_id     = $translation->user_id_last_modified;
 				$status      = $translation->status;
-				$happened_at = DateTime::createFromFormat( 'Y-m-d H:i:s', $translation->date_modified, new DateTimeZone( 'UTC' ) );
+				$happened_at = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $translation->date_modified, new DateTimeZone( 'UTC' ) );
 
 				if ( $translation_before->status === $status ) {
 					// Translation hasn't changed status, so there's nothing for us to track.
@@ -56,7 +56,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		);
 	}
 
-	private function handle_action( GP_Translation $translation, int $user_id, string $action, DateTime $happened_at ): void {
+	private function handle_action( GP_Translation $translation, int $user_id, string $action, DateTimeImmutable $happened_at ): void {
 		try {
 			// Get events that are active when the action happened, for which the user is registered for.
 			$active_event_ids = $this->get_active_events( $happened_at );
@@ -92,7 +92,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	 * @return int[]
 	 * @throws Exception
 	 */
-	private function get_active_events( DateTime $at ): array {
+	private function get_active_events( DateTimeImmutable $at ): array {
 		$event_ids = $this->active_events_cache->get();
 		if ( null !== $event_ids ) {
 			return $event_ids;
