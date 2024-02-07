@@ -218,10 +218,11 @@ function submit_event_ajax() {
 
 	wp_send_json_success(
 		array(
-			'message'     => $response_message,
-			'eventId'     => $event_id,
-			'eventUrl'    => get_permalink( $event_id ),
-			'eventStatus' => $event_status,
+			'message'      => $response_message,
+			'eventId'      => $event_id,
+			'eventUrl'     => get_permalink( $event_id ),
+			'eventStatus'  => $event_status,
+			'eventEditUrl' => esc_url( gp_url( '/events/edit/' . $event_id ) ),
 		)
 	);
 }

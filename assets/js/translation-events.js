@@ -28,7 +28,7 @@ jQuery(document).ready(function($) {
             data:$form.serialize(),
             success: function(response) {
                 if ( response.data.eventId ) {
-                    history.replaceState('','', '/glotpress/events/edit/' + response.data.eventId)
+                    history.replaceState('','', response.data.eventEditUrl)
                     $('#form-name').val('edit_event');
                     $('.event-page-title').text('Edit Event');
                     $('#event-id').val(response.data.eventId);
