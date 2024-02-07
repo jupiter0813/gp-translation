@@ -190,7 +190,7 @@ function submit_event_ajax() {
 	if ( 'edit_event' === $_POST['form_name'] ) {
 		$event_id = $_POST['event_id'];
 		$event    = get_post( $event_id );
-		if ( ! $event || 'event' !== $event->post_type || ! current_user_can( 'edit_post', $event_id ) ) {
+		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 			wp_send_json_error( 'Event does not exist' );
 		}
 		wp_update_post(
@@ -216,11 +216,14 @@ function submit_event_ajax() {
 		update_post_meta( $event_id, '_event_project_name', $project_name );
 	}
 
+	list( $permalink, $post_name ) = get_sample_permalink( $event_id );
+	$permalink = str_replace( '%pagename%', $post_name, $permalink);
+
 	wp_send_json_success(
 		array(
 			'message'      => $response_message,
 			'eventId'      => $event_id,
-			'eventUrl'     => get_permalink( $event_id ),
+			'eventUrl'     => str_replace( '%pagename%', $post_name, $permalink ),
 			'eventStatus'  => $event_status,
 			'eventEditUrl' => esc_url( gp_url( '/events/edit/' . $event_id ) ),
 		)

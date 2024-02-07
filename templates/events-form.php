@@ -5,7 +5,7 @@ gp_tmpl_header();
 ?>
 
 <h2  class="event-page-title"><?php echo esc_html( $event_form_title ); ?></h2>
-<p id="event-url" class="<?php echo esc_attr( $css_show_url ); ?>"><span>Event URL:</span> <a href="<?php echo esc_url( get_permalink( $event_id ) ); ?>"><?php echo esc_url( get_permalink( $event_id ) ); ?></a></p>
+<p id="event-url" class="<?php echo esc_attr( $css_show_url ); ?>"><span>Event URL:</span> <a href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_url( $permalink ); ?></a></p>
 <form class="translation-event-form" action="" method="post">
 	<?php wp_nonce_field( '_event_nonce', '_event_nonce' ); ?>
 	<input type="hidden" name="action" value="submit_event_ajax">

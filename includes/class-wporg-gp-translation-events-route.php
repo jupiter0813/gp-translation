@@ -66,6 +66,8 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 			$this->die_with_404();
 		}
+
+		include ABSPATH . 'wp-admin/includes/post.php';
 		$event_form_title   = 'Edit Event';
 		$event_form_name    = 'edit_event';
 		$css_show_url       = '';
@@ -77,6 +79,8 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_locale       = get_post_meta( $event_id, '_event_locale', true ) ?? '';
 		$event_project_name = get_post_meta( $event_id, '_event_project_name', true ) ?? '';
 		$event_status       = $event->post_status;
+		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
+		$permalink = str_replace( '%pagename%', $post_name, $permalink );
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
 
