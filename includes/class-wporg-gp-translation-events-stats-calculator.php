@@ -62,8 +62,8 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 
 		$query = $wpdb->prepare( "
 				select locale,
-					   sum(if(action = 'create', 1, 0)) AS created,
-					   sum(if(action in ('approve', 'reject', 'request_changes'), 1, 0)) AS reviewed,
+					   sum(action = 'create') as created,
+					   sum(action in ('approve', 'reject', 'request_changes')) as reviewed,
 					   count(distinct user_id) as users
 				from $this->ACTIONS_TABLE_NAME
 				where event_id = %d
