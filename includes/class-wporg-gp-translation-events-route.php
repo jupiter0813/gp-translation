@@ -63,7 +63,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$this->die_with_404();
 		}
 		$event = get_post( $event_id );
-		if ( ! $event || 'event' !== $event->post_type || ! current_user_can( 'edit_post', $event_id ) ) {
+		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 			$this->die_with_404();
 		}
 		$event_form_title   = 'Edit Event';
