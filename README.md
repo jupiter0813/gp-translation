@@ -16,3 +16,11 @@ composer dev:db:schema
 ```
 
 WordPress is now running at http://localhost:8888, user: `admin`, password: `password`.
+
+### Local environment
+
+If you are using a local environment, you need to add the tables to the local database. To do this, you can run this command from the plugin folder:
+
+```
+wp db query < schema.sql
+```
