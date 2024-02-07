@@ -6,7 +6,6 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	const ACTION_APPROVE = 'approve';
 	const ACTION_REJECT = 'reject';
 	const ACTION_REQUEST_CHANGES = 'request_changes';
-	const ACTION_MARK_FUZZY = 'mark_fuzzy';
 
 	public function start(): void {
 		add_action(
@@ -40,9 +39,6 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 					case 'changesrequested':
 						$action = self::ACTION_REQUEST_CHANGES;
 						break;
-					case 'fuzzy':
-						$action = self::ACTION_MARK_FUZZY;
-						break;
 				}
 
 				if ( $action ) {
@@ -64,8 +60,8 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		global $wpdb;
 
 		foreach ( $events as $event ) {
-			// A given user can only do one action of a given type on a specific translation.
-			// So we replace instead of insert, which will enforce the primary key.
+			// A given user can only do one action on a specific translation.
+			// So we replace instead of insert, which will keep only the last action.
 			$wpdb->replace(
 				self::ACTIONS_TABLE_NAME,
 				[
@@ -73,8 +69,8 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 					'event_id'       => $event->ID,
 					'user_id'        => $user_id,
 					'translation_id' => $translation->id,
-					'action'         => $action,
 					// end primary key
+					'action'         => $action,
 					'locale'         => $translation_set->locale,
 					'happened_at'    => $happened_at->format( 'Y-m-d H:i:s' ),
 				]
