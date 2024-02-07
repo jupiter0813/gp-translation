@@ -1,13 +1,17 @@
 <?php
 /**
  * Plugin Name: Translation Events
- * Plugin URI: https://github.com/Automattic/wporg-gp-translation-events
+ * Plugin URI: https://github.com/WordPress/wporg-gp-translation-events/
  * Description: A WordPress plugin for creating translation events.
- * Version: 1.0
- * Author: Automattic
- * Author URI: http://automattic.com/
- * Text Domain: gp-translation-events
+ * Version: 1.0.0
+ * Requires at least: 6.4
+ * Tested up to: 6.4
+ * Requires PHP: 7.4
+ * Author: WordPress Contributors
+ * Author URI: https://github.com/WordPress/wporg-gp-translation-events/
  * License: GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * Text Domain: gp-translation-events
  *
  * @package Translation Events
  */
