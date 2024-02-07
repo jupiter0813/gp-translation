@@ -3,12 +3,7 @@ gp_title( __( 'Translation Events' ) );
 gp_tmpl_header();
 gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 ?>
-<div class="event-list-top-bar">
-	<ul class="event-list-nav">
-		<li><a href="<?php echo esc_url( gp_url( '/events/my-events/' ) ); ?>">My Events</a></li>
-		<li><a class="button is-primary" href="<?php echo esc_url( gp_url( '/events/new/' ) ); ?>">Create Event</a></li>
-	</ul>
-</div>
+
 
 
 <h2 class="event_page_title">Upcoming Translation Events</h2>
