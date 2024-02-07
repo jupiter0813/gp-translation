@@ -58,21 +58,24 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		/** @var GP_Translation_Set $translation_set */
 		$translation_set = ( new GP_Translation_Set )->find_one( [ 'id' => $translation->translation_set_id ] );
 		global $wpdb;
+		$table_name = self::ACTIONS_TABLE_NAME;
 
 		foreach ( $events as $event ) {
 			// A given user can only do one action on a specific translation.
-			// So we replace instead of insert, which will keep only the last action.
-			$wpdb->replace(
-				self::ACTIONS_TABLE_NAME,
-				[
-					// start primary key
-					'event_id'       => $event->ID,
-					'user_id'        => $user_id,
-					'translation_id' => $translation->id,
-					// end primary key
-					'action'         => $action,
-					'locale'         => $translation_set->locale,
-				]
+			// So we insert ignore, which will keep only the first action.
+			$wpdb->query(
+				$wpdb->prepare(
+					"insert ignore into $table_name (event_id, user_id, translation_id, action, locale) values (%d, %d, %d, %s, %s)",
+					[
+						// start primary key
+						'event_id'       => $event->ID,
+						'user_id'        => $user_id,
+						'translation_id' => $translation->id,
+						// end primary key
+						'action'         => $action,
+						'locale'         => $translation_set->locale,
+					],
+				),
 			);
 		}
 	}
