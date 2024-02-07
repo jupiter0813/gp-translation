@@ -72,7 +72,6 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 					// end primary key
 					'action'         => $action,
 					'locale'         => $translation_set->locale,
-					'happened_at'    => $happened_at->format( 'Y-m-d H:i:s' ),
 				]
 			);
 		}

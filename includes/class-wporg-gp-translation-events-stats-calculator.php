@@ -57,8 +57,6 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 	 * @throws Exception
 	 */
 	function for_event( WP_Post $event ): WPORG_GP_Translation_Events_Event_Stats {
-		$start = new DateTime( get_post_meta( $event->ID, '_event_start', true ), new DateTimeZone( 'UTC' ) );
-		$end   = new DateTime( get_post_meta( $event->ID, '_event_end', true ), new DateTimeZone( 'UTC' ) );
 		$stats = new WPORG_GP_Translation_Events_Event_Stats;
 		global $wpdb;
 
@@ -69,13 +67,10 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 					   count(distinct user_id) as users
 				from $this->ACTIONS_TABLE_NAME
 				where event_id = %d
-				  and happened_at between cast('%s' as datetime) and cast('%s' as datetime)
 				group by locale with rollup
 			",
 			[
 				$event->ID,
-				$start->format( 'Y-m-d H:i:s' ),
-				$end->format( 'Y-m-d H:i:s' ),
 			]
 		);
 
