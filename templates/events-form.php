@@ -15,10 +15,10 @@ gp_tmpl_header();
 		<label for="event-title">Event Title</label>
 		<input type="text" id="event-title" name="event_title" value="<?php echo esc_html( $event_title ); ?>" required>
 	</div>
-    <p id="event-url" class="<?php echo esc_attr( $css_show_url ); ?>">
-        <span>Event URL</span>
-         <a class="event-permalink" href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_url( $permalink ); ?></a>
-    </p>
+	<p id="event-url" class="<?php echo esc_attr( $css_show_url ); ?>">
+		<span>Event URL</span>
+		 <a class="event-permalink" href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_url( $permalink ); ?></a>
+	</p>
 	<div>
 		<label for="event-description">Event Description</label>
 		<textarea id="event-description" name="event_description" rows="4" required><?php echo esc_html( $event_description ); ?></textarea>
@@ -57,11 +57,16 @@ gp_tmpl_header();
 		<input type="text" id="event-project-name" name="event_project_name" value="<?php echo esc_attr( $event_project_name ); ?>">
 	</div>
 	<div class="submit-btn-group">
-		<?php if ( ( isset( $event_status ) && 'draft' === $event_status ) || ! $event_id ) : ?>
-			<button class="button is-primary save-draft submit-event" type="submit" data-event-status="draft">Save Draft</button>
-			<button class="button is-primary submit-event" type="submit"  data-event-status="publish">Publish Event</button>
-		<?php else : ?>
-		<button class="button is-primary submit-event" type="submit"  data-event-status="publish">Update Event</button>
+	<?php if ( $event_id ) : ?>
+		<?php if ( isset( $event_status ) && 'draft' === $event_status ) : ?>
+			<button class="button is-primary save-draft submit-event" type="submit" data-event-status="draft">Update Draft</button>
 		<?php endif; ?>
+	<button class="button is-primary submit-event" type="submit"  data-event-status="publish">
+		<?php echo ( isset( $event_status ) && 'publish' === $event_status ) ? esc_html( 'Update Event' ) : esc_html( 'Publish Event' ); ?>
+	</button>
+	<?php else : ?>
+		<button class="button is-primary save-draft submit-event" type="submit" data-event-status="draft">Save Draft</button>
+		<button class="button is-primary submit-event" type="submit"  data-event-status="publish">Publish Event</button>
+	<?php endif; ?>
 	</div>
 </form>

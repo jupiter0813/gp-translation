@@ -36,6 +36,9 @@ jQuery(document).ready(function($) {
                         $('button[data-event-status="draft"]').hide();
                         $('button[data-event-status="publish"]').text('Update Event');
                     }
+                    if( btnClicked == 'draft' ) {
+                        $('button[data-event-status="draft"]').text('Update Draft');
+                    }
                     $('#event-url').removeClass('hide-event-url').find('a').attr('href', response.data.eventUrl).text(response.data.eventUrl);
                     $gp.notices.success(response.data.message);
                 }
