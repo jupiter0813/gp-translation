@@ -59,15 +59,15 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	private function handle_action( GP_Translation $translation, int $user_id, string $action, DateTimeImmutable $happened_at ): void {
 		try {
 			// Get events that are active when the action happened, for which the user is registered for.
-			$active_event_ids = $this->get_active_events( $happened_at );
-			$event_ids        = $this->select_events_user_is_registered_for( $active_event_ids, $user_id );
+			$active_events = $this->get_active_events( $happened_at );
+			$events        = $this->select_events_user_is_registered_for( $active_events, $user_id );
 
 			/** @var GP_Translation_Set $translation_set */
 			$translation_set = ( new GP_Translation_Set )->find_one( [ 'id' => $translation->translation_set_id ] );
 			global $wpdb;
 			$table_name = self::ACTIONS_TABLE_NAME;
 
-			foreach ( $event_ids as $event_id ) {
+			foreach ( $events as $event ) {
 				// A given user can only do one action on a specific translation.
 				// So we insert ignore, which will keep only the first action.
 				$wpdb->query(
@@ -75,7 +75,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 						"insert ignore into $table_name (event_id, user_id, translation_id, action, locale) values (%d, %d, %d, %s, %s)",
 						[
 							// start primary key
-							'event_id'       => $event_id,
+							'event_id'       => $event->id(),
 							'user_id'        => $user_id,
 							'translation_id' => $translation->id,
 							// end primary key
@@ -85,13 +85,13 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 					),
 				);
 			}
-		} catch (Exception $exception) {
-			error_log($exception);
+		} catch ( Exception $exception ) {
+			error_log( $exception );
 		}
 	}
 
 	/**
-	 * @return int[]
+	 * @return WPORG_GP_Translation_Events_Event[]
 	 * @throws Exception
 	 */
 	private function get_active_events( DateTimeImmutable $at ): array {
@@ -101,18 +101,11 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		}
 
 		// Filter out events that aren't actually active at $at.
-		$events = array_filter(
+		return array_filter(
 			$events,
 			function ( $event ) use ( $at ) {
 				return $at >= $event->start() && $at <= $event->end();
 			}
-		);
-
-		return array_map(
-			function ( $event ) {
-				return $event->event_id;
-			},
-			$events
 		);
 	}
 
@@ -130,7 +123,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			[
 				'post_type'      => 'event',
 				'post_status'    => 'publish',
-				'posts_per_page' => -1,
+				'posts_per_page' => - 1,
 				'fields'         => 'ids',
 				'meta_query'     => [
 					[
@@ -149,13 +142,13 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			],
 		);
 
-		$cache_entries = [];
+		$events = [];
 		foreach ( $event_ids as $event_id ) {
 			$meta = get_post_meta( $event_id );
 			if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) || ! isset( $meta['_event_timezone'][0] ) ) {
 				throw new Exception( 'Invalid event meta' );
 			}
-			$cache_entries[] = new WPORG_GP_Translation_Events_Event(
+			$events[] = new WPORG_GP_Translation_Events_Event(
 				$event_id,
 				DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
 				DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
@@ -163,20 +156,20 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			);
 		}
 
-		$this->active_events_cache->cache( $cache_entries );
+		$this->active_events_cache->cache( $events );
 
-		return $cache_entries;
+		return $events;
 	}
 
 	/**
-	 * @param int[] $event_ids
+	 * @param WPORG_GP_Translation_Events_Event[] $events
 	 *
-	 * @return WP_Post[]
+	 * @return WPORG_GP_Translation_Events_Event[]
 	 */
-	private function select_events_user_is_registered_for( array $event_ids, int $user_id ): array {
+	private function select_events_user_is_registered_for( array $events, int $user_id ): array {
 		return array_filter(
-			$event_ids,
-			function ( $event ) {
+			$events,
+			function ( WPORG_GP_Translation_Events_Event $event ) {
 				// TODO.
 				return true;
 			}
