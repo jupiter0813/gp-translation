@@ -97,7 +97,49 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	private function get_active_events( DateTimeImmutable $at ): array {
 		$events = $this->active_events_cache->get();
 		if ( null === $events ) {
-			$events = $this->cache_events( $at );
+			$cache_duration = WPORG_GP_Translation_Events_Active_Events_Cache::CACHE_DURATION;
+			$boundary_start = $at;
+			$boundary_end   = $at->modify( "+$cache_duration seconds" );
+
+			// Get events for which start is before $boundary_end AND end is after $boundary_start.
+			$event_ids = get_posts(
+				[
+					'post_type'      => 'event',
+					'post_status'    => 'publish',
+					'posts_per_page' => - 1,
+					'fields'         => 'ids',
+					'meta_query'     => [
+						[
+							'key'     => '_event_start',
+							'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
+							'compare' => '<',
+							'type'    => 'DATETIME',
+						],
+						[
+							'key'     => '_event_end',
+							'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
+							'compare' => '>',
+							'type'    => 'DATETIME',
+						],
+					],
+				],
+			);
+
+			$events = [];
+			foreach ( $event_ids as $event_id ) {
+				$meta = get_post_meta( $event_id );
+				if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) || ! isset( $meta['_event_timezone'][0] ) ) {
+					throw new Exception( 'Invalid event meta' );
+				}
+				$events[] = new WPORG_GP_Translation_Events_Event(
+					$event_id,
+					DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
+					DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
+					new DateTimeZone( $meta['_event_timezone'] ),
+				);
+			}
+
+			$this->active_events_cache->cache( $events );
 		}
 
 		// Filter out events that aren't actually active at $at.
@@ -107,58 +149,6 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 				return $at >= $event->start() && $at <= $event->end();
 			}
 		);
-	}
-
-	/**
-	 * @return WPORG_GP_Translation_Events_Event[]
-	 * @throws Exception
-	 */
-	private function cache_events( DateTimeImmutable $at ): array {
-		$cache_duration = WPORG_GP_Translation_Events_Active_Events_Cache::CACHE_DURATION;
-		$boundary_start = $at;
-		$boundary_end   = $at->modify( "+$cache_duration seconds" );
-
-		// Get events for which start is before $boundary_end AND end is after $boundary_start.
-		$event_ids = get_posts(
-			[
-				'post_type'      => 'event',
-				'post_status'    => 'publish',
-				'posts_per_page' => - 1,
-				'fields'         => 'ids',
-				'meta_query'     => [
-					[
-						'key'     => '_event_start',
-						'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
-						'compare' => '<',
-						'type'    => 'DATETIME',
-					],
-					[
-						'key'     => '_event_end',
-						'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
-						'compare' => '>',
-						'type'    => 'DATETIME',
-					],
-				],
-			],
-		);
-
-		$events = [];
-		foreach ( $event_ids as $event_id ) {
-			$meta = get_post_meta( $event_id );
-			if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) || ! isset( $meta['_event_timezone'][0] ) ) {
-				throw new Exception( 'Invalid event meta' );
-			}
-			$events[] = new WPORG_GP_Translation_Events_Event(
-				$event_id,
-				DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
-				DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
-				new DateTimeZone( $meta['_event_timezone'] ),
-			);
-		}
-
-		$this->active_events_cache->cache( $events );
-
-		return $events;
 	}
 
 	/**
