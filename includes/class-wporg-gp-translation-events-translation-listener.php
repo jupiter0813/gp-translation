@@ -95,29 +95,29 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	 * @throws Exception
 	 */
 	private function get_active_events( DateTimeImmutable $at ): array {
-		$cache_entries = $this->active_events_cache->get();
-		if ( null === $cache_entries ) {
-			$cache_entries = $this->cache_events( $at );
+		$events = $this->active_events_cache->get();
+		if ( null === $events ) {
+			$events = $this->cache_events( $at );
 		}
 
 		// Filter out events that aren't actually active at $at.
 		$events = array_filter(
-			$cache_entries,
-			function ( $cache_entry ) use ( $at ) {
-				return $at >= $cache_entry->start && $at <= $cache_entry->end;
+			$events,
+			function ( $event ) use ( $at ) {
+				return $at >= $event->start() && $at <= $event->end();
 			}
 		);
 
 		return array_map(
-			function ( $cache_entry ) {
-				return $cache_entry->event_id;
+			function ( $event ) {
+				return $event->event_id;
 			},
 			$events
 		);
 	}
 
 	/**
-	 * @return WPORG_GP_Translation_Events_Active_Events_Cache_Entry[]
+	 * @return WPORG_GP_Translation_Events_Event[]
 	 * @throws Exception
 	 */
 	private function cache_events( DateTimeImmutable $at ): array {
@@ -152,13 +152,14 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		$cache_entries = [];
 		foreach ( $event_ids as $event_id ) {
 			$meta = get_post_meta( $event_id );
-			if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) ) {
+			if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) || ! isset( $meta['_event_timezone'][0] ) ) {
 				throw new Exception( 'Invalid event meta' );
 			}
-			$cache_entries[] = new WPORG_GP_Translation_Events_Active_Events_Cache_Entry(
+			$cache_entries[] = new WPORG_GP_Translation_Events_Event(
 				$event_id,
 				DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
 				DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
+				new DateTimeZone( $meta['_event_timezone'] ),
 			);
 		}
 
