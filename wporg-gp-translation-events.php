@@ -262,6 +262,7 @@ add_action(
 		GP::$router->prepend( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ), 'get' );
 		GP::$router->prepend( '/events/([a-z0-9_-]+)', array( 'WPORG_GP_Translation_Events_Route', 'events_details' ), 'get' );
 
+		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-event.php';
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-active-events-cache.php';
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-stats-calculator.php';
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-translation-listener.php';
