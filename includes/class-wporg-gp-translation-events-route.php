@@ -37,7 +37,19 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		if ( ! is_user_logged_in() ) {
 			$this->die_with_404();
 		}
-		$this->tmpl( 'events-create' );
+		$event_form_title   = 'Create Event';
+		$event_form_name    = 'create_event';
+		$css_show_url       = 'hide-event-url';
+		$event_id           = null;
+		$event_title        = '';
+		$event_description  = '';
+		$event_timezone     = '';
+		$event_start        = '';
+		$event_end          = '';
+		$event_locale       = '';
+		$event_project_name = '';
+
+		$this->tmpl( 'events-form', get_defined_vars() );
 	}
 
 	/**
@@ -51,10 +63,14 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$this->die_with_404();
 		}
 		$event = get_post( $event_id );
-		if ( ! $event || 'event' !== $event->post_type || ! current_user_can( 'edit_post', $event_id ) ) {
+		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 			$this->die_with_404();
 		}
 
+		include ABSPATH . 'wp-admin/includes/post.php';
+		$event_form_title   = 'Edit Event';
+		$event_form_name    = 'edit_event';
+		$css_show_url       = '';
 		$event_title        = $event->post_title;
 		$event_description  = $event->post_content;
 		$event_timezone     = get_post_meta( $event_id, '_event_timezone', true ) ?? '';
@@ -62,7 +78,10 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_end          = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone ) ?? '';
 		$event_locale       = get_post_meta( $event_id, '_event_locale', true ) ?? '';
 		$event_project_name = get_post_meta( $event_id, '_event_project_name', true ) ?? '';
-		$this->tmpl( 'events-edit', get_defined_vars() );
+		$event_status       = $event->post_status;
+		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
+		$permalink = str_replace( '%pagename%', $post_name, $permalink );
+		$this->tmpl( 'events-form', get_defined_vars() );
 	}
 
 	/**
