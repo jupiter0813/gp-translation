@@ -212,6 +212,12 @@ function submit_event_ajax() {
 		update_post_meta( $event_id, '_event_project_name', $project_name );
 	}
 
+	try {
+		WPORG_GP_Translation_Events_Active_Events_Cache::invalidate();
+	} catch ( Exception $e ) {
+		error_log( $e );
+	}
+
 	wp_send_json_success( 'success' );
 }
 

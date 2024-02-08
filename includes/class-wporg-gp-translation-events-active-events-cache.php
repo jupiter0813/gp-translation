@@ -38,7 +38,7 @@ class WPORG_GP_Translation_Events_Active_Events_Cache {
 	/**
 	 * @throws Exception
 	 */
-	public function invalidate(): void {
+	public static function invalidate(): void {
 		if ( ! wp_cache_delete( self::KEY ) ) {
 			throw new Exception( 'Failed to invalidate cached events' );
 		}
