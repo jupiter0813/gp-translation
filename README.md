@@ -25,10 +25,16 @@ If you are using a local environment, you need to add the tables to the local da
 wp db query < schema.sql
 ```
 
-### URL
+### Internal URLs
 
 To access to the **event list**, you need to add `/glotpress/events` to your base URL. E.g.:
 
 ```
 http://localhost:8888/glotpress/events
+```
+
+To add a **new event**, you need to add `/glotpress/events/new` to your base URL. E.g.:
+
+```
+http://localhost:8888/glotpress/events/new
 ```
