@@ -131,12 +131,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 				if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) || ! isset( $meta['_event_timezone'][0] ) ) {
 					throw new Exception( 'Invalid event meta' );
 				}
-				$events[] = new WPORG_GP_Translation_Events_Event(
-					$event_id,
-					DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
-					DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
-					new DateTimeZone( $meta['_event_timezone'] ),
-				);
+				$events[] = WPORG_GP_Translation_Events_Event::fromPostMeta($event_id, $meta);
 			}
 
 			$this->active_events_cache->cache( $events );

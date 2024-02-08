@@ -6,7 +6,23 @@ class WPORG_GP_Translation_Events_Event {
 	private DateTimeImmutable $end;
 	private DateTimeZone $timezone;
 
-	public function __construct( int $id, DateTimeImmutable $start, DateTimeImmutable $end, DateTimeZone $timezone ) {
+	/**
+	 * @throws Exception
+	 */
+	public static function fromPostMeta(int $id, array $meta): WPORG_GP_Translation_Events_Event {
+		if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) || ! isset( $meta['_event_timezone'][0] ) ) {
+			throw new Exception( 'Invalid event meta' );
+		}
+
+		return new WPORG_GP_Translation_Events_Event(
+			$id,
+			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
+			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
+			new DateTimeZone( $meta['_event_timezone'][0] ),
+		);
+	}
+
+	private function __construct( int $id, DateTimeImmutable $start, DateTimeImmutable $end, DateTimeZone $timezone ) {
 		$this->id       = $id;
 		$this->start    = $start;
 		$this->end      = $end;
