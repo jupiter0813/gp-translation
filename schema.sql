@@ -1,7 +1,7 @@
 # This file is only used in development environments, and to serve as documentation.
 # It is not used in production in any way.
 
-create or replace table wp_wporg_gp_translation_events_actions
+create table IF NOT EXISTS wp_wporg_gp_translation_events_actions
 (
     event_id       int(10)     not null comment 'ID of the event',
     user_id        int(10)     not null comment 'ID of the user who made the action',

@@ -1,5 +1,6 @@
 .translation-event-form label {
     width: 10%;
+    vertical-align: top;
 }
 .translation-event-form #event-title, 
 .translation-event-form #event-description {
@@ -53,4 +54,18 @@ button#join-event {
 }
 .event-details-stats-totals {
     font-weight: bold;
+}
+.hide-event-url {
+    display: none;
+}
+.translation-event-form .submit-btn-group {
+    margin-left: 10%;
+}
+.translation-event-form button.save-draft {
+    background: #fff;
+    color: var(--gp-color-btn-primary-bg);
+}
+#event-url span {
+    width: 10%;
+    display: inline-block;
 }

@@ -1,13 +1,17 @@
 <?php
 /**
  * Plugin Name: Translation Events
- * Plugin URI: https://github.com/Automattic/wporg-gp-translation-events
+ * Plugin URI: https://github.com/WordPress/wporg-gp-translation-events/
  * Description: A WordPress plugin for creating translation events.
- * Version: 1.0
- * Author: Automattic
- * Author URI: http://automattic.com/
- * Text Domain: gp-translation-events
+ * Version: 1.0.0
+ * Requires at least: 6.4
+ * Tested up to: 6.4
+ * Requires PHP: 7.4
+ * Author: WordPress Contributors
+ * Author URI: https://github.com/WordPress/wporg-gp-translation-events/
  * License: GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * Text Domain: gp-translation-events
  *
  * @package Translation Events
  */
@@ -59,7 +63,7 @@ function register_event_post_type() {
 		'public'      => true,
 		'has_archive' => true,
 		'menu_icon'   => 'dashicons-calendar',
-		'supports'    => array( 'title', 'editor', 'thumbnail' ),
+		'supports'    => array( 'title', 'editor', 'thumbnail', 'revisions' ),
 		'rewrite'     => array( 'slug' => $slug ),
 	);
 
@@ -153,45 +157,44 @@ function validate_event_dates( $event_start, $event_end ) {
 }
 
 function submit_event_ajax() {
-	$event_id;
-	if ( 'create_event' === $_POST['form_name'] ) {
-		if ( ! isset( $_POST['create_event_nonce'] ) || ! wp_verify_nonce( $_POST['create_event_nonce'], 'create_event_nonce' ) ) {
-			wp_send_json_error( 'Nonce verification failed' );
-		}
+	$event_id         = null;
+	$response_message = '';
+	$form_actions     = array( 'draft', 'publish' );
+	if ( ! isset( $_POST['_event_nonce'] ) || ! wp_verify_nonce( $_POST['_event_nonce'], '_event_nonce' ) ) {
+		wp_send_json_error( 'Nonce verification failed' );
 	}
-	if ( 'edit_event' === $_POST['form_name'] ) {
-		if ( ! isset( $_POST['edit_event_nonce'] ) || ! wp_verify_nonce( $_POST['edit_event_nonce'], 'edit_event_nonce' ) ) {
-			wp_send_json_error( 'Nonce verification failed' );
-		}
-	}
-
-	$title          = sanitize_text_field( $_POST['event_title'] );
-	$description    = sanitize_text_field( $_POST['event_description'] );
-	$event_start    = sanitize_text_field( $_POST['event_start'] );
-	$event_end      = sanitize_text_field( $_POST['event_end'] );
-	$locale         = sanitize_text_field( $_POST['event_locale'] );
-	$project_name   = sanitize_text_field( $_POST['event_project_name'] );
-	$event_timezone = sanitize_text_field( $_POST['event_timezone'] );
+	$title          = isset( $_POST['event_title'] ) ? sanitize_text_field( $_POST['event_title'] ) : '';
+	$description    = isset( $_POST['event_description'] ) ? sanitize_text_field( $_POST['event_description'] ) : '';
+	$event_start    = isset( $_POST['event_start'] ) ? sanitize_text_field( $_POST['event_start'] ) : '';
+	$event_end      = isset( $_POST['event_end'] ) ? sanitize_text_field( $_POST['event_end'] ) : '';
+	$locale         = isset( $_POST['event_locale'] ) ? sanitize_text_field( $_POST['event_locale'] ) : '';
+	$project_name   = isset( $_POST['event_project_name'] ) ? sanitize_text_field( $_POST['event_project_name'] ) : '';
+	$event_timezone = isset( $_POST['event_timezone'] ) ? sanitize_text_field( $_POST['event_timezone'] ) : '';
 
 	$is_valid_event_date = validate_event_dates( $event_start, $event_end );
 
 	if ( ! $is_valid_event_date ) {
 		wp_send_json_error( 'Invalid event dates' );
 	}
+
+	if ( isset( $_POST['event_form_action'] ) && in_array( $_POST['event_form_action'], $form_actions ) ) {
+		$event_status = sanitize_text_field( $_POST['event_form_action'] );
+	}
 	if ( 'create_event' === $_POST['form_name'] ) {
-		$event_id = wp_insert_post(
+		$event_id         = wp_insert_post(
 			array(
 				'post_type'    => 'event',
 				'post_title'   => $title,
 				'post_content' => $description,
-				'post_status'  => 'publish',
+				'post_status'  => $event_status,
 			)
 		);
+		$response_message = 'Event created successfully!';
 	}
 	if ( 'edit_event' === $_POST['form_name'] ) {
 		$event_id = $_POST['event_id'];
 		$event    = get_post( $event_id );
-		if ( ! $event || 'event' !== $event->post_type || ! current_user_can( 'edit_post', $event_id ) ) {
+		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 			wp_send_json_error( 'Event does not exist' );
 		}
 		wp_update_post(
@@ -199,8 +202,13 @@ function submit_event_ajax() {
 				'ID'           => $event_id,
 				'post_title'   => $title,
 				'post_content' => $description,
+				'post_status'  => $event_status,
 			)
 		);
+		$response_message = 'Event updated successfully!';
+	}
+	if ( ! $event_id ) {
+		wp_send_json_error( 'Event could not be created or updated' );
 	}
 	update_post_meta( $event_id, '_event_start', convert_to_UTC( $event_start, $event_timezone ) );
 	update_post_meta( $event_id, '_event_end', convert_to_UTC( $event_end, $event_timezone ) );
@@ -217,8 +225,19 @@ function submit_event_ajax() {
 	} catch ( Exception $e ) {
 		error_log( $e );
 	}
+  
+	list( $permalink, $post_name ) = get_sample_permalink( $event_id );
+	$permalink = str_replace( '%pagename%', $post_name, $permalink);
 
-	wp_send_json_success( 'success' );
+	wp_send_json_success(
+		array(
+			'message'      => $response_message,
+			'eventId'      => $event_id,
+			'eventUrl'     => str_replace( '%pagename%', $post_name, $permalink ),
+			'eventStatus'  => $event_status,
+			'eventEditUrl' => esc_url( gp_url( '/events/edit/' . $event_id ) ),
+		)
+	);
 }
 
 add_action( 'wp_ajax_submit_event_ajax', 'submit_event_ajax' );
@@ -248,8 +267,7 @@ function register_translation_event_js() {
 		'$translation_event',
 		array(
 			'url'          => admin_url( 'admin-ajax.php' ),
-			'create_nonce' => wp_create_nonce( 'create_translation_event' ),
-			'edit_nonce'   => wp_create_nonce( 'edit_translation_event' ),
+			'_event_nonce' => wp_create_nonce( 'translation_event' ),
 		)
 	);
 }
@@ -263,10 +281,10 @@ add_action(
 	'gp_init',
 	function() {
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-route.php';
-		GP::$router->prepend( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ), 'get' );
-		GP::$router->prepend( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ), 'get' );
-		GP::$router->prepend( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ), 'get' );
-		GP::$router->prepend( '/events/([a-z0-9_-]+)', array( 'WPORG_GP_Translation_Events_Route', 'events_details' ), 'get' );
+		GP::$router->add( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ), 'get' );
+		GP::$router->add( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ), 'get' );
+		GP::$router->add( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ), 'get' );
+		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'WPORG_GP_Translation_Events_Route', 'events_details' ), 'get' );
 
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-event.php';
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-active-events-cache.php';

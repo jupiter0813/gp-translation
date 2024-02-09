@@ -1,27 +1,50 @@
 ( function( $, $gp ) {
 jQuery(document).ready(function($) {
     $gp.notices.init();
-    if ( $('#create-event-form').length ) {
+    if ( ! $('#event-timezone').val() ) {
         selectUserTimezone();
     }
     validateEventDates();
-    $('#submit-event, #edit-translation-event').on('click', function(e) {
+
+    $('.submit-event').on('click', function(e) {
+        e.preventDefault();
         if ( $('#event-end').val() <= $('#event-start').val() ) {
             $gp.notices.error( 'Event end date and time must be later than event start date and time.' );
             return;
         }
-
-        e.preventDefault();
+        var btnClicked = $(this).data('event-status');
+        if ( btnClicked == 'publish' ) {
+            var submitPrompt = 'Are you sure you want to publish this event?';
+            if ( ! confirm( submitPrompt ) ) {
+                return;
+            }
+        }
+        $('#event-form-action').val( btnClicked );
         var $form = $('.translation-event-form');
+
         $.ajax({
             type: 'POST',
             url: $translation_event.url,
             data:$form.serialize(),
             success: function(response) {
-                $gp.notices.success(response.data);
+                if ( response.data.eventId ) {
+                    history.replaceState('','', response.data.eventEditUrl)
+                    $('#form-name').val('edit_event');
+                    $('.event-page-title').text('Edit Event');
+                    $('#event-id').val(response.data.eventId);
+                    if( btnClicked == 'publish' ) {
+                        $('button[data-event-status="draft"]').hide();
+                        $('button[data-event-status="publish"]').text('Update Event');
+                    }
+                    if( btnClicked == 'draft' ) {
+                        $('button[data-event-status="draft"]').text('Update Draft');
+                    }
+                    $('#event-url').removeClass('hide-event-url').find('a').attr('href', response.data.eventUrl).text(response.data.eventUrl);
+                    $gp.notices.success(response.data.message);
+                }
             },
             error: function(error) {
-                $gp.notices.error(response.data);
+                $gp.notices.error(response.data.message);
             }
         });
     });
