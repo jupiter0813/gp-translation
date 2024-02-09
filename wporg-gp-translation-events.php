@@ -280,6 +280,8 @@ add_action(
 		GP::$router->add( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ), 'get' );
 		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'WPORG_GP_Translation_Events_Route', 'events_details' ), 'get' );
 
+		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-stats-calculator.php';
+
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-translation-listener.php';
 		$wporg_gp_translation_events_listener = new WPORG_GP_Translation_Events_Translation_Listener();
 		$wporg_gp_translation_events_listener->start();
