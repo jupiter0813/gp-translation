@@ -128,9 +128,6 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			$events = [];
 			foreach ( $event_ids as $event_id ) {
 				$meta = get_post_meta( $event_id );
-				if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) || ! isset( $meta['_event_timezone'][0] ) ) {
-					throw new Exception( 'Invalid event meta' );
-				}
 				$events[] = WPORG_GP_Translation_Events_Event::fromPostMeta($event_id, $meta);
 			}
 
