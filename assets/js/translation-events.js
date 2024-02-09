@@ -1,7 +1,7 @@
 ( function( $, $gp ) {
 jQuery(document).ready(function($) {
     $gp.notices.init();
-    if ( ! $('#event-timezone').val() ) {
+    if ( $('#event-timezone').length && ! $('#event-timezone').val() ) {
         selectUserTimezone();
     }
     validateEventDates();
