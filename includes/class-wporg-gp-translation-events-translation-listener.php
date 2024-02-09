@@ -138,7 +138,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		return array_filter(
 			$events,
 			function ( $event ) use ( $at ) {
-				return $at >= $event->start() && $at <= $event->end();
+				return $event->start() <= $at && $at <= $event->end();
 			}
 		);
 	}
