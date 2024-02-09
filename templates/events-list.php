@@ -15,10 +15,10 @@ if ( $query->have_posts() ) :
 		<?php
 		while ( $query->have_posts() ) :
 			$query->the_post();
-			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format('l, F j, Y');
+			$event_start = get_post_meta( get_the_ID(), '_event_start', true );
 			?>
 			<li class="event-list-item">
-				<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
+				<span class="event-list-date"><time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></span>
 				<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a> by <span><?php the_author(); ?></span>
 				<p><?php the_excerpt(); ?></p>
 			</li>
