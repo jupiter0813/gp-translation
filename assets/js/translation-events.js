@@ -5,6 +5,7 @@ jQuery(document).ready(function($) {
         selectUserTimezone();
     }
     validateEventDates();
+    convertToUserLocalTime();
 
     $('.submit-event').on('click', function(e) {
         e.preventDefault();
@@ -64,6 +65,23 @@ jQuery(document).ready(function($) {
         document.querySelector(`#event-timezone option[value="${Intl.DateTimeFormat().resolvedOptions().timeZone}"]`).selected = true 
     }
 
+    function convertToUserLocalTime() {
+        var timeElements = document.querySelectorAll('time.event-utc-time');
+        if ( timeElements.length === 0 ) {
+            return;
+        }
+        timeElements.forEach(function(timeEl) {
+            var eventDateObj = new Date( timeEl.getAttribute('datetime') );
+            var userTimezoneOffset = new Date().getTimezoneOffset();
+            var userTimezoneOffsetMs = userTimezoneOffset * 60 * 1000;
+            var userLocalDateTime = new Date(eventDateObj.getTime() - userTimezoneOffsetMs);
+
+            var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName: 'short' };
+    
+            timeEl.textContent = userLocalDateTime.toLocaleString('en-US', options);
+        });
+    }
+    
 });
 }( jQuery, $gp )
 );

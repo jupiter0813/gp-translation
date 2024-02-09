@@ -25,8 +25,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 	</div>
 	<div class="event-details-right">
 		<div class="event-details-date">
-			<p><span class="dashicons dashicons-calendar"></span> <?php echo esc_html( ( new DateTime( $event_start_date ) )->format( 'l, F j, Y' ) ); ?></p>
-			<p><span class="dashicons dashicons-clock"></span> 13:00 - 15:00</p>
+			<p><span class="dashicons dashicons-clock"></span> <time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></time> - <time class="event-utc-time" datetime="<?php echo esc_attr( $event_end ); ?>"></time></p>
 		</div>
 		<div class="event-details-join">
 			<button class="button is-primary" id="join-event">Attend Event</button>
