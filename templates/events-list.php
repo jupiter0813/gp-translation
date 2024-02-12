@@ -28,14 +28,16 @@ if ( $query->have_posts() ) :
 	</ul>
 
 	<?php
-	echo esc_html( paginate_links(
-		array(
-			'total'     => $query->max_num_pages,
-			'current'   => max( 1, get_query_var( 'paged' ) ),
-			'prev_text' => '&laquo; Previous',
-			'next_text' => 'Next &raquo;',
+	echo esc_html(
+		paginate_links(
+			array(
+				'total'     => $query->max_num_pages,
+				'current'   => max( 1, get_query_var( 'paged' ) ),
+				'prev_text' => '&laquo; Previous',
+				'next_text' => 'Next &raquo;',
+			)
 		)
-	) );
+	);
 
 	wp_reset_postdata();
 else :
