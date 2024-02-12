@@ -5,6 +5,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 ?>
 
 
+
 <h2 class="event_page_title">Upcoming Translation Events</h2>
 <div class="event-left-col">
 <?php
@@ -14,10 +15,10 @@ if ( $query->have_posts() ) :
 		<?php
 		while ( $query->have_posts() ) :
 			$query->the_post();
-			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format('l, F j, Y');
+			$event_start = get_post_meta( get_the_ID(), '_event_start', true );
 			?>
 			<li class="event-list-item">
-				<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
+				<span class="event-list-date"><time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></span>
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ) ?>"><?php the_title(); ?></a> by <span><?php the_author(); ?></span>
 				<p><?php the_excerpt(); ?></p>
 			</li>
@@ -27,12 +28,14 @@ if ( $query->have_posts() ) :
 	</ul>
 
 	<?php
-	echo paginate_links(
-		array(
-			'total'     => $query->max_num_pages,
-			'current'   => max( 1, get_query_var( 'paged' ) ),
-			'prev_text' => '&laquo; Previous',
-			'next_text' => 'Next &raquo;',
+	echo esc_html(
+		paginate_links(
+			array(
+				'total'     => $query->max_num_pages,
+				'current'   => max( 1, get_query_var( 'paged' ) ),
+				'prev_text' => '&laquo; Previous',
+				'next_text' => 'Next &raquo;',
+			)
 		)
 	);
 
