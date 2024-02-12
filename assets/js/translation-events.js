@@ -53,7 +53,10 @@ jQuery(document).ready(function($) {
     function validateEventDates() {
         var startDateTimeInput = $('#event-start');
         var endDateTimeInput = $('#event-end');
-    
+        if ( ! startDateTimeInput.length || ! endDateTimeInput.length ) {
+            return;
+        }
+
         startDateTimeInput.add(endDateTimeInput).on('input', function () {
             endDateTimeInput.prop('min', startDateTimeInput.val());
             if (endDateTimeInput.val() < startDateTimeInput.val()) {
