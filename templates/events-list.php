@@ -79,20 +79,22 @@ if ( 0 === $current_events_query->post_count && 0 === $upcoming_events_query->po
 endif;
 ?>
 </div>
-<div class="event-right-col">
-	<h3 class="">Events I'm Attending</h3>
-	<?php
-		// TODO: Add the list of events the user is attending.
-	?>
-	<ul class="event-attending-list">
-		<li>
-			<a href="#">Spanish Translation Day</a>
-		</li>
-		<li>
-			<a href="#">Let's Translate 2024</a>
-		</li>
-		<li>
-			<a href="#">Basics of Translation Workshop</a>
-		</li>
-	</ul>
-</div>
+<?php if ( is_user_logged_in() ) : ?>
+	<div class="event-right-col">
+		<h3 class="">Events I'm Attending</h3>
+		<?php
+			// TODO: Add the list of events the user is attending.
+		?>
+		<ul class="event-attending-list">
+			<li>
+				<a href="#">Spanish Translation Day</a>
+			</li>
+			<li>
+				<a href="#">Let's Translate 2024</a>
+			</li>
+			<li>
+				<a href="#">Basics of Translation Workshop</a>
+			</li>
+		</ul>
+	</div>
+<?php endif; ?>
