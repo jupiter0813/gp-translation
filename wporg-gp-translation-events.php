@@ -74,8 +74,6 @@ function register_event_post_type() {
  */
 function event_meta_boxes() {
 	add_meta_box( 'event_dates', 'Event Dates', 'event_dates_meta_box', 'event', 'normal', 'high' );
-	add_meta_box( 'event_locale', 'Event Locale', 'event_locale_meta_box', 'event', 'normal', 'high' );
-	add_meta_box( 'event_project', 'Event Project', 'event_project_meta_box', 'event', 'normal', 'high' );
 }
 
 /**
@@ -94,43 +92,19 @@ function event_dates_meta_box( $post ) {
 }
 
 /**
- * Output the event locale meta box.
- *
- * @param  WP_Post $post The current post object.
- */
-function event_locale_meta_box( $post ) {
-	wp_nonce_field( 'event_locale_nonce', 'event_locale_nonce' );
-	$locale = get_post_meta( $post->ID, '_event_locale', true );
-	echo '<label for="event_locale">Locale: </label>';
-	echo '<input type="text" id="event_locale" name="event_locale" value="' . esc_attr( $locale ) . '">';
-}
-
-/**
- * Output the event project name meta box.
- *
- * @param  WP_Post $post The current post object.
- */
-function event_project_meta_box( $post ) {
-	wp_nonce_field( 'event_project_nonce', 'event_project_nonce' );
-	$project_name = get_post_meta( $post->ID, '_event_project_name', true );
-	echo '<label for="event_project_name">Project Name: </label>';
-	echo '<input type="text" id="event_project_name" name="event_project_name" value="' . esc_attr( $project_name ) . '">';
-}
-
-/**
  * Save the event meta boxes.
  *
  * @param  int $post_id The current post ID.
  */
 function save_event_meta_boxes( $post_id ) {
-	$nonces = array( 'event_dates', 'event_locale', 'event_project' );
+	$nonces = array( 'event_dates' );
 	foreach ( $nonces as $nonce ) {
 		if ( ! isset( $_POST[ $nonce . '_nonce' ] ) || ! wp_verify_nonce( $_POST[ $nonce . '_nonce' ], $nonce . '_nonce' ) ) {
 			return;
 		}
 	}
 
-	$fields = array( 'event_start', 'event_end', 'event_locale', 'event_project_name' );
+	$fields = array( 'event_start', 'event_end' );
 	foreach ( $fields as $field ) {
 		if ( isset( $_POST[ $field ] ) ) {
 			update_post_meta( $post_id, '_' . $field, sanitize_text_field( $_POST[ $field ] ) );
@@ -167,8 +141,6 @@ function submit_event_ajax() {
 	$description    = isset( $_POST['event_description'] ) ? sanitize_text_field( $_POST['event_description'] ) : '';
 	$event_start    = isset( $_POST['event_start'] ) ? sanitize_text_field( $_POST['event_start'] ) : '';
 	$event_end      = isset( $_POST['event_end'] ) ? sanitize_text_field( $_POST['event_end'] ) : '';
-	$locale         = isset( $_POST['event_locale'] ) ? sanitize_text_field( $_POST['event_locale'] ) : '';
-	$project_name   = isset( $_POST['event_project_name'] ) ? sanitize_text_field( $_POST['event_project_name'] ) : '';
 	$event_timezone = isset( $_POST['event_timezone'] ) ? sanitize_text_field( $_POST['event_timezone'] ) : '';
 
 	$is_valid_event_date = validate_event_dates( $event_start, $event_end );
@@ -213,21 +185,15 @@ function submit_event_ajax() {
 	update_post_meta( $event_id, '_event_start', convert_to_UTC( $event_start, $event_timezone ) );
 	update_post_meta( $event_id, '_event_end', convert_to_UTC( $event_end, $event_timezone ) );
 	update_post_meta( $event_id, '_event_timezone', $event_timezone );
-	if ( $locale ) {
-		update_post_meta( $event_id, '_event_locale', $locale );
-	}
-	if ( $project_name ) {
-		update_post_meta( $event_id, '_event_project_name', $project_name );
-	}
 
 	try {
 		WPORG_GP_Translation_Events_Active_Events_Cache::invalidate();
 	} catch ( Exception $e ) {
 		error_log( $e );
 	}
-  
+
 	list( $permalink, $post_name ) = get_sample_permalink( $event_id );
-	$permalink = str_replace( '%pagename%', $post_name, $permalink);
+	$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 
 	wp_send_json_success(
 		array(
@@ -291,8 +257,8 @@ add_action(
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-stats-calculator.php';
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-translation-listener.php';
 
-		$active_events_cache = new WPORG_GP_Translation_Events_Active_Events_Cache();
-		$wporg_gp_translation_events_listener = new WPORG_GP_Translation_Events_Translation_Listener($active_events_cache);
+		$active_events_cache                  = new WPORG_GP_Translation_Events_Active_Events_Cache();
+		$wporg_gp_translation_events_listener = new WPORG_GP_Translation_Events_Translation_Listener( $active_events_cache );
 		$wporg_gp_translation_events_listener->start();
 	}
 );

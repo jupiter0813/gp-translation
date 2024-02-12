@@ -44,7 +44,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			'orderby'        => 'meta_value',
 			'order'          => 'ASC',
 		);
-		$query = new WP_Query( $args );
+		$query                = new WP_Query( $args );
 		$this->tmpl( 'events-list', get_defined_vars() );
 	}
 
@@ -57,17 +57,15 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		if ( ! is_user_logged_in() ) {
 			$this->die_with_404();
 		}
-		$event_form_title   = 'Create Event';
-		$event_form_name    = 'create_event';
-		$css_show_url       = 'hide-event-url';
-		$event_id           = null;
-		$event_title        = '';
-		$event_description  = '';
-		$event_timezone     = '';
-		$event_start        = '';
-		$event_end          = '';
-		$event_locale       = '';
-		$event_project_name = '';
+		$event_form_title  = 'Create Event';
+		$event_form_name   = 'create_event';
+		$css_show_url      = 'hide-event-url';
+		$event_id          = null;
+		$event_title       = '';
+		$event_description = '';
+		$event_timezone    = '';
+		$event_start       = '';
+		$event_end         = '';
 
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
@@ -97,8 +95,6 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_timezone                = get_post_meta( $event_id, '_event_timezone', true ) ?? '';
 		$event_start                   = self::convertToTimezone( get_post_meta( $event_id, '_event_start', true ), $event_timezone ) ?? '';
 		$event_end                     = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone ) ?? '';
-		$event_locale                  = get_post_meta( $event_id, '_event_locale', true ) ?? '';
-		$event_project_name            = get_post_meta( $event_id, '_event_project_name', true ) ?? '';
 		$event_status                  = $event->post_status;
 		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
@@ -121,12 +117,10 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$this->die_with_404();
 		}
 
-		$event_title        = $event->post_title;
-		$event_description  = $event->post_content;
-		$event_start_date   = get_post_meta( $event->ID, '_event_start_date', true ) ?? '';
-		$event_end_date     = get_post_meta( $event->ID, '_event_end_date', true ) ?? '';
-		$event_locale       = get_post_meta( $event->ID, '_event_locale', true ) ?? '';
-		$event_project_name = get_post_meta( $event->ID, '_event_project_name', true ) ?? '';
+		$event_title       = $event->post_title;
+		$event_description = $event->post_content;
+		$event_start_date  = get_post_meta( $event->ID, '_event_start_date', true ) ?? '';
+		$event_end_date    = get_post_meta( $event->ID, '_event_end_date', true ) ?? '';
 
 		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
 		try {

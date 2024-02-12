@@ -49,14 +49,6 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 			?>
 		</select>
 	</div>
-	<div>
-		<label for="event-locale">Locale</label>
-		<input type="text" id="event-locale" name="event_locale" value="<?php echo esc_attr( $event_locale ); ?>">
-	</div>
-	<div>
-		<label for="event-project-name">Project Name</label>
-		<input type="text" id="event-project-name" name="event_project_name" value="<?php echo esc_attr( $event_project_name ); ?>">
-	</div>
 	<div class="submit-btn-group">
 	<?php if ( $event_id ) : ?>
 		<?php if ( isset( $event_status ) && 'draft' === $event_status ) : ?>
