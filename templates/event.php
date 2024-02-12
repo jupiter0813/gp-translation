@@ -27,9 +27,11 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 		<div class="event-details-date">
 			<p><span class="dashicons dashicons-clock"></span> <time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></time> - <time class="event-utc-time" datetime="<?php echo esc_attr( $event_end ); ?>"></time></p>
 		</div>
+		<?php  if ( is_user_logged_in() ) : ?>
 		<div class="event-details-join">
 			<button class="button is-primary" id="join-event">Attend Event</button>
 		</div>
+		<?php endif; ?>
 	</div>
 <?php if ( ! empty( $event_stats->rows() ) ):?>
 	<div class="event-details-stats">

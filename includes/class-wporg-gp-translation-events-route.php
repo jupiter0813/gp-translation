@@ -23,9 +23,6 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_list() {
-		if ( ! is_user_logged_in() ) {
-			$this->die_with_404();
-		}
 		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
 		$_paged               = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
 		$args                 = array(
@@ -55,7 +52,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 */
 	public function events_create() {
 		if ( ! is_user_logged_in() ) {
-			$this->die_with_404();
+			$this->die_with_error( 'You must be logged in to create an event', 403 );
 		}
 		$event_form_title  = 'Create Event';
 		$event_form_name   = 'create_event';
@@ -79,11 +76,11 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 */
 	public function events_edit( $event_id ) {
 		if ( ! is_user_logged_in() ) {
-			$this->die_with_404();
+			$this->die_with_error( 'You must be logged in to edit an event', 403 );
 		}
 		$event = get_post( $event_id );
 		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
-			$this->die_with_404();
+			$this->die_with_error( 'Event does not exist, or you do not have permission to edit it.', 403 );
 		}
 
 		include ABSPATH . 'wp-admin/includes/post.php';
@@ -109,9 +106,6 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_details( $event_slug ) {
-		if ( ! is_user_logged_in() ) {
-			$this->die_with_404();
-		}
 		$event = get_page_by_path( $event_slug, OBJECT, 'event' );
 		if ( ! $event ) {
 			$this->die_with_404();
