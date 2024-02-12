@@ -9,6 +9,8 @@
 /* translators: %s: Event title. */
 gp_title( sprintf( __( 'Translation Events - %s' ), esc_html( $event_title ) ) );
 gp_tmpl_header();
+gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
+
 ?>
 
 <div class="event-details-page">

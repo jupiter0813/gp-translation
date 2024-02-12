@@ -69,3 +69,54 @@ button#join-event {
     width: 10%;
     display: inline-block;
 }
+span.event-list-date {
+    display: block;
+    color: #939393;
+    font-size: .9em;
+    font-weight: bold;
+}
+.event-list-item a{
+    font-weight: bold;
+    font-size: 1.2em;
+}
+li.event-list-item {
+    list-style-type: none;
+}
+li.event-list-item p {
+    margin-top: 0;
+    color: #5a5a5a;
+    font-size: .95em;
+}
+h2.event_page_title {
+    border-bottom: #e0e0e0 thin solid;
+    padding-bottom: 0.5em;
+    font-weight: bold;
+}
+.event-list-top-bar {
+    float: right;
+}
+.event-list-nav li {
+    display: inline;
+    margin-right: 1em;
+}
+.event-left-col {
+    width: 70%;
+    float: left;
+}
+.event-right-col {
+    width: 25%;
+    float: left;
+    padding: 1em;
+    border-left: var(--wp--preset--color--cyan-bluish-gray) thin solid;
+}
+.event-attending-list {
+    list-style-type: none;
+    padding: 0;
+}
+.event-attending-list li {
+    margin-bottom: 1em;
+}
+.event-list-nav li a.button {
+    background-color: var(--gp-color-btn-primary-bg) !important;
+    color: #fff !important;
+}
