@@ -16,10 +16,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 		<label for="event-title">Event Title</label>
 		<input type="text" id="event-title" name="event_title" value="<?php echo esc_html( $event_title ); ?>" required>
 	</div>
-	<p id="event-url" class="<?php echo esc_attr( $css_show_url ); ?>">
-		<span>Event URL</span>
-		 <a class="event-permalink" href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_url( $permalink ); ?></a>
-	</p>
+	<div id="event-url" class="<?php echo esc_attr( $css_show_url ); ?>">
+		<label for="event-permalink">Event URL</label>
+		<a id="event-permalink" class="event-permalink" href="<?php echo esc_url( gp_url( wp_make_link_relative( $permalink ) ) ) ?>" target="_blank"><?php echo esc_url( get_site_url() . gp_url( wp_make_link_relative( $permalink ) ) ) ?></a>
+	</div>
 	<div>
 		<label for="event-description">Event Description</label>
 		<textarea id="event-description" name="event_description" rows="4" required><?php echo esc_html( $event_description ); ?></textarea>

@@ -1,8 +1,9 @@
 .translation-event-form label {
-    width: 10%;
+    display: inline-block;
+    width: 140px;
     vertical-align: top;
 }
-.translation-event-form #event-title, 
+.translation-event-form #event-title,
 .translation-event-form #event-description {
     width: 30%;
 }
