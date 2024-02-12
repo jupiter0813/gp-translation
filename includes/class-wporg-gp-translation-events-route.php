@@ -26,6 +26,25 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		if ( ! is_user_logged_in() ) {
 			$this->die_with_404();
 		}
+		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+		$_paged               = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
+		$args                 = array(
+			'post_type'      => 'event',
+			'posts_per_page' => 10,
+			'paged'          => $_paged,
+			'post_status'    => 'publish',
+			'meta_query'     => array(
+				array(
+					'key'     => '_event_start',
+					'value'   => $current_datetime_utc,
+					'compare' => '>=',
+					'type'    => 'DATETIME',
+				),
+			),
+			'orderby'        => 'meta_value',
+			'order'          => 'ASC',
+		);
+		$query = new WP_Query( $args );
 		$this->tmpl( 'events-list', get_defined_vars() );
 	}
 
@@ -70,19 +89,19 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		}
 
 		include ABSPATH . 'wp-admin/includes/post.php';
-		$event_form_title   = 'Edit Event';
-		$event_form_name    = 'edit_event';
-		$css_show_url       = '';
-		$event_title        = $event->post_title;
-		$event_description  = $event->post_content;
-		$event_timezone     = get_post_meta( $event_id, '_event_timezone', true ) ?? '';
-		$event_start        = self::convertToTimezone( get_post_meta( $event_id, '_event_start', true ), $event_timezone ) ?? '';
-		$event_end          = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone ) ?? '';
-		$event_locale       = get_post_meta( $event_id, '_event_locale', true ) ?? '';
-		$event_project_name = get_post_meta( $event_id, '_event_project_name', true ) ?? '';
-		$event_status       = $event->post_status;
+		$event_form_title              = 'Edit Event';
+		$event_form_name               = 'edit_event';
+		$css_show_url                  = '';
+		$event_title                   = $event->post_title;
+		$event_description             = $event->post_content;
+		$event_timezone                = get_post_meta( $event_id, '_event_timezone', true ) ?? '';
+		$event_start                   = self::convertToTimezone( get_post_meta( $event_id, '_event_start', true ), $event_timezone ) ?? '';
+		$event_end                     = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone ) ?? '';
+		$event_locale                  = get_post_meta( $event_id, '_event_locale', true ) ?? '';
+		$event_project_name            = get_post_meta( $event_id, '_event_project_name', true ) ?? '';
+		$event_status                  = $event->post_status;
 		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
-		$permalink = str_replace( '%pagename%', $post_name, $permalink );
+		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
 
@@ -114,7 +133,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$event_stats = $stats_calculator->for_event( $event );
 		} catch ( Exception $e ) {
 			error_log( $e );
-			$this->die_with_error( "Failed to calculate event stats" );
+			$this->die_with_error( 'Failed to calculate event stats' );
 		}
 
 		$this->tmpl( 'event', get_defined_vars() );
