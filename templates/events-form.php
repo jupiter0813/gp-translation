@@ -50,6 +50,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 		</select>
 	</div>
 	<div class="submit-btn-group">
+		<label for="event-status"></label>
 	<?php if ( $event_id ) : ?>
 		<?php if ( isset( $event_status ) && 'draft' === $event_status ) : ?>
 			<button class="button is-primary save-draft submit-event" type="submit" data-event-status="draft">Update Draft</button>

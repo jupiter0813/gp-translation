@@ -59,9 +59,6 @@ button#join-event {
 .hide-event-url {
     display: none;
 }
-.translation-event-form .submit-btn-group {
-    margin-left: 10%;
-}
 .translation-event-form button.save-draft {
     background: #fff;
     color: var(--gp-color-btn-primary-bg);
