@@ -190,6 +190,7 @@ function submit_event_ajax() {
 	try {
 		WPORG_GP_Translation_Events_Active_Events_Cache::invalidate();
 	} catch ( Exception $e ) {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		error_log( $e );
 	}
 
