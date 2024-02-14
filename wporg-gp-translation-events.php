@@ -153,11 +153,11 @@ function submit_event_ajax() {
 		wp_send_json_error( 'Nonce verification failed' );
 	}
 
-	$title          = isset( $_POST['event_title'] ) ? sanitize_text_field( $_POST['event_title'] ) : '';
-	$description    = isset( $_POST['event_description'] ) ? sanitize_text_field( $_POST['event_description'] ) : '';
-	$event_start    = isset( $_POST['event_start'] ) ? sanitize_text_field( $_POST['event_start'] ) : '';
-	$event_end      = isset( $_POST['event_end'] ) ? sanitize_text_field( $_POST['event_end'] ) : '';
-	$event_timezone = isset( $_POST['event_timezone'] ) ? sanitize_text_field( $_POST['event_timezone'] ) : '';
+	$title          = isset( $_POST['event_title'] ) ? sanitize_text_field( wp_unslash( $_POST['event_title'] ) ) : '';
+	$description    = isset( $_POST['event_description'] ) ? sanitize_text_field( wp_unslash( $_POST['event_description'] ) ) : '';
+	$event_start    = isset( $_POST['event_start'] ) ? sanitize_text_field( wp_unslash( $_POST['event_start'] ) ) : '';
+	$event_end      = isset( $_POST['event_end'] ) ? sanitize_text_field( wp_unslash( $_POST['event_end'] ) ) : '';
+	$event_timezone = isset( $_POST['event_timezone'] ) ? sanitize_text_field( wp_unslash( $_POST['event_timezone'] ) ) : '';
 
 	$is_valid_event_date = validate_event_dates( $event_start, $event_end );
 
@@ -166,7 +166,7 @@ function submit_event_ajax() {
 	}
 
 	if ( isset( $_POST['event_form_action'] ) && in_array( $_POST['event_form_action'], $form_actions, true ) ) {
-		$event_status = sanitize_text_field( $_POST['event_form_action'] );
+		$event_status = sanitize_text_field( wp_unslash( $_POST['event_form_action'] ) );
 	}
 	if ( 'create_event' === $_POST['form_name'] ) {
 		$event_id         = wp_insert_post(
