@@ -140,9 +140,19 @@ function submit_event_ajax() {
 	$event_id         = null;
 	$response_message = '';
 	$form_actions     = array( 'draft', 'publish' );
-	if ( ! isset( $_POST['_event_nonce'] ) || ! wp_verify_nonce( $_POST['_event_nonce'], '_event_nonce' ) ) {
+
+	$is_nonce_valid = false;
+	$nonce_name     = '_event_nonce';
+	if ( isset( $_POST[ $nonce_name ] ) ) {
+		$nonce_value = sanitize_text_field( wp_unslash( $_POST[ $nonce_name ] ) );
+		if ( wp_verify_nonce( $nonce_value, $nonce_name ) ) {
+			$is_nonce_valid = true;
+		}
+	}
+	if ( ! $is_nonce_valid ) {
 		wp_send_json_error( 'Nonce verification failed' );
 	}
+
 	$title          = isset( $_POST['event_title'] ) ? sanitize_text_field( $_POST['event_title'] ) : '';
 	$description    = isset( $_POST['event_description'] ) ? sanitize_text_field( $_POST['event_description'] ) : '';
 	$event_start    = isset( $_POST['event_start'] ) ? sanitize_text_field( $_POST['event_start'] ) : '';
