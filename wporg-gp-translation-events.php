@@ -189,7 +189,10 @@ function submit_event_ajax() {
 		$response_message = 'Event created successfully!';
 	}
 	if ( 'edit_event' === $action ) {
-		$event_id = $_POST['event_id'];
+		if ( ! isset( $_POST['event_id'] ) ) {
+			wp_send_json_error( 'Event id is required' );
+		}
+		$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
 		$event    = get_post( $event_id );
 		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 			wp_send_json_error( 'Event does not exist' );
