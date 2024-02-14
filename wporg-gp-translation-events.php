@@ -300,10 +300,10 @@ add_action(
 	'gp_init',
 	function () {
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-route.php';
-		GP::$router->add( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ), 'get' );
-		GP::$router->add( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ), 'get' );
-		GP::$router->add( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ), 'get' );
-		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'WPORG_GP_Translation_Events_Route', 'events_details' ), 'get' );
+		GP::$router->add( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ) );
+		GP::$router->add( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ) );
+		GP::$router->add( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ) );
+		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'WPORG_GP_Translation_Events_Route', 'events_details' ) );
 
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-event.php';
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-active-events-cache.php';
