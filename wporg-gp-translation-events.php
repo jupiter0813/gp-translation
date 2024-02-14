@@ -160,8 +160,12 @@ function submit_event_ajax() {
 	$event_end      = isset( $_POST['event_end'] ) ? sanitize_text_field( wp_unslash( $_POST['event_end'] ) ) : '';
 	$event_timezone = isset( $_POST['event_timezone'] ) ? sanitize_text_field( wp_unslash( $_POST['event_timezone'] ) ) : '';
 
-	$is_valid_event_date = validate_event_dates( $event_start, $event_end );
-
+	$is_valid_event_date = false;
+	try {
+		$is_valid_event_date = validate_event_dates( $event_start, $event_end );
+	} catch ( Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+		// Deliberately ignored, handled below.
+	}
 	if ( ! $is_valid_event_date ) {
 		wp_send_json_error( 'Invalid event dates' );
 	}
@@ -212,8 +216,13 @@ function submit_event_ajax() {
 	if ( ! $event_id ) {
 		wp_send_json_error( 'Event could not be created or updated' );
 	}
-	update_post_meta( $event_id, '_event_start', convert_to_utc( $event_start, $event_timezone ) );
-	update_post_meta( $event_id, '_event_end', convert_to_utc( $event_end, $event_timezone ) );
+	try {
+		update_post_meta( $event_id, '_event_start', convert_to_utc( $event_start, $event_timezone ) );
+		update_post_meta( $event_id, '_event_end', convert_to_utc( $event_end, $event_timezone ) );
+	} catch ( Exception $e ) {
+		wp_send_json_error( 'Invalid start or end' );
+	}
+
 	update_post_meta( $event_id, '_event_timezone', $event_timezone );
 
 	try {
