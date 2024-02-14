@@ -168,7 +168,16 @@ function submit_event_ajax() {
 	if ( isset( $_POST['event_form_action'] ) && in_array( $_POST['event_form_action'], $form_actions, true ) ) {
 		$event_status = sanitize_text_field( wp_unslash( $_POST['event_form_action'] ) );
 	}
-	if ( 'create_event' === $_POST['form_name'] ) {
+
+	if ( ! isset( $_POST['form_name'] ) ) {
+		wp_send_json_error( 'Form name must be set' );
+	}
+	$action = sanitize_text_field( wp_unslash( $_POST['form_name'] ) );
+	if ( ! in_array( $action, array( 'create_event', 'edit_event' ), true ) ) {
+		wp_send_json_error( 'Invalid form name' );
+	}
+
+	if ( 'create_event' === $action ) {
 		$event_id         = wp_insert_post(
 			array(
 				'post_type'    => 'event',
@@ -179,7 +188,7 @@ function submit_event_ajax() {
 		);
 		$response_message = 'Event created successfully!';
 	}
-	if ( 'edit_event' === $_POST['form_name'] ) {
+	if ( 'edit_event' === $action ) {
 		$event_id = $_POST['event_id'];
 		$event    = get_post( $event_id );
 		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
