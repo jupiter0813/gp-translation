@@ -2,11 +2,22 @@
     "name": "wordpress/wporg-gp-translation-events",
     "description": "",
     "license": "GPL-2.0-only",
-    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^9.6.16",
+        "yoast/phpunit-polyfills": "^2.0.0",
+        "wp-coding-standards/wpcs": "^3.0"
+    },
     "scripts":{
+        "lint": "phpcs --standard=phpcs.xml",
         "dev:start": "wp-env start --debug && wp-env run cli wp rewrite structure '/%postname%/'",
         "dev:debug": "wp-env start --xdebug",
         "dev:stop": "wp-env stop",
-        "dev:db:schema": "wp-env run cli sh -c 'wp db query < /var/www/html/wp-content/plugins/wporg-gp-translation-events/schema.sql'"
+        "dev:db:schema": "wp-env run cli --env-cwd=wp-content/plugins/wporg-gp-translation-events sh -c 'wp db query < schema.sql'",
+        "dev:test": "bin/run-tests.sh"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

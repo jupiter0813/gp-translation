@@ -1,0 +1,29 @@
+name: Coding standards
+
+on:
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  php:
+    name: PHP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: 'none'
+          tools: composer, cs2pr
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v2
+        with:
+          composer-options: "--no-progress --no-ansi --no-interaction"
+
+      - name: Run PHPCS
+        run: vendor/bin/phpcs -q --report=checkstyle | cs2pr --notices-as-warnings
