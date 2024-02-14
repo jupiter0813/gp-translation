@@ -183,8 +183,8 @@ function submit_event_ajax() {
 	if ( ! $event_id ) {
 		wp_send_json_error( 'Event could not be created or updated' );
 	}
-	update_post_meta( $event_id, '_event_start', convert_to_UTC( $event_start, $event_timezone ) );
-	update_post_meta( $event_id, '_event_end', convert_to_UTC( $event_end, $event_timezone ) );
+	update_post_meta( $event_id, '_event_start', convert_to_utc( $event_start, $event_timezone ) );
+	update_post_meta( $event_id, '_event_end', convert_to_utc( $event_end, $event_timezone ) );
 	update_post_meta( $event_id, '_event_timezone', $event_timezone );
 
 	try {
@@ -218,7 +218,7 @@ add_action( 'wp_ajax_nopriv_submit_event_ajax', 'submit_event_ajax' );
  *
  * @return string            The date time in UTC.
  */
-function convert_to_UTC( $date_time, $time_zone ) {
+function convert_to_utc( $date_time, $time_zone ) {
 	$date_time = new DateTime( $date_time, new DateTimeZone( $time_zone ) );
 	$date_time->setTimezone( new DateTimeZone( 'UTC' ) );
 	return $date_time->format( 'Y-m-d H:i:s' );
