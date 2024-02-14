@@ -247,17 +247,16 @@ add_action( 'save_post', 'save_event_meta_boxes' );
 /**
  * Add the events link to the GlotPress main menu.
  *
- * @param array  $items    The menu items.
- * @param string $location The menu location.
+ * @param array $items The menu items.
  *
- * @return array           The modified menu items.
+ * @return array The modified menu items.
  */
-function gp_event_nav_menu_items( $items, $location ) {
+function gp_event_nav_menu_items( $items ) {
 	$new[ esc_url( gp_url( '/events/' ) ) ] = esc_html__( 'Events', 'gp-translation-events' );
 	return array_merge( $items, $new );
 }
 // Add the events link to the GlotPress main menu.
-add_filter( 'gp_nav_menu_items', 'gp_event_nav_menu_items', 10, 2 );
+add_filter( 'gp_nav_menu_items', 'gp_event_nav_menu_items' );
 
 add_action(
 	'gp_init',
