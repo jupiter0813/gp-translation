@@ -117,9 +117,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_description   = $event->post_content;
 		$event_start         = get_post_meta( $event->ID, '_event_start', true ) ?? '';
 		$event_end           = get_post_meta( $event->ID, '_event_end', true ) ?? '';
-		$event_locale        = get_post_meta( $event->ID, '_event_locale', true ) ?: '';
-		$event_project_name  = get_post_meta( $event->ID, '_event_project_name', true ) ?: '';
-		$attending_event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?: [];
+		$attending_event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?: array();
 		$user_is_attending   = isset( $attending_event_ids[ $event_id ] );
 
 		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
