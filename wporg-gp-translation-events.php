@@ -103,7 +103,7 @@ function save_event_meta_boxes( $post_id ) {
 		if ( ! isset( $_POST[ $nonce_name ] ) ) {
 			return;
 		}
-		$nonce_value = $_POST[ $nonce_name ];
+		$nonce_value = sanitize_text_field( wp_unslash( $_POST[ $nonce_name ] ) );
 		if ( ! wp_verify_nonce( $nonce_value, $nonce_name ) ) {
 			return;
 		}
@@ -112,7 +112,7 @@ function save_event_meta_boxes( $post_id ) {
 	$fields = array( 'event_start', 'event_end' );
 	foreach ( $fields as $field ) {
 		if ( isset( $_POST[ $field ] ) ) {
-			update_post_meta( $post_id, '_' . $field, sanitize_text_field( $_POST[ $field ] ) );
+			update_post_meta( $post_id, '_' . $field, sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) );
 		}
 	}
 }
