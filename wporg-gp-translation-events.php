@@ -16,7 +16,6 @@
  * @package Translation Events
  */
 
-
 /**
  * Check if a slug is being used by another post type.
  *
@@ -112,6 +111,7 @@ function save_event_meta_boxes( $post_id ) {
 		}
 	}
 }
+
 /**
  * Validate the event dates.
  *
@@ -253,15 +253,15 @@ add_action( 'save_post', 'save_event_meta_boxes' );
  * @return array           The modified menu items.
  */
 function gp_event_nav_menu_items( $items, $location ) {
-	$new[ esc_url( gp_url( '/events/' ) ) ] = esc_html__('Events', 'gp-translation-events' );
+	$new[ esc_url( gp_url( '/events/' ) ) ] = esc_html__( 'Events', 'gp-translation-events' );
 	return array_merge( $items, $new );
 }
 // Add the events link to the GlotPress main menu.
-add_filter( 'gp_nav_menu_items', 'gp_event_nav_menu_items', 10, 2);
+add_filter( 'gp_nav_menu_items', 'gp_event_nav_menu_items', 10, 2 );
 
 add_action(
 	'gp_init',
-	function() {
+	function () {
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-route.php';
 		GP::$router->add( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ), 'get' );
 		GP::$router->add( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ), 'get' );
