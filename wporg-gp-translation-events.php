@@ -100,7 +100,10 @@ function save_event_meta_boxes( $post_id ) {
 	$nonces = array( 'event_dates' );
 	foreach ( $nonces as $nonce ) {
 		$nonce_name = $nonce . '_nonce';
-		if ( ! isset( $_POST[ $nonce_name ] ) || ! wp_verify_nonce( $_POST[ $nonce_name ], $nonce_name ) ) {
+		if ( ! isset( $_POST[ $nonce_name ] ) ) {
+			return;
+		}
+		if ( ! wp_verify_nonce( $_POST[ $nonce_name ], $nonce_name ) ) {
 			return;
 		}
 	}
