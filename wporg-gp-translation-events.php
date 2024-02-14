@@ -22,7 +22,7 @@
  * @param string $slug The slug to check.
  * @return bool
  */
-function slug_exists( $slug ) {
+function slug_exists( string $slug ): bool {
 	$post_types = get_post_types( array( '_builtin' => false ) );
 	foreach ( $post_types as $post_type ) {
 		$post_type_object = get_post_type_object( $post_type );
@@ -81,7 +81,7 @@ function event_meta_boxes() {
  *
  * @param  WP_Post $post The current post object.
  */
-function event_dates_meta_box( $post ) {
+function event_dates_meta_box( WP_Post $post ) {
 	wp_nonce_field( 'event_dates_nonce', 'event_dates_nonce' );
 	$event_start = get_post_meta( $post->ID, '_event_start', true );
 	$event_end   = get_post_meta( $post->ID, '_event_end', true );
@@ -96,7 +96,7 @@ function event_dates_meta_box( $post ) {
  *
  * @param  int $post_id The current post ID.
  */
-function save_event_meta_boxes( $post_id ) {
+function save_event_meta_boxes( int $post_id ) {
 	$nonces = array( 'event_dates' );
 	foreach ( $nonces as $nonce ) {
 		$nonce_name = $nonce . '_nonce';
@@ -120,11 +120,12 @@ function save_event_meta_boxes( $post_id ) {
 /**
  * Validate the event dates.
  *
- * @param  string $event_start The event start date.
- * @param  string $event_end   The event end date.
- * @return bool                     Whether the event dates are valid.
+ * @param string $event_start The event start date.
+ * @param string $event_end The event end date.
+ * @return bool Whether the event dates are valid.
+ * @throws Exception When dates are invalid.
  */
-function validate_event_dates( $event_start, $event_end ) {
+function validate_event_dates( string $event_start, string $event_end ): bool {
 	if ( ! $event_start || ! $event_end ) {
 		return false;
 	}
@@ -241,12 +242,12 @@ add_action( 'wp_ajax_nopriv_submit_event_ajax', 'submit_event_ajax' );
 /**
  * Convert a date time in a time zone to UTC.
  *
- * @param  string $date_time The date time in the time zone.
- * @param  string $time_zone The time zone.
- *
- * @return string            The date time in UTC.
+ * @param string $date_time The date time in the time zone.
+ * @param string $time_zone The time zone.
+ * @return string The date time in UTC.
+ * @throws Exception When dates are invalid.
  */
-function convert_to_utc( $date_time, $time_zone ) {
+function convert_to_utc( string $date_time, string $time_zone ): string {
 	$date_time = new DateTime( $date_time, new DateTimeZone( $time_zone ) );
 	$date_time->setTimezone( new DateTimeZone( 'UTC' ) );
 	return $date_time->format( 'Y-m-d H:i:s' );
@@ -276,10 +277,9 @@ add_action( 'save_post', 'save_event_meta_boxes' );
  * Add the events link to the GlotPress main menu.
  *
  * @param array $items The menu items.
- *
  * @return array The modified menu items.
  */
-function gp_event_nav_menu_items( $items ) {
+function gp_event_nav_menu_items( array $items ): array {
 	$new[ esc_url( gp_url( '/events/' ) ) ] = esc_html__( 'Events', 'gp-translation-events' );
 	return array_merge( $items, $new );
 }
