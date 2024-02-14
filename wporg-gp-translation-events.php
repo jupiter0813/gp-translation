@@ -103,7 +103,8 @@ function save_event_meta_boxes( $post_id ) {
 		if ( ! isset( $_POST[ $nonce_name ] ) ) {
 			return;
 		}
-		if ( ! wp_verify_nonce( $_POST[ $nonce_name ], $nonce_name ) ) {
+		$nonce_value = $_POST[ $nonce_name ];
+		if ( ! wp_verify_nonce( $nonce_value, $nonce_name ) ) {
 			return;
 		}
 	}
