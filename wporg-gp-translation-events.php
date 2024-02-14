@@ -99,7 +99,8 @@ function event_dates_meta_box( $post ) {
 function save_event_meta_boxes( $post_id ) {
 	$nonces = array( 'event_dates' );
 	foreach ( $nonces as $nonce ) {
-		if ( ! isset( $_POST[ $nonce . '_nonce' ] ) || ! wp_verify_nonce( $_POST[ $nonce . '_nonce' ], $nonce . '_nonce' ) ) {
+		$nonce_name = $nonce . '_nonce';
+		if ( ! isset( $_POST[ $nonce_name ] ) || ! wp_verify_nonce( $_POST[ $nonce_name ], $nonce_name ) ) {
 			return;
 		}
 	}
