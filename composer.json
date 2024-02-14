@@ -8,7 +8,8 @@
         "wp-coding-standards/wpcs": "^3.0"
     },
     "scripts":{
-        "lint": "phpcs --standard=phpcs.xml",
+        "lint": "phpcs --standard=phpcs.xml -s",
+        "lint:fix": "phpcbf --standard=phpcs.xml",
         "dev:start": "wp-env start --debug && wp-env run cli wp rewrite structure '/%postname%/'",
         "dev:debug": "wp-env start --xdebug",
         "dev:stop": "wp-env stop",
