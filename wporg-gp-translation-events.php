@@ -150,7 +150,7 @@ function submit_event_ajax() {
 		wp_send_json_error( 'Invalid event dates' );
 	}
 
-	if ( isset( $_POST['event_form_action'] ) && in_array( $_POST['event_form_action'], $form_actions ) ) {
+	if ( isset( $_POST['event_form_action'] ) && in_array( $_POST['event_form_action'], $form_actions, true ) ) {
 		$event_status = sanitize_text_field( $_POST['event_form_action'] );
 	}
 	if ( 'create_event' === $_POST['form_name'] ) {
