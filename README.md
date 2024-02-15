@@ -3,6 +3,12 @@
 ## Development environment
 First follow [instructions to install `wp-env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/#prerequisites).
 
+Then install dependencies:
+
+```shell
+composer install
+```
+
 Then you can run a local WordPress instance with the plugin installed:
 
 ```shell
@@ -19,22 +25,18 @@ WordPress is now running at http://localhost:8888, user: `admin`, password: `pas
 
 ### Local environment
 
-If you are using a local environment, you need to add the tables to the local database. To do this, you can run this command from the plugin folder:
+If you are not using `wp-env`, you need to add the tables to the database of your local environment. To do this, you can run this command from the plugin folder:
 
-```
+```shell
 wp db query < schema.sql
 ```
 
-### Internal URLs
+### Tests
 
-To access to the **event list**, you need to add `/glotpress/events` to your base URL. E.g.:
+You can run tests in `wp-env` with the following command:
 
-```
-http://localhost:8888/glotpress/events
-```
+> Note that `wp-env` must be running.
 
-To add a **new event**, you need to add `/glotpress/events/new` to your base URL. E.g.:
-
-```
-http://localhost:8888/glotpress/events/new
+```shell
+composer dev:test
 ```

@@ -1,5 +1,6 @@
 .translation-event-form label {
-    width: 10%;
+    display: inline-block;
+    width: 140px;
     vertical-align: top;
 }
 .translation-event-form #event-title,
@@ -53,9 +54,6 @@
 }
 .hide-event-url {
     display: none;
-}
-.translation-event-form .submit-btn-group {
-    margin-left: 10%;
 }
 .translation-event-form button.save-draft {
     background: #fff;

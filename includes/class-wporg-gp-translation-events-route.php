@@ -23,14 +23,42 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_list() {
-		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
-		$_paged               = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-		$args                 = array(
-			'post_type'      => 'event',
-			'posts_per_page' => 10,
-			'paged'          => $_paged,
-			'post_status'    => 'publish',
-			'meta_query'     => array(
+		$current_datetime_utc   = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+		$_current_events_paged  = isset( $_GET[ 'current_events_paged' ] ) && is_numeric( $_GET[ 'current_events_paged' ] ) ? $_GET[ 'current_events_paged' ] : 1;
+		$_upcoming_events_paged = isset( $_GET[ 'upcoming_events_paged' ] ) && is_numeric( $_GET[ 'upcoming_events_paged' ] ) ? $_GET[ 'upcoming_events_paged' ] : 1;
+
+		$current_events_args  = array(
+			'post_type'            => 'event',
+			'posts_per_page'       => 10,
+			'current_events_paged' => $_current_events_paged,
+			'paged'                => $_current_events_paged,
+			'post_status'          => 'publish',
+			'meta_query'           => array(
+				array(
+					'key'     => '_event_start',
+					'value'   => $current_datetime_utc,
+					'compare' => '<=',
+					'type'    => 'DATETIME',
+				),
+				array(
+					'key'     => '_event_end',
+					'value'   => $current_datetime_utc,
+					'compare' => '>=',
+					'type'    => 'DATETIME',
+				),
+			),
+			'orderby'              => 'meta_value',
+			'order'                => 'ASC',
+		);
+		$current_events_query = new WP_Query( $current_events_args );
+
+		$upcoming_events_args = array(
+			'post_type'             => 'event',
+			'posts_per_page'        => 10,
+			'upcoming_events_paged' => $_upcoming_events_paged,
+			'paged'                 => $_upcoming_events_paged,
+			'post_status'           => 'publish',
+			'meta_query'            => array(
 				array(
 					'key'     => '_event_start',
 					'value'   => $current_datetime_utc,
@@ -38,10 +66,10 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 					'type'    => 'DATETIME',
 				),
 			),
-			'orderby'        => 'meta_value',
-			'order'          => 'ASC',
+			'orderby'               => 'meta_value',
+			'order'                 => 'ASC',
 		);
-		$query                = new WP_Query( $args );
+		$upcoming_events_query = new WP_Query( $upcoming_events_args );
 		$this->tmpl( 'events-list', get_defined_vars() );
 	}
 

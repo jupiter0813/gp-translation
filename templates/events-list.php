@@ -6,41 +6,75 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 
 
 
-<h2 class="event_page_title">Upcoming Translation Events</h2>
+<h2 class="event_page_title">Translation Events</h2>
 <div class="event-left-col">
 <?php
-if ( $query->have_posts() ) :
+if ( $current_events_query->have_posts() ) :
 	?>
+	<h3>Current events</h3>
 	<ul>
 		<?php
-		while ( $query->have_posts() ) :
-			$query->the_post();
-			$event_start = get_post_meta( get_the_ID(), '_event_start', true );
+		while ( $current_events_query->have_posts() ) :
+			$current_events_query->the_post();
+			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format('l, F j, Y');
 			?>
 			<li class="event-list-item">
-				<span class="event-list-date"><time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></span>
+				<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ) ?>"><?php the_title(); ?></a> by <span><?php the_author(); ?></span>
 				<p><?php the_excerpt(); ?></p>
 			</li>
-			<?php
+		<?php
 		endwhile;
 		?>
 	</ul>
 
 	<?php
-	echo esc_html(
-		paginate_links(
-			array(
-				'total'     => $query->max_num_pages,
-				'current'   => max( 1, get_query_var( 'paged' ) ),
-				'prev_text' => '&laquo; Previous',
-				'next_text' => 'Next &raquo;',
-			)
+	echo paginate_links(
+		array(
+			'total'     => $current_events_query->max_num_pages,
+			'current'   => max( 1, $current_events_query->query_vars['current_events_paged'] ),
+			'format'	=> '?current_events_paged=%#%',
+			'prev_text' => '&laquo; Previous',
+			'next_text' => 'Next &raquo;',
 		)
 	);
 
 	wp_reset_postdata();
-else :
+endif;
+if ( $upcoming_events_query->have_posts() ) :
+	?>
+	<h3>Upcoming events</h3>
+	<ul>
+		<?php
+		while ( $upcoming_events_query->have_posts() ) :
+			$upcoming_events_query->the_post();
+			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format('l, F j, Y');
+			?>
+			<li class="event-list-item">
+				<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
+				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ) ?>"><?php the_title(); ?></a> by <span><?php the_author(); ?></span>
+				<p><?php the_excerpt(); ?></p>
+			</li>
+		<?php
+		endwhile;
+		?>
+	</ul>
+
+	<?php
+	echo paginate_links(
+		array(
+			'total'     => $upcoming_events_query->max_num_pages,
+			'current'   => max( 1, $upcoming_events_query->query_vars['upcoming_events_paged'] ),
+			'format'	=> '?upcoming_events_paged=%#%',
+			'prev_text' => '&laquo; Previous',
+			'next_text' => 'Next &raquo;',
+		)
+	);
+
+	wp_reset_postdata();
+endif;
+
+if ( 0 === $current_events_query->post_count && 0 === $upcoming_events_query->post_count ) :
 	echo 'No events found.';
 endif;
 ?>
