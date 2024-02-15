@@ -3,7 +3,7 @@
     <description>Coding standards</description>
 
     <arg name="colors"/>
-    <arg name="extensions" value="php,js"/>
+    <arg name="extensions" value="php,js,css"/>
 
     <file>./assets/</file>
     <file>./includes/</file>
