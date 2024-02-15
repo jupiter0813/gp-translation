@@ -18,16 +18,16 @@
 							$gp.notices.error( 'Event end date and time must be later than event start date and time.' );
 							return;
 						}
-						var btnClicked = $( this ).data( 'event-status' );
+						const btnClicked = $( this ).data( 'event-status' );
 						if ( btnClicked === 'publish' && '' === $( '#event-id' ).val() ) {
-							var submitPrompt = 'Are you sure you want to publish this event?';
+							const submitPrompt = 'Are you sure you want to publish this event?';
 							if ( ! confirm( submitPrompt ) ) {
 								return;
 							}
 						}
 						$( '#event-form-action' ).val( btnClicked );
-						var $form = $( '.translation-event-form' );
-						var $is_creation = $('#form-name').val() === 'create_event';
+						const $form = $( '.translation-event-form' );
+						const $is_creation = $('#form-name').val() === 'create_event';
 
 						$.ajax(
 							{
@@ -67,7 +67,7 @@
 					if ( ! confirm( 'Are you sure you want to delete this event?' ) ) {
 						return;
 					}
-					var $form = $('.translation-event-form');
+					const $form = $('.translation-event-form');
 					$('#form-name').val('delete_event');
 					$('#event-form-action').val('delete');
 					$.ajax({
@@ -83,8 +83,8 @@
 					});
 				});
 				function validateEventDates() {
-					var startDateTimeInput = $('#event-start');
-					var endDateTimeInput = $('#event-end');
+					const startDateTimeInput = $('#event-start');
+					const endDateTimeInput = $('#event-end');
 					if ( ! startDateTimeInput.length || ! endDateTimeInput.length ) {
 						return;
 					}
@@ -108,18 +108,18 @@
 				}
 
 				function convertToUserLocalTime() {
-					var timeElements = document.querySelectorAll('time.event-utc-time');
+					const timeElements = document.querySelectorAll('time.event-utc-time');
 					if ( timeElements.length === 0 ) {
 						return;
 					}
 					timeElements.forEach(
 						function ( timeEl ) {
-							var eventDateObj = new Date( timeEl.getAttribute('datetime') );
-							var userTimezoneOffset = new Date().getTimezoneOffset();
-							var userTimezoneOffsetMs = userTimezoneOffset * 60 * 1000;
-							var userLocalDateTime = new Date(eventDateObj.getTime() - userTimezoneOffsetMs);
+							const eventDateObj = new Date( timeEl.getAttribute('datetime') );
+							const userTimezoneOffset = new Date().getTimezoneOffset();
+							const userTimezoneOffsetMs = userTimezoneOffset * 60 * 1000;
+							const userLocalDateTime = new Date(eventDateObj.getTime() - userTimezoneOffsetMs);
 
-							var options = {
+							const options = {
 								weekday: 'short',
 								year: 'numeric',
 								month: 'long',
