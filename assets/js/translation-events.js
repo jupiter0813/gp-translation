@@ -28,34 +28,36 @@
 						var $form = $( '.translation-event-form' );
 						var $is_creation = $( '#form-name' ).val() == 'create_event' ? true : false;
 
-						$.ajax({
-							type: 'POST',
-							url: $translation_event.url,
-							data:$form.serialize(),
-							success: function(response) {
-								if ( response.data.eventId ) {
-									history.replaceState('','', response.data.eventEditUrl)
-									$('#form-name').val('edit_event');
-									$('.event-page-title').text('Edit Event');
-									$('#event-id').val(response.data.eventId);
-									if( btnClicked == 'publish' ) {
-										$('button[data-event-status="draft"]').hide();
-										$('button[data-event-status="publish"]').text('Update Event');
+						$.ajax(
+							{
+								type: 'POST',
+								url: $translation_event.url,
+								data:$form.serialize(),
+								success: function(response) {
+									if ( response.data.eventId ) {
+										history.replaceState('','', response.data.eventEditUrl)
+										$('#form-name').val('edit_event');
+										$('.event-page-title').text('Edit Event');
+										$('#event-id').val(response.data.eventId);
+										if( btnClicked == 'publish' ) {
+											$('button[data-event-status="draft"]').hide();
+											$('button[data-event-status="publish"]').text('Update Event');
+										}
+										if( btnClicked == 'draft' ) {
+											$('button[data-event-status="draft"]').text('Update Draft');
+										}
+										$('#event-url').removeClass('hide-event-url').find('a').attr('href', response.data.eventUrl).text(response.data.eventUrl);
+										if ( $is_creation ) {
+											$('#delete-button').toggle();
+										}
+										$gp.notices.success(response.data.message);
 									}
-									if( btnClicked == 'draft' ) {
-										$('button[data-event-status="draft"]').text('Update Draft');
-									}
-									$('#event-url').removeClass('hide-event-url').find('a').attr('href', response.data.eventUrl).text(response.data.eventUrl);
-									if ( $is_creation ) {
-										$('#delete-button').toggle();
-									}
-									$gp.notices.success(response.data.message);
+								},
+								error: function(error) {
+									$gp.notices.error(response.data.message);
 								}
-							},
-							error: function(error) {
-								$gp.notices.error(response.data.message);
 							}
-						});
+						);
 					}
 				);
 
