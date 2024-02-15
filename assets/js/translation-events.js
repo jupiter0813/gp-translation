@@ -3,7 +3,8 @@
 		jQuery( document ).ready(
 			function ( $ ) {
 				$gp.notices.init();
-				if ( $( '#event-timezone' ).length && ! $( '#event-timezone' ).val() ) {
+				const timezoneElement = $( '#event-timezone' );
+				if ( timezoneElement.length && ! timezoneElement.val() ) {
 					selectUserTimezone();
 				}
 				validateEventDates();
