@@ -82,59 +82,60 @@
 						},
 					});
 				});
-				function validateEventDates() {
-					const startDateTimeInput = $('#event-start');
-					const endDateTimeInput = $('#event-end');
-					if ( ! startDateTimeInput.length || ! endDateTimeInput.length ) {
-						return;
-					}
-
-					startDateTimeInput.add( endDateTimeInput ).on(
-						'input',
-						function () {
-							endDateTimeInput.prop('min', startDateTimeInput.val());
-							if (endDateTimeInput.val() < startDateTimeInput.val()) {
-								endDateTimeInput.val(startDateTimeInput.val());
-							}
-						}
-					);
-				}
-				function selectUserTimezone() {
-					const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-					// phpcs:disable WordPress.WhiteSpace.OperatorSpacing.NoSpaceBefore
-					// phpcs:disable WordPress.WhiteSpace.OperatorSpacing.NoSpaceAfter
-					document.querySelector( `#event-timezone option[value="${timezone}"]` ).selected = true
-					// phpcs:enable
-				}
-
-				function convertToUserLocalTime() {
-					const timeElements = document.querySelectorAll('time.event-utc-time');
-					if ( timeElements.length === 0 ) {
-						return;
-					}
-					timeElements.forEach(
-						function ( timeEl ) {
-							const eventDateObj = new Date( timeEl.getAttribute('datetime') );
-							const userTimezoneOffset = new Date().getTimezoneOffset();
-							const userTimezoneOffsetMs = userTimezoneOffset * 60 * 1000;
-							const userLocalDateTime = new Date(eventDateObj.getTime() - userTimezoneOffsetMs);
-
-							const options = {
-								weekday: 'short',
-								year: 'numeric',
-								month: 'long',
-								day: 'numeric',
-								hour: 'numeric',
-								minute: 'numeric',
-								hour12: true,
-								timeZoneName: 'short'
-							};
-
-							timeEl.textContent = userLocalDateTime.toLocaleString('en-US', options);
-						}
-					);
-				}
 			}
 		);
+
+		function validateEventDates() {
+			const startDateTimeInput = $('#event-start');
+			const endDateTimeInput = $('#event-end');
+			if ( ! startDateTimeInput.length || ! endDateTimeInput.length ) {
+				return;
+			}
+
+			startDateTimeInput.add( endDateTimeInput ).on(
+				'input',
+				function () {
+					endDateTimeInput.prop('min', startDateTimeInput.val());
+					if (endDateTimeInput.val() < startDateTimeInput.val()) {
+						endDateTimeInput.val(startDateTimeInput.val());
+					}
+				}
+			);
+		}
+		function selectUserTimezone() {
+			const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+			// phpcs:disable WordPress.WhiteSpace.OperatorSpacing.NoSpaceBefore
+			// phpcs:disable WordPress.WhiteSpace.OperatorSpacing.NoSpaceAfter
+			document.querySelector( `#event-timezone option[value="${timezone}"]` ).selected = true
+			// phpcs:enable
+		}
+
+		function convertToUserLocalTime() {
+			const timeElements = document.querySelectorAll('time.event-utc-time');
+			if ( timeElements.length === 0 ) {
+				return;
+			}
+			timeElements.forEach(
+				function ( timeEl ) {
+					const eventDateObj = new Date( timeEl.getAttribute('datetime') );
+					const userTimezoneOffset = new Date().getTimezoneOffset();
+					const userTimezoneOffsetMs = userTimezoneOffset * 60 * 1000;
+					const userLocalDateTime = new Date(eventDateObj.getTime() - userTimezoneOffsetMs);
+
+					const options = {
+						weekday: 'short',
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric',
+						hour: 'numeric',
+						minute: 'numeric',
+						hour12: true,
+						timeZoneName: 'short'
+					};
+
+					timeEl.textContent = userLocalDateTime.toLocaleString('en-US', options);
+				}
+			);
+		}
 	}( jQuery, $gp )
 );
