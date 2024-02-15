@@ -9,24 +9,24 @@
 				validateEventDates();
 				convertToUserLocalTime();
 
-				$('.submit-event').on(
+				$( '.submit-event' ).on(
 					'click',
-					function(e) {
+					function ( e ) {
 						e.preventDefault();
-						if ( $('#event-end').val() <= $('#event-start').val() ) {
+						if ( $( '#event-end' ).val() <= $( '#event-start' ).val() ) {
 							$gp.notices.error( 'Event end date and time must be later than event start date and time.' );
 							return;
 						}
-						var btnClicked = $(this).data('event-status');
-						if ( btnClicked == 'publish' && '' == $('#event-id').val() ) {
+						var btnClicked = $( this ).data( 'event-status' );
+						if ( btnClicked == 'publish' && '' == $( '#event-id' ).val() ) {
 							var submitPrompt = 'Are you sure you want to publish this event?';
 							if ( ! confirm( submitPrompt ) ) {
 								return;
 							}
 						}
-						$('#event-form-action').val( btnClicked );
-						var $form = $('.translation-event-form');
-						var $is_creation = $('#form-name').val() == 'create_event' ? true : false;
+						$( '#event-form-action' ).val( btnClicked );
+						var $form = $( '.translation-event-form' );
+						var $is_creation = $( '#form-name' ).val() == 'create_event' ? true : false;
 
 						$.ajax({
 							type: 'POST',
