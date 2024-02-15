@@ -88,12 +88,15 @@
 						return;
 					}
 
-					startDateTimeInput.add(endDateTimeInput).on('input', function () {
-						endDateTimeInput.prop('min', startDateTimeInput.val());
-						if (endDateTimeInput.val() < startDateTimeInput.val()) {
-							endDateTimeInput.val(startDateTimeInput.val());
+					startDateTimeInput.add( endDateTimeInput ).on(
+						'input',
+						function () {
+							endDateTimeInput.prop('min', startDateTimeInput.val());
+							if (endDateTimeInput.val() < startDateTimeInput.val()) {
+								endDateTimeInput.val(startDateTimeInput.val());
+							}
 						}
-					});
+					);
 				}
 				function selectUserTimezone() {
 					document.querySelector(`#event-timezone option[value="${Intl.DateTimeFormat().resolvedOptions().timeZone}"]`).selected = true
@@ -104,25 +107,27 @@
 					if ( timeElements.length === 0 ) {
 						return;
 					}
-					timeElements.forEach(function(timeEl) {
-						var eventDateObj = new Date( timeEl.getAttribute('datetime') );
-						var userTimezoneOffset = new Date().getTimezoneOffset();
-						var userTimezoneOffsetMs = userTimezoneOffset * 60 * 1000;
-						var userLocalDateTime = new Date(eventDateObj.getTime() - userTimezoneOffsetMs);
+					timeElements.forEach(
+						function ( timeEl ) {
+							var eventDateObj = new Date( timeEl.getAttribute('datetime') );
+							var userTimezoneOffset = new Date().getTimezoneOffset();
+							var userTimezoneOffsetMs = userTimezoneOffset * 60 * 1000;
+							var userLocalDateTime = new Date(eventDateObj.getTime() - userTimezoneOffsetMs);
 
-						var options = {
-							weekday: 'short',
-							year: 'numeric',
-							month: 'long',
-							day: 'numeric',
-							hour: 'numeric',
-							minute: 'numeric',
-							hour12: true,
-							timeZoneName: 'short'
-						};
+							var options = {
+								weekday: 'short',
+								year: 'numeric',
+								month: 'long',
+								day: 'numeric',
+								hour: 'numeric',
+								minute: 'numeric',
+								hour12: true,
+								timeZoneName: 'short'
+							};
 
-						timeEl.textContent = userLocalDateTime.toLocaleString('en-US', options);
-					});
+							timeEl.textContent = userLocalDateTime.toLocaleString('en-US', options);
+						}
+					);
 				}
 			}
 		);
