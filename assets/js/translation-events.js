@@ -14,7 +14,7 @@ jQuery(document).ready(function($) {
             return;
         }
         var btnClicked = $(this).data('event-status');
-        if ( btnClicked == 'publish' ) {
+        if ( btnClicked == 'publish' && '' == $('#event-id').val() ) {
             var submitPrompt = 'Are you sure you want to publish this event?';
             if ( ! confirm( submitPrompt ) ) {
                 return;
