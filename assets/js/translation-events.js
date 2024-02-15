@@ -35,7 +35,7 @@
 								data:$form.serialize(),
 								success: function(response) {
 									if ( response.data.eventId ) {
-										history.replaceState('','', response.data.eventEditUrl)
+										history.replaceState( '', '', response.data.eventEditUrl );
 										$('#form-name').val('edit_event');
 										$('.event-page-title').text('Edit Event');
 										$('#event-id').val(response.data.eventId);
@@ -110,7 +110,16 @@
 						var userTimezoneOffsetMs = userTimezoneOffset * 60 * 1000;
 						var userLocalDateTime = new Date(eventDateObj.getTime() - userTimezoneOffsetMs);
 
-						var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName: 'short' };
+						var options = {
+							weekday: 'short',
+							year: 'numeric',
+							month: 'long',
+							day: 'numeric',
+							hour: 'numeric',
+							minute: 'numeric',
+							hour12: true,
+							timeZoneName: 'short'
+						};
 
 						timeEl.textContent = userLocalDateTime.toLocaleString('en-US', options);
 					});
