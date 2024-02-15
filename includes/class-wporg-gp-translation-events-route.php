@@ -89,7 +89,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$css_show_url                  = '';
 		$event_title                   = $event->post_title;
 		$event_description             = $event->post_content;
-		$event_timezone                = get_post_meta( $event_id, '_event_timezone', true ) ?? '';
+		$event_timezone                = get_post_meta( $event_id, '_event_timezone', true ) ?: '';
 		$event_start                   = self::convertToTimezone( get_post_meta( $event_id, '_event_start', true ), $event_timezone ) ?? '';
 		$event_end                     = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone ) ?? '';
 		$event_status                  = $event->post_status;
@@ -115,8 +115,8 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_id = $event->ID;
 		$event_title         = $event->post_title;
 		$event_description   = $event->post_content;
-		$event_start         = get_post_meta( $event->ID, '_event_start', true ) ?? '';
-		$event_end           = get_post_meta( $event->ID, '_event_end', true ) ?? '';
+		$event_start         = get_post_meta( $event->ID, '_event_start', true ) ?: '';
+		$event_end           = get_post_meta( $event->ID, '_event_end', true ) ?: '';
 		$attending_event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?: array();
 		$user_is_attending   = isset( $attending_event_ids[ $event_id ] );
 
