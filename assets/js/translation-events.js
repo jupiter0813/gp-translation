@@ -18,7 +18,7 @@
 							return;
 						}
 						var btnClicked = $( this ).data( 'event-status' );
-						if ( btnClicked == 'publish' && '' == $( '#event-id' ).val() ) {
+						if ( btnClicked === 'publish' && '' === $( '#event-id' ).val() ) {
 							var submitPrompt = 'Are you sure you want to publish this event?';
 							if ( ! confirm( submitPrompt ) ) {
 								return;
@@ -26,7 +26,7 @@
 						}
 						$( '#event-form-action' ).val( btnClicked );
 						var $form = $( '.translation-event-form' );
-						var $is_creation = $( '#form-name' ).val() == 'create_event' ? true : false;
+						var $is_creation = $('#form-name').val() === 'create_event';
 
 						$.ajax(
 							{
@@ -39,11 +39,11 @@
 										$('#form-name').val('edit_event');
 										$('.event-page-title').text('Edit Event');
 										$('#event-id').val(response.data.eventId);
-										if( btnClicked == 'publish' ) {
+										if( btnClicked === 'publish' ) {
 											$('button[data-event-status="draft"]').hide();
 											$('button[data-event-status="publish"]').text('Update Event');
 										}
-										if( btnClicked == 'draft' ) {
+										if( btnClicked === 'draft' ) {
 											$('button[data-event-status="draft"]').text('Update Draft');
 										}
 										$('#event-url').removeClass('hide-event-url').find('a').attr('href', response.data.eventUrl).text(response.data.eventUrl);
