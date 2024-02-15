@@ -6,7 +6,7 @@
  * @package wporg-gp-translation-events
  */
 class WPORG_GP_Translation_Events_Route extends GP_Route {
-
+	public const USER_META_KEY_ATTENDING = 'translation-events-attending';
 
 	/**
 	 * WPORG_GP_Translation_Events_Route constructor.
@@ -117,7 +117,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$css_show_url                  = '';
 		$event_title                   = $event->post_title;
 		$event_description             = $event->post_content;
-		$event_timezone                = get_post_meta( $event_id, '_event_timezone', true ) ?? '';
+		$event_timezone                = get_post_meta( $event_id, '_event_timezone', true ) ?: '';
 		$event_start                   = self::convertToTimezone( get_post_meta( $event_id, '_event_start', true ), $event_timezone ) ?? '';
 		$event_end                     = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone ) ?? '';
 		$event_status                  = $event->post_status;
@@ -134,15 +134,19 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_details( $event_slug ) {
+		$user = wp_get_current_user();
 		$event = get_page_by_path( $event_slug, OBJECT, 'event' );
 		if ( ! $event ) {
 			$this->die_with_404();
 		}
 
-		$event_title       = $event->post_title;
-		$event_description = $event->post_content;
-		$event_start       = get_post_meta( $event->ID, '_event_start', true ) ?? '';
-		$event_end         = get_post_meta( $event->ID, '_event_end', true ) ?? '';
+		$event_id = $event->ID;
+		$event_title         = $event->post_title;
+		$event_description   = $event->post_content;
+		$event_start         = get_post_meta( $event->ID, '_event_start', true ) ?: '';
+		$event_end           = get_post_meta( $event->ID, '_event_end', true ) ?: '';
+		$attending_event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?: array();
+		$user_is_attending   = isset( $attending_event_ids[ $event_id ] );
 
 		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
 		try {
@@ -153,6 +157,43 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		}
 
 		$this->tmpl( 'event', get_defined_vars() );
+	}
+
+	/**
+	 * Toggle whether the current user is attending an event.
+	 * If the user is not currently marked as attending, they will be marked as attending.
+	 * If the user is currently marked as attending, they will be marked as not attending.
+	 *
+	 * @param int $event_id
+	 */
+	public function events_attend( int $event_id ) {
+		$user = wp_get_current_user();
+		if ( ! $user ) {
+			$this->die_with_error( 'Only logged-in users can attend events', 403 );
+		}
+
+		$event = get_post( $event_id );
+		if ( ! $event ) {
+			$this->die_with_404();
+		}
+
+		$event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?? [];
+		if ( ! $event_ids ) {
+			$event_ids = [];
+		}
+
+		if ( ! isset( $event_ids[ $event_id ] ) ) {
+			// Not yet attending, mark as attending.
+			$event_ids[ $event_id ] = true;
+		} else {
+			// Currently attending, mark as not attending.
+			unset( $event_ids[ $event_id ] );
+		}
+
+		update_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, $event_ids );
+
+		wp_safe_redirect( gp_url( "/events/$event->post_name" ) );
+		exit;
 	}
 
 	/**

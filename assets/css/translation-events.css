@@ -41,10 +41,6 @@
     float: left;
     padding: 1em;
 }
-button#join-event {
-    width: 100%;
-    display: block;
-}
 .event-details-stats {
     clear: both;
     margin: 1em;

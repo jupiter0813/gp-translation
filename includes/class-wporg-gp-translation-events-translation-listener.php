@@ -151,9 +151,8 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	private function select_events_user_is_registered_for( array $events, int $user_id ): array {
 		return array_filter(
 			$events,
-			function ( WPORG_GP_Translation_Events_Event $event ) {
-				// TODO.
-				return true;
+			function ( $event ) use ( $attending_event_ids ) {
+				return isset( $attending_event_ids[ $event->ID ] );
 			}
 		);
 	}

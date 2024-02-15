@@ -29,7 +29,13 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 		</div>
 		<?php  if ( is_user_logged_in() ) : ?>
 		<div class="event-details-join">
-			<button class="button is-primary" id="join-event">Attend Event</button>
+			<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) )?>">
+				<?php if ( ! $user_is_attending ): ?>
+					<input type="submit" class="button is-primary" value="Attend Event"/>
+				<?php else: ?>
+					<input type="submit" class="button is-secondary" value="You're attending"/>
+				<?php endif ?>
+			</form>
 		</div>
 		<?php endif; ?>
 	</div>
