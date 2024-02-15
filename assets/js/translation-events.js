@@ -100,7 +100,10 @@
 				}
 				function selectUserTimezone() {
 					const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+					// phpcs:disable WordPress.WhiteSpace.OperatorSpacing.NoSpaceBefore
+					// phpcs:disable WordPress.WhiteSpace.OperatorSpacing.NoSpaceAfter
 					document.querySelector( `#event-timezone option[value="${timezone}"]` ).selected = true
+					// phpcs:enable
 				}
 
 				function convertToUserLocalTime() {
