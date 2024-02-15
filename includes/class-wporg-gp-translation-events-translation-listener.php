@@ -1,10 +1,9 @@
 <?php
 
 class WPORG_GP_Translation_Events_Translation_Listener {
-	const ACTIONS_TABLE_NAME = 'wp_wporg_gp_translation_events_actions';
-	const ACTION_CREATE = 'create';
-	const ACTION_APPROVE = 'approve';
-	const ACTION_REJECT = 'reject';
+	const ACTION_CREATE          = 'create';
+	const ACTION_APPROVE         = 'approve';
+	const ACTION_REJECT          = 'reject';
 	const ACTION_REQUEST_CHANGES = 'request_changes';
 
 	private WPORG_GP_Translation_Events_Active_Events_Cache $active_events_cache;
@@ -62,37 +61,43 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			$active_events = $this->get_active_events( $happened_at );
 			$events        = $this->select_events_user_is_registered_for( $active_events, $user_id );
 
-			/** @var GP_Translation_Set $translation_set */
-			$translation_set = ( new GP_Translation_Set )->find_one( [ 'id' => $translation->translation_set_id ] );
+			// phpcs:ignore Generic.Commenting.DocComment.MissingShort
+			/** @var GP_Translation_Set $translation_set Translation set */
+			$translation_set = ( new GP_Translation_Set() )->find_one( array( 'id' => $translation->translation_set_id ) );
 			global $wpdb;
-			$table_name = self::ACTIONS_TABLE_NAME;
 
 			foreach ( $events as $event ) {
 				// A given user can only do one action on a specific translation.
 				// So we insert ignore, which will keep only the first action.
+				// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+				// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->query(
 					$wpdb->prepare(
-						"insert ignore into $table_name (event_id, user_id, translation_id, action, locale) values (%d, %d, %d, %s, %s)",
-						[
-							// start primary key
+						'insert ignore into wp_wporg_gp_translation_events_actions (event_id, user_id, translation_id, action, locale) values (%d, %d, %d, %s, %s)',
+						array(
+							// Start primary key.
 							'event_id'       => $event->id(),
 							'user_id'        => $user_id,
 							'translation_id' => $translation->id,
-							// end primary key
+							// End primary key.
 							'action'         => $action,
 							'locale'         => $translation_set->locale,
-						],
+						),
 					),
 				);
+				// phpcs:enable
 			}
 		} catch ( Exception $exception ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $exception );
 		}
 	}
 
 	/**
+	 * Get active events at a given time.
+	 *
 	 * @return WPORG_GP_Translation_Events_Event[]
-	 * @throws Exception
+	 * @throws Exception When it fails to get active events.
 	 */
 	private function get_active_events( DateTimeImmutable $at ): array {
 		$events = $this->active_events_cache->get();
@@ -103,32 +108,32 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 
 			// Get events for which start is before $boundary_end AND end is after $boundary_start.
 			$event_ids = get_posts(
-				[
+				array(
 					'post_type'      => 'event',
 					'post_status'    => 'publish',
 					'posts_per_page' => - 1,
 					'fields'         => 'ids',
-					'meta_query'     => [
-						[
+					'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						array(
 							'key'     => '_event_start',
 							'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
 							'compare' => '<',
 							'type'    => 'DATETIME',
-						],
-						[
+						),
+						array(
 							'key'     => '_event_end',
 							'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
 							'compare' => '>',
 							'type'    => 'DATETIME',
-						],
-					],
-				],
+						),
+					),
+				),
 			);
 
-			$events = [];
+			$events = array();
 			foreach ( $event_ids as $event_id ) {
-				$meta = get_post_meta( $event_id );
-				$events[] = WPORG_GP_Translation_Events_Event::fromPostMeta($event_id, $meta);
+				$meta     = get_post_meta( $event_id );
+				$events[] = WPORG_GP_Translation_Events_Event::from_post_meta( $event_id, $meta );
 			}
 
 			$this->active_events_cache->cache( $events );
@@ -144,10 +149,13 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	}
 
 	/**
-	 * @param WPORG_GP_Translation_Events_Event[] $events
+	 * Filter an array of events so that it only includes events the given user is attending.
 	 *
+	 * @param WPORG_GP_Translation_Events_Event[] $events Events.
 	 * @return WPORG_GP_Translation_Events_Event[]
 	 */
+	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.Found
 	private function select_events_user_is_registered_for( array $events, int $user_id ): array {
 		return array_filter(
 			$events,
@@ -156,4 +164,5 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			}
 		);
 	}
+	// phpcs:enable
 }

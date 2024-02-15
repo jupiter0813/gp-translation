@@ -7,9 +7,11 @@ class WPORG_GP_Translation_Events_Event {
 	private DateTimeZone $timezone;
 
 	/**
-	 * @throws Exception
+	 * Make an Event from post meta.
+	 *
+	 * @throws Exception When dates are invalid.
 	 */
-	public static function fromPostMeta(int $id, array $meta): WPORG_GP_Translation_Events_Event {
+	public static function from_post_meta( int $id, array $meta ): WPORG_GP_Translation_Events_Event {
 		if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) || ! isset( $meta['_event_timezone'][0] ) ) {
 			throw new Exception( 'Invalid event meta' );
 		}

@@ -10,11 +10,20 @@
     <file>./templates/</file>
     <file>./tests/</file>
     -->
+    <file>./includes/class-wporg-gp-translation-events-active-events-cache.php</file>
+    <file>./includes/class-wporg-gp-translation-events-event.php</file>
+    <file>./includes/class-wporg-gp-translation-events-stats-calculator.php</file>
+    <file>./includes/class-wporg-gp-translation-events-translation-listener.php</file>
     <file>./wporg-gp-translation-events.php</file>
 
     <rule ref="WordPress">
-        <exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
+        <exclude name="Squiz.Commenting.ClassComment.Missing"/>
         <exclude name="Squiz.Commenting.FileComment.Missing"/>
+        <exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
         <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+        <exclude name="Squiz.Commenting.VariableComment.Missing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <exclude name="Generic.Files.OneObjectStructurePerFile.MultipleFound"/>
     </rule>
 </ruleset>

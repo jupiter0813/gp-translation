@@ -18,12 +18,14 @@ class WPORG_GP_Translation_Events_Event_Stats {
 	 *
 	 * @var WPORG_GP_Translation_Events_Stats_Row[]
 	 */
-	private array $rows = [];
+	private array $rows = array();
 
 	private WPORG_GP_Translation_Events_Stats_Row $totals;
 
 	/**
-	 * @throws Exception
+	 * Add a stats row.
+	 *
+	 * @throws Exception When incorrect locale is passed.
 	 */
 	public function add_row( string $locale, WPORG_GP_Translation_Events_Stats_Row $row ) {
 		if ( ! $locale ) {
@@ -51,33 +53,40 @@ class WPORG_GP_Translation_Events_Event_Stats {
 }
 
 class WPORG_GP_Translation_Events_Stats_Calculator {
-	private string $ACTIONS_TABLE_NAME = WPORG_GP_Translation_Events_Translation_Listener::ACTIONS_TABLE_NAME;
-
 	/**
-	 * @throws Exception
+	 * Get stats for an event.
+	 *
+	 * @throws Exception When stats calculation failed.
 	 */
-	function for_event( WP_Post $event ): WPORG_GP_Translation_Events_Event_Stats {
-		$stats = new WPORG_GP_Translation_Events_Event_Stats;
+	public function for_event( WP_Post $event ): WPORG_GP_Translation_Events_Event_Stats {
+		$stats = new WPORG_GP_Translation_Events_Event_Stats();
 		global $wpdb;
 
-		$query = $wpdb->prepare( "
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs thinks we're doing a schema change but we aren't.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"
 				select locale,
 					   sum(action = 'create') as created,
 					   count(*) as total,
 					   count(distinct user_id) as users
-				from $this->ACTIONS_TABLE_NAME
+				from wp_wporg_gp_translation_events_actions
 				where event_id = %d
 				group by locale with rollup
 			",
-			[
-				$event->ID,
-			]
+				array(
+					$event->ID,
+				)
+			)
 		);
+		// phpcs:enable
 
-		$rows = $wpdb->get_results( $query );
 		foreach ( $rows as $index => $row ) {
-			$is_totals = $row->locale === null;
-			if ( $is_totals && $index !== array_key_last( $rows ) ) {
+			$is_totals = null === $row->locale;
+			if ( $is_totals && array_key_last( $rows ) !== $index ) {
 				// If this is not the last row, something is wrong in the data in the database table
 				// or there's a bug in the query above.
 				throw new Exception(
