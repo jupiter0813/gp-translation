@@ -15,7 +15,12 @@ gp_tmpl_load( 'events-header', get_defined_vars(), dirname( __FILE__ ) );
 
 <div class="event-details-page">
 	<div class="event-details-head">
-		<h1><?php echo esc_html( $event_title ); ?></h1>
+		<h1>
+			<?php echo esc_html( $event_title ); ?>
+			<?php if ( 'draft' === $event->post_status ): ?>
+				<span class="event-label-draft"><?php echo esc_html( $event->post_status ); ?></span>
+			<?php endif; ?>
+		</h1>
 		<p>Host: <a href="<?php echo esc_attr( get_author_posts_url( $event->post_author ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $event->post_author ) ); ?></a></p>
 	</div>
 	<div class="event-details-left">
