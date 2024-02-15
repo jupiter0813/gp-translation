@@ -99,7 +99,8 @@
 					);
 				}
 				function selectUserTimezone() {
-					document.querySelector(`#event-timezone option[value="${Intl.DateTimeFormat().resolvedOptions().timeZone}"]`).selected = true
+					const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+					document.querySelector( `#event-timezone option[value="${timezone}"]` ).selected = true
 				}
 
 				function convertToUserLocalTime() {
