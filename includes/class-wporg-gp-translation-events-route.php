@@ -14,7 +14,8 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * @since 0.0.1
 	 */
 	public function __construct() {
-		$this->template_path = dirname( __FILE__ ) . '/../templates/';
+		parent::__construct();
+		$this->template_path = __DIR__ . '/../templates/';
 	}
 
 	/**
@@ -23,9 +24,32 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_list() {
-		$current_datetime_utc   = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
-		$_current_events_paged  = isset( $_GET['current_events_paged'] ) && is_numeric( $_GET['current_events_paged'] ) ? $_GET['current_events_paged'] : 1;
-		$_upcoming_events_paged = isset( $_GET['upcoming_events_paged'] ) && is_numeric( $_GET['upcoming_events_paged'] ) ? $_GET['upcoming_events_paged'] : 1;
+		$current_datetime_utc = null;
+		try {
+			$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+		} catch ( Exception $e ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( $e );
+			$this->die_with_error( 'Something is wrong.' );
+		}
+
+		$_current_events_paged  = 1;
+		$_upcoming_events_paged = 1;
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['current_events_paged'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['current_events_paged'] ) );
+			if ( is_numeric( $value ) ) {
+				$_current_events_paged = (int) $value;
+			}
+		}
+		if ( isset( $_GET['upcoming_events_paged'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['upcoming_events_paged'] ) );
+			if ( is_numeric( $value ) ) {
+				$_upcoming_events_paged = (int) $value;
+			}
+		}
+		// phpcs:enable
 
 		$current_events_args  = array(
 			'post_type'            => 'event',
@@ -33,6 +57,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			'current_events_paged' => $_current_events_paged,
 			'paged'                => $_current_events_paged,
 			'post_status'          => 'publish',
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query'           => array(
 				array(
 					'key'     => '_event_start',
@@ -58,6 +83,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			'upcoming_events_paged' => $_upcoming_events_paged,
 			'paged'                 => $_upcoming_events_paged,
 			'post_status'           => 'publish',
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query'            => array(
 				array(
 					'key'     => '_event_start',
@@ -91,6 +117,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$event_timezone    = '';
 		$event_start       = '';
 		$event_end         = '';
+		$event_url         = '';
 
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
@@ -102,7 +129,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 *
 	 * @return void
 	 */
-	public function events_edit( $event_id ) {
+	public function events_edit( int $event_id ) {
 		if ( ! is_user_logged_in() ) {
 			$this->die_with_error( 'You must be logged in to edit an event', 403 );
 		}
@@ -117,12 +144,21 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$css_show_url                  = '';
 		$event_title                   = $event->post_title;
 		$event_description             = $event->post_content;
-		$event_timezone                = get_post_meta( $event_id, '_event_timezone', true ) ?: '';
-		$event_start                   = self::convertToTimezone( get_post_meta( $event_id, '_event_start', true ), $event_timezone ) ?? '';
-		$event_end                     = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone ) ?? '';
 		$event_status                  = $event->post_status;
 		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
+		$event_url                     = get_site_url() . gp_url( wp_make_link_relative( $permalink ) );
+		$event_timezone                = get_post_meta( $event_id, '_event_timezone', true ) ?: '';
+
+		try {
+			$event_start = self::convertToTimezone( get_post_meta( $event_id, '_event_start', true ), $event_timezone );
+			$event_end   = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone );
+		} catch ( Exception $e ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( $e );
+			$this->die_with_error( 'Something is wrong.' );
+		}
+
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
 
@@ -133,7 +169,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 *
 	 * @return void
 	 */
-	public function events_details( $event_slug ) {
+	public function events_details( string $event_slug ) {
 		$user  = wp_get_current_user();
 		$event = get_page_by_path( $event_slug, OBJECT, 'event' );
 		if ( ! $event ) {
@@ -152,6 +188,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		try {
 			$event_stats = $stats_calculator->for_event( $event );
 		} catch ( Exception $e ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $e );
 			$this->die_with_error( 'Failed to calculate event stats' );
 		}
@@ -163,8 +200,6 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * Toggle whether the current user is attending an event.
 	 * If the user is not currently marked as attending, they will be marked as attending.
 	 * If the user is currently marked as attending, they will be marked as not attending.
-	 *
-	 * @param int $event_id
 	 */
 	public function events_attend( int $event_id ) {
 		$user = wp_get_current_user();
@@ -230,8 +265,9 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * @param string $time_zone The time zone.
 	 *
 	 * @return string The date time in the time zone.
+	 * @throws Exception When date is invalid.
 	 */
-	public static function convertToTimezone( $date_time, $time_zone ) {
+	public static function convertToTimezone( string $date_time, string $time_zone ): string {
 		return ( new DateTime( $date_time, new DateTimeZone( 'UTC' ) ) )->setTimezone( new DateTimeZone( $time_zone ) )->format( 'Y-m-d H:i:s' );
 	}
 }

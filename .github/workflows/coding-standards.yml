@@ -26,4 +26,4 @@ jobs:
           composer-options: "--no-progress --no-ansi --no-interaction"
 
       - name: Run PHPCS
-        run: vendor/bin/phpcs -q --report=checkstyle | cs2pr --notices-as-warnings
+        run: vendor/bin/phpcs --standard=phpcs.xml -q --report=checkstyle | cs2pr --notices-as-warnings
