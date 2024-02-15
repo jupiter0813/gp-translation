@@ -3,8 +3,9 @@
     <description>Coding standards</description>
 
     <arg name="colors"/>
-    <arg name="extensions" value="php"/>
+    <arg name="extensions" value="php,js"/>
 
+    <file>./assets/</file>
     <file>./includes/</file>
     <file>./templates/</file>
     <file>./tests/</file>
