@@ -114,3 +114,19 @@ h2.event_page_title {
     background-color: var(--gp-color-btn-primary-bg) !important;
     color: #fff !important;
 }
+a.event-link-draft {
+    color:#80807f;
+}
+span.event-label-draft {
+    font-weight: 500;
+    color:#c05621;
+    border: 1px solid #c05621;
+    font-size: .7em;
+    margin-right: 0.3em;
+    width: 6em;
+    text-align: center;
+    padding: 0.2em 0.5em;
+    border-radius: 1em;
+    text-transform: capitalize;
+}
+

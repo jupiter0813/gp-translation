@@ -304,6 +304,7 @@ add_action(
 		GP::$router->add( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ) );
 		GP::$router->add( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ) );
 		GP::$router->add( '/events/attend/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_attend' ) );
+		GP::$router->add( '/events/my-events', array( 'WPORG_GP_Translation_Events_Route', 'events_user_created' ), 'get' );
 		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'WPORG_GP_Translation_Events_Route', 'events_details' ) );
 
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-event.php';

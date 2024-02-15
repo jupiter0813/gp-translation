@@ -24,8 +24,8 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 */
 	public function events_list() {
 		$current_datetime_utc   = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
-		$_current_events_paged  = isset( $_GET[ 'current_events_paged' ] ) && is_numeric( $_GET[ 'current_events_paged' ] ) ? $_GET[ 'current_events_paged' ] : 1;
-		$_upcoming_events_paged = isset( $_GET[ 'upcoming_events_paged' ] ) && is_numeric( $_GET[ 'upcoming_events_paged' ] ) ? $_GET[ 'upcoming_events_paged' ] : 1;
+		$_current_events_paged  = isset( $_GET['current_events_paged'] ) && is_numeric( $_GET['current_events_paged'] ) ? $_GET['current_events_paged'] : 1;
+		$_upcoming_events_paged = isset( $_GET['upcoming_events_paged'] ) && is_numeric( $_GET['upcoming_events_paged'] ) ? $_GET['upcoming_events_paged'] : 1;
 
 		$current_events_args  = array(
 			'post_type'            => 'event',
@@ -52,7 +52,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		);
 		$current_events_query = new WP_Query( $current_events_args );
 
-		$upcoming_events_args = array(
+		$upcoming_events_args  = array(
 			'post_type'             => 'event',
 			'posts_per_page'        => 10,
 			'upcoming_events_paged' => $_upcoming_events_paged,
@@ -134,13 +134,13 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_details( $event_slug ) {
-		$user = wp_get_current_user();
+		$user  = wp_get_current_user();
 		$event = get_page_by_path( $event_slug, OBJECT, 'event' );
 		if ( ! $event ) {
 			$this->die_with_404();
 		}
 
-		$event_id = $event->ID;
+		$event_id            = $event->ID;
 		$event_title         = $event->post_title;
 		$event_description   = $event->post_content;
 		$event_start         = get_post_meta( $event->ID, '_event_start', true ) ?: '';
@@ -177,9 +177,9 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$this->die_with_404();
 		}
 
-		$event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?? [];
+		$event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?? array();
 		if ( ! $event_ids ) {
-			$event_ids = [];
+			$event_ids = array();
 		}
 
 		if ( ! isset( $event_ids[ $event_id ] ) ) {
@@ -194,6 +194,33 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 
 		wp_safe_redirect( gp_url( "/events/$event->post_name" ) );
 		exit;
+	}
+
+	/**
+	 * Loads the 'events_user_created' template.
+	 *
+	 * @return void
+	 */
+	public function events_user_created() {
+		if ( ! is_user_logged_in() ) {
+			$this->die_with_error( 'You must be logged in to your events', 403 );
+		}
+		include ABSPATH . 'wp-admin/includes/post.php';
+
+		$user_id = get_current_user_id();
+		$_paged  = ( get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1;
+		$args    = array(
+			'post_type'      => 'event',
+			'posts_per_page' => 10,
+			'post_status'    => array( 'publish', 'draft' ),
+			'paged'          => $_paged,
+			'orderby'        => 'date',
+			'order'          => 'DESC',
+			'author'         => $user_id,
+
+		);
+		$query = new WP_Query( $args );
+		$this->tmpl( 'events-user-created', get_defined_vars() );
 	}
 
 	/**
