@@ -5,8 +5,8 @@ on:
     types: [ opened, synchronize ]
 
 jobs:
-  php:
-    name: PHP
+  phpcs:
+    name: phpcs
     runs-on: ubuntu-latest
 
     steps:
