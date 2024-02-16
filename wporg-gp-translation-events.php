@@ -140,7 +140,7 @@ function validate_event_dates( string $event_start, string $event_end ): bool {
 function submit_event_ajax() {
 	$event_id         = null;
 	$response_message = '';
-	$form_actions     = array( 'draft', 'publish' );
+	$form_actions     = array( 'draft', 'publish', 'delete' );
 
 	$is_nonce_valid = false;
 	$nonce_name     = '_event_nonce';
@@ -179,7 +179,7 @@ function submit_event_ajax() {
 		wp_send_json_error( 'Form name must be set' );
 	}
 	$action = sanitize_text_field( wp_unslash( $_POST['form_name'] ) );
-	if ( ! in_array( $action, array( 'create_event', 'edit_event' ), true ) ) {
+	if ( ! in_array( $action, array( 'create_event', 'edit_event', 'delete_event' ), true ) ) {
 		wp_send_json_error( 'Invalid form name' );
 	}
 
@@ -213,18 +213,40 @@ function submit_event_ajax() {
 		);
 		$response_message = 'Event updated successfully!';
 	}
+	if ( 'delete_event' === $action ) {
+		$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
+		$event    = get_post( $event_id );
+		if ( ! $event || 'event' !== $event->post_type ) {
+			wp_send_json_error( 'Event does not exist' );
+		}
+		if ( ! ( current_user_can( 'delete_post', $event->ID ) || get_current_user_id() === $event->post_author ) ) {
+			wp_send_json_error( 'You do not have permission to delete this event' );
+		}
+		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
+		try {
+			$event_stats = $stats_calculator->for_event( $event );
+		} catch ( Exception $e ) {
+			wp_send_json_error( 'Failed to calculate event stats' );
+		}
+		if ( ! empty( $event_stats->rows() ) ) {
+			wp_send_json_error( 'Event has translations and cannot be deleted' );
+		}
+		wp_trash_post( $event_id );
+		$response_message = 'Event deleted successfully!';
+	}
 	if ( ! $event_id ) {
 		wp_send_json_error( 'Event could not be created or updated' );
 	}
-	try {
-		update_post_meta( $event_id, '_event_start', convert_to_utc( $event_start, $event_timezone ) );
-		update_post_meta( $event_id, '_event_end', convert_to_utc( $event_end, $event_timezone ) );
-	} catch ( Exception $e ) {
-		wp_send_json_error( 'Invalid start or end' );
+	if ( 'delete_event' !== $_POST['form_name'] ) {
+		try {
+			update_post_meta( $event_id, '_event_start', convert_to_utc( $event_start, $event_timezone ) );
+			update_post_meta( $event_id, '_event_end', convert_to_utc( $event_end, $event_timezone ) );
+		} catch ( Exception $e ) {
+			wp_send_json_error( 'Invalid start or end' );
+		}
+
+		update_post_meta( $event_id, '_event_timezone', $event_timezone );
 	}
-
-	update_post_meta( $event_id, '_event_timezone', $event_timezone );
-
 	try {
 		WPORG_GP_Translation_Events_Active_Events_Cache::invalidate();
 	} catch ( Exception $e ) {
@@ -234,14 +256,14 @@ function submit_event_ajax() {
 
 	list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 	$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
-
 	wp_send_json_success(
 		array(
-			'message'      => $response_message,
-			'eventId'      => $event_id,
-			'eventUrl'     => str_replace( '%pagename%', $post_name, $permalink ),
-			'eventStatus'  => $event_status,
-			'eventEditUrl' => esc_url( gp_url( '/events/edit/' . $event_id ) ),
+			'message'        => $response_message,
+			'eventId'        => $event_id,
+			'eventUrl'       => str_replace( '%pagename%', $post_name, $permalink ),
+			'eventStatus'    => $event_status,
+			'eventEditUrl'   => esc_url( gp_url( '/events/edit/' . $event_id ) ),
+			'eventDeleteUrl' => esc_url( gp_url( '/events/my-events/' ) ),
 		)
 	);
 }

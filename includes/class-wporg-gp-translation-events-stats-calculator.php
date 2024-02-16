@@ -109,4 +109,21 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 
 		return $stats;
 	}
+
+	/**
+	 * Check if an event has stats.
+	 *
+	 * @param WP_Post $event The event to check.
+	 *
+	 * @return bool True if the event has stats, false otherwise.
+	 */
+	public function event_has_stats( WP_Post $event ): bool {
+		try {
+			$stats = $this->for_event( $event );
+		} catch ( Exception $e ) {
+			return false;
+		}
+
+		return ! empty( $stats->rows() );
+	}
 }

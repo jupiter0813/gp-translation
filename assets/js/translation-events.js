@@ -22,6 +22,7 @@ jQuery(document).ready(function($) {
         }
         $('#event-form-action').val( btnClicked );
         var $form = $('.translation-event-form');
+       var $is_creation = $('#form-name').val() == 'create_event' ? true : false;
 
         $.ajax({
             type: 'POST',
@@ -41,6 +42,9 @@ jQuery(document).ready(function($) {
                         $('button[data-event-status="draft"]').text('Update Draft');
                     }
                     $('#event-url').removeClass('hide-event-url').find('a').attr('href', response.data.eventUrl).text(response.data.eventUrl);
+                    if ( $is_creation ) {
+                        $('#delete-button').toggle();
+                    }
                     $gp.notices.success(response.data.message);
                 }
             },
@@ -50,7 +54,27 @@ jQuery(document).ready(function($) {
         });
     });
 
-    function validateEventDates() {
+		$('.delete-event').on('click', function(e) {
+			e.preventDefault();
+			if ( ! confirm( 'Are you sure you want to delete this event?' ) ) {
+				return;
+			}
+			var $form = $('.translation-event-form');
+			$('#form-name').val('delete_event');
+			$('#event-form-action').val( 'delete' );
+			$.ajax({
+				type: 'POST',
+				url: $translation_event.url,
+				data:$form.serialize(),
+				success: function(response) {
+					window.location = response.data.eventDeleteUrl;
+				},
+				error: function(error) {
+					$gp.notices.error(response.data.message);
+				},
+			});
+		});
+	function validateEventDates() {
         var startDateTimeInput = $('#event-start');
         var endDateTimeInput = $('#event-end');
         if ( ! startDateTimeInput.length || ! endDateTimeInput.length ) {
@@ -65,7 +89,7 @@ jQuery(document).ready(function($) {
         });
     }
     function selectUserTimezone() {
-        document.querySelector(`#event-timezone option[value="${Intl.DateTimeFormat().resolvedOptions().timeZone}"]`).selected = true 
+        document.querySelector(`#event-timezone option[value="${Intl.DateTimeFormat().resolvedOptions().timeZone}"]`).selected = true
     }
 
     function convertToUserLocalTime() {
@@ -80,11 +104,11 @@ jQuery(document).ready(function($) {
             var userLocalDateTime = new Date(eventDateObj.getTime() - userTimezoneOffsetMs);
 
             var options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName: 'short' };
-    
+
             timeEl.textContent = userLocalDateTime.toLocaleString('en-US', options);
         });
     }
-    
+
 });
 }( jQuery, $gp )
 );
