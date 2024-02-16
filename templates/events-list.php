@@ -92,19 +92,43 @@ endif;
 <?php if ( is_user_logged_in() ) : ?>
 	<div class="event-right-col">
 		<h3 class="">Events I'm Attending</h3>
-		<?php
-			// TODO: Add the list of events the user is attending.
+		<?php if ( ! $user_attending_events_query->have_posts() ) : ?>
+			<p>You don't have any events to attend.</p>
+		<?php else : ?>
+			<ul class="event-attending-list">
+				<?php
+				while ( $user_attending_events_query->have_posts() ) :
+					$user_attending_events_query->the_post();
+					$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
+					$event_end   = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+					?>
+					<li class="event-list-item">
+						<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
+						<?php if ( $event_start === $event_end ) : ?>
+							<span class="event-list-date events-i-am-attending"><?php echo esc_html( $event_start ); ?></span>
+						<?php else : ?>
+							<span class="event-list-date events-i-am-attending"><?php echo esc_html( $event_start ); ?> - <?php echo esc_html( $event_end ); ?></span>
+						<?php endif; ?>
+					</li>
+					<?php
+				endwhile;
+				?>
+			</ul>
+			<?php
+				echo wp_kses_post(
+					paginate_links(
+						array(
+							'total'     => $user_attending_events_query->max_num_pages,
+							'current'   => max( 1, $user_attending_events_query->query_vars['user_attending_events_paged'] ),
+							'format'    => '?user_attending_events_paged=%#%',
+							'prev_text' => '&laquo; Previous',
+							'next_text' => 'Next &raquo;',
+						)
+					) ?? ''
+				);
+
+				wp_reset_postdata();
+		endif;
 		?>
-		<ul class="event-attending-list">
-			<li>
-				<a href="#">Spanish Translation Day</a>
-			</li>
-			<li>
-				<a href="#">Let's Translate 2024</a>
-			</li>
-			<li>
-				<a href="#">Basics of Translation Workshop</a>
-			</li>
-		</ul>
 	</div>
 <?php endif; ?>

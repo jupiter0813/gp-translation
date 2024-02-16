@@ -33,8 +33,9 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$this->die_with_error( 'Something is wrong.' );
 		}
 
-		$_current_events_paged  = 1;
-		$_upcoming_events_paged = 1;
+		$_current_events_paged        = 1;
+		$_upcoming_events_paged       = 1;
+		$_user_attending_events_paged = 1;
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['current_events_paged'] ) ) {
@@ -47,6 +48,12 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			$value = sanitize_text_field( wp_unslash( $_GET['upcoming_events_paged'] ) );
 			if ( is_numeric( $value ) ) {
 				$_upcoming_events_paged = (int) $value;
+			}
+		}
+		if ( isset( $_GET['user_attending_events_paged'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['user_attending_events_paged'] ) );
+			if ( is_numeric( $value ) ) {
+				$_user_attending_events_paged = (int) $value;
 			}
 		}
 		// phpcs:enable
@@ -96,6 +103,30 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			'order'                 => 'ASC',
 		);
 		$upcoming_events_query = new WP_Query( $upcoming_events_args );
+
+		$user_attending_events      = get_user_meta( get_current_user_id(), self::USER_META_KEY_ATTENDING, true ) ?: array();
+		$user_attending_events_args = array(
+			'post_type'                   => 'event',
+			'post__in'                    => array_keys( $user_attending_events ),
+			'posts_per_page'              => 10,
+			'user_attending_events_paged' => $_user_attending_events_paged,
+			'paged'                       => $_user_attending_events_paged,
+			'post_status'                 => 'publish',
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			'meta_query'                  => array(
+				array(
+					'key'     => '_event_end',
+					'value'   => $current_datetime_utc,
+					'compare' => '>',
+					'type'    => 'DATETIME',
+				),
+			),
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_key'                    => '_event_start',
+			'orderby'                     => 'meta_value',
+			'order'                       => 'ASC',
+		);
+		$user_attending_events_query = new WP_Query( $user_attending_events_args );
 		$this->tmpl( 'events-list', get_defined_vars() );
 	}
 
@@ -223,6 +254,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		}
 
 		$event = get_post( $event_id );
+
 		if ( ! $event ) {
 			$this->die_with_404();
 		}
