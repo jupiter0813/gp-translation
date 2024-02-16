@@ -160,7 +160,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 		$attending_event_ids = get_user_meta( $user_id, WPORG_GP_Translation_Events_Route::USER_META_KEY_ATTENDING, true );
 		return array_filter(
 			$events,
-			function ( $event ) use ( $attending_event_ids ) {
+			function ( WPORG_GP_Translation_Events_Event $event ) use ( $attending_event_ids ) {
 				return isset( $attending_event_ids[ $event->id() ] );
 			}
 		);
