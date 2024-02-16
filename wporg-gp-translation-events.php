@@ -16,6 +16,7 @@
  * @package Translation Events
  */
 
+use Wporg\TranslationEvents\WPORG_GP_Translation_Events_Active_Events_Cache;
 use Wporg\TranslationEvents\WPORG_GP_Translation_Events_Translation_Listener;
 
 /**
