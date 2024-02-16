@@ -18,26 +18,13 @@
 					}
 				);
 
-				$('.delete-event').on('click', function(e) {
-					e.preventDefault();
-					if ( ! confirm( 'Are you sure you want to delete this event?' ) ) {
-						return;
+				$('.delete-event').on(
+					'click',
+					function ( e ) {
+						e.preventDefault();
+						handleDelete()
 					}
-					const $form = $('.translation-event-form');
-					$('#form-name').val('delete_event');
-					$('#event-form-action').val('delete');
-					$.ajax({
-						type: 'POST',
-						url: $translation_event.url,
-						data:$form.serialize(),
-						success: function(response) {
-							window.location = response.data.eventDeleteUrl;
-						},
-						error: function(error) {
-							$gp.notices.error(response.data.message);
-						},
-					});
-				});
+				);
 			}
 		);
 
@@ -87,6 +74,26 @@
 					}
 				}
 			);
+		}
+
+		function handleDelete() {
+			if ( ! confirm( 'Are you sure you want to delete this event?' ) ) {
+				return;
+			}
+			const $form = $('.translation-event-form');
+			$('#form-name').val('delete_event');
+			$('#event-form-action').val('delete');
+			$.ajax({
+				type: 'POST',
+				url: $translation_event.url,
+				data:$form.serialize(),
+				success: function(response) {
+					window.location = response.data.eventDeleteUrl;
+				},
+				error: function(error) {
+					$gp.notices.error(response.data.message);
+				},
+			});
 		}
 
 		function validateEventDates() {
