@@ -1,6 +1,12 @@
 <?php
 
-use Wporg\TranslationEvents\WPORG_GP_Translation_Events_Stats_Calculator;
+namespace Wporg\TranslationEvents;
+
+use DateTime;
+use DateTimeZone;
+use Exception;
+use GP_Route;
+use WP_Query;
 
 /**
  * Routes: WPORG_GP_Translation_Events_Route class
