@@ -1,4 +1,9 @@
 <?php
+
+namespace Wporg\TranslationEvents\Tests;
+
+use WP_UnitTestCase;
+
 /**
  * TODO: Remove this file once there are actual tests.
  */
