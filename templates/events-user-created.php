@@ -3,6 +3,10 @@
  * Template for My Events.
  */
 
+namespace Wporg\TranslationEvents;
+
+use WP_Query;
+
 /** @var WP_Query $query */
 
 gp_title( __( 'Translation Events' ) . ' - ' . esc_html__( 'My Events' ) );
