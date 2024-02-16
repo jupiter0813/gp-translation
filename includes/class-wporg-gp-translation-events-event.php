@@ -1,5 +1,11 @@
 <?php
 
+namespace Wporg\TranslationEvents;
+
+use DateTimeImmutable;
+use DateTimeZone;
+use Exception;
+
 class WPORG_GP_Translation_Events_Event {
 	private int $id;
 	private DateTimeImmutable $start;

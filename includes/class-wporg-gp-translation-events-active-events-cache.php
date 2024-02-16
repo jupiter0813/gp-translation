@@ -1,5 +1,6 @@
 <?php
 
+use Wporg\TranslationEvents\WPORG_GP_Translation_Events_Event;
 
 class WPORG_GP_Translation_Events_Active_Events_Cache {
 	public const CACHE_DURATION = 60 * 60 * 24; // 24 hours.
