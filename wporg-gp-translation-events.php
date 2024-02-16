@@ -16,13 +16,19 @@
  * @package Translation Events
  */
 
-use Wporg\TranslationEvents\WPORG_GP_Translation_Events_Active_Events_Cache;
-use Wporg\TranslationEvents\WPORG_GP_Translation_Events_Translation_Listener;
+namespace Wporg\TranslationEvents;
+
+use DateTime;
+use DateTimeZone;
+use Exception;
+use GP;
+use WP_Post;
 
 /**
  * Check if a slug is being used by another post type.
  *
  * @param string $slug The slug to check.
+ *
  * @return bool
  */
 function slug_exists( string $slug ): bool {
@@ -76,7 +82,7 @@ function register_event_post_type() {
  * Add meta boxes for the event post type.
  */
 function event_meta_boxes() {
-	add_meta_box( 'event_dates', 'Event Dates', 'event_dates_meta_box', 'event', 'normal', 'high' );
+	add_meta_box( 'event_dates', 'Event Dates', 'Wporg\TranslationEvents\event_dates_meta_box', 'event', 'normal', 'high' );
 }
 
 /**
@@ -271,8 +277,8 @@ function submit_event_ajax() {
 	);
 }
 
-add_action( 'wp_ajax_submit_event_ajax', 'submit_event_ajax' );
-add_action( 'wp_ajax_nopriv_submit_event_ajax', 'submit_event_ajax' );
+add_action( 'wp_ajax_submit_event_ajax', 'Wporg\TranslationEvents\submit_event_ajax' );
+add_action( 'wp_ajax_nopriv_submit_event_ajax', 'Wporg\TranslationEvents\submit_event_ajax' );
 
 /**
  * Convert a date time in a time zone to UTC.
@@ -303,10 +309,10 @@ function register_translation_event_js() {
 	);
 }
 
-add_action( 'wp_enqueue_scripts', 'register_translation_event_js' );
-add_action( 'init', 'register_event_post_type' );
-add_action( 'add_meta_boxes', 'event_meta_boxes' );
-add_action( 'save_post', 'save_event_meta_boxes' );
+add_action( 'wp_enqueue_scripts', 'Wporg\TranslationEvents\register_translation_event_js' );
+add_action( 'init', 'Wporg\TranslationEvents\register_event_post_type' );
+add_action( 'add_meta_boxes', 'Wporg\TranslationEvents\event_meta_boxes' );
+add_action( 'save_post', 'Wporg\TranslationEvents\save_event_meta_boxes' );
 
 /**
  * Add the events link to the GlotPress main menu.
@@ -319,7 +325,7 @@ function gp_event_nav_menu_items( array $items ): array {
 	return array_merge( $items, $new );
 }
 // Add the events link to the GlotPress main menu.
-add_filter( 'gp_nav_menu_items', 'gp_event_nav_menu_items' );
+add_filter( 'gp_nav_menu_items', 'Wporg\TranslationEvents\gp_event_nav_menu_items' );
 
 /**
  * Generate a slug for the event post type when we save a draft event.
@@ -339,7 +345,7 @@ function generate_event_slug( $data ) {
 	return $data;
 }
 
-add_filter( 'wp_insert_post_data', 'generate_event_slug', 10, 1 );
+add_filter( 'wp_insert_post_data', 'Wporg\TranslationEvents\generate_event_slug', 10, 1 );
 
 add_action(
 	'gp_init',
