@@ -8,15 +8,15 @@ use Exception;
 use GP_Translation;
 use GP_Translation_Set;
 
-class WPORG_GP_Translation_Events_Translation_Listener {
+class Translation_Listener {
 	const ACTION_CREATE          = 'create';
 	const ACTION_APPROVE         = 'approve';
 	const ACTION_REJECT          = 'reject';
 	const ACTION_REQUEST_CHANGES = 'request_changes';
 
-	private WPORG_GP_Translation_Events_Active_Events_Cache $active_events_cache;
+	private Active_Events_Cache $active_events_cache;
 
-	public function __construct( WPORG_GP_Translation_Events_Active_Events_Cache $active_events_cache ) {
+	public function __construct( Active_Events_Cache $active_events_cache ) {
 		$this->active_events_cache = $active_events_cache;
 	}
 
@@ -104,13 +104,13 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	/**
 	 * Get active events at a given time.
 	 *
-	 * @return WPORG_GP_Translation_Events_Event[]
+	 * @return Event[]
 	 * @throws Exception When it fails to get active events.
 	 */
 	private function get_active_events( DateTimeImmutable $at ): array {
 		$events = $this->active_events_cache->get();
 		if ( null === $events ) {
-			$cache_duration = WPORG_GP_Translation_Events_Active_Events_Cache::CACHE_DURATION;
+			$cache_duration = Active_Events_Cache::CACHE_DURATION;
 			$boundary_start = $at;
 			$boundary_end   = $at->modify( "+$cache_duration seconds" );
 
@@ -141,7 +141,7 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 			$events = array();
 			foreach ( $event_ids as $event_id ) {
 				$meta     = get_post_meta( $event_id );
-				$events[] = WPORG_GP_Translation_Events_Event::from_post_meta( $event_id, $meta );
+				$events[] = Event::from_post_meta( $event_id, $meta );
 			}
 
 			$this->active_events_cache->cache( $events );
@@ -159,8 +159,9 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	/**
 	 * Filter an array of events so that it only includes events the given user is attending.
 	 *
-	 * @param WPORG_GP_Translation_Events_Event[] $events Events.
-	 * @return WPORG_GP_Translation_Events_Event[]
+	 * @param Event[] $events Events.
+	 *
+	 * @return Event[]
 	 */
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.Found

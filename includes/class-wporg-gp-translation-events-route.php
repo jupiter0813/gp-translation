@@ -8,19 +8,9 @@ use Exception;
 use GP_Route;
 use WP_Query;
 
-/**
- * Routes: WPORG_GP_Translation_Events_Route class
- *
- * @package wporg-gp-translation-events
- */
-class WPORG_GP_Translation_Events_Route extends GP_Route {
+class Route extends GP_Route {
 	public const USER_META_KEY_ATTENDING = 'translation-events-attending';
 
-	/**
-	 * WPORG_GP_Translation_Events_Route constructor.
-	 *
-	 * @since 0.0.1
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->template_path = __DIR__ . '/../templates/';
@@ -238,7 +228,7 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 		$attending_event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?: array();
 		$user_is_attending   = isset( $attending_event_ids[ $event_id ] );
 
-		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
+		$stats_calculator = new Stats_Calculator();
 		try {
 			$event_stats = $stats_calculator->for_event( $event );
 		} catch ( Exception $e ) {

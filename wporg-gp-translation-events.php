@@ -257,7 +257,7 @@ function submit_event_ajax() {
 		update_post_meta( $event_id, '_event_timezone', $event_timezone );
 	}
 	try {
-		WPORG_GP_Translation_Events_Active_Events_Cache::invalidate();
+		Active_Events_Cache::invalidate();
 	} catch ( Exception $e ) {
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		error_log( $e );
@@ -351,20 +351,20 @@ add_action(
 	'gp_init',
 	function () {
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-route.php';
-		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\WPORG_GP_Translation_Events_Route', 'events_list' ) );
-		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\WPORG_GP_Translation_Events_Route', 'events_create' ) );
-		GP::$router->add( '/events/edit/(\d+)', array( 'Wporg\TranslationEvents\WPORG_GP_Translation_Events_Route', 'events_edit' ) );
-		GP::$router->add( '/events/attend/(\d+)', array( 'Wporg\TranslationEvents\WPORG_GP_Translation_Events_Route', 'events_attend' ), 'post' );
-		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\WPORG_GP_Translation_Events_Route', 'events_user_created' ) );
-		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\WPORG_GP_Translation_Events_Route', 'events_details' ) );
+		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\Route', 'events_list' ) );
+		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Route', 'events_create' ) );
+		GP::$router->add( '/events/edit/(\d+)', array( 'Wporg\TranslationEvents\Route', 'events_edit' ) );
+		GP::$router->add( '/events/attend/(\d+)', array( 'Wporg\TranslationEvents\Route', 'events_attend' ), 'post' );
+		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Route', 'events_user_created' ) );
+		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Route', 'events_details' ) );
 
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-event.php';
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-active-events-cache.php';
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-stats-calculator.php';
 		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-translation-listener.php';
 
-		$active_events_cache                  = new WPORG_GP_Translation_Events_Active_Events_Cache();
-		$wporg_gp_translation_events_listener = new WPORG_GP_Translation_Events_Translation_Listener( $active_events_cache );
+		$active_events_cache                  = new Active_Events_Cache();
+		$wporg_gp_translation_events_listener = new Translation_Listener( $active_events_cache );
 		$wporg_gp_translation_events_listener->start();
 	}
 );

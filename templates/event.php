@@ -14,7 +14,7 @@ use WP_Post;
 /** @var string $event_start */
 /** @var string $event_end */
 /** @var bool $user_is_attending */
-/** @var WPORG_GP_Translation_Events_Event_Stats $event_stats */
+/** @var Event_Stats $event_stats */
 
 /* translators: %s: Event title. */
 gp_title( sprintf( __( 'Translation Events - %s' ), esc_html( $event_title ) ) );
@@ -66,7 +66,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			</tr>
 			</thead>
 			<tbody>
-		<?php /** @var $row WPORG_GP_Translation_Events_Stats_Row */ ?>
+		<?php /** @var $row Stats_Row */ ?>
 		<?php foreach ( $event_stats->rows() as $locale_ => $row ) : ?>
 			<tr>
 				<td><?php echo esc_html( $locale_ ); ?></td>

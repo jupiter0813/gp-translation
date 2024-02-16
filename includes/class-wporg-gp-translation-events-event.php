@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 
-class WPORG_GP_Translation_Events_Event {
+class Event {
 	private int $id;
 	private DateTimeImmutable $start;
 	private DateTimeImmutable $end;
@@ -17,12 +17,12 @@ class WPORG_GP_Translation_Events_Event {
 	 *
 	 * @throws Exception When dates are invalid.
 	 */
-	public static function from_post_meta( int $id, array $meta ): WPORG_GP_Translation_Events_Event {
+	public static function from_post_meta( int $id, array $meta ): Event {
 		if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) || ! isset( $meta['_event_timezone'][0] ) ) {
 			throw new Exception( 'Invalid event meta' );
 		}
 
-		return new WPORG_GP_Translation_Events_Event(
+		return new Event(
 			$id,
 			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
 			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
