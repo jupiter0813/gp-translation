@@ -350,7 +350,7 @@ add_filter( 'wp_insert_post_data', 'Wporg\TranslationEvents\generate_event_slug'
 add_action(
 	'gp_init',
 	function () {
-		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-route.php';
+		require_once __DIR__ . '/includes/route.php';
 		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\Route', 'events_list' ) );
 		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Route', 'events_create' ) );
 		GP::$router->add( '/events/edit/(\d+)', array( 'Wporg\TranslationEvents\Route', 'events_edit' ) );
@@ -358,10 +358,10 @@ add_action(
 		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Route', 'events_user_created' ) );
 		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Route', 'events_details' ) );
 
-		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-event.php';
-		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-active-events-cache.php';
-		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-stats-calculator.php';
-		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-translation-listener.php';
+		require_once __DIR__ . '/includes/event.php';
+		require_once __DIR__ . '/includes/active-events-cache.php';
+		require_once __DIR__ . '/includes/stats-calculator.php';
+		require_once __DIR__ . '/includes/translation-listener.php';
 
 		$active_events_cache                  = new Active_Events_Cache();
 		$wporg_gp_translation_events_listener = new Translation_Listener( $active_events_cache );
