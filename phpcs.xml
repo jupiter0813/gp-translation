@@ -8,7 +8,7 @@
     <file>./includes/</file>
     <file>./templates/</file>
     <file>./tests/</file>
-    <file>./wporg-gp-translation-events.php</file>
+    <file>./plugin.php</file>
 
     <rule ref="WordPress">
         <exclude name="Squiz.Commenting.ClassComment.Missing"/>
