@@ -70,8 +70,8 @@ span.event-list-date {
 	font-weight: bold;
 }
 span.event-list-date.events-i-am-attending {
-    font-size: .8em;
-    font-weight: normal;
+	font-size: .8em;
+	font-weight: normal;
 }
 .event-list-item a{
 	font-weight: bold;
