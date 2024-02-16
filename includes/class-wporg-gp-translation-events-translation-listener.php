@@ -154,6 +154,8 @@ class WPORG_GP_Translation_Events_Translation_Listener {
 	 * @param WPORG_GP_Translation_Events_Event[] $events Events.
 	 * @return WPORG_GP_Translation_Events_Event[]
 	 */
+	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.Found
 	private function select_events_user_is_registered_for( array $events, int $user_id ): array {
 		$attending_events = get_user_meta( $user_id, 'translation-events-attending', true );
 		return array_filter(
