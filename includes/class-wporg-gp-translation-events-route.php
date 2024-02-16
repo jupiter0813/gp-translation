@@ -1,5 +1,7 @@
 <?php
 
+use Wporg\TranslationEvents\WPORG_GP_Translation_Events_Stats_Calculator;
+
 /**
  * Routes: WPORG_GP_Translation_Events_Route class
  *

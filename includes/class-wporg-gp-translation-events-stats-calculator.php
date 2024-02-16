@@ -1,5 +1,10 @@
 <?php
 
+namespace Wporg\TranslationEvents;
+
+use Exception;
+use WP_Post;
+
 class WPORG_GP_Translation_Events_Stats_Row {
 	public int $created;
 	public int $reviewed;
