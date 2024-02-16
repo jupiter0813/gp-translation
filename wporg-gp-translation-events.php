@@ -16,6 +16,8 @@
  * @package Translation Events
  */
 
+use Wporg\TranslationEvents\WPORG_GP_Translation_Events_Translation_Listener;
+
 /**
  * Check if a slug is being used by another post type.
  *

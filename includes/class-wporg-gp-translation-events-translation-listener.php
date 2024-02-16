@@ -1,5 +1,15 @@
 <?php
 
+namespace Wporg\TranslationEvents;
+
+use DateTimeImmutable;
+use DateTimeZone;
+use Exception;
+use GP_Translation;
+use GP_Translation_Set;
+use WPORG_GP_Translation_Events_Active_Events_Cache;
+use WPORG_GP_Translation_Events_Event;
+
 class WPORG_GP_Translation_Events_Translation_Listener {
 	const ACTION_CREATE          = 'create';
 	const ACTION_APPROVE         = 'approve';
