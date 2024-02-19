@@ -296,10 +296,11 @@ class WPORG_GP_Translation_Events_Route extends GP_Route {
 			'posts_per_page' => 10,
 			'post_status'    => array( 'publish', 'draft' ),
 			'paged'          => $_paged,
-			'orderby'        => 'date',
-			'order'          => 'DESC',
 			'author'         => $user_id,
-
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_key'       => '_event_start',
+			'orderby'        => 'meta_value',
+			'order'          => 'DESC',
 		);
 		$query = new WP_Query( $args );
 		$this->tmpl( 'events-user-created', get_defined_vars() );
