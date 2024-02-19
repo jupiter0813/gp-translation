@@ -8,7 +8,7 @@ use Exception;
 use GP_Translation;
 use GP_Translation_Set;
 
-class Translation_Listener {
+class Stats_Listener {
 	const ACTION_CREATE          = 'create';
 	const ACTION_APPROVE         = 'approve';
 	const ACTION_REJECT          = 'reject';
