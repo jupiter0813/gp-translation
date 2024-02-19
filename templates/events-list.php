@@ -32,7 +32,7 @@ if ( $current_events_query->have_posts() ) :
 			?>
 			<li class="event-list-item">
 				<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
-				<a href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a> by <span><?php the_author(); ?></span>
+				<a href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a>
 				<p><?php the_excerpt(); ?></p>
 			</li>
 			<?php
@@ -66,7 +66,7 @@ if ( $upcoming_events_query->have_posts() ) :
 			?>
 			<li class="event-list-item">
 				<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
-				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a> by <span><?php the_author(); ?></span>
+				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
 				<p><?php the_excerpt(); ?></p>
 			</li>
 			<?php
