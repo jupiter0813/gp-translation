@@ -1,14 +1,18 @@
 <?php
 
+namespace Wporg\TranslationEvents;
 
-class WPORG_GP_Translation_Events_Active_Events_Cache {
+use Exception;
+
+class Active_Events_Cache {
 	public const CACHE_DURATION = 60 * 60 * 24; // 24 hours.
 	private const KEY           = 'translation-events-active-events';
 
 	/**
 	 * Cache active events.
 	 *
-	 * @param WPORG_GP_Translation_Events_Event[] $events Events to cache.
+	 * @param Event[] $events Events to cache.
+	 *
 	 * @throws Exception When it fails to cache events.
 	 */
 	public function cache( array $events ): void {
@@ -20,7 +24,7 @@ class WPORG_GP_Translation_Events_Active_Events_Cache {
 	/**
 	 * Returns the cached events, or null if nothing is cached.
 	 *
-	 * @return WPORG_GP_Translation_Events_Event[]|null
+	 * @return Event[]|null
 	 * @throws Exception When it fails to retrieve cached events.
 	 */
 	public function get(): ?array {

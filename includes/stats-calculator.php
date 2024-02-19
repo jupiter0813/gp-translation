@@ -1,6 +1,11 @@
 <?php
 
-class WPORG_GP_Translation_Events_Stats_Row {
+namespace Wporg\TranslationEvents;
+
+use Exception;
+use WP_Post;
+
+class Stats_Row {
 	public int $created;
 	public int $reviewed;
 	public int $users;
@@ -12,54 +17,54 @@ class WPORG_GP_Translation_Events_Stats_Row {
 	}
 }
 
-class WPORG_GP_Translation_Events_Event_Stats {
+class Event_Stats {
 	/**
 	 * Associative array of rows, with the locale as key.
 	 *
-	 * @var WPORG_GP_Translation_Events_Stats_Row[]
+	 * @var Stats_Row[]
 	 */
 	private array $rows = array();
 
-	private WPORG_GP_Translation_Events_Stats_Row $totals;
+	private Stats_Row $totals;
 
 	/**
 	 * Add a stats row.
 	 *
 	 * @throws Exception When incorrect locale is passed.
 	 */
-	public function add_row( string $locale, WPORG_GP_Translation_Events_Stats_Row $row ) {
+	public function add_row( string $locale, Stats_Row $row ) {
 		if ( ! $locale ) {
 			throw new Exception( 'locale must not be empty' );
 		}
 		$this->rows[ $locale ] = $row;
 	}
 
-	public function set_totals( WPORG_GP_Translation_Events_Stats_Row $totals ) {
+	public function set_totals( Stats_Row $totals ) {
 		$this->totals = $totals;
 	}
 
 	/**
 	 * Get an associative array of rows, with the locale as key.
 	 *
-	 * @return WPORG_GP_Translation_Events_Stats_Row[]
+	 * @return Stats_Row[]
 	 */
 	public function rows(): array {
 		return $this->rows;
 	}
 
-	public function totals(): WPORG_GP_Translation_Events_Stats_Row {
+	public function totals(): Stats_Row {
 		return $this->totals;
 	}
 }
 
-class WPORG_GP_Translation_Events_Stats_Calculator {
+class Stats_Calculator {
 	/**
 	 * Get stats for an event.
 	 *
 	 * @throws Exception When stats calculation failed.
 	 */
-	public function for_event( WP_Post $event ): WPORG_GP_Translation_Events_Event_Stats {
-		$stats = new WPORG_GP_Translation_Events_Event_Stats();
+	public function for_event( WP_Post $event ): Event_Stats {
+		$stats = new Event_Stats();
 		global $wpdb;
 
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -94,7 +99,7 @@ class WPORG_GP_Translation_Events_Stats_Calculator {
 				);
 			}
 
-			$stats_row = new WPORG_GP_Translation_Events_Stats_Row(
+			$stats_row = new Stats_Row(
 				$row->created,
 				$row->total - $row->created,
 				$row->users,

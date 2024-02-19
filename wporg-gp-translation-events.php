@@ -16,10 +16,19 @@
  * @package Translation Events
  */
 
+namespace Wporg\TranslationEvents;
+
+use DateTime;
+use DateTimeZone;
+use Exception;
+use GP;
+use WP_Post;
+
 /**
  * Check if a slug is being used by another post type.
  *
  * @param string $slug The slug to check.
+ *
  * @return bool
  */
 function slug_exists( string $slug ): bool {
@@ -73,7 +82,7 @@ function register_event_post_type() {
  * Add meta boxes for the event post type.
  */
 function event_meta_boxes() {
-	add_meta_box( 'event_dates', 'Event Dates', 'event_dates_meta_box', 'event', 'normal', 'high' );
+	add_meta_box( 'event_dates', 'Event Dates', 'Wporg\TranslationEvents\event_dates_meta_box', 'event', 'normal', 'high' );
 }
 
 /**
@@ -222,7 +231,7 @@ function submit_event_ajax() {
 		if ( ! ( current_user_can( 'delete_post', $event->ID ) || get_current_user_id() === $event->post_author ) ) {
 			wp_send_json_error( 'You do not have permission to delete this event' );
 		}
-		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
+		$stats_calculator = new Stats_Calculator();
 		try {
 			$event_stats = $stats_calculator->for_event( $event );
 		} catch ( Exception $e ) {
@@ -248,7 +257,7 @@ function submit_event_ajax() {
 		update_post_meta( $event_id, '_event_timezone', $event_timezone );
 	}
 	try {
-		WPORG_GP_Translation_Events_Active_Events_Cache::invalidate();
+		Active_Events_Cache::invalidate();
 	} catch ( Exception $e ) {
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		error_log( $e );
@@ -268,8 +277,8 @@ function submit_event_ajax() {
 	);
 }
 
-add_action( 'wp_ajax_submit_event_ajax', 'submit_event_ajax' );
-add_action( 'wp_ajax_nopriv_submit_event_ajax', 'submit_event_ajax' );
+add_action( 'wp_ajax_submit_event_ajax', 'Wporg\TranslationEvents\submit_event_ajax' );
+add_action( 'wp_ajax_nopriv_submit_event_ajax', 'Wporg\TranslationEvents\submit_event_ajax' );
 
 /**
  * Convert a date time in a time zone to UTC.
@@ -300,10 +309,10 @@ function register_translation_event_js() {
 	);
 }
 
-add_action( 'wp_enqueue_scripts', 'register_translation_event_js' );
-add_action( 'init', 'register_event_post_type' );
-add_action( 'add_meta_boxes', 'event_meta_boxes' );
-add_action( 'save_post', 'save_event_meta_boxes' );
+add_action( 'wp_enqueue_scripts', 'Wporg\TranslationEvents\register_translation_event_js' );
+add_action( 'init', 'Wporg\TranslationEvents\register_event_post_type' );
+add_action( 'add_meta_boxes', 'Wporg\TranslationEvents\event_meta_boxes' );
+add_action( 'save_post', 'Wporg\TranslationEvents\save_event_meta_boxes' );
 
 /**
  * Add the events link to the GlotPress main menu.
@@ -316,7 +325,7 @@ function gp_event_nav_menu_items( array $items ): array {
 	return array_merge( $items, $new );
 }
 // Add the events link to the GlotPress main menu.
-add_filter( 'gp_nav_menu_items', 'gp_event_nav_menu_items' );
+add_filter( 'gp_nav_menu_items', 'Wporg\TranslationEvents\gp_event_nav_menu_items' );
 
 /**
  * Generate a slug for the event post type when we save a draft event.
@@ -336,26 +345,26 @@ function generate_event_slug( $data ) {
 	return $data;
 }
 
-add_filter( 'wp_insert_post_data', 'generate_event_slug', 10, 1 );
+add_filter( 'wp_insert_post_data', 'Wporg\TranslationEvents\generate_event_slug', 10, 1 );
 
 add_action(
 	'gp_init',
 	function () {
-		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-route.php';
-		GP::$router->add( '/events?', array( 'WPORG_GP_Translation_Events_Route', 'events_list' ) );
-		GP::$router->add( '/events/new', array( 'WPORG_GP_Translation_Events_Route', 'events_create' ) );
-		GP::$router->add( '/events/edit/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_edit' ) );
-		GP::$router->add( '/events/attend/(\d+)', array( 'WPORG_GP_Translation_Events_Route', 'events_attend' ), 'post' );
-		GP::$router->add( '/events/my-events', array( 'WPORG_GP_Translation_Events_Route', 'events_user_created' ) );
-		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'WPORG_GP_Translation_Events_Route', 'events_details' ) );
+		require_once __DIR__ . '/includes/active-events-cache.php';
+		require_once __DIR__ . '/includes/event.php';
+		require_once __DIR__ . '/includes/route.php';
+		require_once __DIR__ . '/includes/stats-calculator.php';
+		require_once __DIR__ . '/includes/translation-listener.php';
 
-		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-event.php';
-		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-active-events-cache.php';
-		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-stats-calculator.php';
-		require_once __DIR__ . '/includes/class-wporg-gp-translation-events-translation-listener.php';
+		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\Route', 'events_list' ) );
+		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Route', 'events_create' ) );
+		GP::$router->add( '/events/edit/(\d+)', array( 'Wporg\TranslationEvents\Route', 'events_edit' ) );
+		GP::$router->add( '/events/attend/(\d+)', array( 'Wporg\TranslationEvents\Route', 'events_attend' ), 'post' );
+		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Route', 'events_user_created' ) );
+		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Route', 'events_details' ) );
 
-		$active_events_cache                  = new WPORG_GP_Translation_Events_Active_Events_Cache();
-		$wporg_gp_translation_events_listener = new WPORG_GP_Translation_Events_Translation_Listener( $active_events_cache );
+		$active_events_cache                  = new Active_Events_Cache();
+		$wporg_gp_translation_events_listener = new Translation_Listener( $active_events_cache );
 		$wporg_gp_translation_events_listener->start();
 	}
 );

@@ -1,3 +1,8 @@
+<?php
+namespace Wporg\TranslationEvents;
+
+?>
+
 <div class="event-list-top-bar">
 	<ul class="event-list-nav">
 		<?php if ( is_user_logged_in() ) : ?>

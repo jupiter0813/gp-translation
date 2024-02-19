@@ -3,6 +3,8 @@
  * Template for event form.
  */
 
+namespace Wporg\TranslationEvents;
+
 /** @var string $event_form_title */
 /** @var string $event_form_name */
 /** @var int $event_id */
