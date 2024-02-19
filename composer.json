@@ -10,7 +10,7 @@
     "scripts":{
         "lint": "phpcs --standard=phpcs.xml -s",
         "lint:fix": "phpcbf --standard=phpcs.xml",
-        "dev:start": "wp-env start --debug && wp-env run cli wp rewrite structure '/%postname%/'",
+        "dev:start": "wp-env start && wp-env run cli wp rewrite structure '/%postname%/'",
         "dev:debug": "wp-env start --xdebug",
         "dev:stop": "wp-env stop",
         "dev:db:schema": "wp-env run cli --env-cwd=wp-content/plugins/wporg-gp-translation-events sh -c 'wp db query < schema.sql'",

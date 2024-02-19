@@ -23,10 +23,24 @@ require_once "$_tests_dir/includes/functions.php";
  * Manually load the plugin being tested.
  */
 function _manually_load_plugin() {
-	require dirname( __DIR__ ) . '/wporg-gp-translation-events.php';
+	require_once dirname( __DIR__, 2 ) . '/glotpress/tests/phpunit/includes/loader.php';
+	require_once dirname( __DIR__ ) . '/wporg-gp-translation-events.php';
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 // Start up the WP testing environment.
 require "$_tests_dir/includes/bootstrap.php";
+
+// Require GlotPress test code.
+require_once dirname( __DIR__, 2 ) . '/glotpress/tests/phpunit/lib/testcase.php';
+require_once dirname( __DIR__, 2 ) . '/glotpress/tests/phpunit/lib/testcase-route.php';
+require_once dirname( __DIR__, 2 ) . '/glotpress/tests/phpunit/lib/testcase-request.php';
+
+function _install_glotpress() {
+	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+	require_once dirname( __DIR__, 2 ) . '/glotpress/gp-includes/schema.php';
+	require_once dirname( __DIR__, 2 ) . '/glotpress/gp-includes/install-upgrade.php';
+	gp_upgrade_db();
+}
+_install_glotpress();
