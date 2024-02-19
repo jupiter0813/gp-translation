@@ -5,6 +5,7 @@
 
 namespace Wporg\TranslationEvents;
 
+use DateTime;
 use WP_Query;
 
 /** @var WP_Query $query */
