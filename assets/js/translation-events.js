@@ -14,7 +14,8 @@
 					'click',
 					function ( e ) {
 						e.preventDefault();
-						handleSubmit();
+						let eventStatus = $( this ).data( 'event-status' );
+						handleSubmit( eventStatus );
 					}
 				);
 
@@ -28,19 +29,18 @@
 			}
 		);
 
-		function handleSubmit() {
+		function handleSubmit( eventStatus ) {
 			if ( $( '#event-end' ).val() <= $( '#event-start' ).val() ) {
 				$gp.notices.error( 'Event end date and time must be later than event start date and time.' );
 				return;
 			}
-			const btnClicked = $( this ).data( 'event-status' );
-			if ( btnClicked === 'publish' && '' === $( '#event-id' ).val() ) {
+			if ( eventStatus === 'publish' && '' === $( '#event-id' ).val() ) {
 				const submitPrompt = 'Are you sure you want to publish this event?';
 				if ( ! confirm( submitPrompt ) ) {
 					return;
 				}
 			}
-			$( '#event-form-action' ).val( btnClicked );
+			$( '#event-form-action' ).val( eventStatus );
 			const $form        = $( '.translation-event-form' );
 			const $is_creation = $( '#form-name' ).val() === 'create_event';
 
@@ -55,11 +55,11 @@
 							$( '#form-name' ).val( 'edit_event' );
 							$( '.event-page-title' ).text( 'Edit Event' );
 							$( '#event-id' ).val( response.data.eventId );
-							if ( btnClicked === 'publish' ) {
+							if ( eventStatus === 'publish' ) {
 								$( 'button[data-event-status="draft"]' ).hide();
 								$( 'button[data-event-status="publish"]' ).text( 'Update Event' );
 							}
-							if ( btnClicked === 'draft' ) {
+							if ( eventStatus === 'draft' ) {
 								$( 'button[data-event-status="draft"]' ).text( 'Update Draft' );
 							}
 							$( '#event-url' ).removeClass( 'hide-event-url' ).find( 'a' ).attr( 'href', response.data.eventUrl ).text( response.data.eventUrl );
