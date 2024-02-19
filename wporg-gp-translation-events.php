@@ -231,7 +231,7 @@ function submit_event_ajax() {
 		if ( ! ( current_user_can( 'delete_post', $event->ID ) || get_current_user_id() === $event->post_author ) ) {
 			wp_send_json_error( 'You do not have permission to delete this event' );
 		}
-		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
+		$stats_calculator = new Stats_Calculator();
 		try {
 			$event_stats = $stats_calculator->for_event( $event );
 		} catch ( Exception $e ) {

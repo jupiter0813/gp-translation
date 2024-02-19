@@ -186,7 +186,7 @@ class Route extends GP_Route {
 		$create_delete_button          = false;
 		$visibility_delete_button      = 'inline-flex';
 
-		$stats_calculator = new WPORG_GP_Translation_Events_Stats_Calculator();
+		$stats_calculator = new Stats_Calculator();
 		if ( ! $stats_calculator->event_has_stats( $event ) ) {
 			$current_user = wp_get_current_user();
 			if ( $current_user->ID === $event->post_author || current_user_can( 'manage_options' ) ) {
