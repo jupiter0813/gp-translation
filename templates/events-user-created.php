@@ -35,7 +35,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			<?php if ( 'draft' === $event_status ) : ?>
 				<span class="event-label-<?php echo esc_attr( $event_status ); ?>"><?php echo esc_html( $event_status ); ?></span>
 			<?php endif; ?>
-				<p><?php the_excerpt(); ?></p>
+			<p><?php the_excerpt(); ?></p>
 		</li>
 	<?php endwhile; ?>
 	</ul>
