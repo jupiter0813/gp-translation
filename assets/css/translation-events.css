@@ -121,7 +121,7 @@ h2.event_page_title {
 a.event-link-draft {
 	color:#80807f;
 }
-span.event-label-draft {
+span.event-label-draft, span.event-details-join-expired {
 	font-weight: 500;
 	color:#c05621;
 	border: 1px solid #c05621;
