@@ -1,10 +1,18 @@
 <?php
 
-namespace Wporg\tests;
+namespace Wporg\Tests;
 
-use WP_Ajax_UnitTestCase;
+use GP_UnitTestCase_Route;
+use Wporg\TranslationEvents\Tests\Event_Factory;
 
-class Stats_Listener_Test extends WP_Ajax_UnitTestCase {
+class Stats_Listener_Test extends GP_UnitTestCase_Route {
+	public $route_class = 'GP_Route_Translation';
+
+	public function setUp(): void {
+		parent::setUp();
+		$this->event_factory = new Event_Factory();
+	}
+
 	public function test_stores_translation_created() {
 		$this->assertTrue( true );
 	}
