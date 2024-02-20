@@ -15,7 +15,8 @@
 					function ( e ) {
 						e.preventDefault();
 						let eventStatus = $( this ).data( 'event-status' );
-						handleSubmit( eventStatus );
+						let isDraft     = $( 'button.save-draft[data-event-status="draft"]:visible' ).length > 0;
+						handleSubmit( eventStatus, isDraft );
 					}
 				);
 
@@ -29,12 +30,18 @@
 			}
 		);
 
-		function handleSubmit( eventStatus ) {
+		/**
+		 * Handles the form submission
+		 *
+		 * @param eventStatus The new status of the event
+		 * @param isDraft	  Whether the current event status is a draft or not
+		 */
+		function handleSubmit( eventStatus, isDraft ) {
 			if ( $( '#event-end' ).val() <= $( '#event-start' ).val() ) {
 				$gp.notices.error( 'Event end date and time must be later than event start date and time.' );
 				return;
 			}
-			if ( eventStatus === 'publish' && '' === $( '#event-id' ).val() ) {
+			if ( eventStatus === 'publish' && isDraft ) {
 				const submitPrompt = 'Are you sure you want to publish this event?';
 				if ( ! confirm( submitPrompt ) ) {
 					return;
