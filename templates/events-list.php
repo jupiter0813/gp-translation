@@ -27,13 +27,13 @@ if ( $current_events_query->have_posts() ) :
 		<?php
 		while ( $current_events_query->have_posts() ) :
 			$current_events_query->the_post();
-			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'l, F j, Y' );
-			$event_url   = gp_url( wp_make_link_relative( get_the_permalink() ) );
+			$event_end = Route::get_end_date_text( get_post_meta( get_the_ID(), '_event_end', true ) );
+			$event_url = gp_url( wp_make_link_relative( get_the_permalink() ) );
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a>
-				<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
-				<p><?php the_excerpt(); ?></p>
+				<span class="event-list-date"><?php echo esc_html( $event_end ); ?></span>
+				<?php the_excerpt(); ?>
 			</li>
 			<?php
 		endwhile;
@@ -67,7 +67,7 @@ if ( $upcoming_events_query->have_posts() ) :
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
 				<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
-				<p><?php the_excerpt(); ?></p>
+				<?php the_excerpt(); ?>
 			</li>
 			<?php
 		endwhile;
