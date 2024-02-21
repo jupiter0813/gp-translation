@@ -39,7 +39,7 @@
 .event-details-right {
 	width: 22%;
 	float: right;
-	padding: 1em;
+	padding-top: 1em;
 }
 .event-details-stats {
 	clear: both;
@@ -192,7 +192,7 @@ input[type="submit"].attending-btn {
 .event-details-date {
 	background: #f4f4f4;
 	color: #606161;
-	padding: 1em;
+	padding: .5em;
 	font-size: .9em;
 	line-height: 1.8em;
 	font-weight: 500;

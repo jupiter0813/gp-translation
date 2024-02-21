@@ -144,18 +144,16 @@
 					const userTimezoneOffsetMs = userTimezoneOffset * 60 * 1000;
 					const userLocalDateTime    = new Date( eventDateObj.getTime() - userTimezoneOffsetMs );
 
-					const options = {
+					const options      = {
 						weekday: 'short',
 						year: 'numeric',
 						month: 'short',
 						day: 'numeric',
 						hour: 'numeric',
 						minute: 'numeric',
-						hour12: true,
 						timeZoneName: 'short'
 					};
-
-					timeEl.textContent = userLocalDateTime.toLocaleString( 'en-US', options );
+					timeEl.textContent = userLocalDateTime.toLocaleTimeString( navigator.language, options );
 				}
 			);
 		}
