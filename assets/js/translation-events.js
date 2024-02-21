@@ -76,9 +76,11 @@
 							$gp.notices.success( response.data.message );
 						}
 					},
-					error: function ( error ) {
-						$gp.notices.error( response.data.message );
-					}
+					error: function ( xhr, msg ) {
+						/* translators: %s: Error message. */
+						msg = xhr.responseJSON.data ? wp.i18n.sprintf( wp.i18n.__( 'Error: %s', 'gp-translation-events' ), xhr.responseJSON.data ) : wp.i18n.__( 'Error saving the event!', 'gp-translation-events' );
+						$gp.notices.error( msg );
+					},
 				}
 			);
 		}

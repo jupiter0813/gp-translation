@@ -160,14 +160,18 @@ function submit_event_ajax() {
 		}
 	}
 	if ( ! $is_nonce_valid ) {
-		wp_send_json_error( 'Nonce verification failed' );
+		wp_send_json_error( 'Nonce verification failed', 403 );
 	}
-
+	// This is a list of slugs that are not allowed, as they conflict with the event URLs.
+	$invalid_slugs  = array( 'new', 'edit', 'attend', 'my-events' );
 	$title          = isset( $_POST['event_title'] ) ? sanitize_text_field( wp_unslash( $_POST['event_title'] ) ) : '';
 	$description    = isset( $_POST['event_description'] ) ? sanitize_text_field( wp_unslash( $_POST['event_description'] ) ) : '';
 	$event_start    = isset( $_POST['event_start'] ) ? sanitize_text_field( wp_unslash( $_POST['event_start'] ) ) : '';
 	$event_end      = isset( $_POST['event_end'] ) ? sanitize_text_field( wp_unslash( $_POST['event_end'] ) ) : '';
 	$event_timezone = isset( $_POST['event_timezone'] ) ? sanitize_text_field( wp_unslash( $_POST['event_timezone'] ) ) : '';
+	if ( isset( $title ) && in_array( sanitize_title( $title ), $invalid_slugs, true ) ) {
+		wp_send_json_error( 'Invalid slug', 403 );
+	}
 
 	$is_valid_event_date = false;
 	try {
@@ -336,10 +340,10 @@ add_filter( 'gp_nav_menu_items', 'Wporg\TranslationEvents\gp_event_nav_menu_item
  *
  * Generate a slug based on the event title if it's not provided.
  *
- * @param array $data    An array of slashed post data.
+ * @param array $data An array of slashed post data.
  * @return array The modified post data.
  */
-function generate_event_slug( $data ) {
+function generate_event_slug( array $data ): array {
 	if ( 'event' === $data['post_type'] && 'draft' === $data['post_status'] ) {
 		if ( empty( $data['post_name'] ) ) {
 			$data['post_name'] = sanitize_title( $data['post_title'] );
