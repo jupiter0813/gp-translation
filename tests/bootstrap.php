@@ -6,7 +6,11 @@ if ( ! $_tests_dir ) {
 }
 
 function _glotpress_path( string $path ): string {
-	return dirname( __DIR__, 2 ) . '/glotpress/' . $path;
+	$glotpress_path = dirname( __DIR__, 2 ) . '/glotpress/';
+	if ( getenv( 'GITHUB_ACTIONS' ) ) {
+		$glotpress_path = '/tmp/wordpress/wp-content/plugins/glotpress/';
+	}
+	return $glotpress_path . $path;
 }
 
 // Forward custom PHPUnit Polyfills configuration to PHPUnit bootstrap file.
