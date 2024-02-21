@@ -23,6 +23,7 @@ use DateTimeZone;
 use Exception;
 use GP;
 use WP_Post;
+use WP_Query;
 
 /**
  * Check if a slug is being used by another post type.
@@ -405,3 +406,87 @@ add_action(
 		$wporg_gp_translation_events_listener->start();
 	}
 );
+
+/**
+ * Add the active events for the current user before the translation table.
+ *
+ * @return void
+ */
+function add_active_events_current_user(): void {
+	$user_attending_events      = get_user_meta( get_current_user_id(), Route::USER_META_KEY_ATTENDING, true ) ?: array();
+	$current_datetime_utc       = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
+	$user_attending_events_args = array(
+		'post_type'   => 'event',
+		'post__in'    => array_keys( $user_attending_events ),
+		'post_status' => 'publish',
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		'meta_query'  => array(
+			array(
+				'key'     => '_event_start',
+				'value'   => $current_datetime_utc,
+				'compare' => '<=',
+				'type'    => 'DATETIME',
+			),
+			array(
+				'key'     => '_event_end',
+				'value'   => $current_datetime_utc,
+				'compare' => '>=',
+				'type'    => 'DATETIME',
+			),
+		),
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		'meta_key'    => '_event_start',
+		'orderby'     => 'meta_value',
+		'order'       => 'ASC',
+	);
+	$user_attending_events_query = new WP_Query( $user_attending_events_args );
+	$number_of_events            = $user_attending_events_query->post_count;
+	if ( 0 === $number_of_events ) {
+		return;
+	}
+
+	$content = '<div id="active-events-before-translation-table" class="active-events-before-translation-table">';
+	/* translators: %d: Number of events */
+	$content .= sprintf( _n( 'Contributing to %d event:', 'Contributing to %d events:', $number_of_events, 'gp-translation-events' ), $number_of_events );
+	$content .= '&nbsp;&nbsp;';
+	if ( $number_of_events > 3 ) {
+		$counter = 0;
+		while ( $user_attending_events_query->have_posts() && $counter < 2 ) {
+			$user_attending_events_query->the_post();
+			$url      = esc_url( gp_url( '/events/' . get_post_field( 'post_name', get_post() ) ) );
+			$content .= '<span class="active-events-before-translation-table"><a href="' . $url . '" target="_blank">' . get_the_title() . '</a></span>';
+			++$counter;
+		}
+
+		$remaining_events = $number_of_events - 2;
+		$url              = esc_url( gp_url( '/events/' ) );
+		/* translators: %d: Number of remaining events */
+		$content .= '<span class="remaining-events"><a href="' . $url . '" target="_blank">' . sprintf( esc_html__( ' and %d more events.', 'gp-translation-events' ), $remaining_events ) . '</a></span>';
+
+	} else {
+		while ( $user_attending_events_query->have_posts() ) {
+			$user_attending_events_query->the_post();
+			$url      = esc_url( gp_url( '/events/' . get_post_field( 'post_name', get_post() ) ) );
+			$content .= '<span class="active-events-before-translation-table"><a href="' . $url . '" target="_blank">' . get_the_title() . '</a></span>';
+		}
+	}
+	$content .= '</div>';
+
+	echo wp_kses(
+		$content,
+		array(
+			'div'  => array(
+				'id'    => array(),
+				'class' => array(),
+			),
+			'span' => array(
+				'class' => array(),
+			),
+			'a'    => array(
+				'href'   => array(),
+				'target' => array(),
+			),
+		)
+	);
+}
+add_action( 'gp_before_translation_table', 'Wporg\TranslationEvents\add_active_events_current_user' );
