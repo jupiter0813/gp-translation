@@ -67,4 +67,3 @@ else :
 endif;
 gp_tmpl_footer();
 ?>
-</div>
