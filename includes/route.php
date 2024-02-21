@@ -316,26 +316,4 @@ class Route extends GP_Route {
 	public static function convertToTimezone( string $date_time, string $time_zone ): string {
 		return ( new DateTime( $date_time, new DateTimeZone( 'UTC' ) ) )->setTimezone( new DateTimeZone( $time_zone ) )->format( 'Y-m-d H:i:s' );
 	}
-
-	/**
-	 * Generate text for the end date.
-	 *
-	 * @param string $event_end The end date.
-	 *
-	 * @return string The end date text.
-	 */
-	public static function get_end_date_text( string $event_end ): string {
-		$end_date_time     = new DateTime( $event_end );
-		$current_date_time = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
-
-		$interval       = $end_date_time->diff( $current_date_time );
-		$hours_left     = ( $interval->d * 24 ) + $interval->h;
-		$hours_in_a_day = 24;
-
-		if ( $hours_left <= $hours_in_a_day ) {
-			return 'ends in ' . $hours_left . ' hours';
-		} else {
-			return 'until ' . $end_date_time->format( 'M j, Y' );
-		}
-	}
 }

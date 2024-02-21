@@ -27,7 +27,7 @@ if ( $current_events_query->have_posts() ) :
 		<?php
 		while ( $current_events_query->have_posts() ) :
 			$current_events_query->the_post();
-			$event_end = Route::get_end_date_text( get_post_meta( get_the_ID(), '_event_end', true ) );
+			$event_end = Event::get_end_date_text( get_post_meta( get_the_ID(), '_event_end', true ) );
 			$event_url = gp_url( wp_make_link_relative( get_the_permalink() ) );
 			?>
 			<li class="event-list-item">
