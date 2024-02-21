@@ -16,13 +16,14 @@ gp_tmpl_header();
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
 
-<h2 class="event_page_title">Translation Events</h2>
+<div class="event-page-wrapper">
+	<h2 class="event_page_title">Translation Events</h2>
 <div class="event-left-col">
 <?php
 if ( $current_events_query->have_posts() ) :
 	?>
 	<h3>Current events</h3>
-	<ul>
+	<ul class="event-list">
 		<?php
 		while ( $current_events_query->have_posts() ) :
 			$current_events_query->the_post();
@@ -57,7 +58,7 @@ endif;
 if ( $upcoming_events_query->have_posts() ) :
 	?>
 	<h3>Upcoming events</h3>
-	<ul>
+	<ul class="event-list">
 		<?php
 		while ( $upcoming_events_query->have_posts() ) :
 			$upcoming_events_query->the_post();
@@ -137,3 +138,4 @@ endif;
 		?>
 	</div>
 <?php endif; ?>
+</div>
