@@ -5,6 +5,10 @@ if ( ! $_tests_dir ) {
 	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
 }
 
+function _glotpress_path( string $path ): string {
+	return dirname( __DIR__, 2 ) . '/glotpress/' . $path;
+}
+
 // Forward custom PHPUnit Polyfills configuration to PHPUnit bootstrap file.
 $_phpunit_polyfills_path = getenv( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH' );
 if ( false !== $_phpunit_polyfills_path ) {
@@ -23,24 +27,26 @@ require_once "$_tests_dir/includes/functions.php";
  * Manually load the plugin being tested.
  */
 function _manually_load_plugin() {
-	require_once dirname( __DIR__, 2 ) . '/glotpress/tests/phpunit/includes/loader.php';
+	require_once _glotpress_path( '/tests/phpunit/includes/loader.php' );
 	require_once dirname( __DIR__ ) . '/wporg-gp-translation-events.php';
 }
-
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+
+global $wp_tests_options;
+$wp_tests_options['permalink_structure'] = '/%postname%';
 
 // Start up the WP testing environment.
 require "$_tests_dir/includes/bootstrap.php";
 
 // Require GlotPress test code.
-require_once dirname( __DIR__, 2 ) . '/glotpress/tests/phpunit/lib/testcase.php';
-require_once dirname( __DIR__, 2 ) . '/glotpress/tests/phpunit/lib/testcase-route.php';
-require_once dirname( __DIR__, 2 ) . '/glotpress/tests/phpunit/lib/testcase-request.php';
+require_once _glotpress_path( '/tests/phpunit/lib/testcase.php' );
+require_once _glotpress_path( '/tests/phpunit/lib/testcase-route.php' );
+require_once _glotpress_path( '/tests/phpunit/lib/testcase-request.php' );
 
 function _install_glotpress() {
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-	require_once dirname( __DIR__, 2 ) . '/glotpress/gp-includes/schema.php';
-	require_once dirname( __DIR__, 2 ) . '/glotpress/gp-includes/install-upgrade.php';
+	require_once _glotpress_path( '/gp-includes/schema.php' );
+	require_once _glotpress_path( '/gp-includes/install-upgrade.php' );
 	gp_upgrade_db();
 }
 _install_glotpress();
