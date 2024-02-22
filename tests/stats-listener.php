@@ -26,7 +26,17 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 	}
 
 	public function test_does_not_store_action_for_draft_events() {
-		$this->markTestSkipped( 'TODO' );
+		$this->set_normal_user_as_current();
+		$user_id = wp_get_current_user()->ID;
+
+		$this->event_factory->create_draft();
+		$this->event_factory->create_draft();
+
+		$this->translation_factory->create( $user_id );
+		// Stats_Listener will have been called.
+
+		$stats = $this->get_stats();
+		$this->assertEmpty( $stats );
 	}
 
 	public function test_does_not_store_action_for_inactive_events() {

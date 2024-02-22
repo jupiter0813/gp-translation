@@ -20,13 +20,29 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		);
 	}
 
+	public function create_draft(): int {
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
+		$event_id = $this->create_event(
+			$now->modify( '-1 hours' ),
+			$now->modify( '+1 hours' ),
+			array(),
+		);
+
+		$event              = get_post( $event_id );
+		$event->post_status = 'draft';
+		wp_update_post( $event );
+
+		return $event_id;
+	}
+
 	public function create_active( array $attendee_ids = array() ): int {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		return $this->create_event(
 			$now->modify( '-1 hours' ),
 			$now->modify( '+1 hours' ),
-			$attendee_ids
+			$attendee_ids,
 		);
 	}
 
@@ -36,7 +52,7 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		return $this->create_event(
 			$now->modify( '-2 hours' ),
 			$now->modify( '-1 hours' ),
-			$attendee_ids
+			$attendee_ids,
 		);
 	}
 
@@ -46,7 +62,7 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		return $this->create_event(
 			$now->modify( '+1 hours' ),
 			$now->modify( '+2 hours' ),
-			$attendee_ids
+			$attendee_ids,
 		);
 	}
 
