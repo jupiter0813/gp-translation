@@ -24,8 +24,9 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		$event_id = $this->create();
 		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		update_post_meta( $event_id, '_event_start', $now->modify( '-1 hours' ) );
-		update_post_meta( $event_id, '_event_end', $now->modify( '+1 hours' ) );
+		update_post_meta( $event_id, '_event_start', $now->modify( '-1 hours' )->format( 'Y-m-d H:i:s' ) );
+		update_post_meta( $event_id, '_event_end', $now->modify( '+1 hours' )->format( 'Y-m-d H:i:s' ) );
+		update_post_meta( $event_id, '_event_timezone', 'Europe/Lisbon' );
 
 		$meta_key = Route::USER_META_KEY_ATTENDING;
 		foreach ( $attendee_ids as $user_id ) {
