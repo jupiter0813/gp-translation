@@ -23,8 +23,18 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		// phpcs:enable
 	}
 
-	public function test_does_not_store_action_for_inactive_event() {
-		$this->markTestSkipped( 'TODO' );
+	public function test_does_not_store_action_for_inactive_events() {
+		$this->set_normal_user_as_current();
+		$user_id = wp_get_current_user()->ID;
+
+		$this->event_factory->create_inactive_past( array( $user_id ) );
+		$this->event_factory->create_inactive_future( array( $user_id ) );
+
+		$this->translation_factory->create( $user_id );
+		// Stats_Listener will have been called.
+
+		$stats = $this->get_stats();
+		$this->assertEmpty( $stats );
 	}
 
 	public function test_does_not_store_action_if_user_not_attending() {
@@ -33,7 +43,8 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 
 	public function test_stores_action_create() {
 		$this->set_normal_user_as_current();
-		$user_id   = wp_get_current_user()->ID;
+		$user_id = wp_get_current_user()->ID;
+
 		$event1_id = $this->event_factory->create_active( array( $user_id ) );
 		$event2_id = $this->event_factory->create_active( array( $user_id ) );
 
