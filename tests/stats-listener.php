@@ -15,6 +15,14 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$this->event_factory       = new Event_Factory();
 	}
 
+	private function get_stats(): array {
+		global $wpdb;
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $wpdb->get_results( 'select * from wp_wporg_gp_translation_events_actions' );
+		// phpcs:enable
+	}
+
 	public function test_does_not_store_action_for_inactive_event() {
 		$this->markTestSkipped( 'TODO' );
 	}
@@ -30,14 +38,10 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$event_id    = $this->event_factory->create_active( array( $user_id ) );
 		$translation = $this->translation_factory->create( $user_id );
 
-		global $wpdb;
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$rows = $wpdb->get_results( 'select * from wp_wporg_gp_translation_events_actions' );
-		// phpcs:enable
+		$stats = $this->get_stats();
 
 		// TODO.
-		$this->assertNotEmpty( $rows );
+		$this->assertNotEmpty( $stats );
 	}
 
 	public function test_stores_action_approve() {
