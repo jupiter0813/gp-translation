@@ -14,7 +14,15 @@ class Stats_Listener_Test extends GP_UnitTestCase_Route {
 		$this->event_factory = new Event_Factory();
 	}
 
-	public function test_stores_translation_created() {
+	public function test_does_not_store_action_for_inactive_event() {
+		$this->markTestSkipped( 'TODO' );
+	}
+
+	public function test_does_not_store_action_if_user_not_attending() {
+		$this->markTestSkipped( 'TODO' );
+	}
+
+	public function test_stores_action_create() {
 		$this->set_normal_user_as_current();
 		$user_id = wp_get_current_user()->ID;
 
@@ -46,5 +54,17 @@ class Stats_Listener_Test extends GP_UnitTestCase_Route {
 
 		// TODO.
 		$this->assertNotEmpty( $rows );
+	}
+
+	public function test_stores_action_approve() {
+		$this->markTestSkipped( 'TODO' );
+	}
+
+	public function test_stores_action_reject() {
+		$this->markTestSkipped( 'TODO' );
+	}
+
+	public function test_stores_action_request_changes() {
+		$this->markTestSkipped( 'TODO' );
 	}
 }
