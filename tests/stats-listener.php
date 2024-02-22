@@ -33,20 +33,29 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 
 	public function test_stores_action_create() {
 		$this->set_normal_user_as_current();
-		$user_id  = wp_get_current_user()->ID;
-		$event_id = $this->event_factory->create_active( array( $user_id ) );
+		$user_id   = wp_get_current_user()->ID;
+		$event1_id = $this->event_factory->create_active( array( $user_id ) );
+		$event2_id = $this->event_factory->create_active( array( $user_id ) );
 
 		$translation = $this->translation_factory->create( $user_id );
 		// Stats_Listener will have been called.
 
 		$stats = $this->get_stats();
-		$this->assertCount( 1, $stats );
-		$stats = $stats[0];
-		$this->assertEquals( $event_id, $stats['event_id'] );
-		$this->assertEquals( $user_id, $stats['user_id'] );
-		$this->assertEquals( $translation->id, $stats['translation_id'] );
-		$this->assertEquals( 'create', $stats['action'] );
-		$this->assertEquals( 'aa', $stats['locale'] );
+		$this->assertCount( 2, $stats );
+
+		$event1_stats = $stats[0];
+		$this->assertEquals( $event1_id, $event1_stats['event_id'] );
+		$this->assertEquals( $user_id, $event1_stats['user_id'] );
+		$this->assertEquals( $translation->id, $event1_stats['translation_id'] );
+		$this->assertEquals( 'create', $event1_stats['action'] );
+		$this->assertEquals( 'aa', $event1_stats['locale'] );
+
+		$event2_stats = $stats[1];
+		$this->assertEquals( $event2_id, $event2_stats['event_id'] );
+		$this->assertEquals( $user_id, $event2_stats['user_id'] );
+		$this->assertEquals( $translation->id, $event2_stats['translation_id'] );
+		$this->assertEquals( 'create', $event2_stats['action'] );
+		$this->assertEquals( 'aa', $event2_stats['locale'] );
 	}
 
 	public function test_stores_action_approve() {
