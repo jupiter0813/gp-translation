@@ -2,6 +2,8 @@
 
 namespace Wporg\TranslationEvents\Tests;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use WP_UnitTest_Factory_For_Post;
 use WP_UnitTest_Generator_Sequence;
 
@@ -15,5 +17,15 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 			'post_excerpt' => new WP_UnitTest_Generator_Sequence( 'Event excerpt %s' ),
 			'post_type'    => 'event',
 		);
+	}
+
+	public function create_active(): int {
+		$event_id = $this->create();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
+		update_post_meta( $event_id, '_event_start', $now->modify( '-1 hours' ) );
+		update_post_meta( $event_id, '_event_end', $now->modify( '+1 hours' ) );
+
+		return $event_id;
 	}
 }

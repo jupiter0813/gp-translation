@@ -16,7 +16,7 @@ class Stats_Listener_Test extends GP_UnitTestCase_Route {
 
 	public function test_stores_translation_created() {
 		// TODO: must create an active event. This test currently fails because there are no active events.
-		$this->event_factory->create();
+		$this->event_factory->create_active();
 
 		$this->set_normal_user_as_current();
 		$user_id = wp_get_current_user()->ID;
