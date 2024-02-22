@@ -30,6 +30,26 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		);
 	}
 
+	public function create_inactive_past( array $attendee_ids = array() ): int {
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
+		return $this->create_event(
+			$now->modify( '-2 hours' ),
+			$now->modify( '-1 hours' ),
+			$attendee_ids
+		);
+	}
+
+	public function create_inactive_future( array $attendee_ids = array() ): int {
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
+		return $this->create_event(
+			$now->modify( '+1 hours' ),
+			$now->modify( '+2 hours' ),
+			$attendee_ids
+		);
+	}
+
 	private function create_event( DateTimeImmutable $start, DateTimeImmutable $end, array $attendee_ids ): int {
 		$event_id = $this->create();
 
