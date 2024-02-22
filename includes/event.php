@@ -68,10 +68,13 @@ class Event {
 		$hours_left     = ( $interval->d * 24 ) + $interval->h;
 		$hours_in_a_day = 24;
 
-		if ( $hours_left <= $hours_in_a_day ) {
-			return 'ends in ' . $hours_left . ' hours';
-		} else {
-			return 'until ' . $end_date_time->format( 'M j, Y' );
+		if ( 0 === $hours_left ) {
+			/* translators: %s: Number of minutes left. */
+			return sprintf( _n( 'ends in %s minute', 'ends in %s minutes', $interval->i ), $interval->i );
+		} elseif ( $hours_left <= $hours_in_a_day ) {
+			/* translators: %s: Number of hours left. */
+			return sprintf( _n( 'ends in %s hour', 'ends in %s hours', $hours_left ), $hours_left );
 		}
+		return sprintf( 'until %s', $end_date_time->format( 'M j, Y' ) );
 	}
 }
