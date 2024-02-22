@@ -7,6 +7,7 @@ use Wporg\TranslationEvents\Tests\Event_Factory;
 
 class Stats_Listener_Test extends GP_UnitTestCase_Route {
 	public $route_class = 'GP_Route_Translation';
+	private Event_Factory $event_factory;
 
 	public function setUp(): void {
 		parent::setUp();
