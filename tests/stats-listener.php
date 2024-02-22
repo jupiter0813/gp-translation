@@ -3,10 +3,12 @@
 namespace Wporg\Tests;
 
 use GP_UnitTestCase;
+use Wporg\TranslationEvents\Route;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Translation_Factory;
 
 class Stats_Listener_Test extends GP_UnitTestCase {
+	private Translation_Factory $translation_factory;
 	private Event_Factory $event_factory;
 
 	public function setUp(): void {
@@ -21,6 +23,10 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results( 'select * from wp_wporg_gp_translation_events_actions', ARRAY_A );
 		// phpcs:enable
+	}
+
+	public function test_does_not_store_action_for_draft_events() {
+		$this->markTestSkipped( 'TODO' );
 	}
 
 	public function test_does_not_store_action_for_inactive_events() {
