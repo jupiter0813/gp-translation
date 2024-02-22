@@ -2,11 +2,10 @@
 
 namespace Wporg\Tests;
 
-use GP_UnitTestCase_Route;
+use GP_UnitTestCase;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 
-class Stats_Listener_Test extends GP_UnitTestCase_Route {
-	public $route_class = 'GP_Route_Translation';
+class Stats_Listener_Test extends GP_UnitTestCase {
 	private Event_Factory $event_factory;
 
 	public function setUp(): void {
