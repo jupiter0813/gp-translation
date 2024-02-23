@@ -40,4 +40,55 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 
 		$this->assertTrue( $this->calculator->event_has_stats( $event ) );
 	}
+
+	public function test_calculates_stats_for_event() {
+		$this->set_normal_user_as_current();
+		$user1_id = 42;
+		$user2_id = 43;
+		$user3_id = 44;
+
+		$event1_id = $this->event_factory->create_active( array( $user1_id ) );
+		$event2_id = $this->event_factory->create_active( array( $user1_id ) );
+
+		// For event1, aa locale, multiple users.
+		$this->stats_factory->create( $event1_id, $user1_id, 11, 'create' );
+		$this->stats_factory->create( $event1_id, $user2_id, 11, 'create' );
+		$this->stats_factory->create( $event1_id, $user1_id, 12, 'approve' );
+		$this->stats_factory->create( $event1_id, $user3_id, 12, 'reject' );
+		$this->stats_factory->create( $event1_id, $user1_id, 13, 'request_changes' );
+
+		// For event1, bb locale, multiple users.
+		$this->stats_factory->create( $event1_id, $user1_id, 21, 'create', 'bb' );
+		$this->stats_factory->create( $event1_id, $user1_id, 22, 'create', 'bb' );
+		$this->stats_factory->create( $event1_id, $user1_id, 23, 'approve', 'bb' );
+		$this->stats_factory->create( $event1_id, $user2_id, 24, 'reject', 'bb' );
+		$this->stats_factory->create( $event1_id, $user2_id, 25, 'request_changes', 'bb' );
+
+		// For event2, which should not be included in the stats.
+		$this->stats_factory->create( $event2_id, $user1_id, 31, 'create' );
+		$this->stats_factory->create( $event2_id, $user1_id, 32, 'create' );
+		$this->stats_factory->create( $event2_id, $user1_id, 33, 'approve' );
+		$this->stats_factory->create( $event2_id, $user1_id, 34, 'reject' );
+		$this->stats_factory->create( $event2_id, $user1_id, 35, 'request_changes' );
+
+		$event1 = get_post( $event1_id );
+		$stats  = $this->calculator->for_event( $event1 );
+
+		$this->assertCount( 2, $stats->rows() );
+
+		// Locale aa.
+		$this->assertEquals( 2, $stats->rows()['aa']->created );
+		$this->assertEquals( 3, $stats->rows()['aa']->reviewed );
+		$this->assertEquals( 3, $stats->rows()['aa']->users );
+
+		// Locale bb.
+		$this->assertEquals( 2, $stats->rows()['bb']->created );
+		$this->assertEquals( 3, $stats->rows()['bb']->reviewed );
+		$this->assertEquals( 2, $stats->rows()['bb']->users );
+
+		// Totals.
+		$this->assertEquals( 4, $stats->totals()->created );
+		$this->assertEquals( 6, $stats->totals()->reviewed );
+		$this->assertEquals( 3, $stats->totals()->users );
+	}
 }
