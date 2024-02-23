@@ -392,7 +392,7 @@ add_action(
 		require_once __DIR__ . '/includes/event.php';
 		require_once __DIR__ . '/includes/route.php';
 		require_once __DIR__ . '/includes/stats-calculator.php';
-		require_once __DIR__ . '/includes/translation-listener.php';
+		require_once __DIR__ . '/includes/stats-listener.php';
 
 		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\Route', 'events_list' ) );
 		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Route', 'events_create' ) );
@@ -401,9 +401,9 @@ add_action(
 		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Route', 'events_user_created' ) );
 		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Route', 'events_details' ) );
 
-		$active_events_cache                  = new Active_Events_Cache();
-		$wporg_gp_translation_events_listener = new Translation_Listener( $active_events_cache );
-		$wporg_gp_translation_events_listener->start();
+		$active_events_cache = new Active_Events_Cache();
+		$stats_listener      = new Stats_Listener( $active_events_cache );
+		$stats_listener->start();
 	}
 );
 

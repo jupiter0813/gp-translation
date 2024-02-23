@@ -46,4 +46,6 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Run tests
+        env:
+          WP_TESTS_DIR: /tmp/wordpress-tests-lib/
         run: vendor/bin/phpunit
