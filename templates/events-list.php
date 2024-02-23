@@ -12,7 +12,8 @@ use WP_Query;
 /** @var WP_Query $upcoming_events_query */
 /** @var WP_Query $past_events_query */
 
-gp_title( esc_html__( 'Translation Events', 'gp-translation-events' ) );
+gp_title( __( 'Translation Events' ) );
+gp_breadcrumb( array( __( 'Events' ) ) );
 gp_tmpl_header();
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
