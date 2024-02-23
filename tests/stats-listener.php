@@ -5,32 +5,19 @@ namespace Wporg\Tests;
 use GP_Translation;
 use GP_UnitTestCase;
 use Wporg\TranslationEvents\Tests\Event_Factory;
+use Wporg\TranslationEvents\Tests\Stats_Factory;
 use Wporg\TranslationEvents\Tests\Translation_Factory;
 
 class Stats_Listener_Test extends GP_UnitTestCase {
 	private Translation_Factory $translation_factory;
 	private Event_Factory $event_factory;
+	private Stats_Factory $stats_factory;
 
 	public function setUp(): void {
 		parent::setUp();
 		$this->translation_factory = new Translation_Factory( $this->factory );
 		$this->event_factory       = new Event_Factory();
-	}
-
-	private function get_stats(): array {
-		global $wpdb;
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $wpdb->get_results( 'select * from wp_wporg_gp_translation_events_actions', ARRAY_A );
-		// phpcs:enable
-	}
-
-	private function clean_stats() {
-		global $wpdb;
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$wpdb->query( 'delete from wp_wporg_gp_translation_events_actions' );
-		// phpcs:enable
+		$this->stats_factory       = new Stats_Factory();
 	}
 
 	public function test_does_not_store_action_for_draft_events() {
@@ -43,7 +30,7 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$this->translation_factory->create( $user_id );
 		// Stats_Listener will have been called.
 
-		$stats = $this->get_stats();
+		$stats = $this->stats_factory->get_all();
 		$this->assertEmpty( $stats );
 	}
 
@@ -57,7 +44,7 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$this->translation_factory->create( $user_id );
 		// Stats_Listener will have been called.
 
-		$stats = $this->get_stats();
+		$stats = $this->stats_factory->get_all();
 		$this->assertEmpty( $stats );
 	}
 
@@ -71,7 +58,7 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$this->translation_factory->create( $user_id );
 		// Stats_Listener will have been called.
 
-		$stats = $this->get_stats();
+		$stats = $this->stats_factory->get_all();
 		$this->assertEmpty( $stats );
 	}
 
@@ -85,7 +72,7 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$translation = $this->translation_factory->create( $user_id );
 		// Stats_Listener will have been called.
 
-		$stats = $this->get_stats();
+		$stats = $this->stats_factory->get_all();
 		$this->assertCount( 2, $stats );
 
 		$event1_stats = $stats[0];
@@ -114,12 +101,12 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$translation = $this->translation_factory->create( $user_id );
 		// Stats_Listener will have been called.
 		// Clean up stats because we won't care about the "created" action.
-		$this->clean_stats();
+		$this->stats_factory->clean();
 
 		$translation->set_as_current();
 		// Stats_Listener will have been called.
 
-		$stats = $this->get_stats();
+		$stats = $this->stats_factory->get_all();
 		$this->assertCount( 2, $stats );
 
 		$event1_stats = $stats[0];
@@ -148,12 +135,12 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$translation = $this->translation_factory->create( $user_id );
 		// Stats_Listener will have been called.
 		// Clean up stats because we won't care about the "created" action.
-		$this->clean_stats();
+		$this->stats_factory->clean();
 
 		$translation->reject();
 		// Stats_Listener will have been called.
 
-		$stats = $this->get_stats();
+		$stats = $this->stats_factory->get_all();
 		$this->assertCount( 2, $stats );
 
 		$event1_stats = $stats[0];
@@ -182,12 +169,12 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$translation = $this->translation_factory->create( $user_id );
 		// Stats_Listener will have been called.
 		// Clean up stats because we won't care about the "created" action.
-		$this->clean_stats();
+		$this->stats_factory->clean();
 
 		$translation->set_as_changesrequested();
 		// Stats_Listener will have been called.
 
-		$stats = $this->get_stats();
+		$stats = $this->stats_factory->get_all();
 		$this->assertCount( 2, $stats );
 
 		$event1_stats = $stats[0];
