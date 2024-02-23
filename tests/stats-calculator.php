@@ -28,4 +28,16 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 
 		$this->assertFalse( $this->calculator->event_has_stats( $event ) );
 	}
+
+	public function test_tells_that_event_has_stats() {
+		$this->set_normal_user_as_current();
+		$user_id = wp_get_current_user()->ID;
+
+		$event_id = $this->event_factory->create_active( array( $user_id ) );
+		$event    = get_post( $event_id );
+
+		$this->stats_factory->create( $event_id, $user_id, 1, 'create' );
+
+		$this->assertTrue( $this->calculator->event_has_stats( $event ) );
+	}
 }
