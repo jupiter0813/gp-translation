@@ -14,7 +14,7 @@
         "dev:debug": "wp-env start --xdebug",
         "dev:stop": "wp-env stop",
         "dev:db:schema": "wp-env run cli --env-cwd=wp-content/plugins/wporg-gp-translation-events sh -c 'wp db query < schema.sql'",
-        "dev:test": "bin/run-tests.sh"
+        "dev:test": "wp-env run tests-cli --env-cwd=wp-content/plugins/wporg-gp-translation-events ./vendor/bin/phpunit"
     },
     "config": {
         "allow-plugins": {
