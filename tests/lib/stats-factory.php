@@ -34,10 +34,9 @@ class Stats_Factory {
 	}
 
 	public function get_all(): array {
-		global $wpdb;
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $wpdb->get_results( 'select * from wp_wporg_gp_translation_events_actions', ARRAY_A );
+		return $this->wpdb->get_results( 'select * from wp_wporg_gp_translation_events_actions', ARRAY_A );
 		// phpcs:enable
 	}
 }
