@@ -2,12 +2,12 @@
 
 namespace Wporg\Tests;
 
-use WP_UnitTestCase;
+use GP_UnitTestCase;
 use Wporg\TranslationEvents\Stats_Calculator;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 
-class Stats_Calculator_Test extends WP_UnitTestCase {
+class Stats_Calculator_Test extends GP_UnitTestCase {
 	private Event_Factory $event_factory;
 	private Stats_Factory $stats_factory;
 	private Stats_Calculator $calculator;
@@ -19,7 +19,13 @@ class Stats_Calculator_Test extends WP_UnitTestCase {
 		$this->calculator    = new Stats_Calculator();
 	}
 
-	private function test_tells_whether_event_has_stats() {
-		$this->markTestSkipped( 'TODO' );
+	public function test_tells_that_event_has_no_stats() {
+		$this->set_normal_user_as_current();
+		$user_id = wp_get_current_user()->ID;
+
+		$event_id = $this->event_factory->create_active( array( $user_id ) );
+		$event    = get_post( $event_id );
+
+		$this->assertFalse( $this->calculator->event_has_stats( $event ) );
 	}
 }
