@@ -46,11 +46,3 @@ require "$_tests_dir/includes/bootstrap.php";
 require_once _glotpress_path( '/tests/phpunit/lib/testcase.php' );
 require_once _glotpress_path( '/tests/phpunit/lib/testcase-route.php' );
 require_once _glotpress_path( '/tests/phpunit/lib/testcase-request.php' );
-
-function _install_glotpress() {
-	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-	require_once _glotpress_path( '/gp-includes/schema.php' );
-	require_once _glotpress_path( '/gp-includes/install-upgrade.php' );
-	gp_upgrade_db();
-}
-_install_glotpress();
