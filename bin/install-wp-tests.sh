@@ -174,9 +174,6 @@ install_db() {
 	else
 		create_db
 	fi
-
-	# Create translation events table.
-	mysql --user="$DB_USER" --password="$DB_PASS" -D $DB_NAME$EXTRA < schema.sql
 }
 
 install_gp() {
