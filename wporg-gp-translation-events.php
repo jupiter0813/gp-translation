@@ -398,7 +398,7 @@ add_action(
 		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Route', 'events_create' ) );
 		GP::$router->add( '/events/edit/(\d+)', array( 'Wporg\TranslationEvents\Route', 'events_edit' ) );
 		GP::$router->add( '/events/attend/(\d+)', array( 'Wporg\TranslationEvents\Route', 'events_attend' ), 'post' );
-		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Route', 'events_user_created' ) );
+		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Route', 'my_events' ) );
 		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Route', 'events_details' ) );
 
 		$active_events_cache = new Active_Events_Cache();

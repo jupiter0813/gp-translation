@@ -108,11 +108,14 @@ h2.event_page_title {
 }
 .event-list-nav li {
 	display: inline;
-	margin-left: 1em;
+	margin: 0 0.1rem;
 }
 .event-list-nav li a {
 	text-decoration: none;
 	font-weight: bold;
+}
+.event-list-nav li:not(:first-child):not(:last-child):before {
+	content: " | ";
 }
 .event-left-col {
 	width: 75%;
