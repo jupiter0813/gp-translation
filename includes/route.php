@@ -385,13 +385,4 @@ class Route extends GP_Route {
 	public static function convertToTimezone( string $date_time, string $time_zone ): string {
 		return ( new DateTime( $date_time, new DateTimeZone( 'UTC' ) ) )->setTimezone( new DateTimeZone( $time_zone ) )->format( 'Y-m-d H:i:s' );
 	}
-
-	/**
-	 * Get the base breadcrumb for events page.
-	 *
-	 * @return array The base breadcrumb.
-	 */
-	public static function get_base_breadcrumb(): array {
-		return array( gp_link_get( gp_url( '/events' ), __( 'Events' ) ) );
-	}
 }
