@@ -184,7 +184,7 @@ input[type="submit"].attend-btn {
 	padding-bottom: 0.9em;
 	font-weight: bold;
 }
-input[type="submit"].attending-btn {
+input[type="submit"].attending-btn, a.button.is-primary.attend-btn {
 	width: 100%;
 	text-align: center;
 	display: block;

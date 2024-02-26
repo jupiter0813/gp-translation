@@ -151,6 +151,9 @@ function validate_event_dates( string $event_start, string $event_end ): bool {
  * Handle the event form submission for the creation, editing, and deletion of events. This function is called via AJAX.
  */
 function submit_event_ajax() {
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( esc_html__( 'Nonce verification failed', 'gp-translation-events' ), 403 );
+	}
 	$event_id         = null;
 	$response_message = '';
 	$form_actions     = array( 'draft', 'publish', 'delete' );

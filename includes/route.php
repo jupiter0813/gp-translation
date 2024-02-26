@@ -28,7 +28,7 @@ class Route extends GP_Route {
 		} catch ( Exception $e ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $e );
-			$this->die_with_error( 'Something is wrong.' );
+			$this->die_with_error( esc_html__( 'Something is wrong.', 'gp-translation-events' ) );
 		}
 
 		$_current_events_paged        = 1;
@@ -158,8 +158,10 @@ class Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_create() {
+		global $wp;
 		if ( ! is_user_logged_in() ) {
-			$this->die_with_error( 'You must be logged in to create an event', 403 );
+			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
+			exit;
 		}
 		$event_form_title         = 'Create Event';
 		$event_form_name          = 'create_event';
@@ -185,15 +187,17 @@ class Route extends GP_Route {
 	 * @return void
 	 */
 	public function events_edit( int $event_id ) {
+		global $wp;
 		if ( ! is_user_logged_in() ) {
-			$this->die_with_error( 'You must be logged in to edit an event', 403 );
+			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
+			exit;
 		}
 		$event = get_post( $event_id );
 		if ( ! $event || 'event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
-			$this->die_with_error( 'Event does not exist, or you do not have permission to edit it.', 403 );
+			$this->die_with_error( esc_html__( 'Event does not exist, or you do not have permission to edit it.', 'gp-translation-events' ), 403 );
 		}
 		if ( 'trash' === $event->post_status ) {
-			$this->die_with_error( 'You cannot edit a trashed event', 403 );
+			$this->die_with_error( esc_html__( 'You cannot edit a trashed event', 'gp-translation-events' ), 403 );
 		}
 
 		include ABSPATH . 'wp-admin/includes/post.php';
@@ -224,7 +228,7 @@ class Route extends GP_Route {
 		} catch ( Exception $e ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $e );
-			$this->die_with_error( 'Something is wrong.' );
+			$this->die_with_error( esc_html__( 'Something is wrong.', 'gp-translation-events' ) );
 		}
 
 		$this->tmpl( 'events-form', get_defined_vars() );
@@ -258,7 +262,7 @@ class Route extends GP_Route {
 		} catch ( Exception $e ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $e );
-			$this->die_with_error( 'Failed to calculate event stats' );
+			$this->die_with_error( esc_html__( 'Failed to calculate event stats', 'gp-translation-events' ) );
 		}
 
 		$this->tmpl( 'event', get_defined_vars() );
@@ -272,7 +276,7 @@ class Route extends GP_Route {
 	public function events_attend( int $event_id ) {
 		$user = wp_get_current_user();
 		if ( ! $user ) {
-			$this->die_with_error( 'Only logged-in users can attend events', 403 );
+			$this->die_with_error( esc_html__( 'Only logged-in users can attend events', 'gp-translation-events' ), 403 );
 		}
 
 		$event = get_post( $event_id );
@@ -306,8 +310,10 @@ class Route extends GP_Route {
 	 * @return void
 	 */
 	public function my_events() {
+		global $wp;
 		if ( ! is_user_logged_in() ) {
-			$this->die_with_error( 'You must be logged in to your events', 403 );
+			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
+			exit;
 		}
 		include ABSPATH . 'wp-admin/includes/post.php';
 

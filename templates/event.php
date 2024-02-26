@@ -106,6 +106,13 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				</form>
 			<?php endif ?>
 		</div>
+		<?php else : ?>
+		<div class="event-details-join">
+			<p>
+				<?php global $wp; ?>
+				<a href="<?php echo esc_url( wp_login_url( home_url( $wp->request ) ) ); ?>" class="button is-primary attend-btn"><?php esc_html_e( 'Login to attend', 'gp-translation-events' ); ?></a>
+			</p>
+		</div>
 		<?php endif; ?>
 	</div>
 <div class="clear"></div>
