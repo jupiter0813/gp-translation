@@ -18,9 +18,7 @@ use WP_Post;
 
 /* translators: %s: Event title. */
 gp_title( sprintf( __( 'Translation Events - %s' ), esc_html( $event_title ) ) );
-$breadcrumb   = route::get_base_breadcrumb();
-$breadcrumb[] = esc_html( $event_title );
-gp_breadcrumb( $breadcrumb );
+gp_breadcrumb_event( array( esc_html( $event_title ) ) );
 gp_tmpl_header();
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
