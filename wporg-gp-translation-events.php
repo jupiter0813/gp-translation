@@ -369,24 +369,37 @@ function gp_event_nav_menu_items( array $items, string $location ): array {
 add_filter( 'gp_nav_menu_items', 'Wporg\TranslationEvents\gp_event_nav_menu_items', 10, 2 );
 
 /**
- * Generate a slug for the event post type when we save a draft event.
+ * Generate a slug for the event post type when we save a draft event or when we publish an event.
  *
- * Generate a slug based on the event title if it's not provided.
+ * Generate a slug based on the event title if:
+ * - The event is a draft.
+ * - The event is published and it was a draft just before.
  *
- * @param array $data An array of slashed post data.
+ * @param array $data    An array of slashed post data.
+ * @param array $postarr An array of sanitized, but otherwise unmodified post data.
  * @return array The modified post data.
  */
-function generate_event_slug( array $data ): array {
-	if ( 'event' === $data['post_type'] && 'draft' === $data['post_status'] ) {
-		if ( empty( $data['post_name'] ) ) {
+function generate_event_slug( array $data, array $postarr ): array {
+	if ( 'event' === $data['post_type'] ) {
+		if ( 'draft' === $data['post_status'] ) {
 			$data['post_name'] = sanitize_title( $data['post_title'] );
+		}
+		if ( 'publish' === $data['post_status'] ) {
+			if ( is_numeric( $postarr['ID'] ) && 0 !== $postarr['ID'] ) {
+				$post = get_post( $postarr['ID'] );
+				if ( $post instanceof WP_Post ) {
+					if ( 'draft' === $post->post_status ) {
+						$data['post_name'] = sanitize_title( $data['post_title'] );
+					}
+				}
+			}
 		}
 	}
 
 	return $data;
 }
 
-add_filter( 'wp_insert_post_data', 'Wporg\TranslationEvents\generate_event_slug', 10, 1 );
+add_filter( 'wp_insert_post_data', 'Wporg\TranslationEvents\generate_event_slug', 10, 2 );
 
 add_action(
 	'gp_init',

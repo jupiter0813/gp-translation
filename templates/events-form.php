@@ -82,6 +82,31 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<button id="delete-button" class="button is-destructive delete-event" type="submit" name="submit" value="Delete" style="display: <?php echo esc_attr( $visibility_delete_button ); ?>">Delete Event</button>
 	<?php endif; ?>
 	</div>
+	<div class="clear"></div>
+	<div class="published-update-text">
+		<?php
+		$visibility_published_button = 'none';
+		if ( isset( $event_status ) && 'publish' === $event_status ) {
+			$visibility_published_button = 'block';
+		}
+		?>
+		<span id="published-update-text" style="display: <?php echo esc_attr( $visibility_published_button ); ?>">
+		<?php
+		$polyglots_slack_channel = 'https://wordpress.slack.com/archives/C02RP50LK';
+		echo wp_kses(
+		// translators: %s: Polyglots Slack channel URL.
+			sprintf( __( 'If you need to update the event slug, please, contact with an admin in the <a href="%s" target="_blank">Polyglots</a> channel in Slack.', 'gp-translation-events' ), $polyglots_slack_channel ),
+			array(
+				'a' => array(
+					'href'   => array(),
+					'target' => array(),
+				),
+
+			)
+		);
+		?>
+		</span>
+	</div>
 </form>
 <div class="clear"></div>
 <?php gp_tmpl_footer(); ?>

@@ -64,6 +64,7 @@
 							$( '#event-id' ).val( response.data.eventId );
 							if ( eventStatus === 'publish' ) {
 								$( 'button[data-event-status="draft"]' ).hide();
+								$( '#published-update-text' ).show();
 								$( 'button[data-event-status="publish"]' ).text( 'Update Event' );
 							}
 							if ( eventStatus === 'draft' ) {
