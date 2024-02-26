@@ -114,5 +114,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	else :
 		echo 'No events found.';
 	endif;
-	gp_tmpl_footer();
 	?>
+</div>
+<?php
+	gp_tmpl_footer();
+?>
