@@ -126,7 +126,7 @@ class Route extends GP_Route {
 		);
 		$past_events_query = new WP_Query( $past_events_args );
 
-		$user_attending_events      = get_user_meta( get_current_user_id(), self::USER_META_KEY_ATTENDING, true ) ?: array();
+		$user_attending_events      = get_user_meta( get_current_user_id(), self::USER_META_KEY_ATTENDING, true ) ?: array( 0 );
 		$user_attending_events_args = array(
 			'post_type'      => 'event',
 			'post__in'       => array_keys( $user_attending_events ),
