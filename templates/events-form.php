@@ -17,7 +17,7 @@ namespace Wporg\TranslationEvents;
 /** @var string $css_show_url */
 
 gp_title( __( 'Translation Events' ) . ' - ' . esc_html( $event_form_title . ' - ' . $event_title ) );
-gp_breadcrumb_event( array( esc_html( $event_form_title ) ) );
+gp_breadcrumb_translation_events( array( esc_html( $event_form_title ) ) );
 gp_tmpl_header();
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>

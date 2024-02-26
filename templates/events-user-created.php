@@ -11,7 +11,7 @@ use WP_Query;
 /** @var WP_Query $query */
 
 gp_title( __( 'Translation Events' ) . ' - ' . esc_html__( 'My Events' ) );
-gp_breadcrumb_event( array( esc_html__( 'My Events', 'gp-translation-events' ) ) );
+gp_breadcrumb_translation_events( array( esc_html__( 'My Events', 'gp-translation-events' ) ) );
 gp_tmpl_header();
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
