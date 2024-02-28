@@ -3,9 +3,10 @@ CREATE TABLE `translate_event_actions` (
   `event_id` int(10) NOT NULL COMMENT 'Post_ID of the translation_event post in the wp_posts table',
   `original_id` int(10) NOT NULL COMMENT 'ID of the translation',
   `user_id` int(10) NOT NULL COMMENT 'ID of the user who made the action',
-  `action` ENUM('approve','create','reject','request_changes') NOT NULL COMMENT 'The action that the user made (create, reject, etc)',
-  `locale` varchar(10) NOT NULL COMMENT 'Locale of the translation',
+  `action` enum('approve','create','reject','request_changes') NOT NULL COMMENT 'The action that the user made (create, reject, etc)',
+  `locale` varchar(10) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'Locale of the translation',
   `happened_at` datetime NOT NULL COMMENT 'When the action happened, in UTC',
   PRIMARY KEY (`translate_event_actions_id`),
-  UNIQUE KEY `event_id` (`event_id`,`original_id`,`user_id`)
+  UNIQUE KEY `event_per_original_per_user` (`event_id`,`original_id`,`user_id`),
+  KEY `event_stats` (`event_id`,`locale`)
 ) COMMENT='Tracks translation actions that happened during a translation event';
