@@ -506,3 +506,18 @@ function add_active_events_current_user(): void {
 	);
 }
 add_action( 'gp_before_translation_table', 'Wporg\TranslationEvents\add_active_events_current_user' );
+
+/**
+ * Get event breadcrumb.
+ *
+ * @param array $extra_items   Array of additional items to add to the breadcrumb.
+ *
+ * @return string   HTML of the breadcrumb.
+ */
+function gp_breadcrumb_translation_events( $extra_items = array() ) {
+	$breadcrumb = array( gp_link_get( gp_url( '/events' ), __( 'Events' ) ) );
+	if ( ! empty( $extra_items ) ) {
+		$breadcrumb = array_merge( $breadcrumb, $extra_items );
+	}
+	return gp_breadcrumb( $breadcrumb );
+}
