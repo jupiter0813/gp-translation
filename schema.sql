@@ -7,6 +7,5 @@ CREATE TABLE `translate_event_actions` (
   `locale` varchar(10) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'Locale of the translation',
   `happened_at` datetime NOT NULL COMMENT 'When the action happened, in UTC',
   PRIMARY KEY (`translate_event_actions_id`),
-  UNIQUE KEY `event_per_original_per_user` (`event_id`,`original_id`,`user_id`),
-  KEY `event_stats` (`event_id`,`locale`)
+  UNIQUE KEY `event_per_original_per_user` (`event_id`,`locale`,`original_id`,`user_id`)
 ) COMMENT='Tracks translation actions that happened during a translation event';
