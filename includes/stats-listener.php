@@ -90,7 +90,7 @@ class Stats_Listener {
 							// End primary key.
 							'action'      => $action,
 							'locale'      => $translation_set->locale,
-							'happened_at' => date( 'Y-m-d H:i:s' ),
+							'happened_at' => gmdate( 'Y-m-d H:i:s' ),
 						),
 					),
 				);
