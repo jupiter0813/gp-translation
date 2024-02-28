@@ -84,19 +84,18 @@ class Stats_Listener {
 						'insert ignore into translate_event_actions (event_id, user_id, original_id, action, locale, happened_at) values (%d, %d, %d, %s, %s, %s)',
 						array(
 							// Start primary key.
-							'event_id'       => $event->id(),
-							'user_id'        => $user_id,
+							'event_id'    => $event->id(),
+							'user_id'     => $user_id,
 							'original_id' => $translation->original_id,
 							// End primary key.
-							'action'         => $action,
-							'locale'         => $translation_set->locale,
-							'happened_at'    => date( 'Y-m-d H:i:s' ),
+							'action'      => $action,
+							'locale'      => $translation_set->locale,
+							'happened_at' => date( 'Y-m-d H:i:s' ),
 						),
 					),
 				);
 				// phpcs:enable
 			}
-
 		} catch ( Exception $exception ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $exception );
