@@ -81,16 +81,16 @@ class Stats_Listener {
 				// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->query(
 					$wpdb->prepare(
-						'insert ignore into translate_event_actions (event_id, user_id, original_id, action, locale, happened_at) values (%d, %d, %d, %s, %s, %s)',
+						'insert ignore into translate_event_actions (event_id, locale, user_id, original_id, action, happened_at) values (%d, %s, %d, %d, %s, %s)',
 						array(
-							// Start primary key.
+							// Start unique key.
 							'event_id'    => $event->id(),
+							'locale'      => $translation_set->locale,
 							'user_id'     => $user_id,
 							'original_id' => $translation->original_id,
-							// End primary key.
+							// End unique key.
 							'action'      => $action,
-							'locale'      => $translation_set->locale,
-							'happened_at' => gmdate( 'Y-m-d H:i:s' ),
+							'happened_at' => $happened_at->format( 'Y-m-d H:i:s' ),
 						),
 					),
 				);
