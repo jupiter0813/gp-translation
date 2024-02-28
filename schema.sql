@@ -1,19 +1,11 @@
-# This file is only used in development environments, and to serve as documentation.
-# It is not used in production in any way.
-
-drop table if exists wp_wporg_gp_translation_events_actions;
-
-create table wp_wporg_gp_translation_events_actions
-(
-    event_id       int(10)     not null comment 'ID of the event',
-    user_id        int(10)     not null comment 'ID of the user who made the action',
-    translation_id int(10)     not null comment 'ID of the translation',
-    action         varchar(16) not null comment 'The action that the user made (create, reject, etc)',
-    locale         varchar(10) not null comment 'Locale of the translation',
-    # Make sure that for a given event and translation, the user cannot do multiple actions.
-    primary key (event_id, user_id, translation_id)
-)
-    comment 'Tracks translation actions that happened during a translation event';
-
-create index wp_wporg_gp_translation_events_actions_event_id_locale_index
-    on wp_wporg_gp_translation_events_actions (event_id, locale);
+CREATE TABLE `translate_event_actions` (
+  `translate_event_actions_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `event_id` int(10) NOT NULL COMMENT 'Post_ID of the translation_event post in the wp_posts table',
+  `original_id` int(10) NOT NULL COMMENT 'ID of the translation',
+  `user_id` int(10) NOT NULL COMMENT 'ID of the user who made the action',
+  `action` ENUM('approve','create','reject','request_changes') NOT NULL COMMENT 'The action that the user made (create, reject, etc)',
+  `locale` varchar(10) NOT NULL COMMENT 'Locale of the translation',
+  `happened_at` datetime NOT NULL COMMENT 'When the action happened, in UTC',
+  PRIMARY KEY (`translate_event_actions_id`),
+  UNIQUE KEY `event_id` (`event_id`,`original_id`,`user_id`)
+) COMMENT='Tracks translation actions that happened during a translation event';

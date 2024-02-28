@@ -25,34 +25,13 @@ use GP;
 use WP_Post;
 use WP_Query;
 
-/**
- * Check if a slug is being used by another post type.
- *
- * @param string $slug The slug to check.
- *
- * @return bool
- */
-function slug_exists( string $slug ): bool {
-	$post_types = get_post_types( array( '_builtin' => false ) );
-	foreach ( $post_types as $post_type ) {
-		$post_type_object = get_post_type_object( $post_type );
-
-		if ( is_array( $post_type_object->rewrite ) && isset( $post_type_object->rewrite['slug'] ) ) {
-			return ( $post_type_object->rewrite['slug'] === $slug );
-		}
-	}
-	return false;
-}
 
 /**
  * Register the event post type.
  */
 function register_event_post_type() {
-	$slug = 'events';
-	if ( slug_exists( $slug ) ) {
-		echo 'The slug "' . esc_html( $slug ) . '" is already in use by another post type.';
-		return;
-	}
+	$slug = 'translation_event';
+
 	$labels = array(
 		'name'               => 'Translation Events',
 		'singular_name'      => 'Translation Event',
@@ -73,17 +52,17 @@ function register_event_post_type() {
 		'has_archive' => true,
 		'menu_icon'   => 'dashicons-calendar',
 		'supports'    => array( 'title', 'editor', 'thumbnail', 'revisions' ),
-		'rewrite'     => array( 'slug' => $slug ),
+		'rewrite'     => array( 'slug' => 'events' ),
 		'show_ui'     => false,
 	);
 
-	register_post_type( 'event', $args );
+	register_post_type( $slug, $args );
 }
 /**
  * Add meta boxes for the event post type.
  */
 function event_meta_boxes() {
-	add_meta_box( 'event_dates', 'Event Dates', 'Wporg\TranslationEvents\event_dates_meta_box', 'event', 'normal', 'high' );
+	add_meta_box( 'event_dates', 'Event Dates', 'Wporg\TranslationEvents\event_dates_meta_box', 'translation_event', 'normal', 'high' );
 }
 
 /**
@@ -230,7 +209,7 @@ function submit_event_ajax() {
 	if ( 'create_event' === $action ) {
 		$event_id         = wp_insert_post(
 			array(
-				'post_type'    => 'event',
+				'post_type'    => 'translation_event',
 				'post_title'   => $title,
 				'post_content' => $description,
 				'post_status'  => $event_status,
@@ -242,7 +221,9 @@ function submit_event_ajax() {
 		if ( ! isset( $_POST['event_id'] ) ) {
 			wp_send_json_error( esc_html__( 'Event id is required.', 'gp-translation-events' ), 422 );
 		}
-		if ( ! $event || 'event' !== $event->post_type ) {
+		$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
+		$event    = get_post( $event_id );
+		if ( ! $event || 'translation_event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 			wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 		}
 		wp_update_post(
@@ -256,8 +237,13 @@ function submit_event_ajax() {
 		$response_message = esc_html__( 'Event updated successfully!', 'gp-translation-events' );
 	}
 	if ( 'delete_event' === $action ) {
-		if ( ! $event || 'event' !== $event->post_type ) {
+		$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
+		$event    = get_post( $event_id );
+		if ( ! $event || 'translation_event' !== $event->post_type ) {
 			wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
+		}
+		if ( ! ( current_user_can( 'delete_post', $event->ID ) || get_current_user_id() === $event->post_author ) ) {
+			wp_send_json_error( 'You do not have permission to delete this event' );
 		}
 		$stats_calculator = new Stats_Calculator();
 		try {
@@ -347,7 +333,7 @@ function register_translation_event_js() {
  * @param WP_Post $post       The post object.
  */
 function event_status_transition( string $new_status, string $old_status, WP_Post $post ): void {
-	if ( 'event' !== $post->post_type ) {
+	if ( 'translation_event' !== $post->post_type ) {
 		return;
 	}
 	if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
@@ -396,7 +382,7 @@ add_filter( 'gp_nav_menu_items', 'Wporg\TranslationEvents\gp_event_nav_menu_item
  * @return array The modified post data.
  */
 function generate_event_slug( array $data, array $postarr ): array {
-	if ( 'event' === $data['post_type'] ) {
+	if ( 'translation_event' === $data['post_type'] ) {
 		if ( 'draft' === $data['post_status'] ) {
 			$data['post_name'] = sanitize_title( $data['post_title'] );
 		}
@@ -448,7 +434,7 @@ function add_active_events_current_user(): void {
 	$user_attending_events      = get_user_meta( get_current_user_id(), Route::USER_META_KEY_ATTENDING, true ) ?: array();
 	$current_datetime_utc       = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
 	$user_attending_events_args = array(
-		'post_type'   => 'event',
+		'post_type'   => 'translation_event',
 		'post__in'    => array_keys( $user_attending_events ),
 		'post_status' => 'publish',
 		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query

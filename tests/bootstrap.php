@@ -29,22 +29,10 @@ if ( ! file_exists( "$_tests_dir/includes/functions.php" ) ) {
 require_once "$_tests_dir/includes/functions.php";
 
 function _apply_plugin_schema() {
+	require_once ABSPATH . '/wp-admin/includes/upgrade.php';
 	$schema_path = __DIR__ . '/../schema.sql';
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-	$statements = explode( ';', file_get_contents( $schema_path ) );
-
-	global $wpdb;
-	foreach ( $statements as $statement ) {
-		$sql = trim( $statement );
-		if ( ! $sql ) {
-			continue;
-		}
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-		$wpdb->query( $sql );
-		// phpcs:enable
-	}
+	$statements = dbDelta( file_get_contents( $schema_path ) );
 }
 tests_add_filter( 'muplugins_loaded', '_apply_plugin_schema' );
 

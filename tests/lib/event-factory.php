@@ -16,7 +16,7 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 			'post_title'   => new WP_UnitTest_Generator_Sequence( 'Event title %s' ),
 			'post_content' => new WP_UnitTest_Generator_Sequence( 'Event content %s' ),
 			'post_excerpt' => new WP_UnitTest_Generator_Sequence( 'Event excerpt %s' ),
-			'post_type'    => 'event',
+			'post_type'    => 'translation_event',
 		);
 	}
 
