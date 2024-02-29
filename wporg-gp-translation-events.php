@@ -250,7 +250,7 @@ class Translation_Events {
 
 		$is_valid_event_date = false;
 		try {
-			$is_valid_event_date = validate_event_dates( $event_start, $event_end );
+			$is_valid_event_date = $this->validate_event_dates( $event_start, $event_end );
 		} catch ( Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 			// Deliberately ignored, handled below.
 		}
