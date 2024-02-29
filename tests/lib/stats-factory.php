@@ -5,24 +5,20 @@ namespace Wporg\TranslationEvents\Tests;
 use wpdb;
 
 class Stats_Factory {
-	private wpdb $wpdb;
-
-	public function __construct() {
-		global $wpdb;
-		$this->wpdb = $wpdb;
-	}
-
 	public function clean() {
+		global $wpdb;
+
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$this->wpdb->query( "delete from {$this->wpdb->base_prefix}event_actions" );
+		$wpdb->query( "delete from {$wpdb->base_prefix}event_actions" );
 		// phpcs:enable
 	}
 
 	public function create( int $event_id, $user_id, $original_id, $action, $locale = 'aa' ) {
+		global $wpdb;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-		$this->wpdb->insert(
-			$this->wpdb->base_prefix . 'event_actions',
+		$wpdb->insert(
+			$wpdb->base_prefix . 'event_actions',
 			array(
 				'event_id'    => $event_id,
 				'user_id'     => $user_id,
@@ -34,9 +30,10 @@ class Stats_Factory {
 	}
 
 	public function get_all(): array {
+		global $wpdb;
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $this->wpdb->get_results( "select * from {$this->wpdb->base_prefix}event_actions", ARRAY_A );
+		return $wpdb->get_results( "select * from {$wpdb->base_prefix}event_actions", ARRAY_A );
 		// phpcs:enable
 	}
 }
