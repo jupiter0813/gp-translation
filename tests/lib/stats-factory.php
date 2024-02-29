@@ -29,11 +29,11 @@ class Stats_Factory {
 		);
 	}
 
-	public function get_all(): array {
+	public function get_count(): int {
 		global $wpdb;
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $wpdb->get_results( "select * from {$wpdb->base_prefix}event_actions", ARRAY_A );
+		return intval( $wpdb->get_var( "select count(*) from {$wpdb->base_prefix}event_actions" ) );
 		// phpcs:enable
 	}
 
