@@ -323,7 +323,7 @@ class Translation_Events {
 		}
 		if ( 'delete_event' !== $_POST['form_name'] ) {
 			try {
-				update_post_meta( $event_id, '_event_start', convert_to_utc( $event_start, $event_timezone ) );
+				update_post_meta( $event_id, '_event_start', $this->convert_to_utc( $event_start, $event_timezone ) );
 				update_post_meta( $event_id, '_event_end', $this->convert_to_utc( $event_end, $event_timezone ) );
 			} catch ( Exception $e ) {
 				wp_send_json_error( esc_html__( 'Invalid start or end', 'gp-translation-events' ), 422 );
