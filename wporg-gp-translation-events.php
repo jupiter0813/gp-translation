@@ -515,7 +515,9 @@ add_action( 'gp_before_translation_table', 'Wporg\TranslationEvents\add_active_e
  * @return string   HTML of the breadcrumb.
  */
 function gp_breadcrumb_translation_events( $extra_items = array() ) {
-	$breadcrumb = array( gp_link_get( gp_url( '/events' ), __( 'Events' ) ) );
+	$breadcrumb = array(
+		empty( $extra_items ) ? __( 'Events', 'gp-translation-events' ) : gp_link_get( gp_url( '/events' ), __( 'Events', 'gp-translation-events' ) ),
+	);
 	if ( ! empty( $extra_items ) ) {
 		$breadcrumb = array_merge( $breadcrumb, $extra_items );
 	}
