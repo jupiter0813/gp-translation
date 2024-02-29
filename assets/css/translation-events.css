@@ -180,8 +180,6 @@ input[type="submit"].attend-btn {
 	text-align: center;
 	display: inline;
 	margin-top: 1em;
-	padding-top: 0.9em;
-	padding-bottom: 0.9em;
 	font-weight: bold;
 }
 input[type="submit"].attending-btn, a.button.is-primary.attend-btn {
@@ -189,8 +187,6 @@ input[type="submit"].attending-btn, a.button.is-primary.attend-btn {
 	text-align: center;
 	display: block;
 	margin-top: 1em;
-	padding-top: 0.9em;
-	padding-bottom: 0.9em;
 }
 .event-details-date {
 	background: #f4f4f4;
