@@ -409,11 +409,6 @@ class Translation_Events {
 		}
 	}
 
-
-
-
-
-
 	/**
 	 * Add the events link to the GlotPress main menu.
 	 *
@@ -428,8 +423,6 @@ class Translation_Events {
 		$new[ esc_url( gp_url( '/events/' ) ) ] = esc_html__( 'Events', 'gp-translation-events' );
 		return array_merge( $items, $new );
 	}
-	// Add the events link to the GlotPress main menu.
-
 
 	/**
 	 * Generate a slug for the event post type when we save a draft event or when we publish an event.
