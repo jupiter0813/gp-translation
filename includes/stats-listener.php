@@ -118,7 +118,7 @@ class Stats_Listener {
 			// Get events for which start is before $boundary_end AND end is after $boundary_start.
 			$event_ids = get_posts(
 				array(
-					'post_type'      => 'translation_event',
+					'post_type'      => Translation_Events::CPT,
 					'post_status'    => 'publish',
 					'posts_per_page' => - 1,
 					'fields'         => 'ids',

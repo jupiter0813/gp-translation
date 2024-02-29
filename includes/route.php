@@ -64,7 +64,7 @@ class Route extends GP_Route {
 		// phpcs:enable
 
 		$current_events_args  = array(
-			'post_type'      => 'translation_event',
+			'post_type'      => Translation_Events::CPT,
 			'posts_per_page' => 10,
 			'paged'          => $_current_events_paged,
 			'post_status'    => 'publish',
@@ -89,7 +89,7 @@ class Route extends GP_Route {
 		$current_events_query = new WP_Query( $current_events_args );
 
 		$upcoming_events_args  = array(
-			'post_type'      => 'translation_event',
+			'post_type'      => Translation_Events::CPT,
 			'posts_per_page' => 10,
 			'paged'          => $_upcoming_events_paged,
 			'post_status'    => 'publish',
@@ -108,7 +108,7 @@ class Route extends GP_Route {
 		$upcoming_events_query = new WP_Query( $upcoming_events_args );
 
 		$past_events_args  = array(
-			'post_type'      => 'translation_event',
+			'post_type'      => Translation_Events::CPT,
 			'posts_per_page' => 10,
 			'paged'          => $_past_events_paged,
 			'post_status'    => 'publish',
@@ -128,7 +128,7 @@ class Route extends GP_Route {
 
 		$user_attending_events      = get_user_meta( get_current_user_id(), self::USER_META_KEY_ATTENDING, true ) ?: array( 0 );
 		$user_attending_events_args = array(
-			'post_type'      => 'translation_event',
+			'post_type'      => Translation_Events::CPT,
 			'post__in'       => array_keys( $user_attending_events ),
 			'posts_per_page' => 10,
 			'paged'          => $_user_attending_events_paged,
@@ -193,7 +193,7 @@ class Route extends GP_Route {
 			exit;
 		}
 		$event = get_post( $event_id );
-		if ( ! $event || 'translation_event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
+		if ( ! $event || Translation_Events::CPT !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 			$this->die_with_error( esc_html__( 'Event does not exist, or you do not have permission to edit it.', 'gp-translation-events' ), 403 );
 		}
 		if ( 'trash' === $event->post_status ) {
@@ -243,7 +243,7 @@ class Route extends GP_Route {
 	 */
 	public function events_details( string $event_slug ) {
 		$user  = wp_get_current_user();
-		$event = get_page_by_path( $event_slug, OBJECT, 'translation_event' );
+		$event = get_page_by_path( $event_slug, OBJECT, Translation_Events::CPT );
 		if ( ! $event ) {
 			$this->die_with_404();
 		}
@@ -340,7 +340,7 @@ class Route extends GP_Route {
 		$events               = array_keys( $events );
 		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
 		$args                 = array(
-			'post_type'              => 'translation_event',
+			'post_type'              => Translation_Events::CPT,
 			'posts_per_page'         => 10,
 			'events_i_created_paged' => $_events_i_created_paged,
 			'paged'                  => $_events_i_created_paged,
@@ -354,7 +354,7 @@ class Route extends GP_Route {
 		$events_i_created_query = new WP_Query( $args );
 
 		$args = array(
-			'post_type'               => 'translation_event',
+			'post_type'               => Translation_Events::CPT,
 			'posts_per_page'          => 10,
 			'events_i_attended_paged' => $_events_i_attended_paged,
 			'paged'                   => $_events_i_attended_paged,

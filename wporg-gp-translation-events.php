@@ -26,6 +26,7 @@ use WP_Post;
 use WP_Query;
 
 class Translation_Events {
+	const CPT = 'translation_event';
 	public function __construct() {
 		\add_action( 'wp_ajax_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
 		\add_action( 'wp_ajax_nopriv_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
@@ -84,8 +85,6 @@ class Translation_Events {
 	 * Register the event post type.
 	 */
 	public function register_event_post_type() {
-		$slug = 'translation_event';
-
 		$labels = array(
 			'name'               => 'Translation Events',
 			'singular_name'      => 'Translation Event',
@@ -110,13 +109,13 @@ class Translation_Events {
 			'show_ui'     => false,
 		);
 
-		register_post_type( $slug, $args );
+		register_post_type( self::CPT, $args );
 	}
 	/**
 	 * Add meta boxes for the event post type.
 	 */
 	public function event_meta_boxes() {
-		\add_meta_box( 'event_dates', 'Event Dates', array( $this, 'event_dates_meta_box' ), 'translation_event', 'normal', 'high' );
+		\add_meta_box( 'event_dates', 'Event Dates', array( $this, 'event_dates_meta_box' ), self::CPT, 'normal', 'high' );
 	}
 
 	/**
@@ -263,7 +262,7 @@ class Translation_Events {
 		if ( 'create_event' === $action ) {
 			$event_id         = wp_insert_post(
 				array(
-					'post_type'    => 'translation_event',
+					'post_type'    => self::CPT,
 					'post_title'   => $title,
 					'post_content' => $description,
 					'post_status'  => $event_status,
@@ -277,7 +276,7 @@ class Translation_Events {
 			}
 			$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
 			$event    = get_post( $event_id );
-			if ( ! $event || 'translation_event' !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
+			if ( ! $event || self::CPT !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 				wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 			}
 			wp_update_post(
@@ -293,7 +292,7 @@ class Translation_Events {
 		if ( 'delete_event' === $action ) {
 			$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
 			$event    = get_post( $event_id );
-			if ( ! $event || 'translation_event' !== $event->post_type ) {
+			if ( ! $event || self::CPT !== $event->post_type ) {
 				wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 			}
 			if ( ! ( current_user_can( 'delete_post', $event->ID ) || get_current_user_id() === $event->post_author ) ) {
@@ -372,7 +371,7 @@ class Translation_Events {
 			'$translation_event',
 			array(
 				'url'          => admin_url( 'admin-ajax.php' ),
-				'_event_nonce' => wp_create_nonce( 'translation_event' ),
+				'_event_nonce' => wp_create_nonce( self::CPT ),
 			)
 		);
 	}
@@ -387,7 +386,7 @@ class Translation_Events {
 	 * @param WP_Post $post       The post object.
 	 */
 	public function event_status_transition( string $new_status, string $old_status, WP_Post $post ): void {
-		if ( 'translation_event' !== $post->post_type ) {
+		if ( self::CPT !== $post->post_type ) {
 			return;
 		}
 		if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
@@ -436,7 +435,7 @@ class Translation_Events {
 	 * @return array The modified post data.
 	 */
 	public function generate_event_slug( array $data, array $postarr ): array {
-		if ( 'translation_event' === $data['post_type'] ) {
+		if ( self::CPT === $data['post_type'] ) {
 			if ( 'draft' === $data['post_status'] ) {
 				$data['post_name'] = sanitize_title( $data['post_title'] );
 			}
@@ -464,7 +463,7 @@ class Translation_Events {
 		$user_attending_events      = get_user_meta( get_current_user_id(), Route::USER_META_KEY_ATTENDING, true ) ?: array();
 		$current_datetime_utc       = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
 		$user_attending_events_args = array(
-			'post_type'   => 'translation_event',
+			'post_type'   => self::CPT,
 			'post__in'    => array_keys( $user_attending_events ),
 			'post_status' => 'publish',
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
