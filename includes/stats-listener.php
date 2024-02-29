@@ -81,15 +81,16 @@ class Stats_Listener {
 				// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->query(
 					$wpdb->prepare(
-						'insert ignore into wp_wporg_gp_translation_events_actions (event_id, user_id, translation_id, action, locale) values (%d, %d, %d, %s, %s)',
+						"insert ignore into {$wpdb->base_prefix}event_actions (event_id, locale, user_id, original_id, action, happened_at) values (%d, %s, %d, %d, %s, %s)",
 						array(
-							// Start primary key.
-							'event_id'       => $event->id(),
-							'user_id'        => $user_id,
-							'translation_id' => $translation->id,
-							// End primary key.
-							'action'         => $action,
-							'locale'         => $translation_set->locale,
+							// Start unique key.
+							'event_id'    => $event->id(),
+							'locale'      => $translation_set->locale,
+							'user_id'     => $user_id,
+							'original_id' => $translation->original_id,
+							// End unique key.
+							'action'      => $action,
+							'happened_at' => $happened_at->format( 'Y-m-d H:i:s' ),
 						),
 					),
 				);
@@ -117,7 +118,7 @@ class Stats_Listener {
 			// Get events for which start is before $boundary_end AND end is after $boundary_start.
 			$event_ids = get_posts(
 				array(
-					'post_type'      => 'event',
+					'post_type'      => Translation_Events::CPT,
 					'post_status'    => 'publish',
 					'posts_per_page' => - 1,
 					'fields'         => 'ids',

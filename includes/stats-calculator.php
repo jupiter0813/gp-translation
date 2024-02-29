@@ -78,7 +78,7 @@ class Stats_Calculator {
 					   sum(action = 'create') as created,
 					   count(*) as total,
 					   count(distinct user_id) as users
-				from wp_wporg_gp_translation_events_actions
+				from {$wpdb->base_prefix}event_actions
 				where event_id = %d
 				group by locale with rollup
 			",
