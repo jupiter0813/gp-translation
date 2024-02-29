@@ -75,14 +75,14 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$stats = $this->stats_factory->get_all();
 		$this->assertCount( 2, $stats );
 
-		$event1_stats = $stats[0];
+		$event1_stats = $this->stats_factory->get_by_event_id( $event1_id );
 		$this->assertEquals( $event1_id, $event1_stats['event_id'] );
 		$this->assertEquals( $user_id, $event1_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event1_stats['original_id'] );
 		$this->assertEquals( 'create', $event1_stats['action'] );
 		$this->assertEquals( 'aa', $event1_stats['locale'] );
 
-		$event2_stats = $stats[1];
+		$event2_stats = $this->stats_factory->get_by_event_id( $event2_id );
 		$this->assertEquals( $event2_id, $event2_stats['event_id'] );
 		$this->assertEquals( $user_id, $event2_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event2_stats['original_id'] );
@@ -109,14 +109,14 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$stats = $this->stats_factory->get_all();
 		$this->assertCount( 2, $stats );
 
-		$event1_stats = $stats[0];
+		$event1_stats = $this->stats_factory->get_by_event_id( $event1_id );
 		$this->assertEquals( $event1_id, $event1_stats['event_id'] );
 		$this->assertEquals( $user_id, $event1_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event1_stats['original_id'] );
 		$this->assertEquals( 'approve', $event1_stats['action'] );
 		$this->assertEquals( 'aa', $event1_stats['locale'] );
 
-		$event2_stats = $stats[1];
+		$event2_stats = $this->stats_factory->get_by_event_id( $event2_id );
 		$this->assertEquals( $event2_id, $event2_stats['event_id'] );
 		$this->assertEquals( $user_id, $event2_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event2_stats['original_id'] );
@@ -143,14 +143,14 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$stats = $this->stats_factory->get_all();
 		$this->assertCount( 2, $stats );
 
-		$event1_stats = $stats[0];
+		$event1_stats = $this->stats_factory->get_by_event_id( $event1_id );
 		$this->assertEquals( $event1_id, $event1_stats['event_id'] );
 		$this->assertEquals( $user_id, $event1_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event1_stats['original_id'] );
 		$this->assertEquals( 'reject', $event1_stats['action'] );
 		$this->assertEquals( 'aa', $event1_stats['locale'] );
 
-		$event2_stats = $stats[1];
+		$event2_stats = $this->stats_factory->get_by_event_id( $event2_id );
 		$this->assertEquals( $event2_id, $event2_stats['event_id'] );
 		$this->assertEquals( $user_id, $event2_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event2_stats['original_id'] );
@@ -177,14 +177,14 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$stats = $this->stats_factory->get_all();
 		$this->assertCount( 2, $stats );
 
-		$event1_stats = $stats[0];
+		$event1_stats = $this->stats_factory->get_by_event_id( $event1_id );
 		$this->assertEquals( $event1_id, $event1_stats['event_id'] );
 		$this->assertEquals( $user_id, $event1_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event1_stats['original_id'] );
 		$this->assertEquals( 'request_changes', $event1_stats['action'] );
 		$this->assertEquals( 'aa', $event1_stats['locale'] );
 
-		$event2_stats = $stats[1];
+		$event2_stats = $this->stats_factory->get_by_event_id( $event2_id );
 		$this->assertEquals( $event2_id, $event2_stats['event_id'] );
 		$this->assertEquals( $user_id, $event2_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event2_stats['original_id'] );

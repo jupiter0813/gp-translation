@@ -36,4 +36,12 @@ class Stats_Factory {
 		return $wpdb->get_results( "select * from {$wpdb->base_prefix}event_actions", ARRAY_A );
 		// phpcs:enable
 	}
+
+	public function get_by_event_id( $event_id ): array {
+		global $wpdb;
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->base_prefix}event_actions where event_id = %s", $event_id ), ARRAY_A );
+		// phpcs:enable
+	}
 }
