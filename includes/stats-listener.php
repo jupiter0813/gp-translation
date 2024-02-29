@@ -81,7 +81,7 @@ class Stats_Listener {
 				// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->query(
 					$wpdb->prepare(
-						'insert ignore into translate_event_actions (event_id, locale, user_id, original_id, action, happened_at) values (%d, %s, %d, %d, %s, %s)',
+						"insert ignore into {$wpdb->base_prefix}event_actions (event_id, locale, user_id, original_id, action, happened_at) values (%d, %s, %d, %d, %s, %s)",
 						array(
 							// Start unique key.
 							'event_id'    => $event->id(),

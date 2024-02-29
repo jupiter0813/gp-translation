@@ -15,14 +15,14 @@ class Stats_Factory {
 	public function clean() {
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$this->wpdb->query( 'delete from translate_event_actions' );
+		$this->wpdb->query( "delete from {$wpdb->base_prefix}event_actions" );
 		// phpcs:enable
 	}
 
 	public function create( int $event_id, $user_id, $original_id, $action, $locale = 'aa' ) {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$this->wpdb->insert(
-			'translate_event_actions',
+			$wpdb->base_prefix . 'event_actions',
 			array(
 				'event_id'    => $event_id,
 				'user_id'     => $user_id,
@@ -36,7 +36,7 @@ class Stats_Factory {
 	public function get_all(): array {
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $this->wpdb->get_results( 'select * from translate_event_actions', ARRAY_A );
+		return $this->wpdb->get_results( "select * from {$wpdb->base_prefix}event_actions", ARRAY_A );
 		// phpcs:enable
 	}
 }
