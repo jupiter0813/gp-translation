@@ -27,6 +27,15 @@ use WP_Query;
 
 class Translation_Events {
 	const CPT = 'translation_event';
+
+	public static function get_instance() {
+		static $instance = null;
+		if ( null === $instance ) {
+			$instance = new self();
+		}
+		return $instance;
+	}
+
 	public function __construct() {
 		\add_action( 'wp_ajax_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
 		\add_action( 'wp_ajax_nopriv_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
@@ -39,7 +48,6 @@ class Translation_Events {
 		\add_filter( 'wp_insert_post_data', array( $this, 'generate_event_slug' ), 10, 2 );
 		\add_action( 'gp_init', array( $this, 'gp_init' ) );
 		\add_action( 'gp_before_translation_table', array( $this, 'add_active_events_current_user' ) );
-		\add_action( 'init', array( $this, 'activate' ) );
 		\register_activation_hook( __FILE__, array( $this, 'activate' ) );
 	}
 
@@ -537,4 +545,4 @@ class Translation_Events {
 		);
 	}
 }
-new Translation_Events();
+Translation_Events::get_instance();
