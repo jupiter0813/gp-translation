@@ -247,7 +247,7 @@ class Route extends GP_Route {
 		if ( ! $event ) {
 			$this->die_with_404();
 		}
-		if ( 'draft' === $event->post_status && intval( $event->post_author ) !== $user->ID ) {
+		if ( 'publish' !== $event->post_status && intval( $event->post_author ) !== $user->ID ) {
 			$this->die_with_error( esc_html__( 'You are not authorized to view this page.', 'gp-translation-events' ), 403 );
 		}
 
