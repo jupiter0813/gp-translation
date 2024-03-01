@@ -37,6 +37,14 @@
 		 * @param isDraft	  Whether the current event status is a draft or not
 		 */
 		function handleSubmit( eventStatus, isDraft ) {
+			if ( '' === $( '#event-start' ).val() ) {
+				$gp.notices.error( 'Event start date and time must be set.' );
+				return;
+			}
+			if ( '' === $( '#event-end' ).val() ) {
+				$gp.notices.error( 'Event end date and time must be set.' );
+				return;
+			}
 			if ( $( '#event-end' ).val() <= $( '#event-start' ).val() ) {
 				$gp.notices.error( 'Event end date and time must be later than event start date and time.' );
 				return;
