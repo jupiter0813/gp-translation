@@ -5,6 +5,12 @@ use GP;
 ?>
 
 <div class="event-list-top-bar">
+<h2 class="event-page-title">
+	<?php echo esc_html( $event_page_title ); ?>
+	<?php if ( isset( $event ) && 'draft' === $event->post_status ) : ?>
+				<span class="event-label-draft"><?php echo esc_html( $event->post_status ); ?></span>
+			<?php endif; ?>
+</h2>
 	<ul class="event-list-nav">
 		<?php if ( is_user_logged_in() ) : ?>
 			<li><a href="<?php echo esc_url( gp_url( '/events/my-events/' ) ); ?>">My Events</a></li>

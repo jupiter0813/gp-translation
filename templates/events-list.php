@@ -15,11 +15,11 @@ use WP_Query;
 gp_title( __( 'Translation Events', 'gp-translation-events' ) );
 gp_breadcrumb_translation_events();
 gp_tmpl_header();
+$event_page_title = __( 'Translation Events', 'gp-translation-events' );
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
 
 <div class="event-page-wrapper">
-	<h1 class="event_page_title"><?php esc_html_e( 'Translation Events', 'gp-translation-events' ); ?></h1>
 <div class="event-left-col">
 <?php
 if ( $current_events_query->have_posts() ) :

@@ -20,10 +20,6 @@
 	margin-top: 1em;
 	display: block;
 }
-.event-page-title {
-	border-bottom: #d9d8d8 thin solid;
-	padding-bottom: .5em;
-}
 .event-details-page {
 	border-bottom: #cfd4d4 thin solid;
 	width: 60%;
@@ -118,10 +114,13 @@ h2.event_page_title {
 	font-weight: bold;
 }
 .event-list-top-bar {
-	display: block;
 	width: 80%;
-	margin: 0 auto;
-	text-align: right;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+	border-bottom: #d9d8d8 thin solid;
+	padding-bottom: .5em;
 }
 .event-list-nav li {
 	display: inline;
