@@ -5,16 +5,16 @@ namespace Wporg\TranslationEvents;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use GP_Route;
 use WP_Query;
 use GP;
+use Wporg\TranslationEvents\Routes\Route as BaseRoute;
 
-class Route extends GP_Route {
+class Route extends BaseRoute {
 	public const USER_META_KEY_ATTENDING = 'translation-events-attending';
 
-	public function __construct() {
-		parent::__construct();
-		$this->template_path = __DIR__ . '/../templates/';
+	public function handle(): void {
+		// This is not used. It's only here because BaseRoute requires it.
+		// This class will be removed in a later commit.
 	}
 
 	/**

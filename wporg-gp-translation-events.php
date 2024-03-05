@@ -55,6 +55,7 @@ class Translation_Events {
 		require_once __DIR__ . '/templates/helper-functions.php';
 		require_once __DIR__ . '/includes/active-events-cache.php';
 		require_once __DIR__ . '/includes/event.php';
+		require_once __DIR__ . '/includes/routes/route.php';
 		require_once __DIR__ . '/includes/route.php';
 		require_once __DIR__ . '/includes/stats-calculator.php';
 		require_once __DIR__ . '/includes/stats-listener.php';
