@@ -57,11 +57,12 @@ class Translation_Events {
 		require_once __DIR__ . '/includes/active-events-cache.php';
 		require_once __DIR__ . '/includes/event.php';
 		require_once __DIR__ . '/includes/routes/route.php';
+		require_once __DIR__ . '/includes/routes/event/list.php';
 		require_once __DIR__ . '/includes/route.php';
 		require_once __DIR__ . '/includes/stats-calculator.php';
 		require_once __DIR__ . '/includes/stats-listener.php';
 
-		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\Route', 'events_list' ) );
+		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\Routes\Event\List_Route', 'handle' ) );
 		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Route', 'events_create' ) );
 		GP::$router->add( '/events/edit/(\d+)', array( 'Wporg\TranslationEvents\Route', 'events_edit' ) );
 		GP::$router->add( '/events/attend/(\d+)', array( 'Wporg\TranslationEvents\Route', 'events_attend' ), 'post' );
