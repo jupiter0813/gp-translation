@@ -58,6 +58,7 @@ class Translation_Events {
 		require_once __DIR__ . '/includes/event.php';
 		require_once __DIR__ . '/includes/routes/route.php';
 		require_once __DIR__ . '/includes/routes/event/create.php';
+		require_once __DIR__ . '/includes/routes/event/details.php';
 		require_once __DIR__ . '/includes/routes/event/edit.php';
 		require_once __DIR__ . '/includes/routes/event/list.php';
 		require_once __DIR__ . '/includes/route.php';
@@ -69,7 +70,7 @@ class Translation_Events {
 		GP::$router->add( '/events/edit/(\d+)', array( 'Wporg\TranslationEvents\Routes\Event\Edit_Route', 'handle' ) );
 		GP::$router->add( '/events/attend/(\d+)', array( 'Wporg\TranslationEvents\Route', 'events_attend' ), 'post' );
 		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Route', 'my_events' ) );
-		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Route', 'events_details' ) );
+		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Routes\Event\Details_Route', 'handle' ) );
 
 		$active_events_cache = new Active_Events_Cache();
 		$stats_listener      = new Stats_Listener( $active_events_cache );
