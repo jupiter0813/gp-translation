@@ -10,11 +10,6 @@ use GP;
 use Wporg\TranslationEvents\Routes\Route as BaseRoute;
 
 class Route extends BaseRoute {
-	public function handle(): void {
-		// This is not used. It's only here because BaseRoute requires it.
-		// This class will be removed in a later commit.
-	}
-
 	/**
 	 * Loads the 'events_edit' template.
 	 *

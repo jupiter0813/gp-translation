@@ -9,11 +9,4 @@ abstract class Route extends GP_Route {
 		parent::__construct();
 		$this->template_path = __DIR__ . '/../../templates/';
 	}
-
-	/**
-	 * Handle a request to this route.
-	 *
-	 * @return void
-	 */
-	abstract public function handle(): void;
 }
