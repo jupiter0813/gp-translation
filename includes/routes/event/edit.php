@@ -9,6 +9,9 @@ use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
 
+/**
+ * Displays the event edit page.
+ */
 class Edit_Route extends Route {
 	public function handle( int $event_id ): void {
 		global $wp;

@@ -8,6 +8,9 @@ use WP_Query;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
 
+/**
+ * Displays the My Events page for a user.
+ */
 class My_Events_Route extends Route {
 	public function handle(): void {
 		global $wp;

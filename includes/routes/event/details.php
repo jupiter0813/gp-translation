@@ -8,6 +8,9 @@ use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
 
+/**
+ * Displays the event details page.
+ */
 class Details_Route extends Route {
 	public function handle( string $event_slug ): void {
 		$user  = wp_get_current_user();

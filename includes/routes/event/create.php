@@ -4,6 +4,9 @@ namespace Wporg\TranslationEvents\Routes\Event;
 
 use Wporg\TranslationEvents\Routes\Route;
 
+/**
+ * Displays the event create page.
+ */
 class Create_Route extends Route {
 	public function handle(): void {
 		global $wp;

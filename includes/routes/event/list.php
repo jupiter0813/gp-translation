@@ -9,6 +9,9 @@ use WP_Query;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
 
+/**
+ * Displays the event list page.
+ */
 class List_Route extends Route {
 	public function handle(): void {
 		$current_datetime_utc = null;
