@@ -115,10 +115,10 @@ h2.event_page_title {
 }
 .event-list-top-bar {
 	width: 80%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: 1fr auto;
+	align-items: center;
 	border-bottom: #d9d8d8 thin solid;
 	padding-bottom: .5em;
 }
@@ -188,9 +188,6 @@ span.active-events-before-translation-table a {
 	margin: 0;
 	padding: 0;
 }
-.event-details-head {
-	border-bottom: var(--gp-color-secondary-400) thin solid;
-}
 input[type="submit"].attend-btn {
 	width: 100%;
 	text-align: center;
@@ -215,6 +212,8 @@ input[type="submit"].attending-btn, a.button.is-primary.attend-btn {
 .event-page-edit-link {
 	float: right;
 	text-decoration: none;
+	justify-self: end;
+	grid-column: 2;
 }
 .event-stats-summary {
 	margin-top: 1em;
@@ -248,7 +247,12 @@ span.event-details-date-label {
 	color: #5a5a5a;
 	display: block;
 }
-
+.event-host {
+	grid-column: 1;
+}
+p.event-sub-head {
+	grid-column: 1 / -1;
+}
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
 	.event-page-wrapper, .event-details-right, .event-details-left {

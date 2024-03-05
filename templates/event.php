@@ -25,17 +25,6 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
 
 <div class="event-page-wrapper">
-	<div class="event-details-head">
-		<h1>
-			
-		</h1>
-		<p>
-			Host: <a href="<?php echo esc_attr( get_author_posts_url( $event->post_author ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $event->post_author ) ); ?></a>
-			<?php if ( current_user_can( 'edit_post', $event_id ) ) : ?>
-				<a class="event-page-edit-link button" href="<?php echo esc_url( gp_url( 'events/edit/' . $event_id ) ); ?>"><span class="dashicons dashicons-edit"></span>Edit event</a>
-			<?php endif ?>
-		</p>
-	</div>
 	<div class="event-details-left">
 		<div class="event-page-content">
 			<?php
