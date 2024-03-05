@@ -10,8 +10,6 @@ use GP;
 use Wporg\TranslationEvents\Routes\Route as BaseRoute;
 
 class Route extends BaseRoute {
-	public const USER_META_KEY_ATTENDING = 'translation-events-attending';
-
 	public function handle(): void {
 		// This is not used. It's only here because BaseRoute requires it.
 		// This class will be removed in a later commit.
@@ -127,7 +125,7 @@ class Route extends BaseRoute {
 		);
 		$past_events_query = new WP_Query( $past_events_args );
 
-		$user_attending_events      = get_user_meta( get_current_user_id(), self::USER_META_KEY_ATTENDING, true ) ?: array( 0 );
+		$user_attending_events      = get_user_meta( get_current_user_id(), Translation_Events::USER_META_KEY_ATTENDING, true ) ?: array( 0 );
 		$user_attending_events_args = array(
 			'post_type'      => Translation_Events::CPT,
 			'post__in'       => array_keys( $user_attending_events ),
@@ -263,7 +261,7 @@ class Route extends BaseRoute {
 		$event_description   = $event->post_content;
 		$event_start         = get_post_meta( $event->ID, '_event_start', true ) ?: '';
 		$event_end           = get_post_meta( $event->ID, '_event_end', true ) ?: '';
-		$attending_event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?: array();
+		$attending_event_ids = get_user_meta( $user->ID, Translation_Events::USER_META_KEY_ATTENDING, true ) ?: array();
 		$user_is_attending   = isset( $attending_event_ids[ $event_id ] );
 
 		$stats_calculator = new Stats_Calculator();
@@ -295,7 +293,7 @@ class Route extends BaseRoute {
 			$this->die_with_404();
 		}
 
-		$event_ids = get_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, true ) ?? array();
+		$event_ids = get_user_meta( $user->ID, Translation_Events::USER_META_KEY_ATTENDING, true ) ?? array();
 		if ( ! $event_ids ) {
 			$event_ids = array();
 		}
@@ -308,7 +306,7 @@ class Route extends BaseRoute {
 			unset( $event_ids[ $event_id ] );
 		}
 
-		update_user_meta( $user->ID, self::USER_META_KEY_ATTENDING, $event_ids );
+		update_user_meta( $user->ID, Translation_Events::USER_META_KEY_ATTENDING, $event_ids );
 
 		wp_safe_redirect( gp_url( "/events/$event->post_name" ) );
 		exit;
@@ -346,7 +344,7 @@ class Route extends BaseRoute {
 		// phpcs:enable
 
 		$user_id              = get_current_user_id();
-		$events               = get_user_meta( $user_id, self::USER_META_KEY_ATTENDING, true ) ?: array();
+		$events               = get_user_meta( $user_id, Translation_Events::USER_META_KEY_ATTENDING, true ) ?: array();
 		$events               = array_keys( $events );
 		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
 		$args                 = array(

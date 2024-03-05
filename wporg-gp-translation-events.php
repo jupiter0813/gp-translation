@@ -26,7 +26,8 @@ use WP_Post;
 use WP_Query;
 
 class Translation_Events {
-	const CPT = 'translation_event';
+	public const CPT                     = 'translation_event';
+	public const USER_META_KEY_ATTENDING = 'translation-events-attending';
 
 	public static function get_instance() {
 		static $instance = null;
@@ -400,12 +401,12 @@ class Translation_Events {
 		}
 		if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
 			$current_user_id         = get_current_user_id();
-			$user_attending_events   = get_user_meta( $current_user_id, Route::USER_META_KEY_ATTENDING, true ) ?: array();
+			$user_attending_events   = get_user_meta( $current_user_id, self::USER_META_KEY_ATTENDING, true ) ?: array();
 			$is_user_attending_event = in_array( $post->ID, $user_attending_events, true );
 			if ( ! $is_user_attending_event ) {
 				$new_user_attending_events              = $user_attending_events;
 				$new_user_attending_events[ $post->ID ] = true;
-				update_user_meta( $current_user_id, Route::USER_META_KEY_ATTENDING, $new_user_attending_events, $user_attending_events );
+				update_user_meta( $current_user_id, self::USER_META_KEY_ATTENDING, $new_user_attending_events, $user_attending_events );
 			}
 		}
 	}
@@ -462,7 +463,7 @@ class Translation_Events {
 	 * @return void
 	 */
 	public function add_active_events_current_user(): void {
-		$user_attending_events = get_user_meta( get_current_user_id(), Route::USER_META_KEY_ATTENDING, true ) ?: array();
+		$user_attending_events = get_user_meta( get_current_user_id(), self::USER_META_KEY_ATTENDING, true ) ?: array();
 		if ( empty( $user_attending_events ) ) {
 			return;
 		}
