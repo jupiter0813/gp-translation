@@ -25,6 +25,9 @@ class Stats_Listener {
 			'gp_translation_created',
 			function ( $translation ) {
 				$happened_at = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $translation->date_added, new DateTimeZone( 'UTC' ) );
+				if ( ! $translation->user_id ) {
+					return;
+				}
 				$this->handle_action( $translation, $translation->user_id, self::ACTION_CREATE, $happened_at );
 			},
 		);
@@ -54,7 +57,7 @@ class Stats_Listener {
 						break;
 				}
 
-				if ( $action ) {
+				if ( $action && $user_id ) {
 					$this->handle_action( $translation, $user_id, $action, $happened_at );
 				}
 			},
