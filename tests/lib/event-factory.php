@@ -6,7 +6,6 @@ use DateTimeImmutable;
 use DateTimeZone;
 use WP_UnitTest_Factory_For_Post;
 use WP_UnitTest_Generator_Sequence;
-use Wporg\TranslationEvents\Route;
 use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Factory extends WP_UnitTest_Factory_For_Post {
@@ -69,7 +68,7 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 
 	private function create_event( DateTimeImmutable $start, DateTimeImmutable $end, array $attendee_ids ): int {
 		$event_id = $this->create();
-		$meta_key = Route::USER_META_KEY_ATTENDING;
+		$meta_key = Translation_Events::USER_META_KEY_ATTENDING;
 
 		$user_id = get_current_user_id();
 		if ( ! in_array( $user_id, $attendee_ids, true ) ) {
