@@ -46,7 +46,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		</div>
 		<?php if ( ! empty( $event_stats->rows() ) ) : ?>
 	<div class="event-details-stats">
-		<h2>Stats</h2>
+		<h2><?php esc_html_e( 'Stats', 'gp-translation-events' ); ?></h2>
 		<table>
 			<thead>
 			<tr>
@@ -58,9 +58,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			</thead>
 			<tbody>
 			<?php /** @var $row Stats_Row */ ?>
-			<?php foreach ( $event_stats->rows() as $locale_ => $row ) : ?>
+			<?php foreach ( $event_stats->rows() as $_locale => $row ) : ?>
 			<tr>
-				<td><?php echo esc_html( $locale_ ); ?></td>
+				<td title="<?php echo esc_html( $_locale ); ?> "><?php echo esc_html( $row->language->english_name ); ?></td>
 				<td><?php echo esc_html( $row->created ); ?></td>
 				<td><?php echo esc_html( $row->reviewed ); ?></td>
 				<td><?php echo esc_html( $row->users ); ?></td>
@@ -77,8 +77,11 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	</div>
 	<details class="event-stats-summary">
 		<summary>View stats summary in text </summary>
-		<p class="event-stats-text"><?php echo esc_html( sprintf( 'At the %s event, %d people contributed in %d languages (%s), translated %d strings and reviewed %d strings.', esc_html( $event_title ), esc_html( $event_stats->totals()->users ), count( $event_stats->rows() ), esc_html( implode( ',', array_keys( $event_stats->rows() ) ) ), esc_html( $event_stats->totals()->created ), esc_html( $event_stats->totals()->reviewed ) ) ); ?></p>
+		<p class="event-stats-text"><?php echo esc_html( sprintf( __( 'At the %s event, %d people contributed in %d languages (%s), translated %d strings and reviewed %d strings.', 'gp-translation-events' ), esc_html( $event_title ), esc_html( $event_stats->totals()->users ), count( $event_stats->rows() ), esc_html( implode( ', ', array_map( $event_stats->rows(), function( $row ) { return $row->language->english_name; } ) ) ), esc_html( $event_stats->totals()->created ), esc_html( $event_stats->totals()->reviewed ) ) ); ?></p>
 	</details>
+	<div class="event-contributors">
+		<h2><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></h2>
+	</div>
 	<?php endif ?>
 	</div>
 	<div class="event-details-right">

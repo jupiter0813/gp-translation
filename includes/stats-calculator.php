@@ -4,16 +4,22 @@ namespace Wporg\TranslationEvents;
 
 use Exception;
 use WP_Post;
+use GP_Locale;
+use GP_Locales;
 
 class Stats_Row {
 	public int $created;
 	public int $reviewed;
 	public int $users;
+	public GP_Locale $language;
 
-	public function __construct( $created, $reviewed, $users ) {
+	public function __construct( $created, $reviewed, $users, ?GP_Locale $language = null ) {
 		$this->created  = $created;
 		$this->reviewed = $reviewed;
 		$this->users    = $users;
+		if ( $language ) {
+			$this->language = $language;
+		}
 	}
 }
 
@@ -49,6 +55,10 @@ class Event_Stats {
 	 * @return Stats_Row[]
 	 */
 	public function rows(): array {
+		uasort( $this->rows, function ( $a, $b ) {
+			return strcasecmp( $a->language->english_name, $b->language->english_name );
+		} );
+
 		return $this->rows;
 	}
 
@@ -100,10 +110,16 @@ class Stats_Calculator {
 				);
 			}
 
+			$lang = GP_Locales::by_slug( $row->locale );
+			if ( ! $lang ) {
+				$lang = null;
+			}
+
 			$stats_row = new Stats_Row(
 				$row->created,
 				$row->total - $row->created,
 				$row->users,
+				$lang
 			);
 
 			if ( ! $is_totals ) {
@@ -114,6 +130,41 @@ class Stats_Calculator {
 		}
 
 		return $stats;
+	}
+
+	/**
+	 * Get contributors for an event.
+	 */
+	public function get_contributors( WP_Post $event ): Event_Stats {
+		global $wpdb, $gp_table_prefix;
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs thinks we're doing a schema change but we aren't.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+				select distinct user_id, group_concat( locale ) as locales
+				from {$gp_table_prefix}event_actions
+				where event_id = %d
+			",
+				array(
+					$event->ID,
+				)
+			)
+		);
+		// phpcs:enable
+
+		$users = array();
+		foreach ( $rows as $row ) {
+			$user = new WP_User( $row->user_id );
+			$user->locales = explode( ',', $row->locales );
+			$users[] = $user;
+		}
+
+		return $users;
 	}
 
 	/**
