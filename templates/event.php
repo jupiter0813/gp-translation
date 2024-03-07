@@ -102,11 +102,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				)
 			);
 			?>
-									</p>
+			</p>
 	</details>
-	<div class="event-contributors">
-		<h2><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></h2>
-	</div>
 	<?php endif ?>
 	</div>
 	<div class="event-details-right">
