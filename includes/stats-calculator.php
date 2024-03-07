@@ -158,7 +158,7 @@ class Stats_Calculator {
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
 				"
-				select user_id, group_concat( locale ) as locales
+				select user_id, group_concat( distinct locale ) as locales
 				from {$gp_table_prefix}event_actions
 				where event_id = %d
 				group by user_id
