@@ -109,10 +109,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<ul>
 		<?php foreach( $contributors as $contributor ) : ?>
 			<li class="event-contributor">
-				<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>">
-					<?php echo get_avatar( $contributor->ID, 48 ); ?>
-					<?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?>
-				</a>
+				<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo get_avatar( $contributor->ID, 48 ); ?></a>
+				<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?></a>
 			</li>
 		<?php endforeach; ?>
 		</ul>
