@@ -252,6 +252,7 @@ span.event-details-date-label {
 }
 p.event-sub-head {
 	grid-column: 1 / -1;
+	margin-top: 0;
 }
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
