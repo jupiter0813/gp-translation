@@ -11,15 +11,13 @@ class Stats_Row {
 	public int $created;
 	public int $reviewed;
 	public int $users;
-	public GP_Locale $language;
+	public ?GP_Locale $language = null;
 
 	public function __construct( $created, $reviewed, $users, ?GP_Locale $language = null ) {
 		$this->created  = $created;
 		$this->reviewed = $reviewed;
 		$this->users    = $users;
-		if ( $language ) {
-			$this->language = $language;
-		}
+		$this->language = $language;
 	}
 }
 
@@ -58,6 +56,16 @@ class Event_Stats {
 		uasort(
 			$this->rows,
 			function ( $a, $b ) {
+				if ( ! $a->language && ! $b->language ) {
+					return 0;
+				}
+				if ( ! $a->language ) {
+					return -1;
+				}
+				if ( ! $b->language ) {
+					return 1;
+				}
+
 				return strcasecmp( $a->language->english_name, $b->language->english_name );
 			}
 		);
