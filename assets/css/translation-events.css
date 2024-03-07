@@ -233,11 +233,12 @@ input[type="submit"].attending-btn, a.button.is-primary.attend-btn {
 	font-size: .9em;
 	border-top: thin solid #e0e0e0;
 }
-time.event-utc-time {
-	display: block;
+.event-details-date time {
 	font-size: .95em;
+	font-weight: normal;
 }
-.event-utc-time:first-of-type{
+.event-details-date time.full-time {
+	display: block;
 	border-bottom: #cdcdcd thin solid;
 	padding-bottom: 0.5em;
 	margin-bottom: 0.5em;

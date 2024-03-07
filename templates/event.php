@@ -151,8 +151,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	<div class="event-details-right">
 		<div class="event-details-date">
 			<p>
-				<span class="event-details-date-label">Starts:</span> <time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></time>
-				<span class="event-details-date-label">Ends:</span><time class="event-utc-time" datetime="<?php echo esc_attr( $event_end ); ?>"></time>
+				<span class="event-details-date-label">Starts: <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_start ); ?>"></time></span> <time class="event-utc-time full-time" datetime="<?php echo esc_attr( $event_start ); ?>"><?php echo esc_attr( $event_start->format( 'l, F j, Y H:i T' ) ); ?></time>
+				<span class="event-details-date-label">Ends: <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_end ); ?>"></span><time class="event-utc-time full-time" datetime="<?php echo esc_attr( $event_end ); ?>"><?php echo esc_attr( $event_end->format( 'l, F j, Y H:i T' ) ); ?></time>
 			</p>
 		</div>
 		<?php if ( is_user_logged_in() ) : ?>

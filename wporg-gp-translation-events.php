@@ -53,6 +53,8 @@ class Translation_Events {
 
 	public function gp_init() {
 		require_once __DIR__ . '/templates/helper-functions.php';
+		require_once __DIR__ . '/includes/active-events-cache.php';
+		require_once __DIR__ . '/includes/event-date.php';
 		require_once __DIR__ . '/includes/routes/route.php';
 		require_once __DIR__ . '/includes/routes/event/create.php';
 		require_once __DIR__ . '/includes/routes/event/details.php';

@@ -86,12 +86,12 @@ class Event {
 		return $this->id;
 	}
 
-	public function start(): DateTimeImmutable {
-		return $this->start;
+	public function start(): Event_Start_Date {
+		return new Event_Start_Date( $this->start->format( 'Y-m-d H:i:s' ), $this->timezone() );
 	}
 
-	public function end(): DateTimeImmutable {
-		return $this->end;
+	public function end(): Event_End_Date {
+		return new Event_End_Date( $this->end->format( 'Y-m-d H:i:s' ), $this->timezone() );
 	}
 
 	public function timezone(): DateTimeZone {

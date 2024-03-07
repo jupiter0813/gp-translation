@@ -30,12 +30,12 @@ if ( $current_events_query->have_posts() ) :
 		<?php
 		while ( $current_events_query->have_posts() ) :
 			$current_events_query->the_post();
-			$event_end = Event::get_end_date_text( get_post_meta( get_the_ID(), '_event_end', true ) );
+			$event_end = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) );
 			$event_url = gp_url( wp_make_link_relative( get_the_permalink() ) );
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a>
-				<span class="event-list-date"><?php echo esc_html( $event_end ); ?></span>
+				<span class="event-list-date">ends <time datetime="<?php echo esc_attr( $event_end->format( 'Y-m-d H:i:s' ) ); ?>" class="event-utc-time"><?php echo esc_html( $event_end ); ?></time> (<time datetime="<?php echo esc_attr( $event_end->format( 'Y-m-d H:i:s' ) ); ?>" class="relative hide-if-too-far event-utc-time"><?php echo esc_html( $event_end ); ?></time>)</span>
 				<?php the_excerpt(); ?>
 			</li>
 			<?php
@@ -65,11 +65,11 @@ if ( $upcoming_events_query->have_posts() ) :
 		<?php
 		while ( $upcoming_events_query->have_posts() ) :
 			$upcoming_events_query->the_post();
-			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'l, F j, Y' );
+			$event_start = new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) );
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
-				<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
+				<span class="event-list-date">starts <time datetime="<?php echo esc_attr( $event_start->format( 'Y-m-d H:i:s' ) ); ?>" class="event-utc-time"><?php echo esc_html( $event_start ); ?></time> (<time datetime="<?php echo esc_attr( $event_start->format( 'Y-m-d H:i:s' ) ); ?>" class="event-utc-time relative hide-if-too-far"><?php echo esc_html( $event_start ); ?></time>)</span>
 				<?php the_excerpt(); ?>
 			</li>
 			<?php
@@ -99,8 +99,8 @@ if ( $past_events_query->have_posts() ) :
 		<?php
 		while ( $past_events_query->have_posts() ) :
 			$past_events_query->the_post();
-			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
-			$event_end   = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+			$event_start = new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) );
+			$event_end   = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) );
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
@@ -147,8 +147,8 @@ endif;
 				<?php
 				while ( $user_attending_events_query->have_posts() ) :
 					$user_attending_events_query->the_post();
-					$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
-					$event_end   = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+					$event_start = new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) );
+					$event_end   = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) );
 					?>
 					<li class="event-list-item">
 						<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>

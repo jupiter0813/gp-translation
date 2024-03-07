@@ -42,18 +42,18 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	</div>
 	<div>
 		<label for="event-start">Start Date</label>
-		<input type="datetime-local" id="event-start" name="event_start" value="<?php echo esc_attr( $event_start ); ?>" required>
+		<input type="datetime-local" id="event-start" name="event_start" value="<?php echo esc_attr( $event_start->format( 'Y-m-d H:i:s') ); ?>" required>
 	</div>
 	<div>
 		<label for="event-end">End Date</label>
-		<input type="datetime-local" id="event-end" name="event_end" value="<?php echo esc_attr( $event_end ); ?>" required>
+		<input type="datetime-local" id="event-end" name="event_end" value="<?php echo esc_attr( $event_end->format( 'Y-m-d H:i:s') ); ?>" required>
 	</div>
 	<div>
 		<label for="event-timezone">Event Timezone</label>
 		<select id="event-timezone" name="event_timezone"  required>
 			<?php
 			echo wp_kses(
-				wp_timezone_choice( $event_timezone, get_user_locale() ),
+				wp_timezone_choice( $event_timezone->getName(), get_user_locale() ),
 				array(
 					'optgroup' => array( 'label' => array() ),
 					'option'   => array(
