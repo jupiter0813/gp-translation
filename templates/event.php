@@ -75,14 +75,25 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			</tbody>
 		</table>
 	</div>
+	<div class="event-contributors">
+		<h2><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></h2>
+		<ul>
+			<?php foreach ( $contributors as $contributor ) : ?>
+			<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->locales ) ); ?>"
+				<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo get_avatar( $contributor->ID, 48 ); ?></a>
+				<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?></a>
+			</li>
+		<?php endforeach; ?>
+		</ul>
+	</div>
 	<details class="event-stats-summary">
 		<summary>View stats summary in text </summary>
 		<p class="event-stats-text">
 			<?php
-			echo esc_html(
+			echo wp_kses(
 				sprintf(
 					// translators: %1$s: Event title, %2$d: Number of contributors, %3$d: Number of languages, %4$s: List of languages, %5$d: Number of strings translated, %6$d: Number of strings reviewed.
-					__( 'At the %1$s event, %2$d people contributed in %3$d languages (%4$s), translated %5$d strings and reviewed %6$d strings.', 'gp-translation-events' ),
+					__( 'At the <strong>%1$s</strong> event, %2$d people contributed in %3$d languages (%4$s), translated %5$d strings and reviewed %6$d strings.', 'gp-translation-events' ),
 					esc_html( $event_title ),
 					esc_html( $event_stats->totals()->users ),
 					count( $event_stats->rows() ),
@@ -99,12 +110,35 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					),
 					esc_html( $event_stats->totals()->created ),
 					esc_html( $event_stats->totals()->reviewed )
+				),
+				array(
+					'strong' => array(),
+				)
+			);
+			?>
+			<?php
+			echo esc_html(
+				sprintf(
+					// translators: %s the contributors.
+					__( 'Contributors were %s.', 'gp-translation-events' ),
+					esc_html(
+						implode(
+							', ',
+							array_map(
+								function ( $contributor ) {
+									return '@' . $contributor->user_login;
+								},
+								$contributors
+							)
+						)
+					)
 				)
 			);
 			?>
 			</p>
 	</details>
-	<?php endif ?>
+
+	<?php endif; ?>
 	</div>
 	<div class="event-details-right">
 		<div class="event-details-date">
