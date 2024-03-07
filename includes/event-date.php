@@ -50,7 +50,7 @@ abstract class Event_Date extends DateTimeImmutable {
 	 */
 	public static function get_variable_text(): string {
 		if ( ! $this->is_end_date() ) {
-			return $this->__toString( $this );
+		return sprintf( 'starts %s', $this->format( 'l, F j, Y' ) );
 		}
 
 		$current_date_time = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
@@ -66,7 +66,7 @@ abstract class Event_Date extends DateTimeImmutable {
 			/* translators: %s: Number of hours left. */
 			return sprintf( _n( 'ends in %s hour', 'ends in %s hours', $hours_left ), $hours_left );
 		}
-		return sprintf( 'until %s', $end_date_time->format( 'M j, Y' ) );
+		return sprintf( 'until %s', $this->format( 'M j, Y' ) );
 	}
 }
 
