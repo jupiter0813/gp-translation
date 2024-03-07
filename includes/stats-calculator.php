@@ -136,41 +136,6 @@ class Stats_Calculator {
 	}
 
 	/**
-	 * Get contributors for an event.
-	 */
-	public function get_contributors( WP_Post $event ): Event_Stats {
-		global $wpdb, $gp_table_prefix;
-
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		// phpcs thinks we're doing a schema change but we aren't.
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
-		$rows = $wpdb->get_results(
-			$wpdb->prepare(
-				"
-				select distinct user_id, group_concat( locale ) as locales
-				from {$gp_table_prefix}event_actions
-				where event_id = %d
-			",
-				array(
-					$event->ID,
-				)
-			)
-		);
-		// phpcs:enable
-
-		$users = array();
-		foreach ( $rows as $row ) {
-			$user          = new WP_User( $row->user_id );
-			$user->locales = explode( ',', $row->locales );
-			$users[]       = $user;
-		}
-
-		return $users;
-	}
-
-	/**
 	 * Check if an event has stats.
 	 *
 	 * @param WP_Post $event The event to check.
