@@ -92,12 +92,13 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			<?php foreach ( $projects as $project_name => $row ) : ?>
 			<li class="event-project" title="<?php echo esc_html( str_replace( ',', ', ', $row->locales ) ); ?>">
 				<a href="<?php echo esc_url( gp_url_project( $row->project ) ); ?>"><?php echo esc_html( $project_name ); ?></a> <small> to
-				<?php foreach ( explode( ',', $row->locales ) as $_locale ) {
+				<?php
+				foreach ( explode( ',', $row->locales ) as $_locale ) {
 					$_locale = \GP_Locales::by_slug( $_locale );
-				?>
+					?>
 					<a href="<?php echo esc_url( gp_url_project_locale( $row->project, $_locale, 'default' ) ); ?>"><?php echo esc_html( $_locale->english_name ); ?></a>
 				<?php } ?>
-				by <?php echo $row->users; ?> contributors</small>
+				by <?php echo esc_html( $row->users ); ?> contributors</small>
 			</li>
 		<?php endforeach; ?>
 		</ul>

@@ -200,7 +200,7 @@ class Stats_Calculator {
 		// phpcs thinks we're doing a schema change but we aren't.
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
 		$rows = $wpdb->get_results(
-			$sql=$wpdb->prepare(
+			$wpdb->prepare(
 				"
 				select
 					o.project_id as project,
@@ -225,11 +225,11 @@ class Stats_Calculator {
 			$project_name      = $row->project->name;
 			$parent_project_id = $row->project->parent_project_id;
 			while ( $parent_project_id ) {
-			    $parent_project = GP::$project->get( $parent_project_id );
-			    $parent_project_id = $parent_project->parent_project_id;
-			    $project_name = substr( htmlspecialchars_decode( $parent_project->name ), 0, 50 ) . ' - ' . $project_name;
+				$parent_project    = GP::$project->get( $parent_project_id );
+				$parent_project_id = $parent_project->parent_project_id;
+				$project_name      = substr( htmlspecialchars_decode( $parent_project->name ), 0, 35 ) . ' - ' . $project_name;
 			}
-			$projects[$project_name] = $row;
+			$projects[ $project_name ] = $row;
 		}
 
 		ksort( $projects );
