@@ -25,6 +25,9 @@ class Stats_Listener {
 			'gp_translation_created',
 			function ( $translation ) {
 				$happened_at = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $translation->date_added, new DateTimeZone( 'UTC' ) );
+				if ( ! $translation->user_id ) {
+					return;
+				}
 				$this->handle_action( $translation, $translation->user_id, self::ACTION_CREATE, $happened_at );
 			},
 		);
@@ -54,7 +57,7 @@ class Stats_Listener {
 						break;
 				}
 
-				if ( $action ) {
+				if ( $action && $user_id ) {
 					$this->handle_action( $translation, $user_id, $action, $happened_at );
 				}
 			},
@@ -65,9 +68,6 @@ class Stats_Listener {
 
 	private function handle_action( GP_Translation $translation, int $user_id, string $action, DateTimeImmutable $happened_at ): void {
 		try {
-			if ( ! $user_id ) {
-				return;
-			}
 			// Get events that are active when the action happened, for which the user is registered for.
 			$active_events = $this->get_active_events( $happened_at );
 			$events        = $this->select_events_user_is_registered_for( $active_events, $user_id );
