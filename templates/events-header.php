@@ -27,11 +27,11 @@ use GP;
 			<?php endif; ?>
 		<?php endif; ?>
 	</ul>
-	<?php if ( isset( $event_id ) ) : ?>
+	<?php if ( isset( $event_id ) && ! isset( $event_form_name ) ) : ?>
 	<p class="event-sub-head">
 			<span class="event-host">Host: <a href="<?php echo esc_attr( get_author_posts_url( $event->post_author ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $event->post_author ) ); ?></a></span>
 			<?php if ( current_user_can( 'edit_post', $event_id ) ) : ?>
-				<a class="event-page-edit-link button" href="<?php echo esc_url( gp_url( 'events/edit/' . $event_id ) ); ?>"><span class="dashicons dashicons-edit"></span>Edit event</a>
+				<a class="event-page-edit-link" href="<?php echo esc_url( gp_url( 'events/edit/' . $event_id ) ); ?>"><span class="dashicons dashicons-edit"></span>Edit event</a>
 			<?php endif ?>
 		</p>
 		<?php endif; ?>
