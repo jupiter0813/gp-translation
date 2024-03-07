@@ -38,7 +38,6 @@ class Stats_Listener {
 				$user_id     = $translation->user_id_last_modified;
 				$status      = $translation->status;
 				$happened_at = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $translation->date_modified, new DateTimeZone( 'UTC' ) );
-
 				if ( $translation_before->status === $status ) {
 					// Translation hasn't changed status, so there's nothing for us to track.
 					return;
@@ -68,9 +67,6 @@ class Stats_Listener {
 
 	private function handle_action( GP_Translation $translation, int $user_id, string $action, DateTimeImmutable $happened_at ): void {
 		try {
-			if ( ! $user_id ) {
-				return;
-			}
 			// Get events that are active when the action happened, for which the user is registered for.
 			$active_events = $this->get_active_events( $happened_at );
 			$events        = $this->select_events_user_is_registered_for( $active_events, $user_id );

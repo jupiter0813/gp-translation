@@ -58,6 +58,14 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$this->translation_factory->create( $user_id );
 		// Stats_Listener will have been called.
 
+		// Simulate a translation that arrived via import.
+		$translation = $this->translation_factory->create( 0 );
+		$translation->user_id = null;
+		do_action( 'gp_translation_created', $translation );
+		$modified_translation = clone $translation;
+		$modified_translation->status = 'rejected';
+		do_action( 'gp_translation_saved', $modified_translation, $translation );
+
 		$stats_count = $this->stats_factory->get_count();
 		$this->assertEquals( 0, $stats_count );
 	}
