@@ -4,16 +4,20 @@ namespace Wporg\TranslationEvents;
 
 use Exception;
 use WP_Post;
+use GP_Locale;
+use GP_Locales;
 
 class Stats_Row {
 	public int $created;
 	public int $reviewed;
 	public int $users;
+	public ?GP_Locale $language = null;
 
-	public function __construct( $created, $reviewed, $users ) {
+	public function __construct( $created, $reviewed, $users, ?GP_Locale $language = null ) {
 		$this->created  = $created;
 		$this->reviewed = $reviewed;
 		$this->users    = $users;
+		$this->language = $language;
 	}
 }
 
@@ -49,6 +53,23 @@ class Event_Stats {
 	 * @return Stats_Row[]
 	 */
 	public function rows(): array {
+		uasort(
+			$this->rows,
+			function ( $a, $b ) {
+				if ( ! $a->language && ! $b->language ) {
+					return 0;
+				}
+				if ( ! $a->language ) {
+					return -1;
+				}
+				if ( ! $b->language ) {
+					return 1;
+				}
+
+				return strcasecmp( $a->language->english_name, $b->language->english_name );
+			}
+		);
+
 		return $this->rows;
 	}
 
@@ -100,10 +121,16 @@ class Stats_Calculator {
 				);
 			}
 
+			$lang = GP_Locales::by_slug( $row->locale );
+			if ( ! $lang ) {
+				$lang = null;
+			}
+
 			$stats_row = new Stats_Row(
 				$row->created,
 				$row->total - $row->created,
 				$row->users,
+				$lang
 			);
 
 			if ( ! $is_totals ) {

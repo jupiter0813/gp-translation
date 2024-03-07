@@ -46,7 +46,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		</div>
 		<?php if ( ! empty( $event_stats->rows() ) ) : ?>
 	<div class="event-details-stats">
-		<h2>Stats</h2>
+		<h2><?php esc_html_e( 'Stats', 'gp-translation-events' ); ?></h2>
 		<table>
 			<thead>
 			<tr>
@@ -58,9 +58,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			</thead>
 			<tbody>
 			<?php /** @var $row Stats_Row */ ?>
-			<?php foreach ( $event_stats->rows() as $locale_ => $row ) : ?>
+			<?php foreach ( $event_stats->rows() as $_locale => $row ) : ?>
 			<tr>
-				<td><?php echo esc_html( $locale_ ); ?></td>
+				<td title="<?php echo esc_html( $_locale ); ?> "><a href="<?php echo esc_url( gp_url_join( gp_url( '/languages' ), $row->language->slug ) ); ?>"><?php echo esc_html( $row->language->english_name ); ?></a></td>
 				<td><?php echo esc_html( $row->created ); ?></td>
 				<td><?php echo esc_html( $row->reviewed ); ?></td>
 				<td><?php echo esc_html( $row->users ); ?></td>
@@ -77,7 +77,32 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	</div>
 	<details class="event-stats-summary">
 		<summary>View stats summary in text </summary>
-		<p class="event-stats-text"><?php echo esc_html( sprintf( 'At the %s event, %d people contributed in %d languages (%s), translated %d strings and reviewed %d strings.', esc_html( $event_title ), esc_html( $event_stats->totals()->users ), count( $event_stats->rows() ), esc_html( implode( ',', array_keys( $event_stats->rows() ) ) ), esc_html( $event_stats->totals()->created ), esc_html( $event_stats->totals()->reviewed ) ) ); ?></p>
+		<p class="event-stats-text">
+			<?php
+			echo esc_html(
+				sprintf(
+					// translators: %1$s: Event title, %2$d: Number of contributors, %3$d: Number of languages, %4$s: List of languages, %5$d: Number of strings translated, %6$d: Number of strings reviewed.
+					__( 'At the %1$s event, %2$d people contributed in %3$d languages (%4$s), translated %5$d strings and reviewed %6$d strings.', 'gp-translation-events' ),
+					esc_html( $event_title ),
+					esc_html( $event_stats->totals()->users ),
+					count( $event_stats->rows() ),
+					esc_html(
+						implode(
+							', ',
+							array_map(
+								function ( $row ) {
+									return $row->language->english_name;
+								},
+								$event_stats->rows()
+							)
+						)
+					),
+					esc_html( $event_stats->totals()->created ),
+					esc_html( $event_stats->totals()->reviewed )
+				)
+			);
+			?>
+			</p>
 	</details>
 	<?php endif ?>
 	</div>
