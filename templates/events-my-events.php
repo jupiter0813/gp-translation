@@ -14,12 +14,12 @@ use WP_Query;
 gp_title( esc_html__( 'Translation Events', 'gp-translation-events' ) . ' - ' . esc_html__( 'My Events', 'gp-translation-events' ) );
 gp_breadcrumb_translation_events( array( esc_html__( 'My Events', 'gp-translation-events' ) ) );
 gp_tmpl_header();
+$event_page_title = __( 'My Events', 'gp-translation-events' );
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
 
 <div class="event-page-wrapper">
-	<h1 class="event_page_title"><?php esc_html_e( 'My Events', 'gp-translation-events' ); ?> </h1>
-	<h2 class="event_page_title"><?php esc_html_e( 'Events I have created', 'gp-translation-events' ); ?> </h2>
+	<h2><?php esc_html_e( 'Events I have created', 'gp-translation-events' ); ?> </h2>
 	<?php if ( $events_i_created_query->have_posts() ) : ?>
 		<ul>
 		<?php
@@ -70,7 +70,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	endif;
 	?>
 
-	<h2 class="event_page_title"><?php esc_html_e( 'Events I attended', 'gp-translation-events' ); ?> </h2>
+	<h2><?php esc_html_e( 'Events I attended', 'gp-translation-events' ); ?> </h2>
 	<?php if ( $events_i_attended_query->have_posts() ) : ?>
 		<ul>
 		<?php

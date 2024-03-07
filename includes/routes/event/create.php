@@ -14,7 +14,7 @@ class Create_Route extends Route {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
 			exit;
 		}
-		$event_form_title         = 'Create Event';
+		$event_page_title         = 'Create Event';
 		$event_form_name          = 'create_event';
 		$css_show_url             = 'hide-event-url';
 		$event_id                 = null;

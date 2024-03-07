@@ -20,24 +20,11 @@ use WP_Post;
 gp_title( sprintf( __( 'Translation Events - %s' ), esc_html( $event_title ) ) );
 gp_breadcrumb_translation_events( array( esc_html( $event_title ) ) );
 gp_tmpl_header();
+$event_page_title = $event_title;
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
 
 <div class="event-page-wrapper">
-	<div class="event-details-head">
-		<h1>
-			<?php echo esc_html( $event_title ); ?>
-			<?php if ( 'draft' === $event->post_status ) : ?>
-				<span class="event-label-draft"><?php echo esc_html( $event->post_status ); ?></span>
-			<?php endif; ?>
-		</h1>
-		<p>
-			Host: <a href="<?php echo esc_attr( get_author_posts_url( $event->post_author ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $event->post_author ) ); ?></a>
-			<?php if ( current_user_can( 'edit_post', $event_id ) ) : ?>
-				<a class="event-page-edit-link button" href="<?php echo esc_url( gp_url( 'events/edit/' . $event_id ) ); ?>"><span class="dashicons dashicons-edit"></span>Edit event</a>
-			<?php endif ?>
-		</p>
-	</div>
 	<div class="event-details-left">
 		<div class="event-page-content">
 			<?php

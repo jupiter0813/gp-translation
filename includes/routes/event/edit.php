@@ -28,7 +28,7 @@ class Edit_Route extends Route {
 		}
 
 		include ABSPATH . 'wp-admin/includes/post.php';
-		$event_form_title              = 'Edit Event';
+		$event_page_title              = 'Edit Event';
 		$event_form_name               = 'edit_event';
 		$css_show_url                  = '';
 		$event_title                   = $event->post_title;

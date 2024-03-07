@@ -5,7 +5,7 @@
 
 namespace Wporg\TranslationEvents;
 
-/** @var string $event_form_title */
+/** @var string $event_page_title */
 /** @var string $event_form_name */
 /** @var int $event_id */
 /** @var string $event_title */
@@ -16,13 +16,12 @@ namespace Wporg\TranslationEvents;
 /** @var string $event_url */
 /** @var string $css_show_url */
 
-gp_title( __( 'Translation Events' ) . ' - ' . esc_html( $event_form_title . ' - ' . $event_title ) );
-gp_breadcrumb_translation_events( array( esc_html( $event_form_title ) ) );
+gp_title( __( 'Translation Events' ) . ' - ' . esc_html( $event_page_title . ' - ' . $event_title ) );
+gp_breadcrumb_translation_events( array( esc_html( $event_page_title ) ) );
 gp_tmpl_header();
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
 <div class="event-page-wrapper">
-<h2 class="event-page-title"><?php echo esc_html( $event_form_title ); ?></h2>
 <form class="translation-event-form" action="" method="post">
 	<?php wp_nonce_field( '_event_nonce', '_event_nonce' ); ?>
 	<input type="hidden" name="action" value="submit_event_ajax">
