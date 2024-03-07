@@ -55,9 +55,12 @@ class Event_Stats {
 	 * @return Stats_Row[]
 	 */
 	public function rows(): array {
-		uasort( $this->rows, function ( $a, $b ) {
-			return strcasecmp( $a->language->english_name, $b->language->english_name );
-		} );
+		uasort(
+			$this->rows,
+			function ( $a, $b ) {
+				return strcasecmp( $a->language->english_name, $b->language->english_name );
+			}
+		);
 
 		return $this->rows;
 	}
@@ -159,9 +162,9 @@ class Stats_Calculator {
 
 		$users = array();
 		foreach ( $rows as $row ) {
-			$user = new WP_User( $row->user_id );
+			$user          = new WP_User( $row->user_id );
 			$user->locales = explode( ',', $row->locales );
-			$users[] = $user;
+			$users[]       = $user;
 		}
 
 		return $users;

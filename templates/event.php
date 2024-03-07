@@ -77,7 +77,32 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	</div>
 	<details class="event-stats-summary">
 		<summary>View stats summary in text </summary>
-		<p class="event-stats-text"><?php echo esc_html( sprintf( __( 'At the %s event, %d people contributed in %d languages (%s), translated %d strings and reviewed %d strings.', 'gp-translation-events' ), esc_html( $event_title ), esc_html( $event_stats->totals()->users ), count( $event_stats->rows() ), esc_html( implode( ', ', array_map( $event_stats->rows(), function( $row ) { return $row->language->english_name; } ) ) ), esc_html( $event_stats->totals()->created ), esc_html( $event_stats->totals()->reviewed ) ) ); ?></p>
+		<p class="event-stats-text">
+			<?php
+			echo esc_html(
+				sprintf(
+					// translators: %1$s: Event title, %2$d: Number of contributors, %3$d: Number of languages, %4$s: List of languages, %5$d: Number of strings translated, %6$d: Number of strings reviewed.
+					__( 'At the %1$s event, %2$d people contributed in %3$d languages (%4$s), translated %5$d strings and reviewed %6$d strings.', 'gp-translation-events' ),
+					esc_html( $event_title ),
+					esc_html( $event_stats->totals()->users ),
+					count( $event_stats->rows() ),
+					esc_html(
+						implode(
+							', ',
+							array_map(
+								function ( $row ) {
+									return $row->language->english_name;
+								},
+								$event_stats->rows()
+							)
+						)
+					),
+					esc_html( $event_stats->totals()->created ),
+					esc_html( $event_stats->totals()->reviewed )
+				)
+			);
+			?>
+									</p>
 	</details>
 	<div class="event-contributors">
 		<h2><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></h2>
