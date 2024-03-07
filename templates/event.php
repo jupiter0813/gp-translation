@@ -107,7 +107,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	<div class="event-contributors">
 		<h2><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></h2>
 		<ul>
-		<?php foreach( $contributors as $contributor ) : ?>
+			<?php foreach ( $contributors as $contributor ) : ?>
 			<li class="event-contributor">
 				<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo get_avatar( $contributor->ID, 48 ); ?></a>
 				<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?></a>

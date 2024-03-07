@@ -39,7 +39,7 @@ class Details_Route extends Route {
 
 		$stats_calculator = new Stats_Calculator();
 		try {
-			$event_stats = $stats_calculator->for_event( $event );
+			$event_stats  = $stats_calculator->for_event( $event );
 			$contributors = $stats_calculator->get_contributors( $event );
 		} catch ( Exception $e ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
