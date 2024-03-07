@@ -38,6 +38,7 @@ class Stats_Listener {
 				$user_id     = $translation->user_id_last_modified;
 				$status      = $translation->status;
 				$happened_at = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $translation->date_modified, new DateTimeZone( 'UTC' ) );
+
 				if ( $translation_before->status === $status ) {
 					// Translation hasn't changed status, so there's nothing for us to track.
 					return;
