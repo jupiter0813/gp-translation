@@ -254,6 +254,12 @@ p.event-sub-head {
 	grid-column: 1 / -1;
 	margin-top: 0;
 }
+a.event-page-edit-link {
+	font-size: .9em;
+}
+a.event-page-edit-link:hover {
+	border-bottom: var(--gp-color-btn-primary-bg) thin solid;
+}
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
 	.event-page-wrapper, .event-details-right, .event-details-left {
