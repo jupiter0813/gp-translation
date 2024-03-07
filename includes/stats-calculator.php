@@ -177,6 +177,13 @@ class Stats_Calculator {
 			$users[]       = $user;
 		}
 
+		uasort(
+			$users,
+			function ( $a, $b ) {
+				return strcasecmp( $a->display_name, $b->display_name );
+			}
+		);
+
 		return $users;
 	}
 
