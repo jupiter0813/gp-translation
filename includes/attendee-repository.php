@@ -50,8 +50,12 @@ class Attendee_Repository {
 	}
 
 	public function is_attending( int $event_id, int $user_id ): bool {
-		// TODO.
-		return false;
+		$event_ids = get_user_meta( $user_id, self::USER_META_KEY, true );
+		if ( ! $event_ids ) {
+			$event_ids = array();
+		}
+
+		return isset( $event_ids[ $event_id ] );
 	}
 
 	/**
