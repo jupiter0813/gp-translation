@@ -14,6 +14,13 @@ use Wporg\TranslationEvents\Translation_Events;
  * Displays the event list page.
  */
 class List_Route extends Route {
+	private Attendee_Repository $attendee_repository;
+
+	public function __construct() {
+		parent::__construct();
+		$this->attendee_repository = new Attendee_Repository();
+	}
+
 	public function handle(): void {
 		$current_datetime_utc = null;
 		try {
@@ -119,10 +126,8 @@ class List_Route extends Route {
 		);
 		$past_events_query = new WP_Query( $past_events_args );
 
-		$user_attending_events      = get_user_meta( get_current_user_id(), Attendee_Repository::USER_META_KEY, true ) ?: array( 0 );
 		$user_attending_events_args = array(
 			'post_type'      => Translation_Events::CPT,
-			'post__in'       => array_keys( $user_attending_events ),
 			'posts_per_page' => 10,
 			'paged'          => $_user_attending_events_paged,
 			'post_status'    => 'publish',
@@ -140,8 +145,16 @@ class List_Route extends Route {
 			'orderby'        => 'meta_value',
 			'order'          => 'ASC',
 		);
-		$user_attending_events_query = new WP_Query( $user_attending_events_args );
 
+		$user_attending_event_ids = $this->attendee_repository->get_events_for_user( get_current_user_id() );
+		if ( empty( $user_attending_event_ids ) ) {
+			// Setting it to an array with a single 0 element will result in the query returning zero results,
+			// which is what we want, as the user is not attending any events.
+			$user_attending_event_ids = array( 0 );
+		}
+		$user_attending_events_args['post__in'] = $user_attending_event_ids;
+
+		$user_attending_events_query = new WP_Query( $user_attending_events_args );
 		$this->tmpl( 'events-list', get_defined_vars() );
 	}
 }
