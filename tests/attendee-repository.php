@@ -31,12 +31,12 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->repository->add_attendee( $event1_id, $user_id );
 		$this->repository->add_attendee( $event2_id, $user_id );
 
-		$event_ids = get_user_meta( $user_id, Attendee_Repository::USER_META_KEY, true );
+		$event_ids = get_user_meta( $user_id, 'translation-events-attending', true );
 		$this->assertCount( 2, $event_ids );
 		$this->assertTrue( $event_ids[ $event1_id ] );
 		$this->assertTrue( $event_ids[ $event2_id ] );
 
-		$event_ids_another_user = get_user_meta( $user_id + 1, Attendee_Repository::USER_META_KEY, true );
+		$event_ids_another_user = get_user_meta( $user_id + 1, 'translation-events-attending', true );
 		$this->assertEmpty( $event_ids_another_user );
 	}
 
@@ -60,7 +60,7 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 
 		$this->repository->remove_attendee( $event1_id, $user_id );
 
-		$event_ids = get_user_meta( $user_id, Attendee_Repository::USER_META_KEY, true );
+		$event_ids = get_user_meta( $user_id, 'translation-events-attending', true );
 		$this->assertCount( 1, $event_ids );
 		$this->assertTrue( $event_ids[ $event2_id ] );
 	}

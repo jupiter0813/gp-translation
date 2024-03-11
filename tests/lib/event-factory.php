@@ -69,7 +69,7 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 
 	private function create_event( DateTimeImmutable $start, DateTimeImmutable $end, array $attendee_ids ): int {
 		$event_id = $this->create();
-		$meta_key = Attendee_Repository::USER_META_KEY;
+		$meta_key = 'translation-events-attending';
 
 		$user_id = get_current_user_id();
 		if ( ! in_array( $user_id, $attendee_ids, true ) ) {
