@@ -63,6 +63,7 @@ class Translation_Events {
 		require_once __DIR__ . '/includes/routes/event/list.php';
 		require_once __DIR__ . '/includes/routes/user/attend-event.php';
 		require_once __DIR__ . '/includes/routes/user/my-events.php';
+		require_once __DIR__ . '/includes/attendee-repository.php';
 		require_once __DIR__ . '/includes/stats-calculator.php';
 		require_once __DIR__ . '/includes/stats-listener.php';
 
