@@ -465,18 +465,19 @@ class Translation_Events {
 	/**
 	 * Add the active events for the current user before the translation table.
 	 *
-	 * @return void
+	 * @throws Exception
 	 */
 	public function add_active_events_current_user(): void {
-		$user_attending_events = get_user_meta( get_current_user_id(), Attendee_Repository::USER_META_KEY, true ) ?: array();
-		if ( empty( $user_attending_events ) ) {
+		$attendee_repository      = new Attendee_Repository();
+		$user_attending_event_ids = $attendee_repository->get_events_for_user( get_current_user_id() );
+		if ( empty( $user_attending_event_ids ) ) {
 			return;
 		}
 
 		$current_datetime_utc       = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
 		$user_attending_events_args = array(
 			'post_type'   => self::CPT,
-			'post__in'    => array_keys( $user_attending_events ),
+			'post__in'    => $user_attending_event_ids,
 			'post_status' => 'publish',
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query'  => array(
@@ -498,6 +499,7 @@ class Translation_Events {
 			'orderby'     => 'meta_value',
 			'order'       => 'ASC',
 		);
+
 		$user_attending_events_query = new WP_Query( $user_attending_events_args );
 		$number_of_events            = $user_attending_events_query->post_count;
 		if ( 0 === $number_of_events ) {
