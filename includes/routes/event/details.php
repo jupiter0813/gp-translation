@@ -13,6 +13,13 @@ use Wporg\TranslationEvents\Translation_Events;
  * Displays the event details page.
  */
 class Details_Route extends Route {
+	private Attendee_Repository $attendee_repository;
+
+	public function __construct() {
+		parent::__construct();
+		$this->attendee_repository = new Attendee_Repository();
+	}
+
 	public function handle( string $event_slug ): void {
 		$user  = wp_get_current_user();
 		$event = get_page_by_path( $event_slug, OBJECT, Translation_Events::CPT );
@@ -30,13 +37,12 @@ class Details_Route extends Route {
 			$this->die_with_error( esc_html__( 'You are not authorized to view this page.', 'gp-translation-events' ), 403 );
 		}
 
-		$event_id            = $event->ID;
-		$event_title         = $event->post_title;
-		$event_description   = $event->post_content;
-		$event_start         = get_post_meta( $event->ID, '_event_start', true ) ?: '';
-		$event_end           = get_post_meta( $event->ID, '_event_end', true ) ?: '';
-		$attending_event_ids = get_user_meta( $user->ID, Attendee_Repository::USER_META_KEY, true ) ?: array();
-		$user_is_attending   = isset( $attending_event_ids[ $event_id ] );
+		$event_id          = $event->ID;
+		$event_title       = $event->post_title;
+		$event_description = $event->post_content;
+		$event_start       = get_post_meta( $event->ID, '_event_start', true ) ?: '';
+		$event_end         = get_post_meta( $event->ID, '_event_end', true ) ?: '';
+		$user_is_attending = $this->attendee_repository->is_attending( $event_id, $user->ID );
 
 		$stats_calculator = new Stats_Calculator();
 		try {
