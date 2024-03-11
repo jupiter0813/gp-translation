@@ -399,19 +399,18 @@ class Translation_Events {
 	 * @param string  $new_status The new post status.
 	 * @param string  $old_status The old post status.
 	 * @param WP_Post $post       The post object.
+	 *
+	 * @throws Exception
 	 */
 	public function event_status_transition( string $new_status, string $old_status, WP_Post $post ): void {
 		if ( self::CPT !== $post->post_type ) {
 			return;
 		}
 		if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
-			$current_user_id         = get_current_user_id();
-			$user_attending_events   = get_user_meta( $current_user_id, Attendee_Repository::USER_META_KEY, true ) ?: array();
-			$is_user_attending_event = in_array( $post->ID, $user_attending_events, true );
-			if ( ! $is_user_attending_event ) {
-				$new_user_attending_events              = $user_attending_events;
-				$new_user_attending_events[ $post->ID ] = true;
-				update_user_meta( $current_user_id, Attendee_Repository::USER_META_KEY, $new_user_attending_events, $user_attending_events );
+			$attendee_repository = new Attendee_Repository();
+			$current_user_id     = get_current_user_id();
+			if ( ! $attendee_repository->is_attending( $post->ID, $current_user_id ) ) {
+				$attendee_repository->add_attendee( $post->ID, $current_user_id );
 			}
 		}
 	}
