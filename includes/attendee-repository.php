@@ -76,7 +76,11 @@ class Attendee_Repository {
 	 * @return int[] Event ids.
 	 */
 	public function get_events_for_user( int $user_id ): array {
-		// TODO.
-		return array();
+		$event_ids = get_user_meta( $user_id, self::USER_META_KEY, true );
+		if ( ! $event_ids ) {
+			$event_ids = array();
+		}
+
+		return array_keys( $event_ids );
 	}
 }
