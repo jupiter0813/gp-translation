@@ -26,8 +26,27 @@ class Attendee_Repository {
 		update_user_meta( $user_id, self::USER_META_KEY, $event_ids );
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function remove_attendee( int $event_id, int $user_id ): void {
-		// TODO.
+		if ( $event_id < 1 ) {
+			throw new Exception( 'invalid event id' );
+		}
+		if ( $user_id < 1 ) {
+			throw new Exception( 'invalid user id' );
+		}
+
+		$event_ids = get_user_meta( $user_id, self::USER_META_KEY, true );
+		if ( ! $event_ids ) {
+			$event_ids = array();
+		}
+
+		if ( isset( $event_ids[ $event_id ] ) ) {
+			unset( $event_ids[ $event_id ] );
+		}
+
+		update_user_meta( $user_id, self::USER_META_KEY, $event_ids );
 	}
 
 	public function is_attending( int $event_id, int $user_id ): bool {
