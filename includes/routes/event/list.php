@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use WP_Query;
+use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
 
@@ -118,7 +119,7 @@ class List_Route extends Route {
 		);
 		$past_events_query = new WP_Query( $past_events_args );
 
-		$user_attending_events      = get_user_meta( get_current_user_id(), Translation_Events::USER_META_KEY_ATTENDING, true ) ?: array( 0 );
+		$user_attending_events      = get_user_meta( get_current_user_id(), Attendee_Repository::USER_META_KEY, true ) ?: array( 0 );
 		$user_attending_events_args = array(
 			'post_type'      => Translation_Events::CPT,
 			'post__in'       => array_keys( $user_attending_events ),

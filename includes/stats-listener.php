@@ -171,7 +171,7 @@ class Stats_Listener {
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.Found
 	private function select_events_user_is_registered_for( array $events, int $user_id ): array {
-		$attending_event_ids = get_user_meta( $user_id, Translation_Events::USER_META_KEY_ATTENDING, true );
+		$attending_event_ids = get_user_meta( $user_id, Attendee_Repository::USER_META_KEY, true );
 		return array_filter(
 			$events,
 			function ( Event $event ) use ( $attending_event_ids ) {

@@ -3,6 +3,8 @@
 namespace Wporg\TranslationEvents;
 
 class Attendee_Repository {
+	public const USER_META_KEY = 'translation-events-attending';
+
 	public function add_attendee( int $event_id, int $user_id ): void {
 		// TODO.
 	}

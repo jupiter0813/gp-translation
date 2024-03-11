@@ -2,8 +2,8 @@
 
 namespace Wporg\TranslationEvents\Routes\User;
 
+use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Routes\Route;
-use Wporg\TranslationEvents\Translation_Events;
 
 /**
  * Toggle whether the current user is attending an event.
@@ -23,7 +23,7 @@ class Attend_Event_Route extends Route {
 			$this->die_with_404();
 		}
 
-		$event_ids = get_user_meta( $user->ID, Translation_Events::USER_META_KEY_ATTENDING, true ) ?? array();
+		$event_ids = get_user_meta( $user->ID, Attendee_Repository::USER_META_KEY, true ) ?? array();
 		if ( ! $event_ids ) {
 			$event_ids = array();
 		}
@@ -36,7 +36,7 @@ class Attend_Event_Route extends Route {
 			unset( $event_ids[ $event_id ] );
 		}
 
-		update_user_meta( $user->ID, Translation_Events::USER_META_KEY_ATTENDING, $event_ids );
+		update_user_meta( $user->ID, Attendee_Repository::USER_META_KEY, $event_ids );
 
 		wp_safe_redirect( gp_url( "/events/$event->post_name" ) );
 		exit;

@@ -5,6 +5,7 @@ namespace Wporg\TranslationEvents\Routes\User;
 use DateTime;
 use DateTimeZone;
 use WP_Query;
+use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
 
@@ -39,7 +40,7 @@ class My_Events_Route extends Route {
 		// phpcs:enable
 
 		$user_id              = get_current_user_id();
-		$events               = get_user_meta( $user_id, Translation_Events::USER_META_KEY_ATTENDING, true ) ?: array();
+		$events               = get_user_meta( $user_id, Attendee_Repository::USER_META_KEY, true ) ?: array();
 		$events               = array_keys( $events );
 		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
 		$args                 = array(

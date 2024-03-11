@@ -4,6 +4,7 @@ namespace Wporg\TranslationEvents\Routes\Event;
 
 use Exception;
 use GP;
+use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
@@ -34,7 +35,7 @@ class Details_Route extends Route {
 		$event_description   = $event->post_content;
 		$event_start         = get_post_meta( $event->ID, '_event_start', true ) ?: '';
 		$event_end           = get_post_meta( $event->ID, '_event_end', true ) ?: '';
-		$attending_event_ids = get_user_meta( $user->ID, Translation_Events::USER_META_KEY_ATTENDING, true ) ?: array();
+		$attending_event_ids = get_user_meta( $user->ID, Attendee_Repository::USER_META_KEY, true ) ?: array();
 		$user_is_attending   = isset( $attending_event_ids[ $event_id ] );
 
 		$stats_calculator = new Stats_Calculator();
