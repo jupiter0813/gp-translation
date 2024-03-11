@@ -74,7 +74,8 @@ class Translation_Events {
 		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Routes\Event\Details_Route', 'handle' ) );
 
 		$active_events_cache = new Active_Events_Cache();
-		$stats_listener      = new Stats_Listener( $active_events_cache );
+		$attendee_repository = new Attendee_Repository();
+		$stats_listener      = new Stats_Listener( $active_events_cache, $attendee_repository );
 		$stats_listener->start();
 	}
 
