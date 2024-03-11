@@ -18,6 +18,7 @@
         <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
         <exclude name="Squiz.Commenting.VariableComment.Missing"/>
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="Squiz.Commenting.FunctionComment.EmptyThrows"/>
         <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
         <exclude name="Generic.Files.OneObjectStructurePerFile.MultipleFound"/>
         <exclude name="Universal.Operators.DisallowShortTernary.Found"/>
