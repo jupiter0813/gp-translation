@@ -104,11 +104,30 @@ class Attendee_Repository {
 	 * @return int[] Event ids.
 	 */
 	public function get_events_for_user( int $user_id ): array {
-		$event_ids = get_user_meta( $user_id, self::USER_META_KEY, true );
-		if ( ! $event_ids ) {
-			$event_ids = array();
-		}
+		global $wpdb, $gp_table_prefix;
 
-		return array_keys( $event_ids );
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+				select event_id
+				from {$gp_table_prefix}event_attendees
+				where user_id = %d
+			",
+				array(
+					$user_id,
+				)
+			)
+		);
+		// phpcs:enable
+
+		return array_map(
+			function ( object $row ) {
+				return intval( $row->event_id );
+			},
+			$rows
+		);
 	}
 }
