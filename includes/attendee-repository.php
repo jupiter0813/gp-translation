@@ -18,12 +18,20 @@ class Attendee_Repository {
 			throw new Exception( 'invalid user id' );
 		}
 
-		$event_ids = get_user_meta( $user_id, self::USER_META_KEY, true );
-		if ( ! $event_ids ) {
-			$event_ids = array();
-		}
-		$event_ids[ $event_id ] = true;
-		update_user_meta( $user_id, self::USER_META_KEY, $event_ids );
+		global $wpdb, $gp_table_prefix;
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare(
+				"insert ignore into {$gp_table_prefix}event_attendees (event_id, user_id) values (%d, %d)",
+				array(
+					'event_id' => $event_id,
+					'user_id'  => $user_id,
+				),
+			),
+		);
+		// phpcs:enable
 	}
 
 	/**
