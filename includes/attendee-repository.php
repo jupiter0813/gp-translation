@@ -5,8 +5,6 @@ namespace Wporg\TranslationEvents;
 use Exception;
 
 class Attendee_Repository {
-	private const USER_META_KEY = 'translation-events-attending';
-
 	/**
 	 * @throws Exception
 	 */
