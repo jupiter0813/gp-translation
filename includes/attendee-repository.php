@@ -69,7 +69,7 @@ class Attendee_Repository {
 	/**
 	 * @deprecated
 	 * TODO: This method should be moved out of this class because it's not about attendance,
-	 *       it returns events that match a condition (belong to a user), so it belongs in an event repository.
+	 *       it returns events that match a condition (have a user as attendee), so it belongs in an event repository.
 	 *       However, since we don't have an event repository yet, the method is placed here for now.
 	 *       When the method is moved to an event repository, it should return Event instances instead of event ids.
 	 *

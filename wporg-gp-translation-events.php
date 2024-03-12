@@ -103,9 +103,12 @@ class Translation_Events {
 		$stats_listener->start();
 	}
 
-	public function activate() {
+	public function activate(): void {
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		global $gp_table_prefix;
-		$create_table = "
+
+		// Create actions table.
+		$create_actions_table = "
 		CREATE TABLE `{$gp_table_prefix}event_actions` (
 			`translate_event_actions_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 			`event_id` int(10) NOT NULL COMMENT 'Post_ID of the translation_event post in the wp_posts table',
@@ -117,8 +120,7 @@ class Translation_Events {
 		PRIMARY KEY (`translate_event_actions_id`),
 		UNIQUE KEY `event_per_translated_original_per_user` (`event_id`,`locale`,`original_id`,`user_id`)
 		) COMMENT='Tracks translation actions that happened during a translation event'";
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta( $create_table );
+		dbDelta( $create_actions_table );
 	}
 
 	/**
