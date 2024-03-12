@@ -57,9 +57,9 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 
 		$this->repository->remove_attendee( $event1_id, $user_id );
 
-		$event_ids = get_user_meta( $user_id, 'translation-events-attending', true );
-		$this->assertCount( 1, $event_ids );
-		$this->assertTrue( $event_ids[ $event2_id ] );
+		$rows = $this->all_table_rows();
+		$this->assertCount( 1, $rows );
+		$this->assertEquals( $event2_id, $rows[0]->event_id );
 	}
 
 	public function test_is_attending() {

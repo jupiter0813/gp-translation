@@ -45,16 +45,20 @@ class Attendee_Repository {
 			throw new Exception( 'invalid user id' );
 		}
 
-		$event_ids = get_user_meta( $user_id, self::USER_META_KEY, true );
-		if ( ! $event_ids ) {
-			$event_ids = array();
-		}
-
-		if ( isset( $event_ids[ $event_id ] ) ) {
-			unset( $event_ids[ $event_id ] );
-		}
-
-		update_user_meta( $user_id, self::USER_META_KEY, $event_ids );
+		global $wpdb, $gp_table_prefix;
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare(
+				"delete from {$gp_table_prefix}event_attendees where event_id = %d and user_id = %d",
+				array(
+					'event_id' => $event_id,
+					'user_id'  => $user_id,
+				),
+			),
+		);
+		// phpcs:enable
 	}
 
 	public function is_attending( int $event_id, int $user_id ): bool {
