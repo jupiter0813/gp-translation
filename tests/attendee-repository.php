@@ -91,4 +91,13 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->assertEquals( array( $event3_id ), $this->repository->get_events_for_user( $another_user ) );
 		$this->assertEmpty( $this->repository->get_events_for_user( $another_user + 1 ) );
 	}
+
+	private function all_table_rows(): array {
+		global $wpdb, $gp_table_prefix;
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $wpdb->get_results( "select * from {$gp_table_prefix}event_attendees order by event_id, user_id" );
+		// phpcs:enable
+	}
 }

@@ -50,12 +50,28 @@ class Attendee_Repository {
 	}
 
 	public function is_attending( int $event_id, int $user_id ): bool {
-		$event_ids = get_user_meta( $user_id, self::USER_META_KEY, true );
-		if ( ! $event_ids ) {
-			$event_ids = array();
-		}
+		global $wpdb, $gp_table_prefix;
 
-		return isset( $event_ids[ $event_id ] );
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				"
+				select count(*) as cnt
+				from {$gp_table_prefix}event_attendees
+				where event_id = %d
+				  and user_id = %d
+			",
+				array(
+					$event_id,
+					$user_id,
+				)
+			)
+		);
+		// phpcs:enable
+
+		return 1 === intval( $row->cnt );
 	}
 
 	/**
