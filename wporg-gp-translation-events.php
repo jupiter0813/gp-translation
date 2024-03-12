@@ -136,7 +136,10 @@ class Translation_Events {
 
 		// TODO: Remove this once it has been run in production.
 		try {
-			$this->import_legacy_attendees();
+			// Don't run it during tests.
+			if ( 'true' === getenv( 'TRANSLATION_EVENTS_NO_IMPORT_LEGACY_ATTENDEES' ) ) {
+				$this->import_legacy_attendees();
+			}
 		} catch ( Exception $e ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $e );

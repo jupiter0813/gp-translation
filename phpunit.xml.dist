@@ -12,4 +12,7 @@
 			<directory suffix=".php">./tests/</directory>
 		</testsuite>
 	</testsuites>
+	<php>
+		<env name="TRANSLATION_EVENTS_NO_IMPORT_LEGACY_ATTENDEES" value="true" force="true" />
+	</php>
 </phpunit>
