@@ -78,26 +78,22 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 	}
 
 	public function create_event( DateTimeImmutable $start, DateTimeImmutable $end, DateTimeZone $timezone, array $attendee_ids ): int {
-		$event_id = $this->create();
-		$meta_key = 'translation-events-attending';
+		$attendee_repository = new Attendee_Repository();
+		$event_id            = $this->create();
 
 		$user_id = get_current_user_id();
 		if ( ! in_array( $user_id, $attendee_ids, true ) ) {
 			// The current user will have been added as attending the event, but it was not specified as an attendee by
 			// the caller of this function. So we remove the current user as attendee.
-			$event_ids = get_user_meta( $user_id, $meta_key, true );
-			unset( $event_ids[ $event_id ] );
-			update_user_meta( $user_id, $meta_key, $event_ids );
+			$attendee_repository->remove_attendee( $event_id, $user_id );
 		}
 
 		update_post_meta( $event_id, '_event_start', $start->format( 'Y-m-d H:i:s' ) );
 		update_post_meta( $event_id, '_event_end', $end->format( 'Y-m-d H:i:s' ) );
 		update_post_meta( $event_id, '_event_timezone', $timezone->getName() );
 
-		foreach ( $attendee_ids as $user_id ) {
-			$event_ids   = get_user_meta( $user_id, $meta_key, true ) ?: array();
-			$event_ids[] = $event_id;
-			update_user_meta( $user_id, $meta_key, $event_ids );
+		foreach ( $attendee_ids as $attendee_id ) {
+			$attendee_repository->add_attendee( $event_id, $attendee_id );
 		}
 
 		return $event_id;
