@@ -133,6 +133,60 @@ class Translation_Events {
 		INDEX `user` (`user_id`)
 		) COMMENT='Attendees of events'";
 		dbDelta( $create_attendees_table );
+
+		// TODO: Remove this once it has been run in production.
+		try {
+			$this->import_legacy_attendees();
+		} catch ( Exception $e ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( $e );
+		}
+	}
+
+	/**
+	 * Previously, event attendance was tracked through user_meta.
+	 * This function imports this legacy attendance information into the attendees table.
+	 *
+	 * Instead of looping through all users, we consider only users who have contributed to an event.
+	 *
+	 * @deprecated TODO: Remove this function once this has been run in production.
+	 * @throws Exception
+	 */
+	private function import_legacy_attendees(): void {
+		require_once __DIR__ . '/includes/attendee-repository.php';
+		require_once __DIR__ . '/includes/stats-calculator.php';
+
+		$query = new WP_Query(
+			array(
+				'post_type' => self::CPT,
+			)
+		);
+
+		// Import legacy attendance to attendees table.
+		$events              = $query->get_posts();
+		$stats_calculator    = new Stats_Calculator();
+		$attendee_repository = new Attendee_Repository();
+		foreach ( $events as $event ) {
+			foreach ( $stats_calculator->get_contributors( $event ) as $user ) {
+				$attendee_repository->add_attendee( $event->ID, $user->ID );
+			}
+		}
+
+		// Delete legacy attendance information.
+		global $wpdb, $wp_table_prefix;
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		$wpdb->query(
+			$wpdb->prepare(
+				"delete from {$wp_table_prefix}usermeta where meta_key = %s",
+				array(
+					'meta_key' => 'translation-events-attending',
+				),
+			),
+		);
+		// phpcs:enable
 	}
 
 	/**
