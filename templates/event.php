@@ -152,8 +152,8 @@ $current_utc_time = new \DateTimeImmutable( 'now', new \DateTimeZone( 'UTC' ) );
 	<div class="event-details-right">
 		<div class="event-details-date">
 			<p>
-				<span class="event-details-date-label"><?php echo esc_html( $event_start < $current_utc_time ? __( 'Started', 'gp-translation-events' ) : __( 'Starts', 'gp-translation-events' ) );?>: <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_start ); ?>"></time></span> <time class="event-utc-time full-time" datetime="<?php echo esc_attr( $event_start ); ?>"><?php echo esc_attr( $event_start->format( 'l, F j, Y H:i T' ) ); ?></time>
-				<span class="event-details-date-label"><?php echo esc_html( $event_end < $current_utc_time ? __( 'Ended', 'gp-translation-events' ) : __( 'Ends', 'gp-translation-events' ) );?>: <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_end ); ?>"></span><time class="event-utc-time full-time" datetime="<?php echo esc_attr( $event_end ); ?>" style="border-bottom: 0"><?php echo esc_attr( $event_end->format( 'l, F j, Y H:i T' ) ); ?></time>
+				<span class="event-details-date-label"><?php echo esc_html( $event_start < $current_utc_time ? __( 'Started', 'gp-translation-events' ) : __( 'Starts', 'gp-translation-events' ) ); ?>: <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_start ); ?>"></time></span> <time class="event-utc-time full-time" datetime="<?php echo esc_attr( $event_start ); ?>"><?php echo esc_attr( $event_start->format( 'l, F j, Y H:i T' ) ); ?></time>
+				<span class="event-details-date-label"><?php echo esc_html( $event_end < $current_utc_time ? __( 'Ended', 'gp-translation-events' ) : __( 'Ends', 'gp-translation-events' ) ); ?>: <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_end ); ?>"></span><time class="event-utc-time full-time" datetime="<?php echo esc_attr( $event_end ); ?>" style="border-bottom: 0"><?php echo esc_attr( $event_end->format( 'l, F j, Y H:i T' ) ); ?></time>
 			</p>
 		</div>
 		<?php if ( is_user_logged_in() ) : ?>

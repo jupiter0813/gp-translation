@@ -62,7 +62,6 @@ abstract class Event_Date extends DateTimeImmutable {
 			return sprintf( 'starts %s', $this->format( 'l, F j, Y' ) );
 		}
 
-
 		$interval       = $this->diff( $current_date_time );
 		$hours_left     = ( $interval->d * 24 ) + $interval->h;
 		$hours_in_a_day = 24;
