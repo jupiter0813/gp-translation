@@ -15,8 +15,13 @@ abstract class Event_Date extends DateTimeImmutable {
 			$timezone = new DateTimeZone( 'UTC' );
 		}
 
-		$utc_date = new DateTime( $date, new DateTimeZone( 'UTC' ) );
-		$utc_date->setTimezone( $timezone );
+		try {
+			$utc_date = new DateTime( $date, new DateTimeZone( 'UTC' ) );
+			$utc_date->setTimezone( $timezone );
+		} catch ( Exception $e ) {
+			$utc_date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		}
+
 		parent::__construct( $utc_date->format( 'Y-m-d H:i:s' ), $timezone );
 		$this->timezone = $timezone;
 	}
