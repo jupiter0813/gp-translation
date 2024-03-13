@@ -204,10 +204,11 @@ input[type="submit"].attending-btn, a.button.is-primary.attend-btn {
 .event-details-date {
 	background: #f4f4f4;
 	color: #606161;
-	padding: .5em;
+	padding: 0.1em .5em;
 	font-size: .9em;
 	line-height: 1.8em;
 	font-weight: 500;
+	margin-bottom: 1em;
 }
 .event-page-edit-link {
 	float: right;

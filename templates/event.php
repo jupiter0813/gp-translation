@@ -22,6 +22,7 @@ gp_breadcrumb_translation_events( array( esc_html( $event_title ) ) );
 gp_tmpl_header();
 $event_page_title = $event_title;
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
+$current_utc_time = new \DateTimeImmutable( 'now', new \DateTimeZone( 'UTC' ) );
 ?>
 
 <div class="event-page-wrapper">
@@ -151,34 +152,34 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	<div class="event-details-right">
 		<div class="event-details-date">
 			<p>
-				<span class="event-details-date-label">Starts: <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_start ); ?>"></time></span> <time class="event-utc-time full-time" datetime="<?php echo esc_attr( $event_start ); ?>"><?php echo esc_attr( $event_start->format( 'l, F j, Y H:i T' ) ); ?></time>
-				<span class="event-details-date-label">Ends: <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_end ); ?>"></span><time class="event-utc-time full-time" datetime="<?php echo esc_attr( $event_end ); ?>"><?php echo esc_attr( $event_end->format( 'l, F j, Y H:i T' ) ); ?></time>
+				<span class="event-details-date-label"><?php echo esc_html( $event_start < $current_utc_time ? __( 'Started', 'gp-translation-events' ) : __( 'Starts', 'gp-translation-events' ) );?>: <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_start ); ?>"></time></span> <time class="event-utc-time full-time" datetime="<?php echo esc_attr( $event_start ); ?>"><?php echo esc_attr( $event_start->format( 'l, F j, Y H:i T' ) ); ?></time>
+				<span class="event-details-date-label"><?php echo esc_html( $event_end < $current_utc_time ? __( 'Ended', 'gp-translation-events' ) : __( 'Ends', 'gp-translation-events' ) );?>: <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_end ); ?>"></span><time class="event-utc-time full-time" datetime="<?php echo esc_attr( $event_end ); ?>" style="border-bottom: 0"><?php echo esc_attr( $event_end->format( 'l, F j, Y H:i T' ) ); ?></time>
 			</p>
 		</div>
 		<?php if ( is_user_logged_in() ) : ?>
 		<div class="event-details-join">
-			<?php
-			$current_time = gmdate( 'Y-m-d H:i:s' );
-			if ( strtotime( $current_time ) > strtotime( $event_end ) ) :
-				?>
+			<?php if ( $event_end > $current_utc_time ) : ?>
 				<?php if ( $user_is_attending ) : ?>
-					<span class="event-details-join-expired"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></span>
-				<?php endif ?>
+					<button disabled="disabled" class="button is-primary attend-btn"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></button>
+				<?php endif; ?>
 			<?php else : ?>
 				<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) ); ?>">
 					<?php if ( ! $user_is_attending ) : ?>
 						<input type="submit" class="button is-primary attend-btn" value="Attend Event"/>
 					<?php else : ?>
 						<input type="submit" class="button is-secondary attending-btn" value="You're attending"/>
-					<?php endif ?>
+					<?php endif; ?>
 				</form>
-			<?php endif ?>
+			<?php endif; ?>
 		</div>
 		<?php else : ?>
 		<div class="event-details-join">
 			<p>
-				<?php global $wp; ?>
-				<a href="<?php echo esc_url( wp_login_url( home_url( $wp->request ) ) ); ?>" class="button is-primary attend-btn"><?php esc_html_e( 'Login to attend', 'gp-translation-events' ); ?></a>
+				<?php if ( $event_end > $current_utc_time ) : ?>
+					<a href="<?php echo esc_url( wp_login_url() ); ?>" class="button is-primary attend-btn"><?php esc_html_e( 'Login to attend', 'gp-translation-events' ); ?></a>
+				<?php else : ?>
+					<button disabled="disabled" class="button is-primary attend-btn"><?php esc_html_e( 'Event is over', 'gp-translation-events' ); ?></button>
+				<?php endif; ?>
 			</p>
 		</div>
 		<?php endif; ?>
