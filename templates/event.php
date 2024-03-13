@@ -66,9 +66,30 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<h2><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></h2>
 		<ul>
 			<?php foreach ( $contributors as $contributor ) : ?>
-			<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->locales ) ); ?>"
+			<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->locales ) ); ?>">
 				<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo get_avatar( $contributor->ID, 48 ); ?></a>
 				<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?></a>
+			</li>
+		<?php endforeach; ?>
+		</ul>
+	</div>
+	<div class="event-projects">
+		<h2><?php esc_html_e( 'Projects', 'gp-translation-events' ); ?></h2>
+		<ul>
+			<?php foreach ( $projects as $project_name => $row ) : ?>
+			<li class="event-project" title="<?php echo esc_html( str_replace( ',', ', ', $row->locales ) ); ?>">
+				<a href="<?php echo esc_url( gp_url_project( $row->project ) ); ?>"><?php echo esc_html( $project_name ); ?></a> <small> to
+				<?php
+				foreach ( explode( ',', $row->locales ) as $_locale ) {
+					$_locale = \GP_Locales::by_slug( $_locale );
+					?>
+					<a href="<?php echo esc_url( gp_url_project_locale( $row->project, $_locale, 'default' ) ); ?>"><?php echo esc_html( $_locale->english_name ); ?></a>
+					<?php
+				}
+				// translators: %d: Number of contributors.
+				echo esc_html( sprintf( _n( 'by %d contributor', 'by %d contributors', $row->users, 'gp-translation-events' ), $row->users ) );
+				?>
+				</small>
 			</li>
 		<?php endforeach; ?>
 		</ul>
