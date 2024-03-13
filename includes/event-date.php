@@ -48,12 +48,15 @@ abstract class Event_Date extends DateTimeImmutable {
 	 *
 	 * @return string The end date text.
 	 */
-	public static function get_variable_text(): string {
+	public function get_variable_text(): string {
+		$current_date_time = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		if ( ! $this->is_end_date() ) {
+			if ( $this < $current_date_time ) {
+				return sprintf( 'started %s', $this->format( 'l, F j, Y' ) );
+			}
 			return sprintf( 'starts %s', $this->format( 'l, F j, Y' ) );
 		}
 
-		$current_date_time = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		$interval       = $this->diff( $current_date_time );
 		$hours_left     = ( $interval->d * 24 ) + $interval->h;
@@ -66,7 +69,11 @@ abstract class Event_Date extends DateTimeImmutable {
 			/* translators: %s: Number of hours left. */
 			return sprintf( _n( 'ends in %s hour', 'ends in %s hours', $hours_left ), $hours_left );
 		}
-		return sprintf( 'until %s', $this->format( 'M j, Y' ) );
+		if ( $this < $current_date_time ) {
+			return sprintf( 'ended %s', $this->format( 'l, F j, Y' ) );
+		}
+
+		return sprintf( 'until %s', $this->format( 'l, F j, Y' ) );
 	}
 }
 

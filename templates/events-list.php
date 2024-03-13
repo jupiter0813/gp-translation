@@ -104,11 +104,7 @@ if ( $past_events_query->have_posts() ) :
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
-				<?php if ( $event_start === $event_end ) : ?>
-					<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
-				<?php else : ?>
-					<span class="event-list-date"><?php echo esc_html( $event_start ); ?> - <?php echo esc_html( $event_end ); ?></span>
-				<?php endif; ?>
+				<span class="event-list-date"><?php echo esc_html( $event_end->get_variable_text() ); ?></span>
 				<?php the_excerpt(); ?>
 			</li>
 			<?php
