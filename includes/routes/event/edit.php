@@ -72,16 +72,4 @@ class Edit_Route extends Route {
 
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
-
-	/**
-	 * Convert date time stored in UTC to a date time in a time zone.
-	 *
-	 * @param string $date_time The date time in UTC.
-	 * @param string $time_zone The time zone.
-	 *
-	 * @return string The date time in the time zone.
-	 * @throws Exception When date is invalid.
-	 */
-	private static function convertToTimezone( string $date_time, string $time_zone ): string {
-	}
 }

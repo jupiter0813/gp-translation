@@ -21,6 +21,5 @@ class Event_Date_Test extends GP_UnitTestCase {
 		$this->assertEquals( '2024-03-07 20:00:00', $start->format( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2024-03-07 12:00:00', $start->utc( 'Y-m-d H:i:s' ) );
 		$this->assertEquals( '2024-03-07 12:00:00', strval( $start ) );
-
 	}
 }

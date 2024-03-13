@@ -8,7 +8,7 @@ use DateTimeZone;
 use Exception;
 
 abstract class Event_Date extends DateTimeImmutable {
-	abstract public function is_end_date() : bool;
+	abstract public function is_end_date(): bool;
 	public $timezone;
 	public function __construct( string $date, DateTimeZone $timezone = null ) {
 		if ( ! $timezone ) {
@@ -50,7 +50,7 @@ abstract class Event_Date extends DateTimeImmutable {
 	 */
 	public static function get_variable_text(): string {
 		if ( ! $this->is_end_date() ) {
-		return sprintf( 'starts %s', $this->format( 'l, F j, Y' ) );
+			return sprintf( 'starts %s', $this->format( 'l, F j, Y' ) );
 		}
 
 		$current_date_time = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
@@ -71,13 +71,13 @@ abstract class Event_Date extends DateTimeImmutable {
 }
 
 class Event_Start_Date extends Event_Date {
-	public function is_end_date() : bool {
+	public function is_end_date(): bool {
 		return false;
 	}
 }
 
 class Event_End_Date extends Event_Date {
-	public function is_end_date() : bool {
+	public function is_end_date(): bool {
 		return true;
 	}
 }
