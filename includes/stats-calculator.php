@@ -148,7 +148,7 @@ class Stats_Calculator {
 	/**
 	 * Get contributors for an event.
 	 */
-	public function get_contributors( WP_Post $event ): array {
+	public function get_contributors( int $event_id ): array {
 		global $wpdb, $gp_table_prefix;
 
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -165,7 +165,7 @@ class Stats_Calculator {
 				group by user_id
 			",
 				array(
-					$event->ID,
+					$event_id,
 				)
 			)
 		);
@@ -191,7 +191,7 @@ class Stats_Calculator {
 	/**
 	 * Get projects for an event.
 	 */
-	public function get_projects( WP_Post $event ): array {
+	public function get_projects( int $event_id ): array {
 		global $wpdb, $gp_table_prefix;
 
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -213,7 +213,7 @@ class Stats_Calculator {
 				group by o.project_id
 			",
 				array(
-					$event->ID,
+					$event_id,
 				)
 			)
 		);
