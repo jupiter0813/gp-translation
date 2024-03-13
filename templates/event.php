@@ -97,8 +97,12 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					$_locale = \GP_Locales::by_slug( $_locale );
 					?>
 					<a href="<?php echo esc_url( gp_url_project_locale( $row->project, $_locale, 'default' ) ); ?>"><?php echo esc_html( $_locale->english_name ); ?></a>
-				<?php } ?>
-				by <?php echo esc_html( $row->users ); ?> contributors</small>
+					<?php
+				}
+				// translators: %d: Number of contributors.
+				echo esc_html( sprintf( _n( 'by %d contributor', 'by %d contributors', $row->users, 'gp-translation-events' ), $row->users ) );
+				?>
+				</small>
 			</li>
 		<?php endforeach; ?>
 		</ul>
