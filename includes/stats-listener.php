@@ -15,9 +15,11 @@ class Stats_Listener {
 	const ACTION_REQUEST_CHANGES = 'request_changes';
 
 	private Active_Events_Cache $active_events_cache;
+	private Attendee_Repository $attendee_repository;
 
-	public function __construct( Active_Events_Cache $active_events_cache ) {
+	public function __construct( Active_Events_Cache $active_events_cache, Attendee_Repository $attendee_repository ) {
 		$this->active_events_cache = $active_events_cache;
+		$this->attendee_repository = $attendee_repository;
 	}
 
 	public function start(): void {
@@ -171,11 +173,11 @@ class Stats_Listener {
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.Found
 	private function select_events_user_is_registered_for( array $events, int $user_id ): array {
-		$attending_event_ids = get_user_meta( $user_id, Translation_Events::USER_META_KEY_ATTENDING, true );
+		$attending_event_ids = $this->attendee_repository->get_events_for_user( $user_id );
 		return array_filter(
 			$events,
 			function ( Event $event ) use ( $attending_event_ids ) {
-				return isset( $attending_event_ids[ $event->id() ] );
+				return in_array( $event->id(), $attending_event_ids, true );
 			}
 		);
 	}

@@ -5,6 +5,7 @@ namespace Wporg\TranslationEvents\Routes\User;
 use DateTime;
 use DateTimeZone;
 use WP_Query;
+use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
 
@@ -12,6 +13,13 @@ use Wporg\TranslationEvents\Translation_Events;
  * Displays the My Events page for a user.
  */
 class My_Events_Route extends Route {
+	private Attendee_Repository $attendee_repository;
+
+	public function __construct() {
+		parent::__construct();
+		$this->attendee_repository = new Attendee_Repository();
+	}
+
 	public function handle(): void {
 		global $wp;
 		if ( ! is_user_logged_in() ) {
@@ -39,8 +47,6 @@ class My_Events_Route extends Route {
 		// phpcs:enable
 
 		$user_id              = get_current_user_id();
-		$events               = get_user_meta( $user_id, Translation_Events::USER_META_KEY_ATTENDING, true ) ?: array();
-		$events               = array_keys( $events );
 		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
 		$args                 = array(
 			'post_type'              => Translation_Events::CPT,
@@ -62,7 +68,6 @@ class My_Events_Route extends Route {
 			'events_i_attended_paged' => $_events_i_attended_paged,
 			'paged'                   => $_events_i_attended_paged,
 			'post_status'             => 'publish',
-			'post__in'                => $events,
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query'              => array(
 				array(
@@ -77,8 +82,16 @@ class My_Events_Route extends Route {
 			'orderby'                 => 'meta_value',
 			'order'                   => 'DESC',
 		);
-		$events_i_attended_query = new WP_Query( $args );
 
+		$user_attending_event_ids = $this->attendee_repository->get_events_for_user( $user_id );
+		if ( empty( $user_attending_event_ids ) ) {
+			// Setting it to an array with a single 0 element will result in the query returning zero results,
+			// which is what we want, as the user is not attending any events.
+			$user_attending_event_ids = array( 0 );
+		}
+		$args['post__in'] = $user_attending_event_ids;
+
+		$events_i_attended_query = new WP_Query( $args );
 		$this->tmpl( 'events-my-events', get_defined_vars() );
 	}
 }

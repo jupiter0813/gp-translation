@@ -26,8 +26,7 @@ use WP_Post;
 use WP_Query;
 
 class Translation_Events {
-	public const CPT                     = 'translation_event';
-	public const USER_META_KEY_ATTENDING = 'translation-events-attending';
+	public const CPT = 'translation_event';
 
 	public static function get_instance() {
 		static $instance = null;
@@ -63,6 +62,7 @@ class Translation_Events {
 		require_once __DIR__ . '/includes/routes/event/list.php';
 		require_once __DIR__ . '/includes/routes/user/attend-event.php';
 		require_once __DIR__ . '/includes/routes/user/my-events.php';
+		require_once __DIR__ . '/includes/attendee-repository.php';
 		require_once __DIR__ . '/includes/stats-calculator.php';
 		require_once __DIR__ . '/includes/stats-listener.php';
 
@@ -74,7 +74,8 @@ class Translation_Events {
 		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Routes\Event\Details_Route', 'handle' ) );
 
 		$active_events_cache = new Active_Events_Cache();
-		$stats_listener      = new Stats_Listener( $active_events_cache );
+		$attendee_repository = new Attendee_Repository();
+		$stats_listener      = new Stats_Listener( $active_events_cache, $attendee_repository );
 		$stats_listener->start();
 	}
 
@@ -399,19 +400,18 @@ class Translation_Events {
 	 * @param string  $new_status The new post status.
 	 * @param string  $old_status The old post status.
 	 * @param WP_Post $post       The post object.
+	 *
+	 * @throws Exception
 	 */
 	public function event_status_transition( string $new_status, string $old_status, WP_Post $post ): void {
 		if ( self::CPT !== $post->post_type ) {
 			return;
 		}
 		if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
-			$current_user_id         = get_current_user_id();
-			$user_attending_events   = get_user_meta( $current_user_id, self::USER_META_KEY_ATTENDING, true ) ?: array();
-			$is_user_attending_event = in_array( $post->ID, $user_attending_events, true );
-			if ( ! $is_user_attending_event ) {
-				$new_user_attending_events              = $user_attending_events;
-				$new_user_attending_events[ $post->ID ] = true;
-				update_user_meta( $current_user_id, self::USER_META_KEY_ATTENDING, $new_user_attending_events, $user_attending_events );
+			$attendee_repository = new Attendee_Repository();
+			$current_user_id     = get_current_user_id();
+			if ( ! $attendee_repository->is_attending( $post->ID, $current_user_id ) ) {
+				$attendee_repository->add_attendee( $post->ID, $current_user_id );
 			}
 		}
 	}
@@ -465,18 +465,19 @@ class Translation_Events {
 	/**
 	 * Add the active events for the current user before the translation table.
 	 *
-	 * @return void
+	 * @throws Exception
 	 */
 	public function add_active_events_current_user(): void {
-		$user_attending_events = get_user_meta( get_current_user_id(), self::USER_META_KEY_ATTENDING, true ) ?: array();
-		if ( empty( $user_attending_events ) ) {
+		$attendee_repository      = new Attendee_Repository();
+		$user_attending_event_ids = $attendee_repository->get_events_for_user( get_current_user_id() );
+		if ( empty( $user_attending_event_ids ) ) {
 			return;
 		}
 
 		$current_datetime_utc       = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
 		$user_attending_events_args = array(
 			'post_type'   => self::CPT,
-			'post__in'    => array_keys( $user_attending_events ),
+			'post__in'    => $user_attending_event_ids,
 			'post_status' => 'publish',
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query'  => array(
@@ -498,6 +499,7 @@ class Translation_Events {
 			'orderby'     => 'meta_value',
 			'order'       => 'ASC',
 		);
+
 		$user_attending_events_query = new WP_Query( $user_attending_events_args );
 		$number_of_events            = $user_attending_events_query->post_count;
 		if ( 0 === $number_of_events ) {

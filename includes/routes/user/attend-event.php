@@ -2,8 +2,8 @@
 
 namespace Wporg\TranslationEvents\Routes\User;
 
+use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Routes\Route;
-use Wporg\TranslationEvents\Translation_Events;
 
 /**
  * Toggle whether the current user is attending an event.
@@ -11,6 +11,13 @@ use Wporg\TranslationEvents\Translation_Events;
  * If the user is currently marked as attending, they will be marked as not attending.
  */
 class Attend_Event_Route extends Route {
+	private Attendee_Repository $attendee_repository;
+
+	public function __construct() {
+		parent::__construct();
+		$this->attendee_repository = new Attendee_Repository();
+	}
+
 	public function handle( int $event_id ): void {
 		$user = wp_get_current_user();
 		if ( ! $user ) {
@@ -18,25 +25,15 @@ class Attend_Event_Route extends Route {
 		}
 
 		$event = get_post( $event_id );
-
 		if ( ! $event ) {
 			$this->die_with_404();
 		}
 
-		$event_ids = get_user_meta( $user->ID, Translation_Events::USER_META_KEY_ATTENDING, true ) ?? array();
-		if ( ! $event_ids ) {
-			$event_ids = array();
-		}
-
-		if ( ! isset( $event_ids[ $event_id ] ) ) {
-			// Not yet attending, mark as attending.
-			$event_ids[ $event_id ] = true;
+		if ( $this->attendee_repository->is_attending( $event_id, $user->ID ) ) {
+			$this->attendee_repository->remove_attendee( $event_id, $user->ID );
 		} else {
-			// Currently attending, mark as not attending.
-			unset( $event_ids[ $event_id ] );
+			$this->attendee_repository->add_attendee( $event_id, $user->ID );
 		}
-
-		update_user_meta( $user->ID, Translation_Events::USER_META_KEY_ATTENDING, $event_ids );
 
 		wp_safe_redirect( gp_url( "/events/$event->post_name" ) );
 		exit;
