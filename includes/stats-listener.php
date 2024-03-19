@@ -7,6 +7,7 @@ use DateTimeZone;
 use Exception;
 use GP_Translation;
 use GP_Translation_Set;
+use Wporg\TranslationEvents\Event\Event;
 
 class Stats_Listener {
 	const ACTION_CREATE          = 'create';

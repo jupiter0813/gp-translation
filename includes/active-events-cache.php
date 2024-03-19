@@ -3,9 +3,10 @@
 namespace Wporg\TranslationEvents;
 
 use Exception;
+use Wporg\TranslationEvents\Event\Event;
 
 class Active_Events_Cache {
-	public const CACHE_DURATION = 60 * 60 * 24; // 24 hours.
+	public const CACHE_DURATION = DAY_IN_SECONDS;
 	private const KEY           = 'translation-events-active-events';
 
 	/**

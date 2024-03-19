@@ -7,6 +7,7 @@ namespace Wporg\TranslationEvents;
 
 use DateTime;
 use WP_Query;
+use Wporg\TranslationEvents\Event\Event;
 
 /** @var WP_Query $current_events_query */
 /** @var WP_Query $upcoming_events_query */
