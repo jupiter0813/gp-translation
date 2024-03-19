@@ -190,9 +190,10 @@ class Translation_Events {
 		if ( ! $event_start || ! $event_end ) {
 			return false;
 		}
-		$event_start = new DateTime( $event_start );
-		$event_end   = new DateTime( $event_end );
-		if ( $event_start < $event_end ) {
+		$event_start = new DateTime( $event_start, new DateTimeZone( 'UTC' ) );
+		$event_end   = new DateTime( $event_end, new DateTimeZone( 'UTC' ) );
+		$now         = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		if ( ( $event_start < $event_end ) && ( $event_end > $now ) ) {
 			return true;
 		}
 		return false;
@@ -266,7 +267,7 @@ class Translation_Events {
 			// Deliberately ignored, handled below.
 		}
 		if ( ! $is_valid_event_date ) {
-			wp_send_json_error( esc_html__( 'Invalid event dates.', 'gp-translation-events' ), 422 );
+			wp_send_json_error( esc_html__( 'Invalid event dates or the event end date is a past value.', 'gp-translation-events' ), 422 );
 		}
 
 		$event_status = '';
