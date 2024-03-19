@@ -54,6 +54,10 @@ class Edit_Route extends Route {
 			$this->die_with_error( esc_html__( 'Something is wrong.', 'gp-translation-events' ) );
 		}
 
+		if ( $now > $event_end_utc ) {
+			$this->die_with_error( esc_html__( 'You cannot edit a finished event.', 'gp-translation-events' ), 403 );
+		}
+
 		$stats_calculator = new Stats_Calculator();
 		if ( ! $stats_calculator->event_has_stats( $event ) ) {
 			$current_user = wp_get_current_user();

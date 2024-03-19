@@ -12,8 +12,6 @@ namespace Wporg\TranslationEvents;
 /** @var string $event_description */
 /** @var string $event_start */
 /** @var string $event_end */
-/** @var string $event_end_utc */
-/** @var string $now */
 /** @var string $event_timezone */
 /** @var string $event_url */
 /** @var string $css_show_url */
@@ -70,14 +68,12 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	<div class="submit-btn-group">
 		<label for="event-status"></label>
 	<?php if ( $event_id ) : ?>
-		<?php if ( isset( $event_status ) && 'draft' === $event_status && isset( $now ) && isset( $event_end_utc ) && ( $now < $event_end_utc ) ) : ?>
+		<?php if ( isset( $event_status ) && 'draft' === $event_status ) : ?>
 			<button class="button is-primary save-draft submit-event" type="submit" data-event-status="draft">Update Draft</button>
 		<?php endif; ?>
-		<?php if ( isset( $now ) && isset( $event_end_utc ) && ( $now < $event_end_utc ) ) : ?>
-			<button class="button is-primary submit-event" type="submit"  data-event-status="publish">
-				<?php echo ( isset( $event_status ) && 'publish' === $event_status ) ? esc_html( 'Update Event' ) : esc_html( 'Publish Event' ); ?>
-			</button>
-		<?php endif; ?>
+	<button class="button is-primary submit-event" type="submit"  data-event-status="publish">
+		<?php echo ( isset( $event_status ) && 'publish' === $event_status ) ? esc_html( 'Update Event' ) : esc_html( 'Publish Event' ); ?>
+	</button>
 	<?php else : ?>
 		<button class="button is-primary save-draft submit-event" type="submit" data-event-status="draft">Save Draft</button>
 		<button class="button is-primary submit-event" type="submit"  data-event-status="publish">Publish Event</button>
