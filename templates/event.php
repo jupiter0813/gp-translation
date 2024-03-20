@@ -22,7 +22,6 @@ gp_breadcrumb_translation_events( array( esc_html( $event_title ) ) );
 gp_tmpl_header();
 $event_page_title = $event_title;
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
-$current_utc_time = new \DateTimeImmutable( 'now', new \DateTimeZone( 'UTC' ) );
 ?>
 
 <div class="event-page-wrapper">
