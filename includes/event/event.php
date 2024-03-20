@@ -66,7 +66,8 @@ class Event {
 	}
 
 	/**
-	 * @throws InvalidStartOrEnd
+	 * @throws InvalidStart
+	 * @throws InvalidEnd
 	 * @throws InvalidStatus
 	 * @throws InvalidTitle
 	 */
@@ -190,7 +191,8 @@ class Event {
 	}
 
 	/**
-	 * @throws InvalidStartOrEnd
+	 * @throws InvalidStart
+	 * @throws InvalidEnd
 	 */
 	private function validate_times( DateTimeImmutable $start, DateTimeImmutable $end ) {
 		if ( $end <= $start ) {

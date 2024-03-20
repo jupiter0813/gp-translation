@@ -8,7 +8,7 @@ use DateTimeZone;
 use Exception;
 
 /**
- * class Event_Date
+ * Event_Date
  *
  * The event date is in local time, get the UTC time via the utc() method.
  *
