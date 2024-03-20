@@ -11,8 +11,8 @@ use WP_Post;
 /** @var int $event_id */
 /** @var string $event_title */
 /** @var string $event_description */
-/** @var string $event_start */
-/** @var string $event_end */
+/** @var Event_Start_Date $event_start */
+/** @var Event_End_Date $event_end */
 /** @var bool $user_is_attending */
 /** @var Event_Stats $event_stats */
 
@@ -152,13 +152,22 @@ $current_utc_time = new \DateTimeImmutable( 'now', new \DateTimeZone( 'UTC' ) );
 	<div class="event-details-right">
 		<div class="event-details-date">
 			<p>
-				<span class="event-details-date-label"><?php echo esc_html( $event_start < $current_utc_time ? __( 'Started', 'gp-translation-events' ) : __( 'Starts', 'gp-translation-events' ) ); ?>: <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_start ); ?>"></time></span> <time class="event-utc-time full-time" datetime="<?php echo esc_attr( $event_start ); ?>"><?php echo esc_attr( $event_start->format( 'l, F j, Y H:i T' ) ); ?></time>
-				<span class="event-details-date-label"><?php echo esc_html( $event_end < $current_utc_time ? __( 'Ended', 'gp-translation-events' ) : __( 'Ends', 'gp-translation-events' ) ); ?>: <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_end ); ?>"></span><time class="event-utc-time full-time" datetime="<?php echo esc_attr( $event_end ); ?>" style="border-bottom: 0"><?php echo esc_attr( $event_end->format( 'l, F j, Y H:i T' ) ); ?></time>
+				<span class="event-details-date-label">
+					<?php echo esc_html( $event_start->is_in_the_past() ? __( 'Started', 'gp-translation-events' ) : __( 'Starts', 'gp-translation-events' ) ); ?>:
+					<?php $event_start->print_relative_time_html(); ?>
+				</span>
+				<?php $event_start->print_time_html(); ?>
+				<span class="event-details-date-label">
+					<?php echo esc_html( $event_end->is_in_the_past() ? __( 'Ended', 'gp-translation-events' ) : __( 'Ends', 'gp-translation-events' ) ); ?>:
+					<?php $event_end->print_relative_time_html(); ?>
+
+				</span>
+				<?php $event_end->print_time_html(); ?>
 			</p>
 		</div>
 		<?php if ( is_user_logged_in() ) : ?>
 		<div class="event-details-join">
-			<?php if ( $event_end > $current_utc_time ) : ?>
+			<?php if ( $event_end->is_in_the_past() ) : ?>
 				<?php if ( $user_is_attending ) : ?>
 					<button disabled="disabled" class="button is-primary attend-btn"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></button>
 				<?php endif; ?>
@@ -175,7 +184,7 @@ $current_utc_time = new \DateTimeImmutable( 'now', new \DateTimeZone( 'UTC' ) );
 		<?php else : ?>
 		<div class="event-details-join">
 			<p>
-				<?php if ( $event_end > $current_utc_time ) : ?>
+				<?php if ( ! $event_end->is_in_the_past() ) : ?>
 					<a href="<?php echo esc_url( wp_login_url() ); ?>" class="button is-primary attend-btn"><?php esc_html_e( 'Login to attend', 'gp-translation-events' ); ?></a>
 				<?php else : ?>
 					<button disabled="disabled" class="button is-primary attend-btn"><?php esc_html_e( 'Event is over', 'gp-translation-events' ); ?></button>

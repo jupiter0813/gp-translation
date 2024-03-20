@@ -62,7 +62,7 @@ class Details_Route extends Route {
 		$is_editable_event = true;
 		$event_end_utc     = new DateTime( get_post_meta( $event_id, '_event_end', true ), new DateTimeZone( 'UTC' ) );
 		$now_utc           = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
-		if ( $now_utc > $event_end_utc || $stats_calculator->event_has_stats( $event ) ) {
+		if ( $event_end->is_in_the_past() || $stats_calculator->event_has_stats( $event ) ) {
 			$is_editable_event = false;
 		}
 

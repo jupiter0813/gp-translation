@@ -185,15 +185,16 @@ class Translation_Events {
 	 *
 	 * @param string $event_start The event start date.
 	 * @param string $event_end The event end date.
+	 * @param string $event_timezone The event timezone.
 	 * @return bool Whether the event dates are valid.
 	 * @throws Exception When dates are invalid.
 	 */
-	public function validate_event_dates( string $event_start, string $event_end ): bool {
+	public function validate_event_dates( string $event_start, string $event_end, string $event_timezone ): bool {
 		if ( ! $event_start || ! $event_end ) {
 			return false;
 		}
-		$event_start = new DateTime( $event_start, new DateTimeZone( 'UTC' ) );
-		$event_end   = new DateTime( $event_end, new DateTimeZone( 'UTC' ) );
+		$event_start = new DateTime( $event_start, new DateTimeZone( $event_timezone ) );
+		$event_end   = new DateTime( $event_end, new DateTimeZone( $event_timezone ) );
 		$now         = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 		if ( ( $event_start < $event_end ) && ( $event_end > $now ) ) {
 			return true;
@@ -264,7 +265,7 @@ class Translation_Events {
 
 		$is_valid_event_date = false;
 		try {
-			$is_valid_event_date = $this->validate_event_dates( $event_start, $event_end );
+			$is_valid_event_date = $this->validate_event_dates( $event_start, $event_end, $event_timezone );
 		} catch ( Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 			// Deliberately ignored, handled below.
 		}

@@ -35,7 +35,7 @@ if ( $current_events_query->have_posts() ) :
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a>
-				<span class="event-list-date">ends <time datetime="<?php echo esc_attr( $event_end->format( 'Y-m-d H:i:s' ) ); ?>" class="event-utc-time"><?php echo esc_html( $event_end ); ?></time> (<time datetime="<?php echo esc_attr( $event_end->format( 'Y-m-d H:i:s' ) ); ?>" class="relative hide-if-too-far event-utc-time"><?php echo esc_html( $event_end ); ?></time>)</span>
+				<span class="event-list-date">ends <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_end ); ?>"></time></span>
 				<?php the_excerpt(); ?>
 			</li>
 			<?php
@@ -69,7 +69,7 @@ if ( $upcoming_events_query->have_posts() ) :
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
-				<span class="event-list-date">starts <time datetime="<?php echo esc_attr( $event_start->format( 'Y-m-d H:i:s' ) ); ?>" class="event-utc-time"><?php echo esc_html( $event_start ); ?></time> (<time datetime="<?php echo esc_attr( $event_start->format( 'Y-m-d H:i:s' ) ); ?>" class="event-utc-time relative hide-if-too-far"><?php echo esc_html( $event_start ); ?></time>)</span>
+				<span class="event-list-date">starts <?php $event_start->print_relative_time_html(); ?></span>
 				<?php the_excerpt(); ?>
 			</li>
 			<?php
@@ -99,12 +99,11 @@ if ( $past_events_query->have_posts() ) :
 		<?php
 		while ( $past_events_query->have_posts() ) :
 			$past_events_query->the_post();
-			$event_start = new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) );
-			$event_end   = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) );
+			$event_end = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) );
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
-				<span class="event-list-date"><?php echo esc_html( $event_end->get_variable_text() ); ?></span>
+				<span class="event-list-date">ended <?php $event_end->print_relative_time_html( 'F j, Y H:i T' ); ?></span>
 				<?php the_excerpt(); ?>
 			</li>
 			<?php
@@ -135,7 +134,7 @@ endif;
 </div>
 <?php if ( is_user_logged_in() ) : ?>
 	<div class="event-right-col">
-		<h3 class="">Events I'm Attending</h3>
+		<h2>Events I'm Attending</h2>
 		<?php if ( ! $user_attending_events_query->have_posts() ) : ?>
 			<p>You don't have any events to attend.</p>
 		<?php else : ?>
@@ -149,9 +148,9 @@ endif;
 					<li class="event-list-item">
 						<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
 						<?php if ( $event_start === $event_end ) : ?>
-							<span class="event-list-date events-i-am-attending"><?php echo esc_html( $event_start ); ?></span>
+							<span class="event-list-date events-i-am-attending"><?php $event_start->print_time_html( 'F j, Y H:i T' ); ?></span>
 						<?php else : ?>
-							<span class="event-list-date events-i-am-attending"><?php echo esc_html( $event_start ); ?> - <?php echo esc_html( $event_end ); ?></span>
+							<span class="event-list-date events-i-am-attending"><?php $event_start->print_time_html( 'F j, Y H:i T' ); ?> - <?php $event_end->print_time_html( 'F j, Y H:i T' ); ?></span>
 						<?php endif; ?>
 					</li>
 					<?php

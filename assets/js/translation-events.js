@@ -167,10 +167,15 @@
 						let in_text  = 'in ';
 						let ago_text = '';
 						if ( diff < 0 ) {
+							if ( timeEl.classList.contains( 'future' ) ) {
+								// If an event transitions from future to past, reload the page to move it from active to past events and vice versa.
+								location.reload();
+							}
 							in_text  = '';
 							ago_text = ' ago';
 							diff     = - diff;
 						}
+
 						const seconds    = Math.floor( diff / 1000 );
 						const minutes    = Math.floor( seconds / 60 );
 						const hours      = Math.floor( minutes / 60 );
@@ -204,7 +209,7 @@
 						} else if ( minutes > 0 ) {
 							relativeTime = minutes + ' minute' + ( minutes > 1 ? 's' : '' );
 						} else {
-							relativeTime = seconds + ' second' + ( seconds > 1 ? 's' : '' );
+							relativeTime = 'less than a minute';
 						}
 						timeEl.textContent = in_text + relativeTime + ago_text;
 						return;
@@ -219,6 +224,18 @@
 						minute: 'numeric',
 						timeZoneName: 'short'
 					};
+					if ( timeEl.dataset.format ) {
+						if ( timeEl.dataset.format.includes( 'l' ) ) {
+							options.weekday = 'long';
+						} else if ( ! timeEl.dataset.format.includes( 'D' ) ) {
+							delete options.weekday;
+						}
+						if ( timeEl.dataset.format.includes( 'F' ) ) {
+							options.month = 'long';
+						} else if ( timeEl.dataset.format.includes( 'm' ) || timeEl.dataset.format.includes( 'n' ) ) {
+							options.month = 'numeric';
+						}
+					}
 					timeEl.textContent = userLocalDateTime.toLocaleTimeString( navigator.language, options );
 				}
 			);
