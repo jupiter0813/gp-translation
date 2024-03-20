@@ -41,7 +41,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			?>
 			<li class="event-list-item">
 				<a class="event-link-<?php echo esc_attr( $event_status ); ?>" href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a>
-				<?php if ( $event_end->is_in_the_past() && ! $has_stats ) : ?>
+				<?php if ( ! $event_end->is_in_the_past() && ! $has_stats ) : ?>
 					<a href="<?php echo esc_url( $event_edit_url ); ?>" class="button is-small action edit">Edit</a>
 				<?php endif; ?>
 				<?php if ( 'draft' === $event_status ) : ?>
