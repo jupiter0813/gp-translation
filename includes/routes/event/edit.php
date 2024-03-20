@@ -47,21 +47,21 @@ class Edit_Route extends Route {
 			$event_end     = self::convertToTimezone( get_post_meta( $event_id, '_event_end', true ), $event_timezone );
 			$now           = self::convertToTimezone( 'now', $event_timezone );
 			$event_end_utc = new DateTime( get_post_meta( $event_id, '_event_end', true ), new DateTimeZone( 'UTC' ) );
-			$now           = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+			$now_utc       = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 		} catch ( Exception $e ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $e );
 			$this->die_with_error( esc_html__( 'Something is wrong.', 'gp-translation-events' ) );
 		}
 
-		if ( $now > $event_end_utc ) {
+		if ( $now_utc > $event_end_utc ) {
 			$this->die_with_error( esc_html__( 'You cannot edit a finished event.', 'gp-translation-events' ), 403 );
 		}
 
 		$stats_calculator = new Stats_Calculator();
 		if ( ! $stats_calculator->event_has_stats( $event ) ) {
 			$current_user = wp_get_current_user();
-			if ( ( $current_user->ID === $event->post_author || current_user_can( 'manage_options' ) ) && ( $now < $event_end_utc ) ) {
+			if ( ( $current_user->ID === $event->post_author || current_user_can( 'manage_options' ) ) && ( $now_utc < $event_end_utc ) ) {
 				$create_delete_button = true;
 			}
 		}
