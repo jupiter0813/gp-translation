@@ -122,7 +122,7 @@ class List_Route extends Route {
 				),
 			),
 			'orderby'        => 'meta_value',
-			'order'          => 'ASC',
+			'order'          => 'DESC',
 		);
 		$past_events_query = new WP_Query( $past_events_args );
 

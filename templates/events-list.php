@@ -35,7 +35,7 @@ if ( $current_events_query->have_posts() ) :
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a>
-				<span class="event-list-date">ends <time class="event-utc-time relative" datetime="<?php echo esc_attr( $event_end ); ?>"></time></span>
+				<span class="event-list-date">ends <?php $event_end->print_relative_time_html(); ?></time></span>
 				<?php the_excerpt(); ?>
 			</li>
 			<?php

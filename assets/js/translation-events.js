@@ -215,7 +215,7 @@
 						return;
 					}
 
-					const options      = {
+					const options = {
 						weekday: 'short',
 						year: 'numeric',
 						month: 'short',
