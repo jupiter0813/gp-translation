@@ -7,7 +7,7 @@ namespace Wporg\TranslationEvents;
 
 /** @var string $event_page_title */
 /** @var string $event_form_name */
-/** @var int $event_id */
+/** @var int    $event_id */
 /** @var string $event_title */
 /** @var string $event_description */
 /** @var string $event_start */

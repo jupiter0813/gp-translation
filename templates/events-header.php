@@ -1,6 +1,9 @@
 <?php
 namespace Wporg\TranslationEvents;
 
+/** @var string $event_page_title */
+/** @var bool   $is_editable_event */
+
 use GP;
 ?>
 
@@ -30,7 +33,7 @@ use GP;
 	<?php if ( isset( $event_id ) && ! isset( $event_form_name ) ) : ?>
 	<p class="event-sub-head">
 			<span class="event-host">Host: <a href="<?php echo esc_attr( get_author_posts_url( $event->post_author ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $event->post_author ) ); ?></a></span>
-			<?php if ( current_user_can( 'edit_post', $event_id ) ) : ?>
+			<?php if ( current_user_can( 'edit_post', $event_id ) && ( true === $is_editable_event ) ) : ?>
 				<a class="event-page-edit-link" href="<?php echo esc_url( gp_url( 'events/edit/' . $event_id ) ); ?>"><span class="dashicons dashicons-edit"></span>Edit event</a>
 			<?php endif ?>
 		</p>

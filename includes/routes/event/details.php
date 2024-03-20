@@ -2,6 +2,8 @@
 
 namespace Wporg\TranslationEvents\Routes\Event;
 
+use DateTime;
+use DateTimeZone;
 use Exception;
 use GP;
 use Wporg\TranslationEvents\Attendee_Repository;
@@ -53,6 +55,13 @@ class Details_Route extends Route {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $e );
 			$this->die_with_error( esc_html__( 'Failed to calculate event stats', 'gp-translation-events' ) );
+		}
+
+		$is_editable_event = true;
+		$event_end_utc     = new DateTime( get_post_meta( $event_id, '_event_end', true ), new DateTimeZone( 'UTC' ) );
+		$now_utc           = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		if ( $now_utc > $event_end_utc || $stats_calculator->event_has_stats( $event ) ) {
+			$is_editable_event = false;
 		}
 
 		$this->tmpl( 'event', get_defined_vars() );
