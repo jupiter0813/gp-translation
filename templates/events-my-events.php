@@ -35,14 +35,13 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			$event_status                  = get_post_status( $event_id );
 			$event_start                   = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
 			$event_end                     = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
-			$envent_end_utc                = new DateTime( get_post_meta( get_the_ID(), '_event_end', true ), new DateTimeZone( 'UTC' ) );
+			$event_end_utc                 = new DateTime( get_post_meta( get_the_ID(), '_event_end', true ), new DateTimeZone( 'UTC' ) );
 			$now                           = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 
-			$now > $envent_end_utc ? $past_event = true : $past_event = false;
 			?>
 			<li class="event-list-item">
 				<a class="event-link-<?php echo esc_attr( $event_status ); ?>" href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a>
-				<?php if ( ! $past_event ) : ?>
+				<?php if ( $event_end_utc > $now ) : ?>
 					<a href="<?php echo esc_url( $event_edit_url ); ?>" class="button is-small action edit">Edit</a>
 				<?php endif; ?>
 				<?php if ( 'draft' === $event_status ) : ?>
