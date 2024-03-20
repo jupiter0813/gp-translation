@@ -33,8 +33,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			$event_url                     = gp_url( wp_make_link_relative( $permalink ) );
 			$event_edit_url                = gp_url( 'events/edit/' . $event_id );
 			$event_status                  = get_post_status( $event_id );
-			$event_start                   = new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) ) );
-			$event_end                     = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) ) );
+			$event_start                   = new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) );
+			$event_end                     = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) );
 			$stats_calculator              = new Stats_Calculator();
 			$has_stats                     = $stats_calculator->event_has_stats( get_post() );
 
@@ -48,9 +48,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					<span class="event-label-<?php echo esc_attr( $event_status ); ?>"><?php echo esc_html( $event_status ); ?></span>
 				<?php endif; ?>
 				<?php if ( $event_start->format( 'Y-m-d' ) === $event_end->format( 'Y-m-d' ) ) : ?>
-					<span class="event-list-date events-i-am-attending"><?php echo esc_html( $event_start ); ?></span>
+					<span class="event-list-date events-i-am-attending"><?php $event_start->print_time_html(); ?></span>
 				<?php else : ?>
-					<span class="event-list-date events-i-am-attending"><?php echo esc_html( $event_start ); ?> - <?php echo esc_html( $event_end ); ?></span>
+					<span class="event-list-date events-i-am-attending"><?php $event_start->print_time_html(); ?> - <?php $event_end->print_time_html(); ?></span>
 				<?php endif; ?>
 				<p><?php the_excerpt(); ?></p>
 			</li>
