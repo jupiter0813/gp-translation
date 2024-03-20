@@ -55,7 +55,7 @@ class Edit_Route extends Route {
 		}
 
 		if ( $now_utc > $event_end_utc ) {
-			$this->die_with_error( esc_html__( 'You cannot edit a finished event.', 'gp-translation-events' ), 403 );
+			$this->die_with_error( esc_html__( 'You cannot edit a past event.', 'gp-translation-events' ), 403 );
 		}
 
 		$stats_calculator = new Stats_Calculator();
