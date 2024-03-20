@@ -7,9 +7,15 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 
+/**
+ * class Event_Date
+ *
+ * The event date is in local time, get the UTC time via the utc() method.
+ *
+ * @package Wporg\TranslationEvents
+ */
 abstract class Event_Date extends DateTimeImmutable {
-	abstract public function is_end_date(): bool;
-	public $timezone;
+	protected $event_timezone;
 	public function __construct( string $date, DateTimeZone $timezone = null ) {
 		if ( ! $timezone ) {
 			$timezone = new DateTimeZone( 'UTC' );
@@ -23,7 +29,11 @@ abstract class Event_Date extends DateTimeImmutable {
 		}
 
 		parent::__construct( $utc_date->format( 'Y-m-d H:i:s' ), $timezone );
-		$this->timezone = $timezone;
+		$this->event_timezone = $timezone;
+	}
+
+	public function timezone() {
+		return $this->event_timezone;
 	}
 
 	/**
@@ -32,20 +42,20 @@ abstract class Event_Date extends DateTimeImmutable {
 	 * @return string The date text.
 	 */
 	public function __toString(): string {
-		return $this->utc( 'Y-m-d H:i:s' );
+		return $this->utc()->format( 'Y-m-d H:i:s' );
 	}
 	/**
 	 * Get the local formatted text for the date in UTC.
 	 *
-	 * @return string The date text.
+	 * @return DateTimeImmutable The date text.
 	 */
-	public function utc( $format ): string {
-		return $this->setTimeZone( new DateTimeZone( 'UTC' ) )->format( $format );
+	public function utc(): DateTimeImmutable {
+		return $this->setTimeZone( new DateTimeZone( 'UTC' ) );
 	}
 
 	public function is_in_the_past() {
 		$current_date_time = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		return $this < $current_date_time;
+		return $this->utc() < $current_date_time;
 	}
 
 	/**
@@ -55,8 +65,8 @@ abstract class Event_Date extends DateTimeImmutable {
 	 */
 	public function get_variable_text(): string {
 		$current_date_time = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		if ( ! $this->is_end_date() ) {
-			if ( $this < $current_date_time ) {
+		if ( $this instanceof Event_Start_Date ) {
+			if ( $this->is_in_the_past() ) {
 				return sprintf( 'started %s', $this->format( 'l, F j, Y' ) );
 			}
 			return sprintf( 'starts %s', $this->format( 'l, F j, Y' ) );
@@ -73,7 +83,7 @@ abstract class Event_Date extends DateTimeImmutable {
 			/* translators: %s: Number of hours left. */
 			return sprintf( _n( 'ends in %s hour', 'ends in %s hours', $hours_left ), $hours_left );
 		}
-		if ( $this < $current_date_time ) {
+		if ( $this->is_in_the_past() ) {
 			return sprintf( 'ended %s', $this->format( 'l, F j, Y' ) );
 		}
 
@@ -82,13 +92,7 @@ abstract class Event_Date extends DateTimeImmutable {
 }
 
 class Event_Start_Date extends Event_Date {
-	public function is_end_date(): bool {
-		return false;
-	}
 }
 
 class Event_End_Date extends Event_Date {
-	public function is_end_date(): bool {
-		return true;
-	}
 }

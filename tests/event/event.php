@@ -6,7 +6,8 @@ use DateTimeImmutable;
 use DateTimeZone;
 use WP_UnitTestCase;
 use Wporg\TranslationEvents\Event\Event;
-use Wporg\TranslationEvents\Event\InvalidStartOrEnd;
+use Wporg\TranslationEvents\Event\InvalidStart;
+use Wporg\TranslationEvents\Event\InvalidEnd;
 use Wporg\TranslationEvents\Event\InvalidStatus;
 use Wporg\TranslationEvents\Event\InvalidTitle;
 
@@ -15,7 +16,7 @@ class Event_Test extends WP_UnitTestCase {
 		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
 
-		$this->expectException( InvalidStartOrEnd::class );
+		$this->expectException( InvalidEnd::class );
 		new Event(
 			1,
 			$now,
@@ -32,7 +33,7 @@ class Event_Test extends WP_UnitTestCase {
 		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'Europe/Lisbon' ) );
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
 
-		$this->expectException( InvalidStartOrEnd::class );
+		$this->expectException( InvalidStart::class );
 		new Event(
 			1,
 			$now,
