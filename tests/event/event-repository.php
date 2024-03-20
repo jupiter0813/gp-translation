@@ -100,8 +100,8 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->repository->update_event( $event );
 		$updated_event = $this->repository->get_event( $event_id );
 
-		$this->assertEquals( $updated_start->getTimestamp(), $updated_event->start()->getTimestamp() );
-		$this->assertEquals( $updated_end->getTimestamp(), $updated_event->end()->getTimestamp() );
+		$this->assertEquals( $updated_start->getTimestamp(), $updated_event->start()->utc()->getTimestamp() );
+		$this->assertEquals( $updated_end->getTimestamp(), $updated_event->end()->utc()->getTimestamp() );
 		$this->assertEquals( $updated_timezone->getName(), $updated_event->timezone()->getName() );
 		$this->assertEquals( $updated_status, $updated_event->status() );
 		$this->assertEquals( $updated_title, $updated_event->title() );

@@ -300,16 +300,12 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	private function update_event_meta( Event $event ) {
-		update_post_meta( $event->id(), '_event_start', $this->serialize_utc_datetime( $event->start() ) );
-		update_post_meta( $event->id(), '_event_end', $this->serialize_utc_datetime( $event->end() ) );
+		update_post_meta( $event->id(), '_event_start', $event->start()->utc()->format( 'Y-m-d H:i:s' ) );
+		update_post_meta( $event->id(), '_event_end', $event->end()->utc()->format( 'Y-m-d H:i:s' ) );
 		update_post_meta( $event->id(), '_event_timezone', $event->timezone()->getName() );
 	}
 
 	private function parse_utc_datetime( string $datetime ): DateTimeImmutable {
 		return DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $datetime, new DateTimeZone( 'UTC' ) );
-	}
-
-	private function serialize_utc_datetime( DateTimeImmutable $value ): string {
-		return $value->format( 'Y-m-d H:i:s' );
 	}
 }

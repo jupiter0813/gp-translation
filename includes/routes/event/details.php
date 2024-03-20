@@ -10,6 +10,8 @@ use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
+use Wporg\TranslationEvents\Event_Start_Date;
+use Wporg\TranslationEvents\Event_End_Date;
 
 /**
  * Displays the event details page.
@@ -42,8 +44,8 @@ class Details_Route extends Route {
 		$event_id          = $event->ID;
 		$event_title       = $event->post_title;
 		$event_description = $event->post_content;
-		$event_start       = get_post_meta( $event->ID, '_event_start', true ) ?: '';
-		$event_end         = get_post_meta( $event->ID, '_event_end', true ) ?: '';
+		$event_start       = new Event_Start_Date( get_post_meta( $event->ID, '_event_start', true ) ?: '' );
+		$event_end         = new Event_End_Date( get_post_meta( $event->ID, '_event_end', true ) ?: '' );
 		$user_is_attending = $this->attendee_repository->is_attending( $event_id, $user->ID );
 
 		$stats_calculator = new Stats_Calculator();
@@ -60,7 +62,7 @@ class Details_Route extends Route {
 		$is_editable_event = true;
 		$event_end_utc     = new DateTime( get_post_meta( $event_id, '_event_end', true ), new DateTimeZone( 'UTC' ) );
 		$now_utc           = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
-		if ( $now_utc > $event_end_utc || $stats_calculator->event_has_stats( $event ) ) {
+		if ( $event_end->is_in_the_past() || $stats_calculator->event_has_stats( $event ) ) {
 			$is_editable_event = false;
 		}
 

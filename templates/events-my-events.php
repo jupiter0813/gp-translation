@@ -33,26 +33,24 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			$event_url                     = gp_url( wp_make_link_relative( $permalink ) );
 			$event_edit_url                = gp_url( 'events/edit/' . $event_id );
 			$event_status                  = get_post_status( $event_id );
-			$event_start                   = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
-			$event_end                     = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
-			$event_end_utc                 = new DateTime( get_post_meta( get_the_ID(), '_event_end', true ), new DateTimeZone( 'UTC' ) );
-			$now                           = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+			$event_start                   = new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) );
+			$event_end                     = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) );
 			$stats_calculator              = new Stats_Calculator();
 			$has_stats                     = $stats_calculator->event_has_stats( get_post() );
 
 			?>
 			<li class="event-list-item">
 				<a class="event-link-<?php echo esc_attr( $event_status ); ?>" href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a>
-				<?php if ( $event_end_utc > $now && ! $has_stats ) : ?>
+				<?php if ( ! $event_end->is_in_the_past() && ! $has_stats ) : ?>
 					<a href="<?php echo esc_url( $event_edit_url ); ?>" class="button is-small action edit">Edit</a>
 				<?php endif; ?>
 				<?php if ( 'draft' === $event_status ) : ?>
 					<span class="event-label-<?php echo esc_attr( $event_status ); ?>"><?php echo esc_html( $event_status ); ?></span>
 				<?php endif; ?>
-				<?php if ( $event_start === $event_end ) : ?>
-					<span class="event-list-date events-i-am-attending"><?php echo esc_html( $event_start ); ?></span>
+				<?php if ( $event_start->format( 'Y-m-d' ) === $event_end->format( 'Y-m-d' ) ) : ?>
+					<span class="event-list-date events-i-am-attending"><?php $event_start->print_time_html(); ?></span>
 				<?php else : ?>
-					<span class="event-list-date events-i-am-attending"><?php echo esc_html( $event_start ); ?> - <?php echo esc_html( $event_end ); ?></span>
+					<span class="event-list-date events-i-am-attending"><?php $event_start->print_time_html(); ?> - <?php $event_end->print_time_html(); ?></span>
 				<?php endif; ?>
 				<p><?php the_excerpt(); ?></p>
 			</li>
@@ -91,8 +89,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			$event_url                     = gp_url( wp_make_link_relative( $permalink ) );
 			$event_edit_url                = gp_url( 'events/edit/' . $event_id );
 			$event_status                  = get_post_status( $event_id );
-			$event_start                   = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
-			$event_end                     = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+			$event_start                   = ( new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
+			$event_end                     = ( new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
 			?>
 			<li class="event-list-item">
 				<a class="event-link-<?php echo esc_attr( $event_status ); ?>" href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a>

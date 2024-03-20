@@ -4,6 +4,9 @@ namespace Wporg\TranslationEvents\Routes\Event;
 
 use Wporg\TranslationEvents\Routes\Route;
 
+use DateTimeZone;
+use Wporg\TranslationEvents\Event_End_Date;
+use Wporg\TranslationEvents\Event_Start_Date;
 /**
  * Displays the event create page.
  */
@@ -20,12 +23,12 @@ class Create_Route extends Route {
 		$event_id                 = null;
 		$event_title              = '';
 		$event_description        = '';
-		$event_timezone           = '';
-		$event_start              = '';
-		$event_end                = '';
 		$event_url                = '';
 		$create_delete_button     = true;
 		$visibility_delete_button = 'none';
+		$event_timezone           = null;
+		$event_start              = new Event_Start_Date( date_i18n( 'Y - m - d H:i' ) );
+		$event_end                = new Event_End_Date( date_i18n( 'Y - m - d H:i' ) );
 
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}

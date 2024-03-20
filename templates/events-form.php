@@ -10,9 +10,9 @@ namespace Wporg\TranslationEvents;
 /** @var int    $event_id */
 /** @var string $event_title */
 /** @var string $event_description */
-/** @var string $event_start */
-/** @var string $event_end */
-/** @var string $event_timezone */
+/** @var Event_Start_Date $event_start */
+/** @var Event_End_Date $event_end */
+/** @var Datetime_Timezone|null $event_timezone */
 /** @var string $event_url */
 /** @var string $css_show_url */
 
@@ -42,18 +42,18 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	</div>
 	<div>
 		<label for="event-start">Start Date</label>
-		<input type="datetime-local" id="event-start" name="event_start" value="<?php echo esc_attr( $event_start ); ?>" required>
+		<input type="datetime-local" id="event-start" name="event_start" value="<?php echo esc_attr( $event_start->format( 'Y-m-d H:i:s' ) ); ?>" required>
 	</div>
 	<div>
 		<label for="event-end">End Date</label>
-		<input type="datetime-local" id="event-end" name="event_end" value="<?php echo esc_attr( $event_end ); ?>" required>
+		<input type="datetime-local" id="event-end" name="event_end" value="<?php echo esc_attr( $event_end->format( 'Y-m-d H:i:s' ) ); ?>" required>
 	</div>
 	<div>
 		<label for="event-timezone">Event Timezone</label>
-		<select id="event-timezone" name="event_timezone"  required>
+		<select id="event-timezone" name="event_timezone" required>
 			<?php
 			echo wp_kses(
-				wp_timezone_choice( $event_timezone, get_user_locale() ),
+				wp_timezone_choice( $event_timezone ? $event_timezone->getName() : null, get_user_locale() ),
 				array(
 					'optgroup' => array( 'label' => array() ),
 					'option'   => array(

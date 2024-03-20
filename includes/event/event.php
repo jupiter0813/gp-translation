@@ -4,12 +4,20 @@ namespace Wporg\TranslationEvents\Event;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Wporg\TranslationEvents\Event_Start_Date;
+use Wporg\TranslationEvents\Event_End_Date;
 use Exception;
 use Throwable;
 
-class InvalidStartOrEnd extends Exception {
+class InvalidStart extends Exception {
 	public function __construct( Throwable $previous = null ) {
-		parent::__construct( 'Event start or end are invalid', 0, $previous );
+		parent::__construct( 'Event start is invalid', 0, $previous );
+	}
+}
+
+class InvalidEnd extends Exception {
+	public function __construct( Throwable $previous = null ) {
+		parent::__construct( 'Event end is invalid', 0, $previous );
 	}
 }
 
@@ -58,7 +66,8 @@ class Event {
 	}
 
 	/**
-	 * @throws InvalidStartOrEnd
+	 * @throws InvalidStart
+	 * @throws InvalidEnd
 	 * @throws InvalidStatus
 	 * @throws InvalidTitle
 	 */
@@ -86,12 +95,12 @@ class Event {
 		return $this->id;
 	}
 
-	public function start(): DateTimeImmutable {
-		return $this->start;
+	public function start(): Event_Start_Date {
+		return new Event_Start_Date( $this->start->format( 'Y-m-d H:i:s' ), $this->timezone() );
 	}
 
-	public function end(): DateTimeImmutable {
-		return $this->end;
+	public function end(): Event_End_Date {
+		return new Event_End_Date( $this->end->format( 'Y-m-d H:i:s' ), $this->timezone() );
 	}
 
 	public function timezone(): DateTimeZone {
@@ -182,17 +191,18 @@ class Event {
 	}
 
 	/**
-	 * @throws InvalidStartOrEnd
+	 * @throws InvalidStart
+	 * @throws InvalidEnd
 	 */
 	private function validate_times( DateTimeImmutable $start, DateTimeImmutable $end ) {
 		if ( $end <= $start ) {
-			throw new InvalidStartOrEnd();
+			throw new InvalidEnd();
 		}
 		if ( ! $start->getTimezone() || 'UTC' !== $start->getTimezone()->getName() ) {
-			throw new InvalidStartOrEnd();
+			throw new InvalidStart();
 		}
 		if ( ! $end->getTimezone() || 'UTC' !== $end->getTimezone()->getName() ) {
-			throw new InvalidStartOrEnd();
+			throw new InvalidEnd();
 		}
 	}
 }

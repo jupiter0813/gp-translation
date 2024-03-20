@@ -11,8 +11,8 @@ use WP_Post;
 /** @var int $event_id */
 /** @var string $event_title */
 /** @var string $event_description */
-/** @var string $event_start */
-/** @var string $event_end */
+/** @var Event_Start_Date $event_start */
+/** @var Event_End_Date $event_end */
 /** @var bool $user_is_attending */
 /** @var Event_Stats $event_stats */
 
@@ -151,34 +151,43 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	<div class="event-details-right">
 		<div class="event-details-date">
 			<p>
-				<span class="event-details-date-label">Starts:</span> <time class="event-utc-time" datetime="<?php echo esc_attr( $event_start ); ?>"></time>
-				<span class="event-details-date-label">Ends:</span><time class="event-utc-time" datetime="<?php echo esc_attr( $event_end ); ?>"></time>
+				<span class="event-details-date-label">
+					<?php echo esc_html( $event_start->is_in_the_past() ? __( 'Started', 'gp-translation-events' ) : __( 'Starts', 'gp-translation-events' ) ); ?>:
+					<?php $event_start->print_relative_time_html(); ?>
+				</span>
+				<?php $event_start->print_time_html(); ?>
+				<span class="event-details-date-label">
+					<?php echo esc_html( $event_end->is_in_the_past() ? __( 'Ended', 'gp-translation-events' ) : __( 'Ends', 'gp-translation-events' ) ); ?>:
+					<?php $event_end->print_relative_time_html(); ?>
+
+				</span>
+				<?php $event_end->print_time_html(); ?>
 			</p>
 		</div>
 		<?php if ( is_user_logged_in() ) : ?>
 		<div class="event-details-join">
-			<?php
-			$current_time = gmdate( 'Y-m-d H:i:s' );
-			if ( strtotime( $current_time ) > strtotime( $event_end ) ) :
-				?>
+			<?php if ( $event_end->is_in_the_past() ) : ?>
 				<?php if ( $user_is_attending ) : ?>
-					<span class="event-details-join-expired"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></span>
-				<?php endif ?>
+					<button disabled="disabled" class="button is-primary attend-btn"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></button>
+				<?php endif; ?>
 			<?php else : ?>
 				<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) ); ?>">
 					<?php if ( ! $user_is_attending ) : ?>
 						<input type="submit" class="button is-primary attend-btn" value="Attend Event"/>
 					<?php else : ?>
 						<input type="submit" class="button is-secondary attending-btn" value="You're attending"/>
-					<?php endif ?>
+					<?php endif; ?>
 				</form>
-			<?php endif ?>
+			<?php endif; ?>
 		</div>
 		<?php else : ?>
 		<div class="event-details-join">
 			<p>
-				<?php global $wp; ?>
-				<a href="<?php echo esc_url( wp_login_url( home_url( $wp->request ) ) ); ?>" class="button is-primary attend-btn"><?php esc_html_e( 'Login to attend', 'gp-translation-events' ); ?></a>
+				<?php if ( ! $event_end->is_in_the_past() ) : ?>
+					<a href="<?php echo esc_url( wp_login_url() ); ?>" class="button is-primary attend-btn"><?php esc_html_e( 'Login to attend', 'gp-translation-events' ); ?></a>
+				<?php else : ?>
+					<button disabled="disabled" class="button is-primary attend-btn"><?php esc_html_e( 'Event is over', 'gp-translation-events' ); ?></button>
+				<?php endif; ?>
 			</p>
 		</div>
 		<?php endif; ?>

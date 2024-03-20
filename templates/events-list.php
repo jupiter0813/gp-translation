@@ -30,12 +30,12 @@ if ( $current_events_query->have_posts() ) :
 		<?php
 		while ( $current_events_query->have_posts() ) :
 			$current_events_query->the_post();
-			$event_end = Event::get_end_date_text( get_post_meta( get_the_ID(), '_event_end', true ) );
+			$event_end = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) );
 			$event_url = gp_url( wp_make_link_relative( get_the_permalink() ) );
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( $event_url ); ?>"><?php the_title(); ?></a>
-				<span class="event-list-date"><?php echo esc_html( $event_end ); ?></span>
+				<span class="event-list-date">ends <?php $event_end->print_relative_time_html(); ?></time></span>
 				<?php the_excerpt(); ?>
 			</li>
 			<?php
@@ -65,11 +65,11 @@ if ( $upcoming_events_query->have_posts() ) :
 		<?php
 		while ( $upcoming_events_query->have_posts() ) :
 			$upcoming_events_query->the_post();
-			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'l, F j, Y' );
+			$event_start = new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) );
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
-				<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
+				<span class="event-list-date">starts <?php $event_start->print_relative_time_html(); ?></span>
 				<?php the_excerpt(); ?>
 			</li>
 			<?php
@@ -99,16 +99,11 @@ if ( $past_events_query->have_posts() ) :
 		<?php
 		while ( $past_events_query->have_posts() ) :
 			$past_events_query->the_post();
-			$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
-			$event_end   = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+			$event_end = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) );
 			?>
 			<li class="event-list-item">
 				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
-				<?php if ( $event_start === $event_end ) : ?>
-					<span class="event-list-date"><?php echo esc_html( $event_start ); ?></span>
-				<?php else : ?>
-					<span class="event-list-date"><?php echo esc_html( $event_start ); ?> - <?php echo esc_html( $event_end ); ?></span>
-				<?php endif; ?>
+				<span class="event-list-date">ended <?php $event_end->print_relative_time_html( 'F j, Y H:i T' ); ?></span>
 				<?php the_excerpt(); ?>
 			</li>
 			<?php
@@ -139,7 +134,7 @@ endif;
 </div>
 <?php if ( is_user_logged_in() ) : ?>
 	<div class="event-right-col">
-		<h3 class="">Events I'm Attending</h3>
+		<h2>Events I'm Attending</h2>
 		<?php if ( ! $user_attending_events_query->have_posts() ) : ?>
 			<p>You don't have any events to attend.</p>
 		<?php else : ?>
@@ -147,15 +142,15 @@ endif;
 				<?php
 				while ( $user_attending_events_query->have_posts() ) :
 					$user_attending_events_query->the_post();
-					$event_start = ( new DateTime( get_post_meta( get_the_ID(), '_event_start', true ) ) )->format( 'M j, Y' );
-					$event_end   = ( new DateTime( get_post_meta( get_the_ID(), '_event_end', true ) ) )->format( 'M j, Y' );
+					$event_start = new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) );
+					$event_end   = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) );
 					?>
 					<li class="event-list-item">
 						<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
 						<?php if ( $event_start === $event_end ) : ?>
-							<span class="event-list-date events-i-am-attending"><?php echo esc_html( $event_start ); ?></span>
+							<span class="event-list-date events-i-am-attending"><?php $event_start->print_time_html( 'F j, Y H:i T' ); ?></span>
 						<?php else : ?>
-							<span class="event-list-date events-i-am-attending"><?php echo esc_html( $event_start ); ?> - <?php echo esc_html( $event_end ); ?></span>
+							<span class="event-list-date events-i-am-attending"><?php $event_start->print_time_html( 'F j, Y H:i T' ); ?> - <?php $event_end->print_time_html( 'F j, Y H:i T' ); ?></span>
 						<?php endif; ?>
 					</li>
 					<?php
