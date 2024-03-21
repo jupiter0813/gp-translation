@@ -84,10 +84,6 @@ class Event_Form_Handler {
 			$event_status = sanitize_text_field( wp_unslash( $form_data['event_form_action'] ) );
 		}
 
-		if ( ! isset( $form_data['form_name'] ) ) {
-			wp_send_json_error( esc_html__( 'Form name must be set.', 'gp-translation-events' ), 422 );
-		}
-
 		if ( 'create_event' === $action ) {
 			$event_id         = wp_insert_post(
 				array(
