@@ -38,6 +38,10 @@
 		 * @param isDraft	  Whether the current event status is a draft or not
 		 */
 		function handleSubmit( eventStatus, isDraft ) {
+			if ( '' === $( '#event-title' ).val() ) {
+				$gp.notices.error( 'Event title must be set.' );
+				return;
+			}
 			if ( '' === $( '#event-start' ).val() ) {
 				$gp.notices.error( 'Event start date and time must be set.' );
 				return;
