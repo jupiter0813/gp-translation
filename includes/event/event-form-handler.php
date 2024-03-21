@@ -79,17 +79,9 @@ class Event_Form_Handler {
 			return;
 		}
 
-		$event_id       = $new_event->id();
-		$title          = $new_event->title();
-		$description    = $new_event->description();
-		$event_start    = $new_event->start()->format( 'Y-m-d H:i:s' );
-		$event_end      = $new_event->end()->format( 'Y-m-d H:i:s' );
-		$event_timezone = $new_event->timezone()->getName();
-		$event_status   = $new_event->status();
-
 		// This is a list of slugs that are not allowed, as they conflict with the event URLs.
 		$invalid_slugs = array( 'new', 'edit', 'attend', 'my-events' );
-		if ( in_array( sanitize_title( $title ), $invalid_slugs, true ) ) {
+		if ( in_array( sanitize_title( $new_event->title() ), $invalid_slugs, true ) ) {
 			wp_send_json_error( esc_html__( 'Invalid slug.', 'gp-translation-events' ), 422 );
 		}
 
@@ -97,9 +89,9 @@ class Event_Form_Handler {
 			$event_id         = wp_insert_post(
 				array(
 					'post_type'    => Translation_Events::CPT,
-					'post_title'   => $title,
-					'post_content' => $description,
-					'post_status'  => $event_status,
+					'post_title'   => $new_event->title(),
+					'post_content' => $new_event->description(),
+					'post_status'  => $new_event->status(),
 				)
 			);
 			$response_message = esc_html__( 'Event created successfully!', 'gp-translation-events' );
@@ -116,9 +108,9 @@ class Event_Form_Handler {
 			wp_update_post(
 				array(
 					'ID'           => $event_id,
-					'post_title'   => $title,
-					'post_content' => $description,
-					'post_status'  => $event_status,
+					'post_title'   => $new_event->title(),
+					'post_content' => $new_event->description(),
+					'post_status'  => $new_event->status(),
 				)
 			);
 			$response_message = esc_html__( 'Event updated successfully!', 'gp-translation-events' );
@@ -149,13 +141,13 @@ class Event_Form_Handler {
 		}
 		if ( 'delete_event' !== $form_data['form_name'] ) {
 			try {
-				update_post_meta( $event_id, '_event_start', $event_start );
-				update_post_meta( $event_id, '_event_end', $event_end );
+				update_post_meta( $event_id, '_event_start', $new_event->start()->format( 'Y-m-d H:i:s' ) );
+				update_post_meta( $event_id, '_event_end', $new_event->end()->format( 'Y-m-d H:i:s' ) );
 			} catch ( Exception $e ) {
 				wp_send_json_error( esc_html__( 'Invalid start or end', 'gp-translation-events' ), 422 );
 			}
 
-			update_post_meta( $event_id, '_event_timezone', $event_timezone );
+			update_post_meta( $event_id, '_event_timezone', $new_event->timezone()->getName() );
 		}
 		try {
 			Active_Events_Cache::invalidate();
@@ -171,7 +163,7 @@ class Event_Form_Handler {
 				'message'        => $response_message,
 				'eventId'        => $event_id,
 				'eventUrl'       => str_replace( '%pagename%', $post_name, $permalink ),
-				'eventStatus'    => $event_status,
+				'eventStatus'    => $new_event->status(),
 				'eventEditUrl'   => esc_url( gp_url( '/events/edit/' . $event_id ) ),
 				'eventDeleteUrl' => esc_url( gp_url( '/events/my-events/' ) ),
 			)
