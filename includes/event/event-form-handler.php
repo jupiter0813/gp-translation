@@ -19,7 +19,6 @@ class Event_Form_Handler {
 		$event_id         = null;
 		$event            = null;
 		$response_message = '';
-		$form_actions     = array( 'draft', 'publish', 'delete' );
 		$is_nonce_valid   = false;
 		$nonce_name       = '_event_nonce';
 		if ( ! in_array( $action, array( 'create_event', 'edit_event', 'delete_event' ), true ) ) {
@@ -57,6 +56,7 @@ class Event_Form_Handler {
 		if ( ! $is_nonce_valid ) {
 			wp_send_json_error( esc_html__( 'Nonce verification failed.', 'gp-translation-events' ), 403 );
 		}
+
 		// This is a list of slugs that are not allowed, as they conflict with the event URLs.
 		$invalid_slugs = array( 'new', 'edit', 'attend', 'my-events' );
 		$title         = isset( $form_data['event_title'] ) ? sanitize_text_field( wp_unslash( $form_data['event_title'] ) ) : '';
@@ -80,7 +80,7 @@ class Event_Form_Handler {
 		}
 
 		$event_status = '';
-		if ( isset( $form_data['event_form_action'] ) && in_array( $form_data['event_form_action'], $form_actions, true ) ) {
+		if ( isset( $form_data['event_form_action'] ) && in_array( $form_data['event_form_action'], array( 'draft', 'publish', 'delete' ), true ) ) {
 			$event_status = sanitize_text_field( wp_unslash( $form_data['event_form_action'] ) );
 		}
 
