@@ -15,7 +15,7 @@ class Event_Form_Handler {
 		if ( ! is_user_logged_in() ) {
 			wp_send_json_error( esc_html__( 'The user must be logged in.', 'gp-translation-events' ), 403 );
 		}
-		$action           = isset( $_POST['form_name'] ) ? sanitize_text_field( wp_unslash( $_POST['form_name'] ) ) : '';
+		$action           = isset( $form_data['form_name'] ) ? sanitize_text_field( wp_unslash( $form_data['form_name'] ) ) : '';
 		$event_id         = null;
 		$event            = null;
 		$response_message = '';
@@ -35,21 +35,21 @@ class Event_Form_Handler {
 			wp_send_json_error( esc_html__( 'The user does not have permission to create an event.', 'gp-translation-events' ), 403 );
 		}
 		if ( 'edit_event' === $action ) {
-			$event_id = isset( $_POST['event_id'] ) ? sanitize_text_field( wp_unslash( $_POST['event_id'] ) ) : '';
+			$event_id = isset( $form_data['event_id'] ) ? sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) : '';
 			$event    = get_post( $event_id );
 			if ( ! ( $can_crud_event || current_user_can( 'edit_post', $event_id ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 				wp_send_json_error( esc_html__( 'The user does not have permission to edit or delete the event.', 'gp-translation-events' ), 403 );
 			}
 		}
 		if ( 'delete_event' === $action ) {
-			$event_id = isset( $_POST['event_id'] ) ? sanitize_text_field( wp_unslash( $_POST['event_id'] ) ) : '';
+			$event_id = isset( $form_data['event_id'] ) ? sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) : '';
 			$event    = get_post( $event_id );
 			if ( ! ( $can_crud_event || current_user_can( 'delete_post', $event->ID ) || get_current_user_id() === $event->post_author ) ) {
 				wp_send_json_error( esc_html__( 'You do not have permission to delete this event.', 'gp-translation-events' ), 403 );
 			}
 		}
-		if ( isset( $_POST[ $nonce_name ] ) ) {
-			$nonce_value = sanitize_text_field( wp_unslash( $_POST[ $nonce_name ] ) );
+		if ( isset( $form_data[ $nonce_name ] ) ) {
+			$nonce_value = sanitize_text_field( wp_unslash( $form_data[ $nonce_name ] ) );
 			if ( wp_verify_nonce( $nonce_value, $nonce_name ) ) {
 				$is_nonce_valid = true;
 			}
@@ -59,12 +59,12 @@ class Event_Form_Handler {
 		}
 		// This is a list of slugs that are not allowed, as they conflict with the event URLs.
 		$invalid_slugs = array( 'new', 'edit', 'attend', 'my-events' );
-		$title         = isset( $_POST['event_title'] ) ? sanitize_text_field( wp_unslash( $_POST['event_title'] ) ) : '';
+		$title         = isset( $form_data['event_title'] ) ? sanitize_text_field( wp_unslash( $form_data['event_title'] ) ) : '';
 		// This will be sanitized by santitize_post which is called in wp_insert_post.
-		$description    = isset( $_POST['event_description'] ) ? force_balance_tags( wp_unslash( $_POST['event_description'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$event_start    = isset( $_POST['event_start'] ) ? sanitize_text_field( wp_unslash( $_POST['event_start'] ) ) : '';
-		$event_end      = isset( $_POST['event_end'] ) ? sanitize_text_field( wp_unslash( $_POST['event_end'] ) ) : '';
-		$event_timezone = isset( $_POST['event_timezone'] ) ? sanitize_text_field( wp_unslash( $_POST['event_timezone'] ) ) : '';
+		$description    = isset( $form_data['event_description'] ) ? force_balance_tags( wp_unslash( $form_data['event_description'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$event_start    = isset( $form_data['event_start'] ) ? sanitize_text_field( wp_unslash( $form_data['event_start'] ) ) : '';
+		$event_end      = isset( $form_data['event_end'] ) ? sanitize_text_field( wp_unslash( $form_data['event_end'] ) ) : '';
+		$event_timezone = isset( $form_data['event_timezone'] ) ? sanitize_text_field( wp_unslash( $form_data['event_timezone'] ) ) : '';
 		if ( isset( $title ) && in_array( sanitize_title( $title ), $invalid_slugs, true ) ) {
 			wp_send_json_error( esc_html__( 'Invalid slug.', 'gp-translation-events' ), 422 );
 		}
@@ -80,11 +80,11 @@ class Event_Form_Handler {
 		}
 
 		$event_status = '';
-		if ( isset( $_POST['event_form_action'] ) && in_array( $_POST['event_form_action'], $form_actions, true ) ) {
-			$event_status = sanitize_text_field( wp_unslash( $_POST['event_form_action'] ) );
+		if ( isset( $form_data['event_form_action'] ) && in_array( $form_data['event_form_action'], $form_actions, true ) ) {
+			$event_status = sanitize_text_field( wp_unslash( $form_data['event_form_action'] ) );
 		}
 
-		if ( ! isset( $_POST['form_name'] ) ) {
+		if ( ! isset( $form_data['form_name'] ) ) {
 			wp_send_json_error( esc_html__( 'Form name must be set.', 'gp-translation-events' ), 422 );
 		}
 
@@ -100,10 +100,10 @@ class Event_Form_Handler {
 			$response_message = esc_html__( 'Event created successfully!', 'gp-translation-events' );
 		}
 		if ( 'edit_event' === $action ) {
-			if ( ! isset( $_POST['event_id'] ) ) {
+			if ( ! isset( $form_data['event_id'] ) ) {
 				wp_send_json_error( esc_html__( 'Event id is required.', 'gp-translation-events' ), 422 );
 			}
-			$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
+			$event_id = sanitize_text_field( wp_unslash( $form_data['event_id'] ) );
 			$event    = get_post( $event_id );
 			if ( ! $event || Translation_Events::CPT !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
 				wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
@@ -119,7 +119,7 @@ class Event_Form_Handler {
 			$response_message = esc_html__( 'Event updated successfully!', 'gp-translation-events' );
 		}
 		if ( 'delete_event' === $action ) {
-			$event_id = sanitize_text_field( wp_unslash( $_POST['event_id'] ) );
+			$event_id = sanitize_text_field( wp_unslash( $form_data['event_id'] ) );
 			$event    = get_post( $event_id );
 			if ( ! $event || Translation_Events::CPT !== $event->post_type ) {
 				wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
@@ -142,7 +142,7 @@ class Event_Form_Handler {
 		if ( ! $event_id ) {
 			wp_send_json_error( esc_html__( 'Event could not be created or updated.', 'gp-translation-events' ), 422 );
 		}
-		if ( 'delete_event' !== $_POST['form_name'] ) {
+		if ( 'delete_event' !== $form_data['form_name'] ) {
 			try {
 				update_post_meta( $event_id, '_event_start', $this->convert_to_utc( $event_start, $event_timezone ) );
 				update_post_meta( $event_id, '_event_end', $this->convert_to_utc( $event_end, $event_timezone ) );
