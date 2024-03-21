@@ -9,6 +9,12 @@ use Wporg\TranslationEvents\Event_End_Date;
 use Exception;
 use Throwable;
 
+class InvalidTimeZone extends Exception {
+	public function __construct( Throwable $previous = null ) {
+		parent::__construct( 'Event time zone is invalid', 0, $previous );
+	}
+}
+
 class InvalidStart extends Exception {
 	public function __construct( Throwable $previous = null ) {
 		parent::__construct( 'Event start is invalid', 0, $previous );

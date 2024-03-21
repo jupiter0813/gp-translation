@@ -56,7 +56,29 @@ class Event_Form_Handler {
 			wp_send_json_error( esc_html__( 'Nonce verification failed.', 'gp-translation-events' ), 403 );
 		}
 
-		$new_event      = $this->parse_form_data( $form_data );
+		try {
+			$new_event = $this->parse_form_data( $form_data );
+		} catch ( InvalidTimeZone $e ) {
+			wp_send_json_error( esc_html__( 'Invalid time zone.', 'gp-translation-events' ), 422 );
+			return;
+		} catch ( InvalidStart $e ) {
+			wp_send_json_error( esc_html__( 'Invalid start date.', 'gp-translation-events' ), 422 );
+			return;
+		} catch ( InvalidEnd $e ) {
+			wp_send_json_error( esc_html__( 'Invalid end date.', 'gp-translation-events' ), 422 );
+			return;
+		} catch ( InvalidStatus $e ) {
+			wp_send_json_error( esc_html__( 'Invalid status.', 'gp-translation-events' ), 422 );
+			return;
+		} catch ( InvalidTitle $e ) {
+			wp_send_json_error( esc_html__( 'Invalid title.', 'gp-translation-events' ), 422 );
+			return;
+		}
+		if ( $new_event->end() < new DateTime( 'now', new DateTimeZone( 'UTC' ) ) ) {
+			wp_send_json_error( esc_html__( 'Past events cannot be created or edited.', 'gp-translation-events' ), 422 );
+			return;
+		}
+
 		$event_id       = $new_event->id();
 		$title          = $new_event->title();
 		$description    = $new_event->description();
@@ -69,16 +91,6 @@ class Event_Form_Handler {
 		$invalid_slugs = array( 'new', 'edit', 'attend', 'my-events' );
 		if ( in_array( sanitize_title( $title ), $invalid_slugs, true ) ) {
 			wp_send_json_error( esc_html__( 'Invalid slug.', 'gp-translation-events' ), 422 );
-		}
-
-		$is_valid_event_date = false;
-		try {
-			$is_valid_event_date = $this->validate_event_dates( $event_start, $event_end, $event_timezone );
-		} catch ( Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
-			// Deliberately ignored, handled below.
-		}
-		if ( ! $is_valid_event_date ) {
-			wp_send_json_error( esc_html__( 'Invalid event dates or the event end date is a past value.', 'gp-translation-events' ), 422 );
 		}
 
 		if ( 'create_event' === $action ) {
@@ -166,6 +178,16 @@ class Event_Form_Handler {
 		);
 	}
 
+	// PHPCS erroneously thinks there should be only two throw tags.
+	// phpcs:disable Squiz.Commenting.FunctionCommentThrowTag.WrongNumber
+	/**
+	 * @throws InvalidStart
+	 * @throws InvalidEnd
+	 * @throws InvalidTimeZone
+	 * @throws InvalidTitle
+	 * @throws InvalidStatus
+	 */
+	// phpcs:enable
 	private function parse_form_data( array $data ): Event {
 		$event_id = isset( $data['event_id'] ) ? sanitize_text_field( wp_unslash( $data['event_id'] ) ) : 0;
 		$title    = isset( $data['event_title'] ) ? sanitize_text_field( wp_unslash( $data['event_title'] ) ) : '';
@@ -182,9 +204,23 @@ class Event_Form_Handler {
 			$event_status = sanitize_text_field( wp_unslash( $data['event_form_action'] ) );
 		}
 
-		$timezone = new DateTimeZone( $event_timezone );
-		$start    = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $event_start, $timezone );
-		$end      = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $event_end, $timezone );
+		try {
+			$timezone = new DateTimeZone( $event_timezone );
+		} catch ( Exception $e ) {
+			throw new InvalidTimeZone();
+		}
+
+		try {
+			$start = new DateTimeImmutable( $event_start, $timezone );
+		} catch ( Exception $e ) {
+			throw new InvalidStart();
+		}
+
+		try {
+			$end = new DateTimeImmutable( $event_end, $timezone );
+		} catch ( Exception $e ) {
+			throw new InvalidEnd();
+		}
 
 		return new Event(
 			intval( $event_id ),
@@ -196,27 +232,5 @@ class Event_Form_Handler {
 			$title,
 			$description,
 		);
-	}
-
-	/**
-	 * Validate the event dates.
-	 *
-	 * @param string $event_start The event start date.
-	 * @param string $event_end The event end date.
-	 * @param string $event_timezone The event timezone.
-	 * @return bool Whether the event dates are valid.
-	 * @throws Exception When dates are invalid.
-	 */
-	private function validate_event_dates( string $event_start, string $event_end, string $event_timezone ): bool {
-		if ( ! $event_start || ! $event_end ) {
-			return false;
-		}
-		$event_start = new DateTime( $event_start, new DateTimeZone( $event_timezone ) );
-		$event_end   = new DateTime( $event_end, new DateTimeZone( $event_timezone ) );
-		$now         = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
-		if ( ( $event_start < $event_end ) && ( $event_end > $now ) ) {
-			return true;
-		}
-		return false;
 	}
 }
