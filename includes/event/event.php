@@ -128,7 +128,7 @@ class Event {
 	}
 
 	/**
-	 * @throws InvalidStartOrEnd
+	 * @throws InvalidStart|InvalidEnd
 	 */
 	public function set_times( DateTimeImmutable $start, DateTimeImmutable $end ): void {
 		$this->validate_times( $start, $end );
@@ -162,32 +162,6 @@ class Event {
 
 	public function set_description( string $description ): void {
 		$this->description = $description;
-	}
-
-	/**
-	 * Generate text for the end date.
-	 *
-	 * @param string $event_end The end date.
-	 *
-	 * @return string The end date text.
-	 */
-	public static function get_end_date_text( string $event_end ): string {
-		$end_date_time     = new DateTimeImmutable( $event_end );
-		$current_date_time = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-
-		$interval       = $end_date_time->diff( $current_date_time );
-		$hours_left     = ( $interval->d * 24 ) + $interval->h;
-		$hours_in_a_day = 24;
-
-		if ( 0 === $hours_left ) {
-			/* translators: %s: Number of minutes left. */
-			return sprintf( _n( 'ends in %s minute', 'ends in %s minutes', $interval->i ), $interval->i );
-		} elseif ( $hours_left <= $hours_in_a_day ) {
-			/* translators: %s: Number of hours left. */
-			return sprintf( _n( 'ends in %s hour', 'ends in %s hours', $hours_left ), $hours_left );
-		}
-
-		return sprintf( 'until %s', $end_date_time->format( 'M j, Y' ) );
 	}
 
 	/**
