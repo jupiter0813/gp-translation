@@ -137,8 +137,8 @@ class Event_Form_Handler {
 		}
 		if ( 'delete_event' !== $form_data['form_name'] ) {
 			try {
-				update_post_meta( $event_id, '_event_start', $this->convert_to_utc( $event_start, $event_timezone ) );
-				update_post_meta( $event_id, '_event_end', $this->convert_to_utc( $event_end, $event_timezone ) );
+				update_post_meta( $event_id, '_event_start', $event_start );
+				update_post_meta( $event_id, '_event_end', $event_end );
 			} catch ( Exception $e ) {
 				wp_send_json_error( esc_html__( 'Invalid start or end', 'gp-translation-events' ), 422 );
 			}
@@ -183,31 +183,19 @@ class Event_Form_Handler {
 		}
 
 		$timezone = new DateTimeZone( $event_timezone );
+		$start    = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $event_start, $timezone );
+		$end      = DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $event_end, $timezone );
 
 		return new Event(
 			intval( $event_id ),
-			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $event_start, $timezone ),
-			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $event_end, $timezone ),
+			$start->setTimezone( new DateTimeZone( 'UTC' ) ),
+			$end->setTimezone( new DateTimeZone( 'UTC' ) ),
 			$timezone,
 			sanitize_title( $title ),
 			$event_status,
 			$title,
 			$description,
 		);
-	}
-
-	/**
-	 * Convert a date time in a time zone to UTC.
-	 *
-	 * @param string $date_time The date time in the time zone.
-	 * @param string $time_zone The time zone.
-	 * @return string The date time in UTC.
-	 * @throws Exception When dates are invalid.
-	 */
-	private function convert_to_utc( string $date_time, string $time_zone ): string {
-		$date_time = new DateTime( $date_time, new DateTimeZone( $time_zone ) );
-		$date_time->setTimezone( new DateTimeZone( 'UTC' ) );
-		return $date_time->format( 'Y-m-d H:i:s' );
 	}
 
 	/**
