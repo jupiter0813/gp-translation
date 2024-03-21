@@ -3,6 +3,7 @@
 namespace Wporg\TranslationEvents\Event;
 
 use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use GP;
@@ -16,8 +17,6 @@ class Event_Form_Handler {
 			wp_send_json_error( esc_html__( 'The user must be logged in.', 'gp-translation-events' ), 403 );
 		}
 		$action           = isset( $form_data['form_name'] ) ? sanitize_text_field( wp_unslash( $form_data['form_name'] ) ) : '';
-		$event_id         = null;
-		$event            = null;
 		$response_message = '';
 		$is_nonce_valid   = false;
 		$nonce_name       = '_event_nonce';
@@ -57,15 +56,18 @@ class Event_Form_Handler {
 			wp_send_json_error( esc_html__( 'Nonce verification failed.', 'gp-translation-events' ), 403 );
 		}
 
+		$new_event      = $this->parse_form_data( $form_data );
+		$event_id       = $new_event->id();
+		$title          = $new_event->title();
+		$description    = $new_event->description();
+		$event_start    = $new_event->start()->format( 'Y-m-d H:i:s' );
+		$event_end      = $new_event->end()->format( 'Y-m-d H:i:s' );
+		$event_timezone = $new_event->timezone()->getName();
+		$event_status   = $new_event->status();
+
 		// This is a list of slugs that are not allowed, as they conflict with the event URLs.
 		$invalid_slugs = array( 'new', 'edit', 'attend', 'my-events' );
-		$title         = isset( $form_data['event_title'] ) ? sanitize_text_field( wp_unslash( $form_data['event_title'] ) ) : '';
-		// This will be sanitized by santitize_post which is called in wp_insert_post.
-		$description    = isset( $form_data['event_description'] ) ? force_balance_tags( wp_unslash( $form_data['event_description'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$event_start    = isset( $form_data['event_start'] ) ? sanitize_text_field( wp_unslash( $form_data['event_start'] ) ) : '';
-		$event_end      = isset( $form_data['event_end'] ) ? sanitize_text_field( wp_unslash( $form_data['event_end'] ) ) : '';
-		$event_timezone = isset( $form_data['event_timezone'] ) ? sanitize_text_field( wp_unslash( $form_data['event_timezone'] ) ) : '';
-		if ( isset( $title ) && in_array( sanitize_title( $title ), $invalid_slugs, true ) ) {
+		if ( in_array( sanitize_title( $title ), $invalid_slugs, true ) ) {
 			wp_send_json_error( esc_html__( 'Invalid slug.', 'gp-translation-events' ), 422 );
 		}
 
@@ -77,11 +79,6 @@ class Event_Form_Handler {
 		}
 		if ( ! $is_valid_event_date ) {
 			wp_send_json_error( esc_html__( 'Invalid event dates or the event end date is a past value.', 'gp-translation-events' ), 422 );
-		}
-
-		$event_status = '';
-		if ( isset( $form_data['event_form_action'] ) && in_array( $form_data['event_form_action'], array( 'draft', 'publish', 'delete' ), true ) ) {
-			$event_status = sanitize_text_field( wp_unslash( $form_data['event_form_action'] ) );
 		}
 
 		if ( 'create_event' === $action ) {
@@ -166,6 +163,36 @@ class Event_Form_Handler {
 				'eventEditUrl'   => esc_url( gp_url( '/events/edit/' . $event_id ) ),
 				'eventDeleteUrl' => esc_url( gp_url( '/events/my-events/' ) ),
 			)
+		);
+	}
+
+	private function parse_form_data( array $data ): Event {
+		$event_id = isset( $data['event_id'] ) ? sanitize_text_field( wp_unslash( $data['event_id'] ) ) : 0;
+		$title    = isset( $data['event_title'] ) ? sanitize_text_field( wp_unslash( $data['event_title'] ) ) : '';
+
+		// This will be sanitized by sanitize_post which is called in wp_insert_post.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$description    = isset( $data['event_description'] ) ? force_balance_tags( wp_unslash( $data['event_description'] ) ) : '';
+		$event_start    = isset( $data['event_start'] ) ? sanitize_text_field( wp_unslash( $data['event_start'] ) ) : '';
+		$event_end      = isset( $data['event_end'] ) ? sanitize_text_field( wp_unslash( $data['event_end'] ) ) : '';
+		$event_timezone = isset( $data['event_timezone'] ) ? sanitize_text_field( wp_unslash( $data['event_timezone'] ) ) : '';
+
+		$event_status = '';
+		if ( isset( $data['event_form_action'] ) && in_array( $data['event_form_action'], array( 'draft', 'publish', 'delete' ), true ) ) {
+			$event_status = sanitize_text_field( wp_unslash( $data['event_form_action'] ) );
+		}
+
+		$timezone = new DateTimeZone( $event_timezone );
+
+		return new Event(
+			intval( $event_id ),
+			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $event_start, $timezone ),
+			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $event_end, $timezone ),
+			$timezone,
+			sanitize_title( $title ),
+			$event_status,
+			$title,
+			$description,
 		);
 	}
 
