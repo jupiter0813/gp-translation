@@ -70,9 +70,7 @@ class Event_Form_Handler {
 			if ( ! $event || Translation_Events::CPT !== $event->post_type ) {
 				wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 			}
-			if ( ! ( current_user_can( 'delete_post', $event->ID ) || get_current_user_id() === $event->post_author ) ) {
-				wp_send_json_error( 'You do not have permission to delete this event' );
-			}
+
 			$stats_calculator = new Stats_Calculator();
 			try {
 				$event_stats = $stats_calculator->for_event( $event->ID );
@@ -129,12 +127,9 @@ class Event_Form_Handler {
 				$response_message = esc_html__( 'Event created successfully!', 'gp-translation-events' );
 			}
 			if ( 'edit_event' === $action ) {
-				if ( ! isset( $form_data['event_id'] ) ) {
-					wp_send_json_error( esc_html__( 'Event id is required.', 'gp-translation-events' ), 422 );
-				}
 				$event_id = sanitize_text_field( wp_unslash( $form_data['event_id'] ) );
 				$event    = get_post( $event_id );
-				if ( ! $event || Translation_Events::CPT !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
+				if ( ! $event || Translation_Events::CPT !== $event->post_type ) {
 					wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 				}
 				wp_update_post(
