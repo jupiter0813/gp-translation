@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use GP;
+use WP_Error;
 use Wporg\TranslationEvents\Active_Events_Cache;
 use Wporg\TranslationEvents\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
@@ -120,15 +121,13 @@ class Event_Form_Handler {
 			}
 
 			if ( 'create_event' === $action ) {
-				$event_id         = wp_insert_post(
-					array(
-						'post_type'    => Translation_Events::CPT,
-						'post_title'   => $new_event->title(),
-						'post_content' => $new_event->description(),
-						'post_status'  => $new_event->status(),
-					)
-				);
-				$response_message = esc_html__( 'Event created successfully!', 'gp-translation-events' );
+				$result = $this->event_repository->insert_event( $new_event );
+				if ( $result instanceof WP_Error ) {
+					wp_send_json_error( esc_html__( 'Failed to create event.', 'gp-translation-events' ), 422 );
+					return;
+				}
+				$response_message = esc_html__( 'Event created successfully.', 'gp-translation-events' );
+				$event_id         = $new_event->id();
 			}
 			if ( 'edit_event' === $action ) {
 				$event_id = sanitize_text_field( wp_unslash( $form_data['event_id'] ) );
