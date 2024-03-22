@@ -127,7 +127,6 @@ class Event_Form_Handler {
 					return;
 				}
 				$response_message = esc_html__( 'Event created successfully.', 'gp-translation-events' );
-				$event_id         = $new_event->id();
 			}
 			if ( 'edit_event' === $action ) {
 				$event = $this->event_repository->get_event( $new_event->id() );
@@ -152,9 +151,9 @@ class Event_Form_Handler {
 					return;
 				}
 				$response_message = esc_html__( 'Event updated successfully', 'gp-translation-events' );
-				$event_id         = $event->id();
 			}
 
+			$event_id     = $new_event->id();
 			$event_status = $new_event->status();
 		}
 
