@@ -220,16 +220,17 @@ class Event_Form_Handler {
 			throw new InvalidEnd();
 		}
 
-		return new Event(
-			intval( $event_id ),
+		$event = new Event(
 			get_current_user_id(),
 			$start->setTimezone( new DateTimeZone( 'UTC' ) ),
 			$end->setTimezone( new DateTimeZone( 'UTC' ) ),
 			$timezone,
-			sanitize_title( $title ),
 			$event_status,
 			$title,
 			$description,
 		);
+		$event->set_id( intval( $event_id ) );
+		$event->set_slug( sanitize_title( $title ) );
+		return $event;
 	}
 }

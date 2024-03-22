@@ -72,18 +72,19 @@ class Event_Repository implements Event_Repository_Interface {
 		}
 
 		try {
-			$meta = $this->get_event_meta( $id );
-			return new Event(
-				$post->ID,
+			$meta  = $this->get_event_meta( $id );
+			$event = new Event(
 				intval( $post->post_author ),
 				$meta['start'],
 				$meta['end'],
 				$meta['timezone'],
-				$post->post_name,
 				$post->post_status,
 				$post->post_title,
 				$post->post_content,
 			);
+			$event->set_id( $post->ID );
+			$event->set_slug( $post->post_name );
+			return $event;
 		} catch ( Exception $e ) {
 			// This should not be possible as it means data in the database is invalid.
 			// So we consider an invalid event to be not found.
@@ -259,18 +260,19 @@ class Event_Repository implements Event_Repository_Interface {
 		$events = array();
 
 		foreach ( $posts as $post ) {
-			$meta     = $this->get_event_meta( $post->ID );
-			$events[] = new Event(
-				$post->ID,
+			$meta  = $this->get_event_meta( $post->ID );
+			$event = new Event(
 				intval( $post->post_author ),
 				$meta['start'],
 				$meta['end'],
 				$meta['timezone'],
-				$post->post_name,
 				$post->post_status,
 				$post->post_title,
 				$post->post_content,
 			);
+			$event->set_id( $post->ID );
+			$event->set_slug( $post->post_name );
+			$events[] = $event;
 		}
 
 		return new Events_Query_Result( $events, $query->max_num_pages );

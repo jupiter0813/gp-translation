@@ -63,18 +63,15 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$start       = $now->modify( '-1 hours' );
 		$end         = $now->modify( '+1 hours' );
 		$timezone    = new DateTimeZone( 'Europe/Lisbon' );
-		$slug        = 'foo-slug';
 		$status      = 'publish';
 		$title       = 'Foo title';
 		$description = 'Foo Description';
 
 		$event = new Event(
 			0,
-			0,
 			$start,
 			$end,
 			$timezone,
-			$slug,
 			$status,
 			$title,
 			$description,
@@ -88,7 +85,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( $start->getTimestamp(), $created_event->start()->getTimestamp() );
 		$this->assertEquals( $end->getTimestamp(), $created_event->end()->getTimestamp() );
 		$this->assertEquals( $timezone, $created_event->timezone() );
-		$this->assertEquals( $slug, $created_event->slug() );
+		$this->assertEquals( 'foo-title', $created_event->slug() );
 		$this->assertEquals( $status, $created_event->status() );
 		$this->assertEquals( $title, $created_event->title() );
 		$this->assertEquals( $description, $created_event->description() );
