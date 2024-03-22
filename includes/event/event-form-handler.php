@@ -12,6 +12,12 @@ use Wporg\TranslationEvents\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Form_Handler {
+	private Event_Repository_Interface $event_repository;
+
+	public function __construct( Event_Repository_Interface $event_repository ) {
+		$this->event_repository = $event_repository;
+	}
+
 	public function handle( array $form_data ): void {
 		if ( ! is_user_logged_in() ) {
 			wp_send_json_error( esc_html__( 'The user must be logged in.', 'gp-translation-events' ), 403 );

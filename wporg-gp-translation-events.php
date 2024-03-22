@@ -203,7 +203,7 @@ class Translation_Events {
 	 * Handle the event form submission for the creation, editing, and deletion of events. This function is called via AJAX.
 	 */
 	public function submit_event_ajax() {
-		$form_handler = new Event_Form_Handler();
+		$form_handler = new Event_Form_Handler( self::get_event_repository() );
 		// Nonce verification is done by the form handler.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$form_handler->handle( $_POST );
