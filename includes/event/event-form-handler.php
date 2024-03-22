@@ -158,13 +158,6 @@ class Event_Form_Handler {
 			$event_status = $new_event->status();
 		}
 
-		try {
-			Active_Events_Cache::invalidate();
-		} catch ( Exception $e ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( $e );
-		}
-
 		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 		wp_send_json_success(
