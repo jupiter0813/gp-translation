@@ -25,6 +25,8 @@ use GP;
 use WP_Post;
 use WP_Query;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
+use Wporg\TranslationEvents\Event\Event_Repository_Cached;
+use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 
 class Translation_Events {
 	public const CPT = 'translation_event';
@@ -35,6 +37,22 @@ class Translation_Events {
 			$instance = new self();
 		}
 		return $instance;
+	}
+
+	public static function get_event_repository(): Event_Repository_Interface {
+		static $event_repository = null;
+		if ( null === $event_repository ) {
+			$event_repository = new Event_Repository_Cached( self::get_attendee_repository() );
+		}
+		return $event_repository;
+	}
+
+	public static function get_attendee_repository(): Attendee_Repository {
+		static $attendee_repository = null;
+		if ( null === $attendee_repository ) {
+			$attendee_repository = new Attendee_Repository();
+		}
+		return $attendee_repository;
 	}
 
 	public function __construct() {
