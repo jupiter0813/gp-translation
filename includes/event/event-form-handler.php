@@ -135,11 +135,16 @@ class Event_Form_Handler {
 					wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 				}
 
-				$event->set_status( $new_event->status() );
-				$event->set_title( $new_event->title() );
-				$event->set_description( $new_event->description() );
-				$event->set_timezone( $new_event->timezone() );
-				$event->set_times( $new_event->start()->utc(), $new_event->end()->utc() );
+				try {
+					$event->set_status( $new_event->status() );
+					$event->set_title( $new_event->title() );
+					$event->set_description( $new_event->description() );
+					$event->set_timezone( $new_event->timezone() );
+					$event->set_times( $new_event->start()->utc(), $new_event->end()->utc() );
+				} catch ( Exception $e ) {
+					wp_send_json_error( esc_html__( 'Failed to update event.', 'gp-translation-events' ), 422 );
+					return;
+				}
 
 				$result = $this->event_repository->update_event( $event );
 				if ( $result instanceof WP_Error ) {
