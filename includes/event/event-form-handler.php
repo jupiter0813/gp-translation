@@ -155,14 +155,6 @@ class Event_Form_Handler {
 				$event_id         = $event->id();
 			}
 
-			try {
-				update_post_meta( $event_id, '_event_start', $new_event->start()->format( 'Y-m-d H:i:s' ) );
-				update_post_meta( $event_id, '_event_end', $new_event->end()->format( 'Y-m-d H:i:s' ) );
-			} catch ( Exception $e ) {
-				wp_send_json_error( esc_html__( 'Invalid start or end', 'gp-translation-events' ), 422 );
-			}
-			update_post_meta( $event_id, '_event_timezone', $new_event->timezone()->getName() );
-
 			$event_status = $new_event->status();
 		}
 
