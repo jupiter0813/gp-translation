@@ -8,9 +8,7 @@ use DateTimeZone;
 use Exception;
 use GP;
 use WP_Error;
-use Wporg\TranslationEvents\Active_Events_Cache;
 use Wporg\TranslationEvents\Stats_Calculator;
-use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Form_Handler {
 	private Event_Repository_Interface $event_repository;
