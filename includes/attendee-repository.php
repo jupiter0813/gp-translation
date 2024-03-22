@@ -44,16 +44,17 @@ class Attendee_Repository {
 		}
 
 		global $wpdb, $gp_table_prefix;
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$wpdb->query(
-			$wpdb->prepare(
-				"delete from {$gp_table_prefix}event_attendees where event_id = %d and user_id = %d",
-				array(
-					'event_id' => $event_id,
-					'user_id'  => $user_id,
-				),
+		$wpdb->delete(
+			"{$gp_table_prefix}event_attendees",
+			array(
+				'event_id' => $event_id,
+				'user_id'  => $user_id,
+			),
+			array(
+				'%d',
+				'%d',
 			),
 		);
 		// phpcs:enable
