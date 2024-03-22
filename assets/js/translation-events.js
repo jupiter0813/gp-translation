@@ -38,6 +38,15 @@
 		 * @param isDraft	  Whether the current event status is a draft or not
 		 */
 		function handleSubmit( eventStatus, isDraft ) {
+			const $form = $( '.translation-event-form' );
+			if ( ! $form[0].reportValidity() ) {
+				return;
+			}
+
+			if ( '' === $( '#event-title' ).val() ) {
+				$gp.notices.error( 'Event title must be set.' );
+				return;
+			}
 			if ( '' === $( '#event-start' ).val() ) {
 				$gp.notices.error( 'Event start date and time must be set.' );
 				return;
@@ -57,7 +66,6 @@
 				}
 			}
 			$( '#event-form-action' ).val( eventStatus );
-			const $form        = $( '.translation-event-form' );
 			const $is_creation = $( '#form-name' ).val() === 'create_event';
 
 			$.ajax(
