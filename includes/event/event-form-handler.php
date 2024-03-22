@@ -69,7 +69,7 @@ class Event_Form_Handler {
 			}
 			$stats_calculator = new Stats_Calculator();
 			try {
-				$event_stats = $stats_calculator->for_event( $event );
+				$event_stats = $stats_calculator->for_event( $event->ID );
 			} catch ( Exception $e ) {
 				wp_send_json_error( esc_html__( 'Failed to calculate event stats.', 'gp-translation-events' ), 500 );
 			}

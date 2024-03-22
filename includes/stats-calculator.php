@@ -86,7 +86,7 @@ class Stats_Calculator {
 	 *
 	 * @throws Exception When stats calculation failed.
 	 */
-	public function for_event( WP_Post $event ): Event_Stats {
+	public function for_event( int $event_id ): Event_Stats {
 		$stats = new Event_Stats();
 		global $wpdb, $gp_table_prefix;
 
@@ -107,7 +107,7 @@ class Stats_Calculator {
 				group by locale with rollup
 			",
 				array(
-					$event->ID,
+					$event_id,
 				)
 			)
 		);
@@ -246,7 +246,7 @@ class Stats_Calculator {
 	 */
 	public function event_has_stats( WP_Post $event ): bool {
 		try {
-			$stats = $this->for_event( $event );
+			$stats = $this->for_event( $event->ID );
 		} catch ( Exception $e ) {
 			return false;
 		}

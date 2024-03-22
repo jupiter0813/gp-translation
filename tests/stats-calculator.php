@@ -71,7 +71,7 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 		$this->stats_factory->create( $event2_id, $user2_id, 32, 'reject' );
 
 		$event1 = get_post( $event1_id );
-		$stats  = $this->calculator->for_event( $event1 );
+		$stats  = $this->calculator->for_event( $event1->ID );
 
 		$this->assertCount( 2, $stats->rows() );
 
