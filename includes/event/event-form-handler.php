@@ -222,6 +222,7 @@ class Event_Form_Handler {
 
 		return new Event(
 			intval( $event_id ),
+			get_current_user_id(),
 			$start->setTimezone( new DateTimeZone( 'UTC' ) ),
 			$end->setTimezone( new DateTimeZone( 'UTC' ) ),
 			$timezone,

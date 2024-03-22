@@ -41,6 +41,7 @@ class InvalidStatus extends Exception {
 
 class Event {
 	private int $id;
+	private int $author_id;
 	private DateTimeImmutable $start;
 	private DateTimeImmutable $end;
 	private DateTimeZone $timezone;
@@ -61,6 +62,7 @@ class Event {
 
 		return new Event(
 			$id,
+			0,           // TODO: this function will be removed, this is here so tests pass.
 			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
 			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
 			new DateTimeZone( $meta['_event_timezone'][0] ),
@@ -79,6 +81,7 @@ class Event {
 	 */
 	public function __construct(
 		int $id,
+		int $author_id,
 		DateTimeImmutable $start,
 		DateTimeImmutable $end,
 		DateTimeZone $timezone,
@@ -90,6 +93,7 @@ class Event {
 		$this->slug = $slug;
 
 		$this->set_id( $id );
+		$this->author_id = $author_id;
 		$this->set_times( $start, $end );
 		$this->set_timezone( $timezone );
 		$this->set_status( $status );
@@ -99,6 +103,10 @@ class Event {
 
 	public function id(): int {
 		return $this->id;
+	}
+
+	public function author_id(): int {
+		return $this->author_id;
 	}
 
 	public function start(): Event_Start_Date {

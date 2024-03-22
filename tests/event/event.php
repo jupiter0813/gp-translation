@@ -19,6 +19,7 @@ class Event_Test extends WP_UnitTestCase {
 		$this->expectException( InvalidEnd::class );
 		new Event(
 			1,
+			0,
 			$now,
 			$now->modify( '-1 hours' ),
 			$timezone,
@@ -36,6 +37,7 @@ class Event_Test extends WP_UnitTestCase {
 		$this->expectException( InvalidStart::class );
 		new Event(
 			1,
+			0,
 			$now,
 			$now->modify( '+1 hours' ),
 			$timezone,
@@ -53,6 +55,7 @@ class Event_Test extends WP_UnitTestCase {
 		$this->expectException( InvalidTitle::class );
 		new Event(
 			1,
+			0,
 			$now,
 			$now->modify( '+1 hours' ),
 			$timezone,
@@ -70,6 +73,7 @@ class Event_Test extends WP_UnitTestCase {
 		$this->expectException( InvalidStatus::class );
 		new Event(
 			1,
+			0,
 			$now,
 			$now->modify( '+1 hours' ),
 			$timezone,

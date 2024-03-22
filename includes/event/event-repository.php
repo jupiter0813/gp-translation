@@ -75,6 +75,7 @@ class Event_Repository implements Event_Repository_Interface {
 			$meta = $this->get_event_meta( $id );
 			return new Event(
 				$post->ID,
+				intval( $post->post_author ),
 				$meta['start'],
 				$meta['end'],
 				$meta['timezone'],
@@ -261,6 +262,7 @@ class Event_Repository implements Event_Repository_Interface {
 			$meta     = $this->get_event_meta( $post->ID );
 			$events[] = new Event(
 				$post->ID,
+				intval( $post->post_author ),
 				$meta['start'],
 				$meta['end'],
 				$meta['timezone'],

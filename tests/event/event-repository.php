@@ -70,6 +70,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 
 		$event = new Event(
 			0,
+			0,
 			$start,
 			$end,
 			$timezone,
