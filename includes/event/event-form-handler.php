@@ -64,25 +64,29 @@ class Event_Form_Handler {
 
 		if ( 'delete_event' === $action ) {
 			// Delete event.
-
-			$event_id = sanitize_text_field( wp_unslash( $form_data['event_id'] ) );
-			$event    = get_post( $event_id );
-			if ( ! $event || Translation_Events::CPT !== $event->post_type ) {
+			$event_id = intval( sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) );
+			$event    = $this->event_repository->get_event( $event_id );
+			if ( ! $event ) {
 				wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 			}
 
 			$stats_calculator = new Stats_Calculator();
 			try {
-				$event_stats = $stats_calculator->for_event( $event->ID );
+				$event_stats = $stats_calculator->for_event( $event->id() );
 			} catch ( Exception $e ) {
 				wp_send_json_error( esc_html__( 'Failed to calculate event stats.', 'gp-translation-events' ), 500 );
 			}
 			if ( ! empty( $event_stats->rows() ) ) {
-				wp_send_json_error( esc_html__( 'Event has translations and cannot be deleted.', 'gp-translation-events' ), 422 );
+				wp_send_json_error( esc_html__( 'Event has stats so it cannot be deleted.', 'gp-translation-events' ), 422 );
 			}
-			wp_trash_post( $event_id );
-			$response_message = esc_html__( 'Event deleted successfully!', 'gp-translation-events' );
-			$event_status     = 'deleted';
+
+			if ( false === $this->event_repository->delete_event( $event ) ) {
+				$response_message = esc_html__( 'Failed to delete event.', 'gp-translation-events' );
+				$event_status     = $event->status();
+			} else {
+				$response_message = esc_html__( 'Event deleted successfully.', 'gp-translation-events' );
+				$event_status     = 'deleted';
+			}
 		} else {
 			// Create or update event.
 
