@@ -165,7 +165,6 @@ class Translation_Events {
 			)
 		);
 
-		// Import legacy attendance to attendees table.
 		$events              = $query->get_posts();
 		$stats_calculator    = new Stats_Calculator();
 		$attendee_repository = new Attendee_Repository();
@@ -174,22 +173,6 @@ class Translation_Events {
 				$attendee_repository->add_attendee( $event->ID, $user->ID );
 			}
 		}
-
-		// Delete legacy attendance information.
-		global $wpdb, $wp_table_prefix;
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-		$wpdb->query(
-			$wpdb->prepare(
-				"delete from {$wp_table_prefix}usermeta where meta_key = %s",
-				array(
-					'meta_key' => 'translation-events-attending',
-				),
-			),
-		);
-		// phpcs:enable
 	}
 
 	/**
