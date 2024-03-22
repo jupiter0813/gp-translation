@@ -154,9 +154,7 @@ class Event_Form_Handler {
 				$response_message = esc_html__( 'Event updated successfully', 'gp-translation-events' );
 				$event_id         = $event->id();
 			}
-			if ( ! $event_id ) {
-				wp_send_json_error( esc_html__( 'Event could not be created or updated.', 'gp-translation-events' ), 422 );
-			}
+
 			try {
 				update_post_meta( $event_id, '_event_start', $new_event->start()->format( 'Y-m-d H:i:s' ) );
 				update_post_meta( $event_id, '_event_end', $new_event->end()->format( 'Y-m-d H:i:s' ) );
