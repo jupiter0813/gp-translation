@@ -67,6 +67,9 @@ class Event_Repository implements Event_Repository_Interface {
 
 	public function get_event( int $id ): ?Event {
 		$post = $this->get_event_post( $id );
+		if ( ! $post ) {
+			return null;
+		}
 
 		try {
 			$meta = $this->get_event_meta( $id );

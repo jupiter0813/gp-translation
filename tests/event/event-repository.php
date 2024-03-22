@@ -22,6 +22,15 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 	}
 
+	public function test_get_event_returns_null_when_post_does_not_not_have_correct_type() {
+		$id = wp_insert_post(
+			array(
+				'post_type' => 'foo',
+			)
+		);
+		$this->assertNull( $this->repository->get_event( $id ) );
+	}
+
 	public function test_get_event_returns_null_when_event_does_not_exist() {
 		$this->assertNull( $this->repository->get_event( 42 ) );
 	}
