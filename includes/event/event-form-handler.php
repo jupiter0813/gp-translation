@@ -130,20 +130,24 @@ class Event_Form_Handler {
 				$event_id         = $new_event->id();
 			}
 			if ( 'edit_event' === $action ) {
-				$event_id = sanitize_text_field( wp_unslash( $form_data['event_id'] ) );
-				$event    = get_post( $event_id );
-				if ( ! $event || Translation_Events::CPT !== $event->post_type ) {
+				$event = $this->event_repository->get_event( $new_event->id() );
+				if ( ! $event ) {
 					wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 				}
-				wp_update_post(
-					array(
-						'ID'           => $event_id,
-						'post_title'   => $new_event->title(),
-						'post_content' => $new_event->description(),
-						'post_status'  => $new_event->status(),
-					)
-				);
-				$response_message = esc_html__( 'Event updated successfully!', 'gp-translation-events' );
+
+				$event->set_status( $new_event->status() );
+				$event->set_title( $new_event->title() );
+				$event->set_description( $new_event->description() );
+				$event->set_timezone( $new_event->timezone() );
+				$event->set_times( $new_event->start()->utc(), $new_event->end()->utc() );
+
+				$result = $this->event_repository->update_event( $event );
+				if ( $result instanceof WP_Error ) {
+					wp_send_json_error( esc_html__( 'Failed to update event.', 'gp-translation-events' ), 422 );
+					return;
+				}
+				$response_message = esc_html__( 'Event updated successfully', 'gp-translation-events' );
+				$event_id         = $event->id();
 			}
 			if ( ! $event_id ) {
 				wp_send_json_error( esc_html__( 'Event could not be created or updated.', 'gp-translation-events' ), 422 );
