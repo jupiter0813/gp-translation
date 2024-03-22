@@ -225,7 +225,6 @@ class Event_Form_Handler {
 			$description,
 		);
 		$event->set_id( intval( $event_id ) );
-		$event->set_slug( sanitize_title( $title ) );
 		return $event;
 	}
 }
