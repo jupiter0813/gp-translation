@@ -29,6 +29,7 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
+use Wporg\TranslationEvents\Events_Text_Snippet;
 
 class Translation_Events {
 	public const CPT = 'translation_event';
@@ -70,6 +71,8 @@ class Translation_Events {
 		add_filter( 'wp_insert_post_data', array( $this, 'generate_event_slug' ), 10, 2 );
 		add_action( 'gp_init', array( $this, 'gp_init' ) );
 		add_action( 'gp_before_translation_table', array( $this, 'add_active_events_current_user' ) );
+		add_filter( 'wporg_translation_events_snippets', array( Events_Text_Snippet::class, 'generate_snippet_links' ) );
+
 
 		if ( is_admin() ) {
 			Upgrade::upgrade_if_needed();
