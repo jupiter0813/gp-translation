@@ -33,7 +33,7 @@
 					'click',
 					function ( e ) {
 						e.preventDefault();
-						$( this ).closest( 'div').find( 'textarea' ).append( $( this ).data( 'snippet' ) );
+						$( this ).closest( 'div' ).find( 'textarea' ).append( $( this ).data( 'snippet' ) );
 					}
 				);
 			}

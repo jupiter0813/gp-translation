@@ -10,7 +10,7 @@ class Events_Text_Snippet {
 	 * @param array $snippets The array of snippets.
 	 * @return string The generated snippet links.
 	 */
-	public static function generate_snippet_links( $snippets ) : string {
+	public static function generate_snippet_links( $snippets ): string {
 		$links = '<ul class="text-snippets">';
 		foreach ( $snippets as $snippet ) {
 			$links .= sprintf( '<li><a href="#" class="text-snippet" data-snippet="%s">%s</a></li>', $snippet['snippet'], $snippet['title'] );
@@ -37,4 +37,3 @@ class Events_Text_Snippet {
 		);
 	}
 }
-
