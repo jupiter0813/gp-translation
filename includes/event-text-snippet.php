@@ -13,7 +13,7 @@ class Events_Text_Snippet {
 	public static function generate_snippet_links( $snippets ) : string {
 		$links = '<ul class="text-snippets">';
 		foreach ( $snippets as $snippet ) {
-			$links .= sprintf( '<li><a href="#" data-snippet="%s">%s</a></li>', $snippet['snippet'], $snippet['title'] );
+			$links .= sprintf( '<li><a href="#" class="text-snippet" data-snippet="%s">%s</a></li>', $snippet['snippet'], $snippet['title'] );
 		}
 		$links .= '</ul>';
 		return $links;

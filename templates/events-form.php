@@ -50,6 +50,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				'a'  => array(
 					'href'         => array(),
 					'data-snippet' => array(),
+					'class'        => array(),
 				),
 				'ul' => array( 'class' => array() ),
 				'li' => array(),

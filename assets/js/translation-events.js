@@ -28,6 +28,14 @@
 						handleDelete()
 					}
 				);
+
+				$( '.text-snippet' ).on(
+					'click',
+					function ( e ) {
+						e.preventDefault();
+						$( this ).closest( 'div').find( 'textarea' ).append( $( this ).data( 'snippet' ) );
+					}
+				);
 			}
 		);
 
