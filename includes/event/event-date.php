@@ -58,6 +58,15 @@ abstract class Event_Date extends DateTimeImmutable {
 		return $this->utc() < $current_date_time;
 	}
 
+	/**
+	 * Get the date in seconds.
+	 *
+	 * @return int The date in seconds.
+	 */
+	public function __toSeconds(): int {
+		return $this->utc()->getTimestamp();
+	}
+
 	public function print_relative_time_html( $format = false ) {
 		echo wp_kses(
 			'<time
