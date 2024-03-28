@@ -279,6 +279,9 @@ class Stats_Calculator {
 		$first_translation_date_in_sec = ( new \DateTime( $users_first_translation_date ) )->getTimestamp();
 		$event_start_date_in_sec       = $event_start->__toSeconds();
 		$days_in_sec                   = 60 * 60 * 24;
-		return ( $event_start_date_in_sec - $first_translation_date_in_sec ) < $days_in_sec;
+		if ( $event_start_date_time <= $first_translation_date ) {
+			return true;
+	   }
+	   return false;
 	}
 }

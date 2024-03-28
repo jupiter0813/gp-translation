@@ -125,21 +125,26 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			);
 			?>
 			<?php
-			echo esc_html(
+
+			echo wp_kses(
 				sprintf(
 					// translators: %s the contributors.
-					__( 'Contributors were %s.', 'gp-translation-events' ),
-					esc_html(
-						implode(
-							', ',
-							array_map(
-								function ( $contributor ) {
-									return '@' . $contributor->user_login;
-								},
-								$contributors
-							)
+					esc_html__( 'Contributors were %s.', 'gp-translation-events' ),
+					implode(
+						', ',
+						array_map(
+							function ( $contributor ) use ( $stats_calculator, $event_start ) {
+								$append_tada = $stats_calculator->is_first_time_contributors( $event_start, $contributor->ID ) ? '<span class="first-time-contributor-tada"></span>' : '';
+								return '@' . $contributor->user_login . $append_tada;
+							},
+							$contributors
 						)
 					)
+				),
+				array(
+					'span' => array(
+						'class' => array(),
+					),
 				)
 			);
 			?>
