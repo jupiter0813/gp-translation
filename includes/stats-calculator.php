@@ -253,4 +253,32 @@ class Stats_Calculator {
 
 		return ! empty( $stats->rows() );
 	}
+
+	/**
+	 * Check if a user is a first time contributor.
+	 *
+	 * @param Event_Start_Date $event_start The event start date.
+	 * @param int              $user_id      The user ID.
+	 *
+	 * @return bool True if the user is a first time contributor, false otherwise.
+	 */
+	public function is_first_time_contributors( $event_start, $user_id ) {
+		global $wpdb, $gp_table_prefix;
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$users_first_translation_date  = $wpdb->get_var(
+			$wpdb->prepare(
+				"
+			select min(date_added) from {$gp_table_prefix}translations where user_id = %d
+		",
+				array(
+					$user_id,
+				)
+			)
+		);
+		$first_translation_date_in_sec = ( new \DateTime( $users_first_translation_date ) )->getTimestamp();
+		$event_start_date_in_sec       = $event_start->__toSeconds();
+		$days_in_sec                   = 60 * 60 * 24;
+		return ( $event_start_date_in_sec - $first_translation_date_in_sec ) < $days_in_sec;
+	}
 }
