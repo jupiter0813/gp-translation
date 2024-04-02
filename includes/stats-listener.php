@@ -79,8 +79,8 @@ class Stats_Listener {
 	private function handle_action( GP_Translation $translation, int $user_id, string $action, DateTimeImmutable $happened_at ): void {
 		try {
 			// Get events that are active when the action happened, for which the user is registered for.
-			$active_events = $this->get_active_events( $happened_at );
-			$events        = $this->select_events_user_is_registered_for( $active_events, $user_id );
+			$active_events = $this->event_repository->get_current_events();
+			$events        = $this->select_events_user_is_registered_for( $active_events->events, $user_id );
 
 			// phpcs:ignore Generic.Commenting.DocComment.MissingShort
 			/** @var GP_Translation_Set $translation_set Translation set */
@@ -114,61 +114,6 @@ class Stats_Listener {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $exception );
 		}
-	}
-
-	/**
-	 * Get active events at a given time.
-	 *
-	 * @return Event[]
-	 * @throws Exception When it fails to get active events.
-	 */
-	private function get_active_events( DateTimeImmutable $at ): array {
-		$events = $this->active_events_cache->get();
-		if ( null === $events ) {
-			$cache_duration = Active_Events_Cache::CACHE_DURATION;
-			$boundary_start = $at;
-			$boundary_end   = $at->modify( "+$cache_duration seconds" );
-
-			// Get events for which start is before $boundary_end AND end is after $boundary_start.
-			$event_ids = get_posts(
-				array(
-					'post_type'      => Translation_Events::CPT,
-					'post_status'    => 'publish',
-					'posts_per_page' => - 1,
-					'fields'         => 'ids',
-					'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-						array(
-							'key'     => '_event_start',
-							'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
-							'compare' => '<',
-							'type'    => 'DATETIME',
-						),
-						array(
-							'key'     => '_event_end',
-							'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
-							'compare' => '>',
-							'type'    => 'DATETIME',
-						),
-					),
-				),
-			);
-
-			$events = array();
-			foreach ( $event_ids as $event_id ) {
-				$meta     = get_post_meta( $event_id );
-				$events[] = Event::from_post_meta( $event_id, $meta );
-			}
-
-			$this->active_events_cache->cache( $events );
-		}
-
-		// Filter out events that aren't actually active at $at.
-		return array_filter(
-			$events,
-			function ( $event ) use ( $at ) {
-				return $event->start() <= $at && $at <= $event->end();
-			}
-		);
 	}
 
 	/**
