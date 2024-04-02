@@ -13,6 +13,7 @@ use Wporg\TranslationEvents\Event\Events_Query_Result;
 /** @var Events_Query_Result $current_events_query */
 /** @var Events_Query_Result $upcoming_events_query */
 /** @var Events_Query_Result $past_events_query */
+/** @var Events_Query_Result $user_attending_events_query */
 
 gp_title( __( 'Translation Events', 'gp-translation-events' ) );
 gp_breadcrumb_translation_events();
@@ -133,34 +134,32 @@ endif;
 <?php if ( is_user_logged_in() ) : ?>
 	<div class="event-right-col">
 		<h2>Events I'm Attending</h2>
-		<?php if ( ! $user_attending_events_query->have_posts() ) : ?>
+		<?php if ( empty( $user_attending_events_query->events ) ) : ?>
 			<p>You don't have any events to attend.</p>
 		<?php else : ?>
 			<ul class="event-attending-list">
 				<?php
-				while ( $user_attending_events_query->have_posts() ) :
-					$user_attending_events_query->the_post();
-					$event_start = new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) );
-					$event_end   = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) );
+				foreach ( $user_attending_events_query->events as $event ) :
+					$event_url = gp_url( wp_make_link_relative( get_the_permalink( $event->id() ) ) );
 					?>
 					<li class="event-list-item">
-						<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
-						<?php if ( $event_start === $event_end ) : ?>
-							<span class="event-list-date events-i-am-attending"><?php $event_start->print_time_html( 'F j, Y H:i T' ); ?></span>
+						<a href="<?php echo esc_url( $event_url ); ?>"><?php echo esc_html( $event->title() ); ?></a>
+						<?php if ( $event->start() === $event->end() ) : ?>
+							<span class="event-list-date events-i-am-attending"><?php $event->start()->print_time_html( 'F j, Y H:i T' ); ?></span>
 						<?php else : ?>
-							<span class="event-list-date events-i-am-attending"><?php $event_start->print_time_html( 'F j, Y H:i T' ); ?> - <?php $event_end->print_time_html( 'F j, Y H:i T' ); ?></span>
+							<span class="event-list-date events-i-am-attending"><?php $event->start()->print_time_html( 'F j, Y H:i T' ); ?> - <?php $event->end()->print_time_html( 'F j, Y H:i T' ); ?></span>
 						<?php endif; ?>
 					</li>
 					<?php
-				endwhile;
+				endforeach;
 				?>
 			</ul>
 			<?php
 				echo wp_kses_post(
 					paginate_links(
 						array(
-							'total'     => $user_attending_events_query->max_num_pages,
-							'current'   => max( 1, $user_attending_events_query->query_vars['paged'] ),
+							'total'     => $user_attending_events_query->page_count,
+							'current'   => $user_attending_events_query->current_page,
 							'format'    => '?user_attending_events_paged=%#%',
 							'prev_text' => '&laquo; Previous',
 							'next_text' => 'Next &raquo;',
