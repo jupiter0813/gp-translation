@@ -48,7 +48,7 @@ if ( ! empty( $current_events_query->events ) ) :
 		paginate_links(
 			array(
 				'total'     => $current_events_query->page_count,
-				'current'   => $current_events_query->current_page + 1,
+				'current'   => $current_events_query->current_page,
 				'format'    => '?current_events_paged=%#%',
 				'prev_text' => '&laquo; Previous',
 				'next_text' => 'Next &raquo;',
@@ -82,7 +82,7 @@ if ( ! empty( $upcoming_events_query->events ) ) :
 		paginate_links(
 			array(
 				'total'     => $upcoming_events_query->page_count,
-				'current'   => $upcoming_events_query->current_page + 1,
+				'current'   => $upcoming_events_query->current_page,
 				'format'    => '?upcoming_events_paged=%#%',
 				'prev_text' => '&laquo; Previous',
 				'next_text' => 'Next &raquo;',
@@ -115,7 +115,7 @@ if ( ! empty( $past_events_query->events ) ) :
 		paginate_links(
 			array(
 				'total'     => $past_events_query->page_count,
-				'current'   => $past_events_query->current_page + 1,
+				'current'   => $past_events_query->current_page,
 				'format'    => '?past_events_paged=%#%',
 				'prev_text' => '&laquo; Previous',
 				'next_text' => 'Next &raquo;',
