@@ -179,12 +179,7 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		// We consider the start of time to be January 1st 2024,
-		// which is guaranteed to be earlier than when this plugin was created.
-		// It's not possible for there to be events before the plugin was created.
-		$boundary_start = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$boundary_start = $boundary_start->setDate( 2024, 1, 1 )->setTime( 0, 0 );
-		$boundary_end   = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
@@ -195,13 +190,7 @@ class Event_Repository implements Event_Repository_Interface {
 				'meta_query' => array(
 					array(
 						'key'     => '_event_end',
-						'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
-						'compare' => '>=',
-						'type'    => 'DATETIME',
-					),
-					array(
-						'key'     => '_event_end',
-						'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
+						'value'   => $now->format( 'Y-m-d H:i:s' ),
 						'compare' => '<',
 						'type'    => 'DATETIME',
 					),
