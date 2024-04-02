@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeZone;
 use WP_Query;
 use Wporg\TranslationEvents\Attendee_Repository;
+use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
 
@@ -13,11 +14,13 @@ use Wporg\TranslationEvents\Translation_Events;
  * Displays the My Events page for a user.
  */
 class My_Events_Route extends Route {
+	private Event_Repository_Interface $event_repository;
 	private Attendee_Repository $attendee_repository;
 
 	public function __construct() {
 		parent::__construct();
-		$this->attendee_repository = new Attendee_Repository();
+		$this->event_repository    = Translation_Events::get_event_repository();
+		$this->attendee_repository = Translation_Events::get_attendee_repository();
 	}
 
 	public function handle(): void {
@@ -46,21 +49,9 @@ class My_Events_Route extends Route {
 		}
 		// phpcs:enable
 
-		$user_id              = get_current_user_id();
+		$events_i_created_query = $this->event_repository->get_events_created_by_user( get_current_user_id(), $_events_i_created_paged, 10 );
+
 		$current_datetime_utc = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
-		$args                 = array(
-			'post_type'              => Translation_Events::CPT,
-			'posts_per_page'         => 10,
-			'events_i_created_paged' => $_events_i_created_paged,
-			'paged'                  => $_events_i_created_paged,
-			'post_status'            => array( 'publish', 'draft' ),
-			'author'                 => $user_id,
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			'meta_key'               => '_event_start',
-			'orderby'                => 'meta_value',
-			'order'                  => 'DESC',
-		);
-		$events_i_created_query = new WP_Query( $args );
 
 		$args = array(
 			'post_type'               => Translation_Events::CPT,
@@ -83,6 +74,7 @@ class My_Events_Route extends Route {
 			'order'                   => 'DESC',
 		);
 
+		$user_id                  = get_current_user_id();
 		$user_attending_event_ids = $this->attendee_repository->get_events_for_user( $user_id );
 		if ( empty( $user_attending_event_ids ) ) {
 			// Setting it to an array with a single 0 element will result in the query returning zero results,
