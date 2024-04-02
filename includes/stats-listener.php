@@ -8,6 +8,7 @@ use Exception;
 use GP_Translation;
 use GP_Translation_Set;
 use Wporg\TranslationEvents\Event\Event;
+use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 
 class Stats_Listener {
 	const ACTION_CREATE          = 'create';
@@ -17,9 +18,15 @@ class Stats_Listener {
 
 	private Active_Events_Cache $active_events_cache;
 	private Attendee_Repository $attendee_repository;
+	private Event_Repository_Interface $event_repository;
 
-	public function __construct( Active_Events_Cache $active_events_cache, Attendee_Repository $attendee_repository ) {
+	public function __construct(
+		Active_Events_Cache $active_events_cache,
+		Event_Repository_Interface $event_repository,
+		Attendee_Repository $attendee_repository
+	) {
 		$this->active_events_cache = $active_events_cache;
+		$this->event_repository    = $event_repository;
 		$this->attendee_repository = $attendee_repository;
 	}
 
