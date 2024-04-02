@@ -71,7 +71,7 @@ class Event_Repository_Cached extends Event_Repository {
 			$pages = array( $events );
 		}
 
-		return new Events_Query_Result( $pages[ $page ], count( $pages ) );
+		return new Events_Query_Result( $pages[ $page ], $page, count( $pages ) );
 	}
 
 	private function invalidate_cache(): void {

@@ -276,7 +276,12 @@ class Event_Repository implements Event_Repository_Interface {
 			$events[] = $event;
 		}
 
-		return new Events_Query_Result( $events, $query->max_num_pages );
+		$current_page = isset( $args['paged'] ) ? $args['paged'] - 1 : 0;
+		if ( 0 < $current_page ) {
+			$current_page = 0;
+		}
+
+		return new Events_Query_Result( $events, $current_page, $query->max_num_pages );
 	}
 
 	private function get_event_post( int $event_id ): ?WP_Post {
