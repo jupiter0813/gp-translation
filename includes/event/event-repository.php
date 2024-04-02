@@ -113,8 +113,7 @@ class Event_Repository implements Event_Repository_Interface {
 			$page,
 			$page_size,
 			array(
-				'post_status' => 'publish',
-				'meta_query'  => array(
+				'meta_query' => array(
 					array(
 						'key'     => '_event_start',
 						'value'   => $now->format( 'Y-m-d H:i:s' ),
@@ -122,8 +121,8 @@ class Event_Repository implements Event_Repository_Interface {
 						'type'    => 'DATETIME',
 					),
 				),
-				'orderby'     => array( 'meta_value', 'ID' ),
-				'order'       => 'ASC',
+				'orderby'    => array( 'meta_value', 'ID' ),
+				'order'      => 'ASC',
 			)
 		);
 		// phpcs:enable
@@ -138,8 +137,7 @@ class Event_Repository implements Event_Repository_Interface {
 			$page,
 			$page_size,
 			array(
-				'post_status' => 'publish',
-				'meta_query'  => array(
+				'meta_query' => array(
 					array(
 						'key'     => '_event_end',
 						'value'   => $now->format( 'Y-m-d H:i:s' ),
@@ -147,8 +145,8 @@ class Event_Repository implements Event_Repository_Interface {
 						'type'    => 'DATETIME',
 					),
 				),
-				'orderby'     => array( 'meta_value', 'ID' ),
-				'order'       => 'DESC',
+				'orderby'    => array( 'meta_value', 'ID' ),
+				'order'      => 'DESC',
 			)
 		);
 		// phpcs:enable
@@ -183,9 +181,8 @@ class Event_Repository implements Event_Repository_Interface {
 			$page,
 			$page_size,
 			array(
-				'post_status' => 'publish',
-				'post__in'    => $event_ids_user_is_attending,
-				'meta_query'  => array(
+				'post__in'   => $event_ids_user_is_attending,
+				'meta_query' => array(
 					array(
 						'key'     => '_event_end',
 						'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
@@ -199,10 +196,10 @@ class Event_Repository implements Event_Repository_Interface {
 						'type'    => 'DATETIME',
 					),
 				),
-				'meta_key'    => '_event_end',
-				'meta_type'   => 'DATETIME',
-				'orderby'     => array( 'meta_value', 'ID' ),
-				'order'       => 'DESC',
+				'meta_key'   => '_event_end',
+				'meta_type'  => 'DATETIME',
+				'orderby'    => array( 'meta_value', 'ID' ),
+				'order'      => 'DESC',
 			)
 		);
 		// phpcs:enable
@@ -242,8 +239,7 @@ class Event_Repository implements Event_Repository_Interface {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		$query_args = array(
-			'post_status' => 'publish',
-			'meta_query'  => array(
+			'meta_query' => array(
 				array(
 					'key'     => '_event_start',
 					'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
@@ -257,9 +253,9 @@ class Event_Repository implements Event_Repository_Interface {
 					'type'    => 'DATETIME',
 				),
 			),
-			'meta_key'    => '_event_start',
-			'meta_type'   => 'DATETIME',
-			'orderby'     => array( 'meta_value', 'ID' ),
+			'meta_key'   => '_event_start',
+			'meta_type'  => 'DATETIME',
+			'orderby'    => array( 'meta_value', 'ID' ),
 		);
 		// phpcs:enable
 
@@ -303,6 +299,10 @@ class Event_Repository implements Event_Repository_Interface {
 				'posts_per_page' => $page_size,
 			),
 		);
+
+		if ( ! isset( $args['post_status'] ) ) {
+			$args['post_status'] = 'publish';
+		}
 
 		$query  = new WP_Query( $args );
 		$posts  = $query->get_posts();
