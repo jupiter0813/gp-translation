@@ -7,6 +7,7 @@ use DateTimeZone;
 use Exception;
 use WP_Query;
 use Wporg\TranslationEvents\Attendee_Repository;
+use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
 
@@ -14,11 +15,13 @@ use Wporg\TranslationEvents\Translation_Events;
  * Displays the event list page.
  */
 class List_Route extends Route {
+	private Event_Repository_Interface $event_repository;
 	private Attendee_Repository $attendee_repository;
 
 	public function __construct() {
 		parent::__construct();
-		$this->attendee_repository = new Attendee_Repository();
+		$this->event_repository    = Translation_Events::get_event_repository();
+		$this->attendee_repository = Translation_Events::get_attendee_repository();
 	}
 
 	public function handle(): void {
@@ -63,30 +66,7 @@ class List_Route extends Route {
 		}
 		// phpcs:enable
 
-		$current_events_args  = array(
-			'post_type'      => Translation_Events::CPT,
-			'posts_per_page' => 10,
-			'paged'          => $_current_events_paged,
-			'post_status'    => 'publish',
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-			'meta_query'     => array(
-				array(
-					'key'     => '_event_start',
-					'value'   => $current_datetime_utc,
-					'compare' => '<=',
-					'type'    => 'DATETIME',
-				),
-				array(
-					'key'     => '_event_end',
-					'value'   => $current_datetime_utc,
-					'compare' => '>=',
-					'type'    => 'DATETIME',
-				),
-			),
-			'orderby'        => 'meta_value',
-			'order'          => 'ASC',
-		);
-		$current_events_query = new WP_Query( $current_events_args );
+		$current_events_query = $this->event_repository->get_current_events( $_current_events_paged, 10 );
 
 		$upcoming_events_args  = array(
 			'post_type'      => Translation_Events::CPT,
