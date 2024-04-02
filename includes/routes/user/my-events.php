@@ -2,10 +2,6 @@
 
 namespace Wporg\TranslationEvents\Routes\User;
 
-use DateTime;
-use DateTimeZone;
-use WP_Query;
-use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
@@ -15,12 +11,10 @@ use Wporg\TranslationEvents\Translation_Events;
  */
 class My_Events_Route extends Route {
 	private Event_Repository_Interface $event_repository;
-	private Attendee_Repository $attendee_repository;
 
 	public function __construct() {
 		parent::__construct();
-		$this->event_repository    = Translation_Events::get_event_repository();
-		$this->attendee_repository = Translation_Events::get_attendee_repository();
+		$this->event_repository = Translation_Events::get_event_repository();
 	}
 
 	public function handle(): void {
