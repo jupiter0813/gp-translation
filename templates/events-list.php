@@ -11,7 +11,7 @@ use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Events_Query_Result;
 
 /** @var Events_Query_Result $current_events_query */
-/** @var WP_Query $upcoming_events_query */
+/** @var Events_Query_Result $upcoming_events_query */
 /** @var WP_Query $past_events_query */
 
 gp_title( __( 'Translation Events', 'gp-translation-events' ) );
@@ -58,22 +58,21 @@ if ( ! empty( $current_events_query->events ) ) :
 	wp_reset_postdata();
 endif;
 
-if ( $upcoming_events_query->have_posts() ) :
+if ( ! empty( $upcoming_events_query->events ) ) :
 	?>
 	<h2><?php esc_html_e( 'Upcoming events', 'gp-translation-events' ); ?></h2>
 	<ul class="event-list">
 		<?php
-		while ( $upcoming_events_query->have_posts() ) :
-			$upcoming_events_query->the_post();
-			$event_start = new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) );
+		foreach ( $upcoming_events_query->events as $event ) :
+			$event_url = gp_url( wp_make_link_relative( get_the_permalink( $event->id() ) ) );
 			?>
 			<li class="event-list-item">
-				<a href="<?php echo esc_url( gp_url( wp_make_link_relative( get_the_permalink() ) ) ); ?>"><?php the_title(); ?></a>
-				<span class="event-list-date">starts <?php $event_start->print_relative_time_html(); ?></span>
-				<?php the_excerpt(); ?>
+				<a href="<?php echo esc_url( $event_url ); ?>"><?php echo esc_html( $event->title() ); ?></a>
+				<span class="event-list-date">starts <?php $event->start()->print_relative_time_html(); ?></span>
+				<?php echo esc_html( get_the_excerpt( $event->id() ) ); ?>
 			</li>
 			<?php
-		endwhile;
+		endforeach;
 		?>
 	</ul>
 
@@ -81,8 +80,8 @@ if ( $upcoming_events_query->have_posts() ) :
 	echo wp_kses_post(
 		paginate_links(
 			array(
-				'total'     => $upcoming_events_query->max_num_pages,
-				'current'   => max( 1, $upcoming_events_query->query_vars['paged'] ),
+				'total'     => $upcoming_events_query->page_count,
+				'current'   => $upcoming_events_query->current_page + 1,
 				'format'    => '?upcoming_events_paged=%#%',
 				'prev_text' => '&laquo; Previous',
 				'next_text' => 'Next &raquo;',
@@ -127,7 +126,7 @@ if ( $past_events_query->have_posts() ) :
 	wp_reset_postdata();
 endif;
 
-if ( empty( $current_events_query->events ) && 0 === $upcoming_events_query->post_count && 0 === $past_events_query->post_count ) :
+if ( empty( $current_events_query->events ) && empty( $upcoming_events_query->events ) && 0 === $past_events_query->post_count ) :
 	esc_html_e( 'No events found.', 'gp-translation-events' );
 endif;
 ?>
