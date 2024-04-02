@@ -172,14 +172,13 @@ class Event_Repository implements Event_Repository_Interface {
 				'meta_key'   => '_event_start',
 				'orderby'    => 'meta_value',
 				'order'      => 'ASC',
-			)
+			),
+			$this->attendee_repository->get_events_for_user( $user_id ),
 		);
 		// phpcs:enable
 	}
 
 	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		$event_ids_user_is_attending = $this->attendee_repository->get_events_for_user( $user_id );
-
 		// We consider the start of time to be January 1st 2024,
 		// which is guaranteed to be earlier than when this plugin was created.
 		// It's not possible for there to be events before the plugin was created.
@@ -193,7 +192,6 @@ class Event_Repository implements Event_Repository_Interface {
 			$page,
 			$page_size,
 			array(
-				'post__in'   => $event_ids_user_is_attending,
 				'meta_query' => array(
 					array(
 						'key'     => '_event_end',
@@ -212,7 +210,8 @@ class Event_Repository implements Event_Repository_Interface {
 				'meta_type'  => 'DATETIME',
 				'orderby'    => array( 'meta_value', 'ID' ),
 				'order'      => 'DESC',
-			)
+			),
+			$this->attendee_repository->get_events_for_user( $user_id )
 		);
 		// phpcs:enable
 	}
@@ -271,11 +270,7 @@ class Event_Repository implements Event_Repository_Interface {
 		);
 		// phpcs:enable
 
-		if ( ! empty( $filter_by_ids ) ) {
-			$query_args['post__in'] = $filter_by_ids;
-		}
-
-		return $this->execute_events_query( $page, $page_size, $query_args );
+		return $this->execute_events_query( $page, $page_size, $query_args, $filter_by_ids );
 	}
 
 	/**
@@ -300,7 +295,7 @@ class Event_Repository implements Event_Repository_Interface {
 	 * @throws InvalidStatus
 	 * @throws Exception
 	 */
-	private function execute_events_query( int $page, int $page_size, array $args ): Events_Query_Result {
+	private function execute_events_query( int $page, int $page_size, array $args, array $filter_by_ids = array() ): Events_Query_Result {
 		$this->assert_pagination_arguments( $page, $page_size );
 
 		$args = array_replace_recursive(
@@ -314,6 +309,10 @@ class Event_Repository implements Event_Repository_Interface {
 
 		if ( ! isset( $args['post_status'] ) ) {
 			$args['post_status'] = 'publish';
+		}
+
+		if ( ! empty( $filter_by_ids ) ) {
+			$args['post__in'] = $filter_by_ids;
 		}
 
 		$query  = new WP_Query( $args );
