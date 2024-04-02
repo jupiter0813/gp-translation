@@ -58,6 +58,17 @@ interface Event_Repository_Interface {
 	public function get_current_events( int $page = -1, int $page_size = -1 ): Events_Query_Result;
 
 	/**
+	 * Get events that will be active in the future.
+	 *
+	 * @param int $page      Index of the page to return.
+	 * @param int $page_size Page size.
+	 *
+	 * @return Events_Query_Result
+	 * @throws Exception
+	 */
+	public function get_upcoming_events( int $page = -1, int $page_size = -1 ): Events_Query_Result;
+
+	/**
 	 * Get events that are currently active for a given user.
 	 *
 	 * @param int $user_id   Id of the user.

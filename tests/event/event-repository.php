@@ -150,6 +150,19 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( $event2_id, $events[0]->id() );
 	}
 
+	public function test_get_upcoming_events() {
+		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event1_id = $this->event_factory->create_active( array(), $now->modify( '+1 month' ) );
+		$event2_id = $this->event_factory->create_active( array(), $now->modify( '+2 months' ) );
+		$this->event_factory->create_active( array(), $now->modify( '-2 hours' ) );
+		$this->event_factory->create_inactive_past();
+
+		$events = $this->repository->get_upcoming_events()->events;
+		$this->assertCount( 2, $events );
+		$this->assertEquals( $event1_id, $events[0]->id() );
+		$this->assertEquals( $event2_id, $events[1]->id() );
+	}
+
 	public function test_get_current_events_for_user() {
 		$user_id   = $this->set_normal_user_as_current();
 		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );

@@ -105,6 +105,19 @@ class Event_Repository implements Event_Repository_Interface {
 		);
 	}
 
+	public function get_upcoming_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
+		$this->assert_pagination_arguments( $page, $page_size );
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
+		return $this->get_events_active_between(
+			$now->modify( '+1 second' ),
+			$now->modify( '+1 year' ),
+			array(),
+			$page,
+			$page_size
+		);
+	}
+
 	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		$this->assert_pagination_arguments( $page, $page_size );
 		$event_ids_user_is_attending = $this->attendee_repository->get_events_for_user( $user_id );
