@@ -240,13 +240,13 @@ class Stats_Calculator {
 	/**
 	 * Check if an event has stats.
 	 *
-	 * @param WP_Post $event The event to check.
+	 * @param int $event_id The id of the event to check.
 	 *
 	 * @return bool True if the event has stats, false otherwise.
 	 */
-	public function event_has_stats( WP_Post $event ): bool {
+	public function event_has_stats( int $event_id ): bool {
 		try {
-			$stats = $this->for_event( $event->ID );
+			$stats = $this->for_event( $event_id );
 		} catch ( Exception $e ) {
 			return false;
 		}

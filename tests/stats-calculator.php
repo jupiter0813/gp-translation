@@ -26,7 +26,7 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 		$event_id = $this->event_factory->create_active( array( $user_id ) );
 		$event    = get_post( $event_id );
 
-		$this->assertFalse( $this->calculator->event_has_stats( $event ) );
+		$this->assertFalse( $this->calculator->event_has_stats( $event_id ) );
 	}
 
 	public function test_tells_that_event_has_stats() {
@@ -38,7 +38,7 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 
 		$this->stats_factory->create( $event_id, $user_id, 1, 'create' );
 
-		$this->assertTrue( $this->calculator->event_has_stats( $event ) );
+		$this->assertTrue( $this->calculator->event_has_stats( $event_id ) );
 	}
 
 	public function test_calculates_stats_for_event() {

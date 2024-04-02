@@ -36,7 +36,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			$event_start                   = new Event_Start_Date( get_post_meta( get_the_ID(), '_event_start', true ) );
 			$event_end                     = new Event_End_Date( get_post_meta( get_the_ID(), '_event_end', true ) );
 			$stats_calculator              = new Stats_Calculator();
-			$has_stats                     = $stats_calculator->event_has_stats( get_post() );
+			$has_stats                     = $stats_calculator->event_has_stats( $event_id );
 
 			?>
 			<li class="event-list-item">

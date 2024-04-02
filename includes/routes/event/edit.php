@@ -59,11 +59,11 @@ class Edit_Route extends Route {
 
 		$stats_calculator = new Stats_Calculator();
 
-		if ( $stats_calculator->event_has_stats( $event ) ) {
+		if ( $stats_calculator->event_has_stats( $event_id ) ) {
 			$this->die_with_error( esc_html__( 'You cannot edit an event with translations.', 'gp-translation-events' ), 403 );
 		}
 
-		if ( ! $stats_calculator->event_has_stats( $event ) ) {
+		if ( ! $stats_calculator->event_has_stats( $event_id ) ) {
 			$current_user = wp_get_current_user();
 			if ( ( $current_user->ID === $event->post_author || current_user_can( 'manage_options' ) ) && ! $event_end->is_in_the_past() ) {
 				$create_delete_button = true;
