@@ -68,25 +68,7 @@ class List_Route extends Route {
 
 		$current_events_query  = $this->event_repository->get_current_events( $_current_events_paged, 10 );
 		$upcoming_events_query = $this->event_repository->get_upcoming_events( $_upcoming_events_paged, 10 );
-
-		$past_events_args  = array(
-			'post_type'      => Translation_Events::CPT,
-			'posts_per_page' => 10,
-			'paged'          => $_past_events_paged,
-			'post_status'    => 'publish',
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-			'meta_query'     => array(
-				array(
-					'key'     => '_event_end',
-					'value'   => $current_datetime_utc,
-					'compare' => '<',
-					'type'    => 'DATETIME',
-				),
-			),
-			'orderby'        => 'meta_value',
-			'order'          => 'DESC',
-		);
-		$past_events_query = new WP_Query( $past_events_args );
+		$past_events_query     = $this->event_repository->get_past_events( $_past_events_paged, 10 );
 
 		$user_attending_events_args = array(
 			'post_type'      => Translation_Events::CPT,
