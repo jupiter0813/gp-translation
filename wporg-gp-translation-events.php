@@ -85,7 +85,6 @@ class Translation_Events {
 		require_once __DIR__ . '/includes/event/event-repository.php';
 		require_once __DIR__ . '/includes/event/event-repository-cached.php';
 		require_once __DIR__ . '/includes/event/event-form-handler.php';
-		require_once __DIR__ . '/includes/active-events-cache.php';
 		require_once __DIR__ . '/includes/attendee-repository.php';
 		require_once __DIR__ . '/includes/stats-calculator.php';
 		require_once __DIR__ . '/includes/stats-listener.php';
@@ -97,9 +96,7 @@ class Translation_Events {
 		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Routes\User\My_Events_Route', 'handle' ) );
 		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Routes\Event\Details_Route', 'handle' ) );
 
-		$active_events_cache = new Active_Events_Cache();
-		$stats_listener      = new Stats_Listener(
-			$active_events_cache,
+		$stats_listener = new Stats_Listener(
 			self::get_event_repository(),
 			self::get_attendee_repository(),
 		);

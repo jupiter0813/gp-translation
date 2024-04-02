@@ -16,16 +16,13 @@ class Stats_Listener {
 	const ACTION_REJECT          = 'reject';
 	const ACTION_REQUEST_CHANGES = 'request_changes';
 
-	private Active_Events_Cache $active_events_cache;
 	private Attendee_Repository $attendee_repository;
 	private Event_Repository_Interface $event_repository;
 
 	public function __construct(
-		Active_Events_Cache $active_events_cache,
 		Event_Repository_Interface $event_repository,
 		Attendee_Repository $attendee_repository
 	) {
-		$this->active_events_cache = $active_events_cache;
 		$this->event_repository    = $event_repository;
 		$this->attendee_repository = $attendee_repository;
 	}
