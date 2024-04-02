@@ -7,11 +7,16 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use GP;
-use Wporg\TranslationEvents\Active_Events_Cache;
+use WP_Error;
 use Wporg\TranslationEvents\Stats_Calculator;
-use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Form_Handler {
+	private Event_Repository_Interface $event_repository;
+
+	public function __construct( Event_Repository_Interface $event_repository ) {
+		$this->event_repository = $event_repository;
+	}
+
 	public function handle( array $form_data ): void {
 		if ( ! is_user_logged_in() ) {
 			wp_send_json_error( esc_html__( 'The user must be logged in.', 'gp-translation-events' ), 403 );
@@ -58,27 +63,29 @@ class Event_Form_Handler {
 
 		if ( 'delete_event' === $action ) {
 			// Delete event.
-
-			$event_id = sanitize_text_field( wp_unslash( $form_data['event_id'] ) );
-			$event    = get_post( $event_id );
-			if ( ! $event || Translation_Events::CPT !== $event->post_type ) {
+			$event_id = intval( sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) );
+			$event    = $this->event_repository->get_event( $event_id );
+			if ( ! $event ) {
 				wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 			}
-			if ( ! ( current_user_can( 'delete_post', $event->ID ) || get_current_user_id() === $event->post_author ) ) {
-				wp_send_json_error( 'You do not have permission to delete this event' );
-			}
+
 			$stats_calculator = new Stats_Calculator();
 			try {
-				$event_stats = $stats_calculator->for_event( $event );
+				$event_stats = $stats_calculator->for_event( $event->id() );
 			} catch ( Exception $e ) {
 				wp_send_json_error( esc_html__( 'Failed to calculate event stats.', 'gp-translation-events' ), 500 );
 			}
 			if ( ! empty( $event_stats->rows() ) ) {
-				wp_send_json_error( esc_html__( 'Event has translations and cannot be deleted.', 'gp-translation-events' ), 422 );
+				wp_send_json_error( esc_html__( 'Event has stats so it cannot be deleted.', 'gp-translation-events' ), 422 );
 			}
-			wp_trash_post( $event_id );
-			$response_message = esc_html__( 'Event deleted successfully!', 'gp-translation-events' );
-			$event_status     = 'deleted';
+
+			if ( false === $this->event_repository->delete_event( $event ) ) {
+				$response_message = esc_html__( 'Failed to delete event.', 'gp-translation-events' );
+				$event_status     = $event->status();
+			} else {
+				$response_message = esc_html__( 'Event deleted successfully.', 'gp-translation-events' );
+				$event_status     = 'deleted';
+			}
 		} else {
 			// Create or update event.
 
@@ -112,54 +119,40 @@ class Event_Form_Handler {
 			}
 
 			if ( 'create_event' === $action ) {
-				$event_id         = wp_insert_post(
-					array(
-						'post_type'    => Translation_Events::CPT,
-						'post_title'   => $new_event->title(),
-						'post_content' => $new_event->description(),
-						'post_status'  => $new_event->status(),
-					)
-				);
-				$response_message = esc_html__( 'Event created successfully!', 'gp-translation-events' );
+				$result = $this->event_repository->insert_event( $new_event );
+				if ( $result instanceof WP_Error ) {
+					wp_send_json_error( esc_html__( 'Failed to create event.', 'gp-translation-events' ), 422 );
+					return;
+				}
+				$response_message = esc_html__( 'Event created successfully.', 'gp-translation-events' );
 			}
 			if ( 'edit_event' === $action ) {
-				if ( ! isset( $form_data['event_id'] ) ) {
-					wp_send_json_error( esc_html__( 'Event id is required.', 'gp-translation-events' ), 422 );
-				}
-				$event_id = sanitize_text_field( wp_unslash( $form_data['event_id'] ) );
-				$event    = get_post( $event_id );
-				if ( ! $event || Translation_Events::CPT !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
+				$event = $this->event_repository->get_event( $new_event->id() );
+				if ( ! $event ) {
 					wp_send_json_error( esc_html__( 'Event does not exist.', 'gp-translation-events' ), 404 );
 				}
-				wp_update_post(
-					array(
-						'ID'           => $event_id,
-						'post_title'   => $new_event->title(),
-						'post_content' => $new_event->description(),
-						'post_status'  => $new_event->status(),
-					)
-				);
-				$response_message = esc_html__( 'Event updated successfully!', 'gp-translation-events' );
-			}
-			if ( ! $event_id ) {
-				wp_send_json_error( esc_html__( 'Event could not be created or updated.', 'gp-translation-events' ), 422 );
-			}
-			try {
-				update_post_meta( $event_id, '_event_start', $new_event->start()->format( 'Y-m-d H:i:s' ) );
-				update_post_meta( $event_id, '_event_end', $new_event->end()->format( 'Y-m-d H:i:s' ) );
-			} catch ( Exception $e ) {
-				wp_send_json_error( esc_html__( 'Invalid start or end', 'gp-translation-events' ), 422 );
-			}
-			update_post_meta( $event_id, '_event_timezone', $new_event->timezone()->getName() );
 
+				try {
+					$event->set_status( $new_event->status() );
+					$event->set_title( $new_event->title() );
+					$event->set_description( $new_event->description() );
+					$event->set_timezone( $new_event->timezone() );
+					$event->set_times( $new_event->start()->utc(), $new_event->end()->utc() );
+				} catch ( Exception $e ) {
+					wp_send_json_error( esc_html__( 'Failed to update event.', 'gp-translation-events' ), 422 );
+					return;
+				}
+
+				$result = $this->event_repository->update_event( $event );
+				if ( $result instanceof WP_Error ) {
+					wp_send_json_error( esc_html__( 'Failed to update event.', 'gp-translation-events' ), 422 );
+					return;
+				}
+				$response_message = esc_html__( 'Event updated successfully', 'gp-translation-events' );
+			}
+
+			$event_id     = $new_event->id();
 			$event_status = $new_event->status();
-		}
-
-		try {
-			Active_Events_Cache::invalidate();
-		} catch ( Exception $e ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( $e );
 		}
 
 		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
@@ -220,15 +213,16 @@ class Event_Form_Handler {
 			throw new InvalidEnd();
 		}
 
-		return new Event(
-			intval( $event_id ),
+		$event = new Event(
+			get_current_user_id(),
 			$start->setTimezone( new DateTimeZone( 'UTC' ) ),
 			$end->setTimezone( new DateTimeZone( 'UTC' ) ),
 			$timezone,
-			sanitize_title( $title ),
 			$event_status,
 			$title,
 			$description,
 		);
+		$event->set_id( intval( $event_id ) );
+		return $event;
 	}
 }

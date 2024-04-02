@@ -40,15 +40,4 @@ class Active_Events_Cache {
 
 		return $result;
 	}
-
-	/**
-	 * Invalidates the active events cache.
-	 *
-	 * @throws Exception When it fails to invalidate the cache.
-	 */
-	public static function invalidate(): void {
-		if ( ! wp_cache_delete( self::KEY ) ) {
-			throw new Exception( 'Failed to invalidate cached events' );
-		}
-	}
 }

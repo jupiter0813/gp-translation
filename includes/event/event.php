@@ -40,11 +40,12 @@ class InvalidStatus extends Exception {
 }
 
 class Event {
-	private int $id;
+	private int $id = 0;
+	private int $author_id;
 	private DateTimeImmutable $start;
 	private DateTimeImmutable $end;
 	private DateTimeZone $timezone;
-	private string $slug;
+	private string $slug = '';
 	private string $status;
 	private string $title;
 	private string $description;
@@ -59,16 +60,17 @@ class Event {
 			throw new Exception( 'Invalid event meta' );
 		}
 
-		return new Event(
-			$id,
+		$event = new Event(
+			0,           // TODO: this function will be removed, this is here so tests pass.
 			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
 			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
 			new DateTimeZone( $meta['_event_timezone'][0] ),
-			'foo-slug',  // TODO: this function will be removed, this is here so tests pass.
 			'publish',   // TODO: this function will be removed, this is here so tests pass.
 			'Foo title', // TODO: this function will be removed, this is here so tests pass.
 			''
 		);
+		$event->set_id( $id );
+		return $event;
 	}
 
 	/**
@@ -78,18 +80,15 @@ class Event {
 	 * @throws InvalidTitle
 	 */
 	public function __construct(
-		int $id,
+		int $author_id,
 		DateTimeImmutable $start,
 		DateTimeImmutable $end,
 		DateTimeZone $timezone,
-		string $slug,
 		string $status,
 		string $title,
 		string $description
 	) {
-		$this->slug = $slug;
-
-		$this->set_id( $id );
+		$this->author_id = $author_id;
 		$this->set_times( $start, $end );
 		$this->set_timezone( $timezone );
 		$this->set_status( $status );
@@ -99,6 +98,10 @@ class Event {
 
 	public function id(): int {
 		return $this->id;
+	}
+
+	public function author_id(): int {
+		return $this->author_id;
 	}
 
 	public function start(): Event_Start_Date {
@@ -131,6 +134,10 @@ class Event {
 
 	public function set_id( int $id ): void {
 		$this->id = $id;
+	}
+
+	public function set_slug( string $slug ): void {
+		$this->slug = $slug;
 	}
 
 	/**

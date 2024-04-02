@@ -22,6 +22,15 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 	}
 
+	public function test_get_event_returns_null_when_post_does_not_not_have_correct_type() {
+		$id = wp_insert_post(
+			array(
+				'post_type' => 'foo',
+			)
+		);
+		$this->assertNull( $this->repository->get_event( $id ) );
+	}
+
 	public function test_get_event_returns_null_when_event_does_not_exist() {
 		$this->assertNull( $this->repository->get_event( 42 ) );
 	}
@@ -54,7 +63,6 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$start       = $now->modify( '-1 hours' );
 		$end         = $now->modify( '+1 hours' );
 		$timezone    = new DateTimeZone( 'Europe/Lisbon' );
-		$slug        = 'foo-slug';
 		$status      = 'publish';
 		$title       = 'Foo title';
 		$description = 'Foo Description';
@@ -64,7 +72,6 @@ class Event_Repository_Test extends GP_UnitTestCase {
 			$start,
 			$end,
 			$timezone,
-			$slug,
 			$status,
 			$title,
 			$description,
@@ -78,7 +85,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( $start->getTimestamp(), $created_event->start()->getTimestamp() );
 		$this->assertEquals( $end->getTimestamp(), $created_event->end()->getTimestamp() );
 		$this->assertEquals( $timezone, $created_event->timezone() );
-		$this->assertEquals( $slug, $created_event->slug() );
+		$this->assertEquals( 'foo-title', $created_event->slug() );
 		$this->assertEquals( $status, $created_event->status() );
 		$this->assertEquals( $title, $created_event->title() );
 		$this->assertEquals( $description, $created_event->description() );

@@ -57,7 +57,6 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 			$now,
 			$now->modify( '+1 hour' ),
 			new DateTimeZone( 'Europe/Lisbon' ),
-			'foo',
 			'draft',
 			'Foo',
 			'Foo.'
