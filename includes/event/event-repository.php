@@ -93,7 +93,6 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function get_current_events( int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $page, $page_size );
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		return $this->get_events_active_between(
@@ -106,7 +105,6 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function get_upcoming_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $page, $page_size );
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		return $this->get_events_active_between(
@@ -119,8 +117,6 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function get_past_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $page, $page_size );
-
 		// We consider the start of time to be January 1st 2024,
 		// which is guaranteed to be earlier than when this plugin was created.
 		// It's not possible for there to be events before the plugin was created.
@@ -138,7 +134,6 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $page, $page_size );
 		$event_ids_user_is_attending = $this->attendee_repository->get_events_for_user( $user_id );
 
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
@@ -152,7 +147,6 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $page, $page_size );
 		$event_ids_user_is_attending = $this->attendee_repository->get_events_for_user( $user_id );
 
 		// We consider the start of time to be January 1st 2024,
@@ -165,12 +159,12 @@ class Event_Repository implements Event_Repository_Interface {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		return $this->execute_events_query(
+			$page,
+			$page_size,
 			array(
-				'post_status'    => 'publish',
-				'post__in'       => $event_ids_user_is_attending,
-				'paged'          => $page,
-				'posts_per_page' => $page_size,
-				'meta_query'     => array(
+				'post_status' => 'publish',
+				'post__in'    => $event_ids_user_is_attending,
+				'meta_query'  => array(
 					array(
 						'key'     => '_event_end',
 						'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
@@ -184,28 +178,27 @@ class Event_Repository implements Event_Repository_Interface {
 						'type'    => 'DATETIME',
 					),
 				),
-				'meta_key'       => '_event_end',
-				'meta_type'      => 'DATETIME',
-				'orderby'        => array( 'meta_value', 'ID' ),
-				'order'          => 'DESC',
+				'meta_key'    => '_event_end',
+				'meta_type'   => 'DATETIME',
+				'orderby'     => array( 'meta_value', 'ID' ),
+				'order'       => 'DESC',
 			)
 		);
 		// phpcs:enable
 	}
 
 	public function get_events_created_by_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $page, $page_size );
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		return $this->execute_events_query(
+			$page,
+			$page_size,
 			array(
-				'post_status'    => array( 'publish', 'draft' ),
-				'author'         => $user_id,
-				'paged'          => $page,
-				'posts_per_page' => $page_size,
-				'meta_key'       => '_event_start',
-				'orderby'        => array( 'meta_value', 'ID' ),
-				'order'          => 'DESC',
+				'post_status' => array( 'publish', 'draft' ),
+				'author'      => $user_id,
+				'meta_key'    => '_event_start',
+				'orderby'     => array( 'meta_value', 'ID' ),
+				'order'       => 'DESC',
 			)
 		);
 		// phpcs:enable
@@ -228,10 +221,8 @@ class Event_Repository implements Event_Repository_Interface {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		$query_args = array(
-			'post_status'    => 'publish',
-			'paged'          => $page,
-			'posts_per_page' => $page_size,
-			'meta_query'     => array(
+			'post_status' => 'publish',
+			'meta_query'  => array(
 				array(
 					'key'     => '_event_start',
 					'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
@@ -245,9 +236,9 @@ class Event_Repository implements Event_Repository_Interface {
 					'type'    => 'DATETIME',
 				),
 			),
-			'meta_key'       => '_event_start',
-			'meta_type'      => 'DATETIME',
-			'orderby'        => array( 'meta_value', 'ID' ),
+			'meta_key'    => '_event_start',
+			'meta_type'   => 'DATETIME',
+			'orderby'     => array( 'meta_value', 'ID' ),
 		);
 		// phpcs:enable
 
@@ -255,7 +246,7 @@ class Event_Repository implements Event_Repository_Interface {
 			$query_args['post__in'] = $filter_by_ids;
 		}
 
-		return $this->execute_events_query( $query_args );
+		return $this->execute_events_query( $page, $page_size, $query_args );
 	}
 
 	/**
@@ -280,11 +271,15 @@ class Event_Repository implements Event_Repository_Interface {
 	 * @throws InvalidStatus
 	 * @throws Exception
 	 */
-	private function execute_events_query( array $args ): Events_Query_Result {
+	private function execute_events_query( int $page, int $page_size, array $args ): Events_Query_Result {
+		$this->assert_pagination_arguments( $page, $page_size );
+
 		$args = array_replace_recursive(
 			$args,
 			array(
-				'post_type' => self::POST_TYPE,
+				'post_type'      => self::POST_TYPE,
+				'paged'          => $page,
+				'posts_per_page' => $page_size,
 			),
 		);
 
@@ -308,12 +303,7 @@ class Event_Repository implements Event_Repository_Interface {
 			$events[] = $event;
 		}
 
-		$current_page = isset( $args['paged'] ) ? $args['paged'] - 1 : 0;
-		if ( 0 < $current_page ) {
-			$current_page = 0;
-		}
-
-		return new Events_Query_Result( $events, $current_page, $query->max_num_pages );
+		return new Events_Query_Result( $events, $page, $query->max_num_pages );
 	}
 
 	private function get_event_post( int $event_id ): ?WP_Post {
