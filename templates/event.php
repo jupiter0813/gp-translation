@@ -5,9 +5,6 @@
 
 namespace Wporg\TranslationEvents;
 
-use WP_Post;
-
-/** @var WP_Post $event */
 /** @var int $event_id */
 /** @var string $event_title */
 /** @var string $event_description */
