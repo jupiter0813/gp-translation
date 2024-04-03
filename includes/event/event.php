@@ -51,29 +51,6 @@ class Event {
 	private string $description;
 
 	/**
-	 * Make an Event from post meta.
-	 *
-	 * @throws Exception When dates are invalid.
-	 */
-	public static function from_post_meta( int $id, array $meta ): Event {
-		if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) || ! isset( $meta['_event_timezone'][0] ) ) {
-			throw new Exception( 'Invalid event meta' );
-		}
-
-		$event = new Event(
-			0,           // TODO: this function will be removed, this is here so tests pass.
-			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
-			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
-			new DateTimeZone( $meta['_event_timezone'][0] ),
-			'publish',   // TODO: this function will be removed, this is here so tests pass.
-			'Foo title', // TODO: this function will be removed, this is here so tests pass.
-			''
-		);
-		$event->set_id( $id );
-		return $event;
-	}
-
-	/**
 	 * @throws InvalidStart
 	 * @throws InvalidEnd
 	 * @throws InvalidStatus
