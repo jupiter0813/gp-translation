@@ -33,7 +33,9 @@
 					'click',
 					function ( e ) {
 						e.preventDefault();
-						$( this ).closest( 'div' ).find( 'textarea' ).append( $( this ).data( 'snippet' ) );
+						var textArea = $( this ).closest( 'div' ).find( 'textarea' );
+						var textAreaContent = textArea.val();
+						textArea.val( textAreaContent + $( this ).data( 'snippet' ) );
 					}
 				);
 			}
