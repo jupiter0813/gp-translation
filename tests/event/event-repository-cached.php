@@ -8,8 +8,8 @@ use GP_UnitTestCase;
 use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event;
-use Wporg\TranslationEvents\Event_End_Date;
-use Wporg\TranslationEvents\Event_Start_Date;
+use Wporg\TranslationEvents\Event\Event_End_Date;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 
 class Event_Repository_Cached_Test extends GP_UnitTestCase {

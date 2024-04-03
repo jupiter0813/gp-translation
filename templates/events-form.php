@@ -6,6 +6,8 @@
 namespace Wporg\TranslationEvents;
 
 use DateTimeZone;
+use Wporg\TranslationEvents\Event\Event_End_Date;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
 
 /** @var string $event_page_title */
 /** @var string $event_form_name */

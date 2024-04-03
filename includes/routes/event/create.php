@@ -2,11 +2,10 @@
 
 namespace Wporg\TranslationEvents\Routes\Event;
 
+use Wporg\TranslationEvents\Event\Event_End_Date;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Routes\Route;
 
-use DateTimeZone;
-use Wporg\TranslationEvents\Event_End_Date;
-use Wporg\TranslationEvents\Event_Start_Date;
 /**
  * Displays the event create page.
  */

@@ -3,13 +3,10 @@
 namespace Wporg\TranslationEvents\Event;
 
 use DateTime;
-use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use GP;
 use WP_Error;
-use Wporg\TranslationEvents\Event_End_Date;
-use Wporg\TranslationEvents\Event_Start_Date;
 use Wporg\TranslationEvents\Stats_Calculator;
 
 class Event_Form_Handler {

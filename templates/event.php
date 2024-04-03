@@ -5,6 +5,9 @@
 
 namespace Wporg\TranslationEvents;
 
+use Wporg\TranslationEvents\Event\Event_End_Date;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
+
 /** @var int $event_id */
 /** @var string $event_title */
 /** @var string $event_description */

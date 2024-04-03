@@ -2,9 +2,6 @@
 
 namespace Wporg\TranslationEvents\Routes\Event;
 
-use DateTime;
-use DateTimeImmutable;
-use DateTimeZone;
 use Exception;
 use GP;
 use Wporg\TranslationEvents\Attendee_Repository;
@@ -12,8 +9,6 @@ use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
-use Wporg\TranslationEvents\Event_Start_Date;
-use Wporg\TranslationEvents\Event_End_Date;
 
 /**
  * Displays the event details page.

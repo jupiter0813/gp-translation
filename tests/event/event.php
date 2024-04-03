@@ -9,8 +9,8 @@ use Wporg\TranslationEvents\Event\InvalidStart;
 use Wporg\TranslationEvents\Event\InvalidEnd;
 use Wporg\TranslationEvents\Event\InvalidStatus;
 use Wporg\TranslationEvents\Event\InvalidTitle;
-use Wporg\TranslationEvents\Event_End_Date;
-use Wporg\TranslationEvents\Event_Start_Date;
+use Wporg\TranslationEvents\Event\Event_End_Date;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
 
 class Event_Test extends WP_UnitTestCase {
 	public function test_validates_start_and_end() {

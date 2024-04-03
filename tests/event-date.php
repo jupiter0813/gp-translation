@@ -3,8 +3,7 @@
 namespace Wporg\Tests;
 
 use GP_UnitTestCase;
-use Wporg\TranslationEvents\Event_Start_Date;
-use Wporg\TranslationEvents\Event_End_Date;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
 
 class Event_Date_Test extends GP_UnitTestCase {
 	public function test_timezone() {
