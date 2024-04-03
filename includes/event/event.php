@@ -42,8 +42,8 @@ class InvalidStatus extends Exception {
 class Event {
 	private int $id = 0;
 	private int $author_id;
-	private DateTimeImmutable $start;
-	private DateTimeImmutable $end;
+	private Event_Start_Date $start;
+	private Event_End_Date $end;
 	private DateTimeZone $timezone;
 	private string $slug = '';
 	private string $status;
@@ -58,8 +58,8 @@ class Event {
 	 */
 	public function __construct(
 		int $author_id,
-		DateTimeImmutable $start,
-		DateTimeImmutable $end,
+		Event_Start_Date $start,
+		Event_End_Date $end,
 		DateTimeZone $timezone,
 		string $status,
 		string $title,
@@ -82,11 +82,11 @@ class Event {
 	}
 
 	public function start(): Event_Start_Date {
-		return new Event_Start_Date( $this->start->format( 'Y-m-d H:i:s' ), $this->timezone() );
+		return $this->start;
 	}
 
 	public function end(): Event_End_Date {
-		return new Event_End_Date( $this->end->format( 'Y-m-d H:i:s' ), $this->timezone() );
+		return $this->end;
 	}
 
 	public function timezone(): DateTimeZone {
@@ -120,7 +120,7 @@ class Event {
 	/**
 	 * @throws InvalidStart|InvalidEnd
 	 */
-	public function set_times( DateTimeImmutable $start, DateTimeImmutable $end ): void {
+	public function set_times( Event_Start_Date $start, Event_End_Date $end ): void {
 		$this->validate_times( $start, $end );
 		$this->start = $start;
 		$this->end   = $end;
@@ -158,7 +158,7 @@ class Event {
 	 * @throws InvalidStart
 	 * @throws InvalidEnd
 	 */
-	private function validate_times( DateTimeImmutable $start, DateTimeImmutable $end ) {
+	private function validate_times( Event_Start_Date $start, Event_End_Date $end ) {
 		if ( $end <= $start ) {
 			throw new InvalidEnd();
 		}

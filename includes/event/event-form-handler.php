@@ -8,6 +8,8 @@ use DateTimeZone;
 use Exception;
 use GP;
 use WP_Error;
+use Wporg\TranslationEvents\Event_End_Date;
+use Wporg\TranslationEvents\Event_Start_Date;
 use Wporg\TranslationEvents\Stats_Calculator;
 
 class Event_Form_Handler {
@@ -137,7 +139,7 @@ class Event_Form_Handler {
 					$event->set_title( $new_event->title() );
 					$event->set_description( $new_event->description() );
 					$event->set_timezone( $new_event->timezone() );
-					$event->set_times( $new_event->start()->utc(), $new_event->end()->utc() );
+					$event->set_times( $new_event->start(), $new_event->end() );
 				} catch ( Exception $e ) {
 					wp_send_json_error( esc_html__( 'Failed to update event.', 'gp-translation-events' ), 422 );
 					return;
@@ -202,13 +204,13 @@ class Event_Form_Handler {
 		}
 
 		try {
-			$start = new DateTimeImmutable( $event_start, $timezone );
+			$start = new Event_Start_Date( $event_start, $timezone );
 		} catch ( Exception $e ) {
 			throw new InvalidStart();
 		}
 
 		try {
-			$end = new DateTimeImmutable( $event_end, $timezone );
+			$end = new Event_End_Date( $event_end, $timezone );
 		} catch ( Exception $e ) {
 			throw new InvalidEnd();
 		}

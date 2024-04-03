@@ -9,6 +9,8 @@ use WP_Error;
 use WP_Post;
 use WP_Query;
 use Wporg\TranslationEvents\Attendee_Repository;
+use Wporg\TranslationEvents\Event_End_Date;
+use Wporg\TranslationEvents\Event_Start_Date;
 use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Repository implements Event_Repository_Interface {
@@ -347,10 +349,11 @@ class Event_Repository implements Event_Repository_Interface {
 	 */
 	private function get_event_meta( int $event_id ): array {
 		$meta = get_post_meta( $event_id );
+		$utc  = new DateTimeZone( 'UTC' );
 
 		return array(
-			'start'    => self::parse_utc_datetime( $meta['_event_start'][0] ),
-			'end'      => self::parse_utc_datetime( $meta['_event_end'][0] ),
+			'start'    => new Event_Start_Date( $meta['_event_start'][0], $utc ),
+			'end'      => new Event_End_Date( $meta['_event_end'][0], $utc ),
 			'timezone' => new DateTimeZone( $meta['_event_timezone'][0] ),
 		);
 	}
@@ -359,9 +362,5 @@ class Event_Repository implements Event_Repository_Interface {
 		update_post_meta( $event->id(), '_event_start', $event->start()->utc()->format( 'Y-m-d H:i:s' ) );
 		update_post_meta( $event->id(), '_event_end', $event->end()->utc()->format( 'Y-m-d H:i:s' ) );
 		update_post_meta( $event->id(), '_event_timezone', $event->timezone()->getName() );
-	}
-
-	private function parse_utc_datetime( string $datetime ): DateTimeImmutable {
-		return DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $datetime, new DateTimeZone( 'UTC' ) );
 	}
 }
