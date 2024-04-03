@@ -335,9 +335,6 @@ ul.text-snippets {
 	padding: 0;
 	margin-left: 140px;
 }
-ul.text-snippets li {
-	display: inline;
-}
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
 
