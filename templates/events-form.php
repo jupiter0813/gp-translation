@@ -5,6 +5,8 @@
 
 namespace Wporg\TranslationEvents;
 
+use DateTimeZone;
+
 /** @var string $event_page_title */
 /** @var string $event_form_name */
 /** @var int    $event_id */
@@ -12,7 +14,7 @@ namespace Wporg\TranslationEvents;
 /** @var string $event_description */
 /** @var Event_Start_Date $event_start */
 /** @var Event_End_Date $event_end */
-/** @var Datetime_Timezone|null $event_timezone */
+/** @var DateTimeZone|null $event_timezone */
 /** @var string $event_url */
 /** @var string $css_show_url */
 
