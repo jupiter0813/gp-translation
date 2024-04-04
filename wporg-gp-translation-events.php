@@ -169,7 +169,7 @@ class Translation_Events {
 		$stats_calculator    = new Stats_Calculator();
 		$attendee_repository = new Attendee_Repository();
 		foreach ( $events as $event ) {
-			foreach ( $stats_calculator->get_contributors( $event ) as $user ) {
+			foreach ( $stats_calculator->get_contributors( $event->ID ) as $user ) {
 				$attendee_repository->add_attendee( $event->ID, $user->ID );
 			}
 		}
