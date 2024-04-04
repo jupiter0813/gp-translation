@@ -2,10 +2,7 @@
 
 namespace Wporg\TranslationEvents\Event;
 
-use DateTimeImmutable;
 use DateTimeZone;
-use Wporg\TranslationEvents\Event_Start_Date;
-use Wporg\TranslationEvents\Event_End_Date;
 use Exception;
 use Throwable;
 
@@ -42,36 +39,13 @@ class InvalidStatus extends Exception {
 class Event {
 	private int $id = 0;
 	private int $author_id;
-	private DateTimeImmutable $start;
-	private DateTimeImmutable $end;
+	private Event_Start_Date $start;
+	private Event_End_Date $end;
 	private DateTimeZone $timezone;
 	private string $slug = '';
 	private string $status;
 	private string $title;
 	private string $description;
-
-	/**
-	 * Make an Event from post meta.
-	 *
-	 * @throws Exception When dates are invalid.
-	 */
-	public static function from_post_meta( int $id, array $meta ): Event {
-		if ( ! isset( $meta['_event_start'][0] ) || ! isset( $meta['_event_end'][0] ) || ! isset( $meta['_event_timezone'][0] ) ) {
-			throw new Exception( 'Invalid event meta' );
-		}
-
-		$event = new Event(
-			0,           // TODO: this function will be removed, this is here so tests pass.
-			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_start'][0], new DateTimeZone( 'UTC' ) ),
-			DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $meta['_event_end'][0], new DateTimeZone( 'UTC' ) ),
-			new DateTimeZone( $meta['_event_timezone'][0] ),
-			'publish',   // TODO: this function will be removed, this is here so tests pass.
-			'Foo title', // TODO: this function will be removed, this is here so tests pass.
-			''
-		);
-		$event->set_id( $id );
-		return $event;
-	}
 
 	/**
 	 * @throws InvalidStart
@@ -81,8 +55,8 @@ class Event {
 	 */
 	public function __construct(
 		int $author_id,
-		DateTimeImmutable $start,
-		DateTimeImmutable $end,
+		Event_Start_Date $start,
+		Event_End_Date $end,
 		DateTimeZone $timezone,
 		string $status,
 		string $title,
@@ -105,11 +79,11 @@ class Event {
 	}
 
 	public function start(): Event_Start_Date {
-		return new Event_Start_Date( $this->start->format( 'Y-m-d H:i:s' ), $this->timezone() );
+		return $this->start;
 	}
 
 	public function end(): Event_End_Date {
-		return new Event_End_Date( $this->end->format( 'Y-m-d H:i:s' ), $this->timezone() );
+		return $this->end;
 	}
 
 	public function timezone(): DateTimeZone {
@@ -143,7 +117,7 @@ class Event {
 	/**
 	 * @throws InvalidStart|InvalidEnd
 	 */
-	public function set_times( DateTimeImmutable $start, DateTimeImmutable $end ): void {
+	public function set_times( Event_Start_Date $start, Event_End_Date $end ): void {
 		$this->validate_times( $start, $end );
 		$this->start = $start;
 		$this->end   = $end;
@@ -181,7 +155,7 @@ class Event {
 	 * @throws InvalidStart
 	 * @throws InvalidEnd
 	 */
-	private function validate_times( DateTimeImmutable $start, DateTimeImmutable $end ) {
+	private function validate_times( Event_Start_Date $start, Event_End_Date $end ) {
 		if ( $end <= $start ) {
 			throw new InvalidEnd();
 		}

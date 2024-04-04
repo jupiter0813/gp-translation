@@ -8,6 +8,8 @@ use GP_UnitTestCase;
 use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository;
+use Wporg\TranslationEvents\Event\Event_End_Date;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 
 class Event_Repository_Test extends GP_UnitTestCase {
@@ -59,9 +61,8 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_create_event() {
-		$now         = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$start       = $now->modify( '-1 hours' );
-		$end         = $now->modify( '+1 hours' );
+		$start       = ( new Event_Start_Date( 'now' ) )->modify( '-1 hours' );
+		$end         = ( new Event_End_Date( 'now' ) )->modify( '+1 hours' );
 		$timezone    = new DateTimeZone( 'Europe/Lisbon' );
 		$status      = 'publish';
 		$title       = 'Foo title';
@@ -95,9 +96,8 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$event_id = $this->event_factory->create_active();
 		$event    = $this->repository->get_event( $event_id );
 
-		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		// phpcs:disable Squiz.PHP.DisallowMultipleAssignments.Found
-		$event->set_times( $updated_start = $now->modify( '+1 days' ), $updated_end = $now->modify( '+2 days' ) );
+		$event->set_times( $updated_start = ( new Event_Start_Date( 'now' ) )->modify( '+1 days' ), $updated_end = ( new Event_End_Date( 'now' ) )->modify( '+2 days' ) );
 		$event->set_timezone( $updated_timezone = new DateTimeZone( 'Europe/Madrid' ) );
 		$event->set_status( $updated_status = 'draft' );
 		$event->set_title( $updated_title = 'Updated title' );

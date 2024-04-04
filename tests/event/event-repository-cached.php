@@ -8,6 +8,8 @@ use GP_UnitTestCase;
 use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event;
+use Wporg\TranslationEvents\Event\Event_End_Date;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 
 class Event_Repository_Cached_Test extends GP_UnitTestCase {
@@ -51,11 +53,10 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 	}
 
 	public function test_invalidates_cache_when_events_are_created() {
-		$now   = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event = new Event(
 			0,
-			$now,
-			$now->modify( '+1 hour' ),
+			new Event_Start_Date( 'now' ),
+			( new Event_End_Date( 'now' ) )->modify( '+1 hour' ),
 			new DateTimeZone( 'Europe/Lisbon' ),
 			'draft',
 			'Foo',
