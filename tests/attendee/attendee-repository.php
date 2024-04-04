@@ -38,16 +38,6 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->assertEquals( $event2_id, $rows[1]->event_id );
 	}
 
-	public function test_remove_attendee_invalid_event_id() {
-		$this->expectExceptionMessage( 'invalid event id' );
-		$this->repository->remove_attendee( 0, 1 );
-	}
-
-	public function test_remove_attendee_invalid_user_id() {
-		$this->expectExceptionMessage( 'invalid user id' );
-		$this->repository->remove_attendee( 1, 0 );
-	}
-
 	public function test_remove_attendee() {
 		$event1_id = 1;
 		$event2_id = 2;
@@ -56,7 +46,7 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->repository->add_attendee( new Attendee( $event1_id, $user_id ) );
 		$this->repository->add_attendee( new Attendee( $event2_id, $user_id ) );
 
-		$this->repository->remove_attendee( $event1_id, $user_id );
+		$this->repository->remove_attendee( new Attendee( $event1_id, $user_id ) );
 
 		$rows = $this->all_table_rows();
 		$this->assertCount( 1, $rows );
