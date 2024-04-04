@@ -60,8 +60,8 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 
 		$this->repository->add_attendee( new Attendee( $event1_id, $user_id ) );
 
-		$this->assertTrue( $this->repository->is_attending( $event1_id, $user_id ) );
-		$this->assertFalse( $this->repository->is_attending( $event2_id, $user_id ) );
+		$this->assertTrue( $this->repository->is_attending( new Attendee( $event1_id, $user_id ) ) );
+		$this->assertFalse( $this->repository->is_attending( new Attendee( $event2_id, $user_id ) ) );
 	}
 
 	public function test_get_events_for_user() {

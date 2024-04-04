@@ -302,7 +302,7 @@ class Translation_Events {
 			$attendee_repository = self::get_attendee_repository();
 			$attendee            = new Attendee( $post->ID, get_current_user_id() );
 
-			if ( ! $attendee_repository->is_attending( $attendee->event_id(), $attendee->user_id() ) ) {
+			if ( ! $attendee_repository->is_attending( $attendee ) ) {
 				$attendee_repository->add_attendee( $attendee );
 			}
 		}

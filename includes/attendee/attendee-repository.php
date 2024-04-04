@@ -46,7 +46,7 @@ class Attendee_Repository {
 		// phpcs:enable
 	}
 
-	public function is_attending( int $event_id, int $user_id ): bool {
+	public function is_attending( Attendee $attendee ): bool {
 		global $wpdb, $gp_table_prefix;
 
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -61,8 +61,8 @@ class Attendee_Repository {
 				  and user_id = %d
 			",
 				array(
-					$event_id,
-					$user_id,
+					$attendee->event_id(),
+					$attendee->user_id(),
 				)
 			)
 		);
