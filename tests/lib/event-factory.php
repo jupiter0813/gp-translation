@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use WP_UnitTest_Factory_For_Post;
 use WP_UnitTest_Generator_Sequence;
-use Wporg\TranslationEvents\Attendee_Repository;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Factory extends WP_UnitTest_Factory_For_Post {

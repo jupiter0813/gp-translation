@@ -1,9 +1,9 @@
 <?php
 
-namespace Wporg\Tests;
+namespace Wporg\Tests\Attendee;
 
 use WP_UnitTestCase;
-use Wporg\TranslationEvents\Attendee_Repository;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 
 class Attendee_Repository_Test extends WP_UnitTestCase {
 	private Attendee_Repository $repository;

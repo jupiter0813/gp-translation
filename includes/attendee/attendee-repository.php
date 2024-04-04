@@ -1,6 +1,6 @@
 <?php
 
-namespace Wporg\TranslationEvents;
+namespace Wporg\TranslationEvents\Attendee;
 
 use Exception;
 

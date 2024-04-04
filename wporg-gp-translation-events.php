@@ -24,6 +24,7 @@ use Exception;
 use GP;
 use WP_Post;
 use WP_Query;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
@@ -79,13 +80,13 @@ class Translation_Events {
 		require_once __DIR__ . '/includes/routes/event/list.php';
 		require_once __DIR__ . '/includes/routes/user/attend-event.php';
 		require_once __DIR__ . '/includes/routes/user/my-events.php';
+		require_once __DIR__ . '/includes/attendee/attendee-repository.php';
 		require_once __DIR__ . '/includes/event/event-date.php';
 		require_once __DIR__ . '/includes/event/event.php';
 		require_once __DIR__ . '/includes/event/event-repository-interface.php';
 		require_once __DIR__ . '/includes/event/event-repository.php';
 		require_once __DIR__ . '/includes/event/event-repository-cached.php';
 		require_once __DIR__ . '/includes/event/event-form-handler.php';
-		require_once __DIR__ . '/includes/attendee-repository.php';
 		require_once __DIR__ . '/includes/stats-calculator.php';
 		require_once __DIR__ . '/includes/stats-listener.php';
 

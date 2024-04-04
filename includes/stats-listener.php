@@ -7,6 +7,7 @@ use DateTimeZone;
 use Exception;
 use GP_Translation;
 use GP_Translation_Set;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 

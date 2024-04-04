@@ -4,7 +4,7 @@ namespace Wporg\TranslationEvents\Routes\Event;
 
 use Exception;
 use GP;
-use Wporg\TranslationEvents\Attendee_Repository;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats_Calculator;

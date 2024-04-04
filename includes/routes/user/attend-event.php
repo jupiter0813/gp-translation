@@ -2,7 +2,7 @@
 
 namespace Wporg\TranslationEvents\Routes\User;
 
-use Wporg\TranslationEvents\Attendee_Repository;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Routes\Route;
 
 /**
