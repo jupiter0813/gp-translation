@@ -33,7 +33,7 @@
 					'click',
 					function ( e ) {
 						e.preventDefault();
-						var textArea = $( this ).closest( 'div' ).find( 'textarea' );
+						var textArea        = $( this ).closest( 'div' ).find( 'textarea' );
 						var textAreaContent = textArea.val();
 						textArea.val( textAreaContent + $( this ).data( 'snippet' ) );
 					}
