@@ -137,7 +137,8 @@ class Translation_Events {
 		// TODO: Remove this once it has been run in production.
 		try {
 			// Don't run it during tests.
-			if ( 'true' === getenv( 'TRANSLATION_EVENTS_NO_IMPORT_LEGACY_ATTENDEES' ) ) {
+			$is_running_tests = 'yes' === getenv( 'WPORG_TRANSLATION_EVENTS_TESTS' );
+			if ( ! $is_running_tests ) {
 				$this->import_legacy_attendees();
 			}
 		} catch ( Exception $e ) {
