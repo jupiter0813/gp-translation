@@ -24,6 +24,7 @@ use Exception;
 use GP;
 use WP_Post;
 use WP_Query;
+use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
@@ -170,10 +171,11 @@ class Translation_Events {
 
 		$events              = $query->get_posts();
 		$stats_calculator    = new Stats_Calculator();
-		$attendee_repository = new Attendee_Repository();
+		$attendee_repository = self::get_attendee_repository();
 		foreach ( $events as $event ) {
 			foreach ( $stats_calculator->get_contributors( $event->ID ) as $user ) {
-				$attendee_repository->add_attendee( $event->ID, $user->ID );
+				$attendee = new Attendee( $event->ID, $user->ID );
+				$attendee_repository->add_attendee( $attendee );
 			}
 		}
 	}
@@ -297,10 +299,11 @@ class Translation_Events {
 			return;
 		}
 		if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
-			$attendee_repository = new Attendee_Repository();
-			$current_user_id     = get_current_user_id();
-			if ( ! $attendee_repository->is_attending( $post->ID, $current_user_id ) ) {
-				$attendee_repository->add_attendee( $post->ID, $current_user_id );
+			$attendee_repository = self::get_attendee_repository();
+			$attendee            = new Attendee( $post->ID, get_current_user_id() );
+
+			if ( ! $attendee_repository->is_attending( $attendee->event_id(), $attendee->user_id() ) ) {
+				$attendee_repository->add_attendee( $attendee );
 			}
 		}
 	}

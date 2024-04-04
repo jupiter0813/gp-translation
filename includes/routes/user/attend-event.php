@@ -2,6 +2,7 @@
 
 namespace Wporg\TranslationEvents\Routes\User;
 
+use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
@@ -33,10 +34,12 @@ class Attend_Event_Route extends Route {
 			$this->die_with_404();
 		}
 
+		$attendee = new Attendee( $event->id(), $user->ID );
+
 		if ( $this->attendee_repository->is_attending( $event->id(), $user->ID ) ) {
 			$this->attendee_repository->remove_attendee( $event->id(), $user->ID );
 		} else {
-			$this->attendee_repository->add_attendee( $event->id(), $user->ID );
+			$this->attendee_repository->add_attendee( $attendee );
 		}
 
 		wp_safe_redirect( gp_url( "/events/{$event->slug()}" ) );

@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use WP_UnitTest_Factory_For_Post;
 use WP_UnitTest_Generator_Sequence;
+use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Translation_Events;
 
@@ -93,7 +94,7 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		update_post_meta( $event_id, '_event_timezone', $timezone->getName() );
 
 		foreach ( $attendee_ids as $attendee_id ) {
-			$attendee_repository->add_attendee( $event_id, $attendee_id );
+			$attendee_repository->add_attendee( new Attendee( $event_id, $attendee_id ) );
 		}
 
 		return $event_id;

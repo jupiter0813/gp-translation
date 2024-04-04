@@ -8,14 +8,7 @@ class Attendee_Repository {
 	/**
 	 * @throws Exception
 	 */
-	public function add_attendee( int $event_id, int $user_id ): void {
-		if ( $event_id < 1 ) {
-			throw new Exception( 'invalid event id' );
-		}
-		if ( $user_id < 1 ) {
-			throw new Exception( 'invalid user id' );
-		}
-
+	public function add_attendee( Attendee $attendee ): void {
 		global $wpdb, $gp_table_prefix;
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -24,8 +17,8 @@ class Attendee_Repository {
 			$wpdb->prepare(
 				"insert ignore into {$gp_table_prefix}event_attendees (event_id, user_id) values (%d, %d)",
 				array(
-					'event_id' => $event_id,
-					'user_id'  => $user_id,
+					'event_id' => $attendee->event_id(),
+					'user_id'  => $attendee->user_id(),
 				),
 			),
 		);
