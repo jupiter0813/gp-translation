@@ -1,6 +1,6 @@
 <?php
 
-namespace Wporg\Tests;
+namespace Wporg\Tests\Event;
 
 use GP_UnitTestCase;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
