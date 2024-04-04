@@ -72,7 +72,7 @@ class Attendee_Repository {
 	}
 
 	/**
-	 * @return int[] User ids.
+	 * @return Attendee[] Attendees of the event.
 	 */
 	public function get_attendees( int $event_id ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		// TODO.
