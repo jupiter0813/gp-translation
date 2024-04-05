@@ -5,9 +5,9 @@
 
 namespace Wporg\TranslationEvents;
 
-use WP_Post;
+use Wporg\TranslationEvents\Event\Event_End_Date;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
 
-/** @var WP_Post $event */
 /** @var int $event_id */
 /** @var string $event_title */
 /** @var string $event_description */

@@ -1,17 +1,20 @@
 <?php
+
 namespace Wporg\TranslationEvents;
 
+use GP;
+use Wporg\TranslationEvents\Event\Event;
+
+/** @var Event  $event */
 /** @var string $event_page_title */
 /** @var bool   $is_editable_event */
-
-use GP;
 ?>
 
 <div class="event-list-top-bar">
 <h2 class="event-page-title">
 	<?php echo esc_html( $event_page_title ); ?>
-	<?php if ( isset( $event ) && 'draft' === $event->post_status ) : ?>
-				<span class="event-label-draft"><?php echo esc_html( $event->post_status ); ?></span>
+	<?php if ( isset( $event ) && 'draft' === $event->status() ) : ?>
+				<span class="event-label-draft"><?php echo esc_html( $event->status() ); ?></span>
 			<?php endif; ?>
 </h2>
 	<ul class="event-list-nav">
@@ -30,11 +33,11 @@ use GP;
 			<?php endif; ?>
 		<?php endif; ?>
 	</ul>
-	<?php if ( isset( $event_id ) && ! isset( $event_form_name ) ) : ?>
+	<?php if ( isset( $event ) && ! isset( $event_form_name ) ) : ?>
 	<p class="event-sub-head">
-			<span class="event-host">Host: <a href="<?php echo esc_attr( get_author_posts_url( $event->post_author ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $event->post_author ) ); ?></a></span>
-			<?php if ( current_user_can( 'edit_post', $event_id ) && ( $is_editable_event ) ) : ?>
-				<a class="event-page-edit-link" href="<?php echo esc_url( gp_url( 'events/edit/' . $event_id ) ); ?>"><span class="dashicons dashicons-edit"></span>Edit event</a>
+			<span class="event-host">Host: <a href="<?php echo esc_attr( get_author_posts_url( $event->author_id() ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $event->author_id() ) ); ?></a></span>
+			<?php if ( current_user_can( 'edit_post', $event->id() ) && ( $is_editable_event ) ) : ?>
+				<a class="event-page-edit-link" href="<?php echo esc_url( gp_url( 'events/edit/' . $event->id() ) ); ?>"><span class="dashicons dashicons-edit"></span>Edit event</a>
 			<?php endif ?>
 		</p>
 		<?php endif; ?>

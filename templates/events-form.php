@@ -5,6 +5,10 @@
 
 namespace Wporg\TranslationEvents;
 
+use DateTimeZone;
+use Wporg\TranslationEvents\Event\Event_End_Date;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
+
 /** @var string $event_page_title */
 /** @var string $event_form_name */
 /** @var int    $event_id */
@@ -12,7 +16,7 @@ namespace Wporg\TranslationEvents;
 /** @var string $event_description */
 /** @var Event_Start_Date $event_start */
 /** @var Event_End_Date $event_end */
-/** @var Datetime_Timezone|null $event_timezone */
+/** @var DateTimeZone|null $event_timezone */
 /** @var string $event_url */
 /** @var string $css_show_url */
 
@@ -42,11 +46,11 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	</div>
 	<div>
 		<label for="event-start">Start Date</label>
-		<input type="datetime-local" id="event-start" name="event_start" value="<?php echo esc_attr( $event_start->format( 'Y-m-d H:i:s' ) ); ?>" required>
+		<input type="datetime-local" id="event-start" name="event_start" value="<?php echo esc_attr( $event_start->format( 'Y-m-d H:i' ) ); ?>" required>
 	</div>
 	<div>
 		<label for="event-end">End Date</label>
-		<input type="datetime-local" id="event-end" name="event_end" value="<?php echo esc_attr( $event_end->format( 'Y-m-d H:i:s' ) ); ?>" required>
+		<input type="datetime-local" id="event-end" name="event_end" value="<?php echo esc_attr( $event_end->format( 'Y-m-d H:i' ) ); ?>" required>
 	</div>
 	<div>
 		<label for="event-timezone">Event Timezone</label>

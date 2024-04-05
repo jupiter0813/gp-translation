@@ -62,16 +62,31 @@ class Event_Repository_Cached extends Event_Repository {
 			)
 		);
 
-		if ( $page > 0 && $page_size > 0 ) {
-			// Convert from 1-indexed to 0-indexed.
-			--$page;
-			$pages = array_chunk( $events, $page_size );
-		} else {
-			$page  = 0;
-			$pages = array( $events );
+		if ( empty( $events ) ) {
+			return new Events_Query_Result( $events, $page, 0 );
 		}
 
-		return new Events_Query_Result( $pages[ $page ], count( $pages ) );
+		// Split the list of all current events into pages.
+		// If no pagination parameters were supplied, we return the full list of events as a single page.
+
+		if ( $page >= 1 ) {
+			// Pagination parameters were supplied.
+			// Convert from 1-indexed to 0-indexed.
+			--$page;
+		} else {
+			// No pagination parameters were supplied.
+			$page      = 0;
+			$page_size = count( $events );
+		}
+
+		$pages = array_chunk( $events, $page_size );
+		if ( ! empty( $pages ) && isset( $pages[ $page ] ) ) {
+			$events = $pages[ $page ];
+		} else {
+			$events = array();
+		}
+
+		return new Events_Query_Result( $events, $page, count( $pages ) );
 	}
 
 	private function invalidate_cache(): void {

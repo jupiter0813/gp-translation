@@ -8,6 +8,8 @@ use GP_UnitTestCase;
 use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event;
+use Wporg\TranslationEvents\Event\Event_End_Date;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 
 class Event_Repository_Cached_Test extends GP_UnitTestCase {
@@ -22,7 +24,21 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 	}
 
-	public function test_get_active_events() {
+	public function test_get_current_events_when_no_current_events_exist() {
+		$result = $this->repository->get_current_events();
+		$this->assertIsArray( $result->events );
+		$this->assertEmpty( $result->events );
+
+		$result = $this->repository->get_current_events( 1, 1 );
+		$this->assertIsArray( $result->events );
+		$this->assertEmpty( $result->events );
+
+		$result = $this->repository->get_current_events( 2, 1 );
+		$this->assertIsArray( $result->events );
+		$this->assertEmpty( $result->events );
+	}
+
+	public function test_get_current_events() {
 		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event1_id = $this->event_factory->create_active( array(), $now );
 		$event2_id = $this->event_factory->create_active( array(), $now );
@@ -51,11 +67,10 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 	}
 
 	public function test_invalidates_cache_when_events_are_created() {
-		$now   = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event = new Event(
 			0,
-			$now,
-			$now->modify( '+1 hour' ),
+			new Event_Start_Date( 'now' ),
+			( new Event_End_Date( 'now' ) )->modify( '+1 hour' ),
 			new DateTimeZone( 'Europe/Lisbon' ),
 			'draft',
 			'Foo',
