@@ -312,14 +312,22 @@ class Event_Repository implements Event_Repository_Interface {
 		$events = array();
 
 		foreach ( $posts as $post ) {
-			$meta  = $this->get_event_meta( $post->ID );
+			$meta = $this->get_event_meta( $post->ID );
+
+			$title = $post->post_title;
+			if ( empty( $title ) ) {
+				// Previously, it was possible for events to not have a title, so there can be events in the database
+				// that do not have a title. To work around that, we set the title of those events to a single space.
+				$title = ' ';
+			}
+
 			$event = new Event(
 				intval( $post->post_author ),
 				$meta['start'],
 				$meta['end'],
 				$meta['timezone'],
 				$post->post_status,
-				$post->post_title,
+				$title,
 				$post->post_content,
 			);
 			$event->set_id( $post->ID );
