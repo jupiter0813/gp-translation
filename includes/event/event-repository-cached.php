@@ -80,7 +80,7 @@ class Event_Repository_Cached extends Event_Repository {
 		}
 
 		$pages = array_chunk( $events, $page_size );
-		if ( ! empty( $pages ) ) {
+		if ( ! empty( $pages ) && isset( $pages[ $page ] ) ) {
 			$events = $pages[ $page ];
 		} else {
 			$events = array();
