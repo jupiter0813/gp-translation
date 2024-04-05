@@ -93,7 +93,6 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function get_current_events( int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $page, $page_size );
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		return $this->get_events_active_between(
@@ -105,75 +104,119 @@ class Event_Repository implements Event_Repository_Interface {
 		);
 	}
 
-	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $page, $page_size );
-		$event_ids_user_is_attending = $this->attendee_repository->get_events_for_user( $user_id );
-
+	public function get_upcoming_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		return $this->get_events_active_between(
-			$now,
-			$now,
-			$event_ids_user_is_attending,
-			$page,
-			$page_size
-		);
-	}
-
-	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $page, $page_size );
-		$event_ids_user_is_attending = $this->attendee_repository->get_events_for_user( $user_id );
-
-		// We consider the start of time to be January 1st 2024,
-		// which is guaranteed to be earlier than when this plugin was created.
-		// It's not possible for there to be events before the plugin was created.
-		$boundary_start = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$boundary_start = $boundary_start->setDate( 2024, 1, 1 )->setTime( 0, 0 );
-		$boundary_end   = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		return $this->execute_events_query(
+			$page,
+			$page_size,
 			array(
-				'post_status'    => 'publish',
-				'post__in'       => $event_ids_user_is_attending,
-				'paged'          => $page,
-				'posts_per_page' => $page_size,
-				'meta_query'     => array(
+				'meta_query' => array(
 					array(
-						'key'     => '_event_end',
-						'value'   => $boundary_start->format( 'Y-m-d H:i:s' ),
+						'key'     => '_event_start',
+						'value'   => $now->format( 'Y-m-d H:i:s' ),
 						'compare' => '>=',
 						'type'    => 'DATETIME',
 					),
-					array(
-						'key'     => '_event_end',
-						'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
-						'compare' => '<',
-						'type'    => 'DATETIME',
-					),
 				),
-				'meta_key'       => '_event_end',
-				'meta_type'      => 'DATETIME',
-				'orderby'        => array( 'meta_value', 'ID' ),
-				'order'          => 'DESC',
+				'orderby'    => array( 'meta_value', 'ID' ),
+				'order'      => 'ASC',
 			)
 		);
 		// phpcs:enable
 	}
 
-	public function get_events_created_by_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $page, $page_size );
+	public function get_past_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		return $this->execute_events_query(
+			$page,
+			$page_size,
 			array(
-				'post_status'    => array( 'publish', 'draft' ),
-				'author'         => $user_id,
-				'paged'          => $page,
-				'posts_per_page' => $page_size,
-				'meta_key'       => '_event_start',
-				'orderby'        => array( 'meta_value', 'ID' ),
-				'order'          => 'DESC',
+				'meta_query' => array(
+					array(
+						'key'     => '_event_end',
+						'value'   => $now->format( 'Y-m-d H:i:s' ),
+						'compare' => '<',
+						'type'    => 'DATETIME',
+					),
+				),
+				'orderby'    => array( 'meta_value', 'ID' ),
+				'order'      => 'DESC',
+			)
+		);
+		// phpcs:enable
+	}
+
+	public function get_current_and_upcoming_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		return $this->execute_events_query(
+			$page,
+			$page_size,
+			array(
+				'meta_query' => array(
+					array(
+						'key'     => '_event_end',
+						'value'   => $now->format( 'Y-m-d H:i:s' ),
+						'compare' => '>',
+						'type'    => 'DATETIME',
+					),
+				),
+				'meta_key'   => '_event_start',
+				'orderby'    => 'meta_value',
+				'order'      => 'ASC',
+			),
+			$this->attendee_repository->get_events_for_user( $user_id ),
+		);
+		// phpcs:enable
+	}
+
+	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		return $this->execute_events_query(
+			$page,
+			$page_size,
+			array(
+				'meta_query' => array(
+					array(
+						'key'     => '_event_end',
+						'value'   => $now->format( 'Y-m-d H:i:s' ),
+						'compare' => '<',
+						'type'    => 'DATETIME',
+					),
+				),
+				'meta_key'   => '_event_end',
+				'meta_type'  => 'DATETIME',
+				'orderby'    => array( 'meta_value', 'ID' ),
+				'order'      => 'DESC',
+			),
+			$this->attendee_repository->get_events_for_user( $user_id )
+		);
+		// phpcs:enable
+	}
+
+	public function get_events_created_by_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		return $this->execute_events_query(
+			$page,
+			$page_size,
+			array(
+				'post_status' => array( 'publish', 'draft' ),
+				'author'      => $user_id,
+				'meta_key'    => '_event_start',
+				'orderby'     => array( 'meta_value', 'ID' ),
+				'order'       => 'DESC',
 			)
 		);
 		// phpcs:enable
@@ -196,10 +239,7 @@ class Event_Repository implements Event_Repository_Interface {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		$query_args = array(
-			'post_status'    => 'publish',
-			'paged'          => $page,
-			'posts_per_page' => $page_size,
-			'meta_query'     => array(
+			'meta_query' => array(
 				array(
 					'key'     => '_event_start',
 					'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
@@ -213,17 +253,13 @@ class Event_Repository implements Event_Repository_Interface {
 					'type'    => 'DATETIME',
 				),
 			),
-			'meta_key'       => '_event_start',
-			'meta_type'      => 'DATETIME',
-			'orderby'        => array( 'meta_value', 'ID' ),
+			'meta_key'   => '_event_start',
+			'meta_type'  => 'DATETIME',
+			'orderby'    => array( 'meta_value', 'ID' ),
 		);
 		// phpcs:enable
 
-		if ( ! empty( $filter_by_ids ) ) {
-			$query_args['post__in'] = $filter_by_ids;
-		}
-
-		return $this->execute_events_query( $query_args );
+		return $this->execute_events_query( $page, $page_size, $query_args, $filter_by_ids );
 	}
 
 	/**
@@ -236,38 +272,62 @@ class Event_Repository implements Event_Repository_Interface {
 		if ( -1 !== $page_size && $page_size <= 0 ) {
 			throw new Exception( 'page size must be greater than 0' );
 		}
+		if ( $page > 0 && -1 === $page_size ) {
+			throw new Exception( 'if page is specified, page size must also be' );
+		}
 		if ( $page_size > 0 && -1 === $page ) {
 			throw new Exception( 'if page size is specified, page must also be' );
 		}
 	}
 
 	/**
-	 * @throws InvalidStartOrEnd
+	 * @throws InvalidStart
+	 * @throws InvalidEnd
 	 * @throws InvalidTitle
 	 * @throws InvalidStatus
 	 * @throws Exception
 	 */
-	private function execute_events_query( array $args ): Events_Query_Result {
+	private function execute_events_query( int $page, int $page_size, array $args, array $filter_by_ids = array() ): Events_Query_Result {
+		$this->assert_pagination_arguments( $page, $page_size );
+
 		$args = array_replace_recursive(
 			$args,
 			array(
-				'post_type' => self::POST_TYPE,
+				'post_type'      => self::POST_TYPE,
+				'paged'          => $page,
+				'posts_per_page' => $page_size,
 			),
 		);
+
+		if ( ! isset( $args['post_status'] ) ) {
+			$args['post_status'] = 'publish';
+		}
+
+		if ( ! empty( $filter_by_ids ) ) {
+			$args['post__in'] = $filter_by_ids;
+		}
 
 		$query  = new WP_Query( $args );
 		$posts  = $query->get_posts();
 		$events = array();
 
 		foreach ( $posts as $post ) {
-			$meta  = $this->get_event_meta( $post->ID );
+			$meta = $this->get_event_meta( $post->ID );
+
+			$title = $post->post_title;
+			if ( empty( $title ) ) {
+				// Previously, it was possible for events to not have a title, so there can be events in the database
+				// that do not have a title. To work around that, we set the title of those events to a single space.
+				$title = ' ';
+			}
+
 			$event = new Event(
 				intval( $post->post_author ),
 				$meta['start'],
 				$meta['end'],
 				$meta['timezone'],
 				$post->post_status,
-				$post->post_title,
+				$title,
 				$post->post_content,
 			);
 			$event->set_id( $post->ID );
@@ -275,7 +335,7 @@ class Event_Repository implements Event_Repository_Interface {
 			$events[] = $event;
 		}
 
-		return new Events_Query_Result( $events, $query->max_num_pages );
+		return new Events_Query_Result( $events, $page, $query->max_num_pages );
 	}
 
 	private function get_event_post( int $event_id ): ?WP_Post {
@@ -298,10 +358,11 @@ class Event_Repository implements Event_Repository_Interface {
 	 */
 	private function get_event_meta( int $event_id ): array {
 		$meta = get_post_meta( $event_id );
+		$utc  = new DateTimeZone( 'UTC' );
 
 		return array(
-			'start'    => self::parse_utc_datetime( $meta['_event_start'][0] ),
-			'end'      => self::parse_utc_datetime( $meta['_event_end'][0] ),
+			'start'    => new Event_Start_Date( $meta['_event_start'][0], $utc ),
+			'end'      => new Event_End_Date( $meta['_event_end'][0], $utc ),
 			'timezone' => new DateTimeZone( $meta['_event_timezone'][0] ),
 		);
 	}
@@ -310,9 +371,5 @@ class Event_Repository implements Event_Repository_Interface {
 		update_post_meta( $event->id(), '_event_start', $event->start()->utc()->format( 'Y-m-d H:i:s' ) );
 		update_post_meta( $event->id(), '_event_end', $event->end()->utc()->format( 'Y-m-d H:i:s' ) );
 		update_post_meta( $event->id(), '_event_timezone', $event->timezone()->getName() );
-	}
-
-	private function parse_utc_datetime( string $datetime ): DateTimeImmutable {
-		return DateTimeImmutable::createFromFormat( 'Y-m-d H:i:s', $datetime, new DateTimeZone( 'UTC' ) );
 	}
 }

@@ -2,31 +2,33 @@
 
 namespace Wporg\TranslationEvents\Routes\Event;
 
-use DateTime;
-use DateTimeImmutable;
-use DateTimeZone;
-use Exception;
+use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
-use Wporg\TranslationEvents\Event_Start_Date;
-use Wporg\TranslationEvents\Event_End_Date;
 
 /**
  * Displays the event edit page.
  */
 class Edit_Route extends Route {
+	private Event_Repository_Interface $event_repository;
+
+	public function __construct() {
+		parent::__construct();
+		$this->event_repository = Translation_Events::get_event_repository();
+	}
+
 	public function handle( int $event_id ): void {
 		global $wp;
 		if ( ! is_user_logged_in() ) {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
 			exit;
 		}
-		$event = get_post( $event_id );
-		if ( ! $event || Translation_Events::CPT !== $event->post_type || ! ( current_user_can( 'edit_post', $event->ID ) || intval( $event->post_author ) === get_current_user_id() ) ) {
+		$event = $this->event_repository->get_event( $event_id );
+		if ( ! $event || ! ( current_user_can( 'edit_post', $event->id() ) || $event->author_id() === get_current_user_id() ) ) {
 			$this->die_with_error( esc_html__( 'Event does not exist, or you do not have permission to edit it.', 'gp-translation-events' ), 403 );
 		}
-		if ( 'trash' === $event->post_status ) {
+		if ( 'trash' === $event->status() ) {
 			$this->die_with_error( esc_html__( 'You cannot edit a trashed event', 'gp-translation-events' ), 403 );
 		}
 
@@ -34,38 +36,31 @@ class Edit_Route extends Route {
 		$event_page_title              = 'Edit Event';
 		$event_form_name               = 'edit_event';
 		$css_show_url                  = '';
-		$event_title                   = $event->post_title;
-		$event_description             = $event->post_content;
-		$event_status                  = $event->post_status;
-		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
+		$event_title                   = $event->title();
+		$event_description             = $event->description();
+		$event_status                  = $event->status();
+		list( $permalink, $post_name ) = get_sample_permalink( $event->id() );
 		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 		$event_url                     = get_site_url() . gp_url( wp_make_link_relative( $permalink ) );
-		$event_timezone                = new DateTimeZone( get_post_meta( $event_id, '_event_timezone', true ) ?: 'UTC' );
+		$event_timezone                = $event->timezone();
+		$event_start                   = $event->start();
+		$event_end                     = $event->end();
 		$create_delete_button          = false;
 		$visibility_delete_button      = 'inline-flex';
 
-		try {
-			$event_start = new Event_Start_Date( get_post_meta( $event_id, '_event_start', true ), $event_timezone );
-			$event_end   = new Event_End_Date( get_post_meta( $event_id, '_event_end', true ), $event_timezone );
-		} catch ( Exception $e ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( $e );
-			$this->die_with_error( esc_html__( 'Something is wrong.', 'gp-translation-events' ) );
-		}
-
-		if ( $event_end->is_in_the_past() ) {
+		if ( $event->end()->is_in_the_past() ) {
 			$this->die_with_error( esc_html__( 'You cannot edit a past event.', 'gp-translation-events' ), 403 );
 		}
 
 		$stats_calculator = new Stats_Calculator();
 
-		if ( $stats_calculator->event_has_stats( $event ) ) {
+		if ( $stats_calculator->event_has_stats( $event->id() ) ) {
 			$this->die_with_error( esc_html__( 'You cannot edit an event with translations.', 'gp-translation-events' ), 403 );
 		}
 
-		if ( ! $stats_calculator->event_has_stats( $event ) ) {
+		if ( ! $stats_calculator->event_has_stats( $event->id() ) ) {
 			$current_user = wp_get_current_user();
-			if ( ( $current_user->ID === $event->post_author || current_user_can( 'manage_options' ) ) && ! $event_end->is_in_the_past() ) {
+			if ( ( $current_user->ID === $event->author_id() || current_user_can( 'manage_options' ) ) && ! $event->end()->is_in_the_past() ) {
 				$create_delete_button = true;
 			}
 		}
