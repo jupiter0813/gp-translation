@@ -36,6 +36,7 @@ class Translation_Events {
 	public static function get_instance() {
 		static $instance = null;
 		if ( null === $instance ) {
+			require_once __DIR__ . '/autoload.php';
 			$instance = new self();
 		}
 		return $instance;
@@ -73,25 +74,6 @@ class Translation_Events {
 	}
 
 	public function gp_init() {
-		require_once __DIR__ . '/templates/helper-functions.php';
-		require_once __DIR__ . '/includes/routes/route.php';
-		require_once __DIR__ . '/includes/routes/event/create.php';
-		require_once __DIR__ . '/includes/routes/event/details.php';
-		require_once __DIR__ . '/includes/routes/event/edit.php';
-		require_once __DIR__ . '/includes/routes/event/list.php';
-		require_once __DIR__ . '/includes/routes/user/attend-event.php';
-		require_once __DIR__ . '/includes/routes/user/my-events.php';
-		require_once __DIR__ . '/includes/attendee/attendee.php';
-		require_once __DIR__ . '/includes/attendee/attendee-repository.php';
-		require_once __DIR__ . '/includes/event/event-date.php';
-		require_once __DIR__ . '/includes/event/event.php';
-		require_once __DIR__ . '/includes/event/event-repository-interface.php';
-		require_once __DIR__ . '/includes/event/event-repository.php';
-		require_once __DIR__ . '/includes/event/event-repository-cached.php';
-		require_once __DIR__ . '/includes/event/event-form-handler.php';
-		require_once __DIR__ . '/includes/stats-calculator.php';
-		require_once __DIR__ . '/includes/stats-listener.php';
-
 		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\Routes\Event\List_Route', 'handle' ) );
 		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Routes\Event\Create_Route', 'handle' ) );
 		GP::$router->add( '/events/edit/(\d+)', array( 'Wporg\TranslationEvents\Routes\Event\Edit_Route', 'handle' ) );
@@ -160,9 +142,6 @@ class Translation_Events {
 	 * @throws Exception
 	 */
 	private function import_legacy_attendees(): void {
-		require_once __DIR__ . '/includes/attendee-repository.php';
-		require_once __DIR__ . '/includes/stats-calculator.php';
-
 		$query = new WP_Query(
 			array(
 				'post_type' => self::CPT,
