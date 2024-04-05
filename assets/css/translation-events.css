@@ -47,9 +47,12 @@
 
 .event-details-stats {
 	clear: both;
-	margin: 1em;
+	margin: 0;
 }
 
+.event-details-stats table {
+	margin: 1rem;
+}
 .event-details-stats table {
 	width: 100%;
 	table-layout: fixed;
@@ -342,9 +345,5 @@ a.event-page-edit-link:hover {
 		border-right: none;
 		margin: 0;
 		padding: 0;
-	}
-
-	.event-details-stats {
-		margin: 0;
 	}
 }
