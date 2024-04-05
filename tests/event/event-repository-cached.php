@@ -24,7 +24,21 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 	}
 
-	public function test_get_active_events() {
+	public function test_get_current_events_when_no_current_events_exist() {
+		$result = $this->repository->get_current_events();
+		$this->assertIsArray( $result->events );
+		$this->assertEmpty( $result->events );
+
+		$result = $this->repository->get_current_events( 1, 1 );
+		$this->assertIsArray( $result->events );
+		$this->assertEmpty( $result->events );
+
+		$result = $this->repository->get_current_events( 2, 1 );
+		$this->assertIsArray( $result->events );
+		$this->assertEmpty( $result->events );
+	}
+
+	public function test_get_current_events() {
 		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event1_id = $this->event_factory->create_active( array(), $now );
 		$event2_id = $this->event_factory->create_active( array(), $now );
