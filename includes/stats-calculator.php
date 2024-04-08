@@ -269,7 +269,7 @@ class Stats_Calculator {
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
-		$users_first_translation_date  = $wpdb->get_var(
+		$users_first_translation_date = $wpdb->get_var(
 			$wpdb->prepare(
 				"
 			select min(date_added) from {$gp_table_prefix}translations where user_id = %d
