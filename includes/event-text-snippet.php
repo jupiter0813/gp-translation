@@ -2,7 +2,7 @@
 
 namespace Wporg\TranslationEvents;
 
-class Events_Text_Snippet {
+class Event_Text_Snippet {
 
 	/**
 	 * Generate links for text snippets.
