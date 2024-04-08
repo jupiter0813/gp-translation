@@ -279,6 +279,10 @@ class Stats_Calculator {
 				)
 			)
 		);
+
+		if ( ! $users_first_translation_date ) {
+			return true;
+		}
 		$first_translation_date_in_sec = ( new \DateTime( $users_first_translation_date ) )->getTimestamp();
 		$event_start_date_in_sec       = $event_start->__toSeconds();
 		$days_in_sec                   = 60 * 60 * 24;
