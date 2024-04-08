@@ -37,7 +37,7 @@ class Attend_Event_Route extends Route {
 		$attendee = new Attendee( $event->id(), $user->ID );
 
 		if ( $this->attendee_repository->is_attending( $attendee ) ) {
-			$this->attendee_repository->remove_attendee( $attendee );
+			$this->attendee_repository->remove_attendee( $event->id(), $user->ID );
 		} else {
 			$this->attendee_repository->insert_attendee( $attendee );
 		}

@@ -86,7 +86,7 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		if ( ! in_array( $user_id, $attendee_ids, true ) ) {
 			// The current user will have been added as attending the event, but it was not specified as an attendee by
 			// the caller of this function. So we remove the current user as attendee.
-			$attendee_repository->remove_attendee( new Attendee( $event_id, $user_id ) );
+			$attendee_repository->remove_attendee( $event_id, $user_id );
 		}
 
 		update_post_meta( $event_id, '_event_start', $start->format( 'Y-m-d H:i:s' ) );

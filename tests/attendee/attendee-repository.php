@@ -46,7 +46,7 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->repository->insert_attendee( new Attendee( $event1_id, $user_id ) );
 		$this->repository->insert_attendee( new Attendee( $event2_id, $user_id ) );
 
-		$this->repository->remove_attendee( new Attendee( $event1_id, $user_id ) );
+		$this->repository->remove_attendee( $event1_id, $user_id );
 
 		$rows = $this->all_table_rows();
 		$this->assertCount( 1, $rows );

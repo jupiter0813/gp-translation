@@ -30,15 +30,15 @@ class Attendee_Repository {
 	/**
 	 * @throws Exception
 	 */
-	public function remove_attendee( Attendee $attendee ): void {
+	public function remove_attendee( int $event_id, int $user_id ): void {
 		global $wpdb, $gp_table_prefix;
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->delete(
 			"{$gp_table_prefix}event_attendees",
 			array(
-				'event_id' => $attendee->event_id(),
-				'user_id'  => $attendee->user_id(),
+				'event_id' => $event_id,
+				'user_id'  => $user_id,
 			),
 			array(
 				'%d',
