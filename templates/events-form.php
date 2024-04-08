@@ -45,7 +45,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<textarea id="event-description" name="event_description" rows="4" required><?php echo esc_html( $event_description ); ?></textarea>
 		<?php
 		echo wp_kses(
-			apply_filters( 'wporg_translation_events_snippets', Events_Text_Snippet::get_default_snippets() ),
+			Events_Text_Snippet::get_snippet_links(),
 			array(
 				'a'  => array(
 					'href'         => array(),
