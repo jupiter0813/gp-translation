@@ -34,11 +34,11 @@ class Attend_Event_Route extends Route {
 			$this->die_with_404();
 		}
 
-		$attendee = new Attendee( $event->id(), $user->ID );
-
-		if ( $this->attendee_repository->is_attending( $attendee ) ) {
+		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		if ( $attendee instanceof Attendee ) {
 			$this->attendee_repository->remove_attendee( $event->id(), $user->ID );
 		} else {
+			$attendee = new Attendee( $event->id(), $user->ID );
 			$this->attendee_repository->insert_attendee( $attendee );
 		}
 

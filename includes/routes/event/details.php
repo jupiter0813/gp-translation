@@ -50,7 +50,9 @@ class Details_Route extends Route {
 		$event_description = $event->description();
 		$event_start       = $event->start();
 		$event_end         = $event->end();
-		$user_is_attending = $this->attendee_repository->is_attending( new Attendee( $event->id(), $user->ID ) );
+
+		$attendee          = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		$user_is_attending = $attendee instanceof Attendee;
 
 		$stats_calculator = new Stats_Calculator();
 		try {

@@ -211,10 +211,14 @@ class Translation_Events {
 			return;
 		}
 		if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
+			$event_id            = $post->ID;
+			$user_id             = get_current_user_id();
 			$attendee_repository = self::get_attendee_repository();
-			$attendee            = new Attendee( $post->ID, get_current_user_id() );
+			$attendee            = $attendee_repository->get_attendee( $event_id, $user_id );
 
-			if ( ! $attendee_repository->is_attending( $attendee ) ) {
+			if ( null === $attendee ) {
+				$attendee = new Attendee( $event_id, $user_id );
+				$attendee->mark_as_host();
 				$attendee_repository->insert_attendee( $attendee );
 			}
 		}
