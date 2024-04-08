@@ -88,31 +88,6 @@ class Attendee_Repository {
 		return $attendee;
 	}
 
-	public function is_attending( Attendee $attendee ): bool {
-		global $wpdb, $gp_table_prefix;
-
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$row = $wpdb->get_row(
-			$wpdb->prepare(
-				"
-				select count(*) as cnt
-				from {$gp_table_prefix}event_attendees
-				where event_id = %d
-				  and user_id = %d
-			",
-				array(
-					$attendee->event_id(),
-					$attendee->user_id(),
-				)
-			)
-		);
-		// phpcs:enable
-
-		return 1 === intval( $row->cnt );
-	}
-
 	/**
 	 * @return Attendee[] Attendees of the event.
 	 */
