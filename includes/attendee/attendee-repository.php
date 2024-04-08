@@ -48,6 +48,46 @@ class Attendee_Repository {
 		// phpcs:enable
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	public function get_attendee( int $event_id, int $user_id ): ?Attendee {
+		global $wpdb, $gp_table_prefix;
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				"
+				select *
+				from {$gp_table_prefix}event_attendees
+				where event_id = %d
+				  and user_id = %d
+			",
+				array(
+					$event_id,
+					$user_id,
+				),
+			)
+		);
+		// phpcs:enable
+
+		if ( ! $row ) {
+			return null;
+		}
+
+		$attendee = new Attendee( $row->event_id, $row->user_id );
+		if ( '1' === $row->is_host ) {
+			$attendee->mark_as_host();
+		}
+		if ( '1' === $row->is_contributor ) {
+			$attendee->mark_as_contributor();
+		}
+
+		return $attendee;
+	}
+
 	public function is_attending( Attendee $attendee ): bool {
 		global $wpdb, $gp_table_prefix;
 
