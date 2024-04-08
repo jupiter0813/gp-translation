@@ -32,6 +32,8 @@ class Database {
 			`translate_event_attendees_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 			`event_id` int(10) NOT NULL COMMENT 'Post_ID of the translation_event post in the wp_posts table',
 			`user_id` int(10) NOT NULL COMMENT 'ID of the user who is attending the event',
+			`is_host` tinyint(1) default 0 not null comment 'Whether the user is a host of the event',
+			`is_contributor` tinyint(1) default 0 not null comment 'Whether the user created or reviewed translations during the event',
 		PRIMARY KEY (`translate_event_attendees_id`),
 		UNIQUE KEY `event_per_user` (`event_id`,`user_id`),
 		INDEX `user` (`user_id`)
