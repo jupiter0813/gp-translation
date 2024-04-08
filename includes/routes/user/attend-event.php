@@ -39,7 +39,7 @@ class Attend_Event_Route extends Route {
 		if ( $this->attendee_repository->is_attending( $attendee ) ) {
 			$this->attendee_repository->remove_attendee( $attendee );
 		} else {
-			$this->attendee_repository->add_attendee( $attendee );
+			$this->attendee_repository->insert_attendee( $attendee );
 		}
 
 		wp_safe_redirect( gp_url( "/events/{$event->slug()}" ) );

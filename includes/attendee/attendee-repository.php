@@ -8,7 +8,7 @@ class Attendee_Repository {
 	/**
 	 * @throws Exception
 	 */
-	public function add_attendee( Attendee $attendee ): void {
+	public function insert_attendee( Attendee $attendee ): void {
 		global $wpdb, $gp_table_prefix;
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery

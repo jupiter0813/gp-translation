@@ -94,7 +94,7 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		update_post_meta( $event_id, '_event_timezone', $timezone->getName() );
 
 		foreach ( $attendee_ids as $attendee_id ) {
-			$attendee_repository->add_attendee( new Attendee( $event_id, $attendee_id ) );
+			$attendee_repository->insert_attendee( new Attendee( $event_id, $attendee_id ) );
 		}
 
 		return $event_id;

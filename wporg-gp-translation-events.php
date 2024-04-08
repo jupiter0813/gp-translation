@@ -215,7 +215,7 @@ class Translation_Events {
 			$attendee            = new Attendee( $post->ID, get_current_user_id() );
 
 			if ( ! $attendee_repository->is_attending( $attendee ) ) {
-				$attendee_repository->add_attendee( $attendee );
+				$attendee_repository->insert_attendee( $attendee );
 			}
 		}
 	}
