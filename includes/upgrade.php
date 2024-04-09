@@ -7,21 +7,39 @@ use WP_Query;
 use Wporg\TranslationEvents\Attendee\Attendee;
 
 class Upgrade {
+	private const VERSION        = 2;
+	private const VERSION_OPTION = 'wporg_gp_translations_events_version';
+
 	public static function upgrade(): void {
+		$previous_version = get_option( self::VERSION_OPTION );
+
+		// If previous version is not set yet, set it to version 1.
+		if ( false === $previous_version ) {
+			$previous_version = 1;
+			update_option( self::VERSION_OPTION, $previous_version );
+		}
+
+		if ( self::VERSION === $previous_version ) {
+			// Nothing to do, we're already at the latest version.
+			return;
+		}
+
+		// Upgrade database schema.
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( self::get_database_schema_sql() );
 
-		// TODO: Remove this once it has been run in production.
-		try {
-			// Don't run it during tests.
-			$is_running_tests = 'yes' === getenv( 'WPORG_TRANSLATION_EVENTS_TESTS' );
-			if ( ! $is_running_tests ) {
+		// Run version-specific upgrades.
+		$is_running_tests = 'yes' === getenv( 'WPORG_TRANSLATION_EVENTS_TESTS' );
+		if ( $previous_version < 2 && ! $is_running_tests ) {
+			try {
 				self::import_legacy_attendees();
+			} catch ( Exception $e ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( $e );
 			}
-		} catch ( Exception $e ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( $e );
 		}
+
+		update_option( self::VERSION_OPTION, self::VERSION );
 	}
 
 	private static function get_database_schema_sql(): string {
@@ -58,7 +76,6 @@ class Upgrade {
 	 *
 	 * Instead of looping through all users, we consider only users who have contributed to an event.
 	 *
-	 * @deprecated TODO: Remove this function once this has been run in production.
 	 * @throws Exception
 	 */
 	private static function import_legacy_attendees(): void {
