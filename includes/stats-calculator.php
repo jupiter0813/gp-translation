@@ -254,7 +254,6 @@ class Stats_Calculator {
 		return ! empty( $stats->rows() );
 	}
 
-	public function get_attendees(int $id)
-	{
+	public function get_attendees( int $id ) {
 	}
 }

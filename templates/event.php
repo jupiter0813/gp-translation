@@ -44,8 +44,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				</ul>
 			</div>
 	<div class="event-atendees">
-		<h2><?php esc_html_e('Atendees', 'gp-translation-events' ); ?></h2>
-		<small><?php esc_html_e('Users without contributions', 'gp-translation-events' ); ?></small>
+		<h2><?php esc_html_e( 'Atendees', 'gp-translation-events' ); ?></h2>
+		<small><?php esc_html_e( 'Users without contributions', 'gp-translation-events' ); ?></small>
 		<ul>
 			<?php foreach ( $contributors as $contributor ) : ?>
 				<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->locales ) ); ?>">
