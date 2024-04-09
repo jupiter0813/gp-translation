@@ -12,4 +12,7 @@
 			<directory suffix=".php">./tests/</directory>
 		</testsuite>
 	</testsuites>
+	<php>
+		<env name="WPORG_TRANSLATION_EVENTS_TESTS" value="yes" force="true" />
+	</php>
 </phpunit>

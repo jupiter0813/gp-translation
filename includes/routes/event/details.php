@@ -4,7 +4,8 @@ namespace Wporg\TranslationEvents\Routes\Event;
 
 use Exception;
 use GP;
-use Wporg\TranslationEvents\Attendee_Repository;
+use Wporg\TranslationEvents\Attendee\Attendee;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats_Calculator;
@@ -49,7 +50,9 @@ class Details_Route extends Route {
 		$event_description = $event->description();
 		$event_start       = $event->start();
 		$event_end         = $event->end();
-		$user_is_attending = $this->attendee_repository->is_attending( $event->id(), $user->ID );
+
+		$attendee          = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		$user_is_attending = $attendee instanceof Attendee;
 
 		$stats_calculator = new Stats_Calculator();
 		try {
