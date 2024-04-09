@@ -5,6 +5,8 @@
 
 namespace Wporg\TranslationEvents;
 
+use Wporg\TranslationEvents\Attendee\Attendee;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 
@@ -39,6 +41,19 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 						<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->locales ) ); ?>">
 							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo get_avatar( $contributor->ID, 48 ); ?></a>
 							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?></a>
+							<?php
+							if ( $attendee->is_host() ) :
+								$_attendee_repo = new Attendee_Repository();
+								$_attendee      = $_attendee_repo->get_attendee( $event_id, $contributor->ID );
+								echo '<form class="add-remove-user-as-host" method="post" action="#">';
+								if ( $_attendee->is_host() ) :
+									echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+								else :
+									echo '<input type="submit" class="button is-secondary convert-to-host" value="Convert to host"/>';
+								endif;
+								echo '</form>';
+							endif;
+							?>
 						</li>
 					<?php endforeach; ?>
 				</ul>
@@ -47,10 +62,23 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<h2><?php esc_html_e( 'Atendees', 'gp-translation-events' ); ?></h2>
 		<small><?php esc_html_e( 'Users without contributions', 'gp-translation-events' ); ?></small>
 		<ul>
-			<?php foreach ( $attendees as $attendee ) : ?>
+			<?php foreach ( $attendees as $_user ) : ?>
 				<li class="event-atendee">
-					<a href="<?php echo esc_url( get_author_posts_url( $attendee->ID ) ); ?>"><?php echo get_avatar( $attendee->ID, 48 ); ?></a>
-					<a href="<?php echo esc_url( get_author_posts_url( $attendee->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $attendee->ID ) ); ?></a>
+					<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>"><?php echo get_avatar( $_user->ID, 48 ); ?></a>
+					<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $_user->ID ) ); ?></a>
+					<?php
+					if ( $attendee->is_host() ) :
+						$_attendee_repo = new Attendee_Repository();
+						$_attendee      = $_attendee_repo->get_attendee( $event_id, $_user->ID );
+						echo '<form class="add-remove-user-as-host" method="post" action="#">';
+						if ( $_attendee->is_host() ) :
+							echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+						else :
+							echo '<input type="submit" class="button is-secondary convert-to-host" value="Convert to host"/>';
+						endif;
+						echo '</form>';
+					endif;
+					?>
 				</li>
 			<?php endforeach; ?>
 		</ul>

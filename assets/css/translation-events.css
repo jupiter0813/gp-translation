@@ -240,6 +240,13 @@ span.active-events-before-translation-table a {
 	padding: 0;
 }
 
+input[type="submit"].remove-as-host, input[type="submit"].convert-to-host {
+	text-align: center;
+	display: inline;
+	margin-top: 1em;
+	font-weight: bold;
+}
+
 input[type="submit"].attend-btn {
 	width: 100%;
 	text-align: center;
