@@ -74,6 +74,7 @@ class Database {
 		foreach ( $events as $event ) {
 			foreach ( $stats_calculator->get_contributors( $event->ID ) as $user ) {
 				$attendee = new Attendee( $event->ID, $user->ID );
+				$attendee->mark_as_host();
 				$attendee_repository->insert_attendee( $attendee );
 			}
 		}
