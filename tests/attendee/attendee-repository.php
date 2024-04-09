@@ -64,7 +64,6 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->repository->insert_attendee( $attendee11 );
 
 		$attendee12 = new Attendee( $event1_id, $user2_id );
-		$attendee12->mark_as_contributor();
 		$this->repository->insert_attendee( $attendee12 );
 
 		// Add some more attendees to make sure we get the right ones.
@@ -75,12 +74,10 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$retrieved_attendee_11 = $this->repository->get_attendee( $event1_id, $user1_id );
 		$this->assertEquals( $attendee11, $retrieved_attendee_11 );
 		$this->assertTrue( $retrieved_attendee_11->is_host() );
-		$this->assertFalse( $retrieved_attendee_11->is_contributor() );
 
 		$retrieved_attendee_12 = $this->repository->get_attendee( $event1_id, $user2_id );
 		$this->assertEquals( $attendee12, $retrieved_attendee_12 );
 		$this->assertFalse( $retrieved_attendee_12->is_host() );
-		$this->assertTrue( $retrieved_attendee_12->is_contributor() );
 
 		$this->assertNull( $this->repository->get_attendee( $event2_id, $user2_id ) );
 	}
