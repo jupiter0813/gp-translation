@@ -33,7 +33,7 @@ use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 class Translation_Events {
 	public const CPT = 'translation_event';
 
-	public static function get_instance() {
+	public static function get_instance(): Translation_Events {
 		static $instance = null;
 		if ( null === $instance ) {
 			require_once __DIR__ . '/autoload.php';
