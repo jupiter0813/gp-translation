@@ -24,6 +24,8 @@ use Exception;
 use GP;
 use WP_Post;
 use WP_Query;
+use Wporg\TranslationEvents\Attendee\Attendee;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
@@ -34,6 +36,7 @@ class Translation_Events {
 	public static function get_instance() {
 		static $instance = null;
 		if ( null === $instance ) {
+			require_once __DIR__ . '/autoload.php';
 			$instance = new self();
 		}
 		return $instance;
@@ -71,24 +74,6 @@ class Translation_Events {
 	}
 
 	public function gp_init() {
-		require_once __DIR__ . '/templates/helper-functions.php';
-		require_once __DIR__ . '/includes/routes/route.php';
-		require_once __DIR__ . '/includes/routes/event/create.php';
-		require_once __DIR__ . '/includes/routes/event/details.php';
-		require_once __DIR__ . '/includes/routes/event/edit.php';
-		require_once __DIR__ . '/includes/routes/event/list.php';
-		require_once __DIR__ . '/includes/routes/user/attend-event.php';
-		require_once __DIR__ . '/includes/routes/user/my-events.php';
-		require_once __DIR__ . '/includes/event/event-date.php';
-		require_once __DIR__ . '/includes/event/event.php';
-		require_once __DIR__ . '/includes/event/event-repository-interface.php';
-		require_once __DIR__ . '/includes/event/event-repository.php';
-		require_once __DIR__ . '/includes/event/event-repository-cached.php';
-		require_once __DIR__ . '/includes/event/event-form-handler.php';
-		require_once __DIR__ . '/includes/attendee-repository.php';
-		require_once __DIR__ . '/includes/stats-calculator.php';
-		require_once __DIR__ . '/includes/stats-listener.php';
-
 		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\Routes\Event\List_Route', 'handle' ) );
 		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Routes\Event\Create_Route', 'handle' ) );
 		GP::$router->add( '/events/edit/(\d+)', array( 'Wporg\TranslationEvents\Routes\Event\Edit_Route', 'handle' ) );
@@ -103,22 +88,8 @@ class Translation_Events {
 		$stats_listener->start();
 	}
 
-	public function activate() {
-		global $gp_table_prefix;
-		$create_table = "
-		CREATE TABLE `{$gp_table_prefix}event_actions` (
-			`translate_event_actions_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-			`event_id` int(10) NOT NULL COMMENT 'Post_ID of the translation_event post in the wp_posts table',
-			`original_id` int(10) NOT NULL COMMENT 'ID of the translation',
-			`user_id` int(10) NOT NULL COMMENT 'ID of the user who made the action',
-			`action` enum('approve','create','reject','request_changes') NOT NULL COMMENT 'The action that the user made (create, reject, etc)',
-			`locale` varchar(10) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'Locale of the translation',
-			`happened_at` datetime NOT NULL COMMENT 'When the action happened, in UTC',
-		PRIMARY KEY (`translate_event_actions_id`),
-		UNIQUE KEY `event_per_translated_original_per_user` (`event_id`,`locale`,`original_id`,`user_id`)
-		) COMMENT='Tracks translation actions that happened during a translation event'";
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta( $create_table );
+	public function activate(): void {
+		Database::upgrade();
 	}
 
 	/**
@@ -240,10 +211,15 @@ class Translation_Events {
 			return;
 		}
 		if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
-			$attendee_repository = new Attendee_Repository();
-			$current_user_id     = get_current_user_id();
-			if ( ! $attendee_repository->is_attending( $post->ID, $current_user_id ) ) {
-				$attendee_repository->add_attendee( $post->ID, $current_user_id );
+			$event_id            = $post->ID;
+			$user_id             = get_current_user_id();
+			$attendee_repository = self::get_attendee_repository();
+			$attendee            = $attendee_repository->get_attendee( $event_id, $user_id );
+
+			if ( null === $attendee ) {
+				$attendee = new Attendee( $event_id, $user_id );
+				$attendee->mark_as_host();
+				$attendee_repository->insert_attendee( $attendee );
 			}
 		}
 	}

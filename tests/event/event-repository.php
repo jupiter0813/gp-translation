@@ -5,7 +5,7 @@ namespace Wporg\Tests\Event;
 use DateTimeImmutable;
 use DateTimeZone;
 use GP_UnitTestCase;
-use Wporg\TranslationEvents\Attendee_Repository;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Event\Event_End_Date;
