@@ -32,7 +32,7 @@ class Upgrade {
 		$is_running_tests = 'yes' === getenv( 'WPORG_TRANSLATION_EVENTS_TESTS' );
 		if ( $previous_version < 2 && ! $is_running_tests ) {
 			try {
-				self::import_legacy_attendees();
+				self::v2_import_legacy_attendees();
 			} catch ( Exception $e ) {
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 				error_log( $e );
@@ -78,7 +78,7 @@ class Upgrade {
 	 *
 	 * @throws Exception
 	 */
-	private static function import_legacy_attendees(): void {
+	private static function v2_import_legacy_attendees(): void {
 		$query = new WP_Query(
 			array(
 				'post_type' => Translation_Events::CPT,
