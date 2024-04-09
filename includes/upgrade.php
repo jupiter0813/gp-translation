@@ -81,7 +81,8 @@ class Upgrade {
 	private static function v2_import_legacy_attendees(): void {
 		$query = new WP_Query(
 			array(
-				'post_type' => Translation_Events::CPT,
+				'post_type'   => Translation_Events::CPT,
+				'post_status' => 'publish',
 			)
 		);
 
