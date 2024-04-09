@@ -90,8 +90,11 @@ class Upgrade {
 		$attendee_repository = Translation_Events::get_attendee_repository();
 		foreach ( $events as $event ) {
 			foreach ( $stats_calculator->get_contributors( $event->ID ) as $user ) {
-				$attendee = new Attendee( $event->ID, $user->ID );
-				$attendee_repository->insert_attendee( $attendee );
+				$attendee = $attendee_repository->get_attendee( $event->ID, $user->id );
+				if ( ! $attendee ) {
+					$attendee = new Attendee( $event->ID, $user->ID );
+					$attendee_repository->insert_attendee( $attendee );
+				}
 			}
 		}
 	}
