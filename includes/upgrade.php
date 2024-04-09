@@ -6,7 +6,7 @@ use Exception;
 use WP_Query;
 use Wporg\TranslationEvents\Attendee\Attendee;
 
-class Database {
+class Upgrade {
 	public static function upgrade(): void {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		global $gp_table_prefix;

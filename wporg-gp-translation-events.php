@@ -89,7 +89,7 @@ class Translation_Events {
 	}
 
 	public function activate(): void {
-		Database::upgrade();
+		Upgrade::upgrade();
 	}
 
 	/**

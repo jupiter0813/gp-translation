@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/includes/database.php';
+require_once __DIR__ . '/includes/upgrade.php';
 require_once __DIR__ . '/templates/helper-functions.php';
 require_once __DIR__ . '/includes/routes/route.php';
 require_once __DIR__ . '/includes/routes/event/create.php';
