@@ -47,10 +47,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<h2><?php esc_html_e( 'Atendees', 'gp-translation-events' ); ?></h2>
 		<small><?php esc_html_e( 'Users without contributions', 'gp-translation-events' ); ?></small>
 		<ul>
-			<?php foreach ( $contributors as $contributor ) : ?>
-				<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->locales ) ); ?>">
-					<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo get_avatar( $contributor->ID, 48 ); ?></a>
-					<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?></a>
+			<?php foreach ( $attendees as $attendee ) : ?>
+				<li class="event-atendee">
+					<a href="<?php echo esc_url( get_author_posts_url( $attendee->ID ) ); ?>"><?php echo get_avatar( $attendee->ID, 48 ); ?></a>
+					<a href="<?php echo esc_url( get_author_posts_url( $attendee->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $attendee->ID ) ); ?></a>
 				</li>
 			<?php endforeach; ?>
 		</ul>

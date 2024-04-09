@@ -96,6 +96,10 @@
 	vertical-align: middle;
 }
 
+.event-atendees h2 {
+	margin-bottom: 0;
+}
+
 .hide-event-url {
 	display: none;
 }
