@@ -1,4 +1,4 @@
-<?php
+x<?php
 /**
  * Events list page.
  */

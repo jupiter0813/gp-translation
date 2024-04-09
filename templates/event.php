@@ -129,7 +129,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					<?php foreach ( $event_stats->rows() as $_locale => $row ) : ?>
 					<tr>
 						<td title="<?php echo esc_html( $_locale ); ?> "><a href="<?php echo esc_url( gp_url_join( gp_url( '/languages' ), $row->language->slug ) ); ?>"><?php echo esc_html( $row->language->english_name ); ?></a></td>
-						<td><?php echo esc_html( $row->created ); ?></td>
+						<td><a href="<?php echo esc_url( gp_url_join( gp_url( '/events/translations' ), $event_id, $row->language->slug ) ); ?>"><?php echo esc_html( $row->created ); ?></a></td>
 						<td><?php echo esc_html( $row->reviewed ); ?></td>
 						<td><?php echo esc_html( $row->users ); ?></td>
 					</tr>
