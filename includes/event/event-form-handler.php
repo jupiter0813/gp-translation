@@ -49,9 +49,13 @@ class Event_Form_Handler {
 			}
 		}
 		if ( 'delete_event' === $action ) {
-			$event_id = isset( $form_data['event_id'] ) ? sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) : '';
-			$event    = $this->event_repository->get_event( $event_id );
-			$attendee = $this->attendee_repository->get_attendee( $event->id(), get_current_user_id() );
+			$event_id         = isset( $form_data['event_id'] ) ? sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) : '';
+			$event            = $this->event_repository->get_event( $event_id );
+			$attendee         = $this->attendee_repository->get_attendee( $event->id(), get_current_user_id() );
+			$stats_calculator = new Stats_Calculator();
+			if ( $stats_calculator->event_has_stats( $event->id() ) ) {
+				wp_send_json_error( esc_html__( 'The event has stats so it cannot be deleted.', 'gp-translation-events' ), 422 );
+			}
 			if ( ! ( $can_crud_event || ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'delete_post', $event_id ) || get_current_user_id() === $event->author_id() ) ) {
 				wp_send_json_error( esc_html__( 'You do not have permission to delete this event.', 'gp-translation-events' ), 403 );
 			}
