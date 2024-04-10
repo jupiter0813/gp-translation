@@ -70,7 +70,10 @@ class Translation_Events {
 		add_filter( 'wp_insert_post_data', array( $this, 'generate_event_slug' ), 10, 2 );
 		add_action( 'gp_init', array( $this, 'gp_init' ) );
 		add_action( 'gp_before_translation_table', array( $this, 'add_active_events_current_user' ) );
-		register_activation_hook( __FILE__, array( $this, 'activate' ) );
+
+		if ( is_admin() ) {
+			Upgrade::upgrade_if_needed();
+		}
 	}
 
 	public function gp_init() {
@@ -86,10 +89,6 @@ class Translation_Events {
 			self::get_attendee_repository(),
 		);
 		$stats_listener->start();
-	}
-
-	public function activate(): void {
-		Upgrade::upgrade_if_needed();
 	}
 
 	/**
