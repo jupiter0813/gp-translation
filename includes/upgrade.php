@@ -16,7 +16,6 @@ class Upgrade {
 		// If previous version is not set yet, set it to version 1.
 		if ( false === $previous_version ) {
 			$previous_version = 1;
-			update_option( self::VERSION_OPTION, $previous_version );
 		}
 
 		if ( self::VERSION === $previous_version ) {
