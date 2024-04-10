@@ -27,6 +27,27 @@ class Attendee_Repository {
 	}
 
 	/**
+	 * Update an attendee.
+	 *
+	 * @param Attendee $attendee The attendee to update.
+	 * @return void
+	 */
+	public function update_attendee( Attendee $attendee ): void {
+		global $wpdb, $gp_table_prefix;
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->update(
+			"{$gp_table_prefix}event_attendees",
+			array( 'is_host' => $attendee->is_host() ? 1 : 0 ),
+			array(
+				'event_id' => $attendee->event_id(),
+				'user_id'  => $attendee->user_id(),
+			)
+		);
+	}
+
+	/**
 	 * @throws Exception
 	 */
 	public function remove_attendee( int $event_id, int $user_id ): void {
@@ -126,48 +147,6 @@ class Attendee_Repository {
 				return intval( $row->event_id );
 			},
 			$rows
-		);
-	}
-
-	/**
-	 * Add a user as host of an event.
-	 *
-	 * @param Attendee $attendee The attendee to add as host.
-	 * @return void
-	 */
-	public function add_host( Attendee $attendee ): void {
-		$this->update_host( $attendee, 1 );
-	}
-
-	/**
-	 * Remove a user as host of an event.
-	 *
-	 * @param Attendee $attendee The attendee to remove as host.
-	 * @return void
-	 */
-	public function remove_host( Attendee $attendee ): void {
-		$this->update_host( $attendee, 0 );
-	}
-
-	/**
-	 * Update the host status of an attendee.
-	 *
-	 * @param Attendee $attendee The attendee to update.
-	 * @param int      $is_host  Whether the attendee is a host.
-	 * @return void
-	 */
-	private function update_host( Attendee $attendee, int $is_host ) {
-		global $wpdb, $gp_table_prefix;
-
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$wpdb->update(
-			"{$gp_table_prefix}event_attendees",
-			array( 'is_host' => $is_host ),
-			array(
-				'event_id' => $attendee->event_id(),
-				'user_id'  => $attendee->user_id(),
-			)
 		);
 	}
 }

@@ -50,12 +50,15 @@ class Host_Event_Route extends Route {
 		}
 
 		$affected_attendee = $this->attendee_repository->get_attendee( $event_id, $user_id );
+		// The user is attending to the event, so if I don't find the attendee, I won't create it.
 		if ( $affected_attendee instanceof Attendee ) {
 			if ( $affected_attendee->is_host() ) {
-				$this->attendee_repository->remove_host( $affected_attendee );
+				$affected_attendee->mark_as_non_host();
 			} else {
-				$this->attendee_repository->add_host( $affected_attendee );
+				$affected_attendee->mark_as_host();
 			}
+
+			$this->attendee_repository->update_attendee( $affected_attendee );
 		}
 
 		wp_safe_redirect( gp_url( "/events/{$event->slug()}" ) );
