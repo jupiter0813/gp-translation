@@ -36,12 +36,12 @@ class Host_Event_Route extends Route {
 	public function handle( int $event_id, int $user_id ): void {
 		$current_user = wp_get_current_user();
 		if ( ! $current_user->exists() ) {
-			$this->die_with_error( esc_html__( 'Only logged-in users can manage event\'s hosts.', 'gp-translation-events' ), 403 );
+			$this->die_with_error( esc_html__( "Only logged-in users can manage event's hosts.", 'gp-translation-events' ), 403 );
 		}
 
 		$current_user_attendee = $this->attendee_repository->get_attendee( $event_id, $current_user->ID );
 		if ( ! current_user_can( 'manage_options' ) && ! $current_user_attendee->is_host() ) {
-			$this->die_with_error( esc_html__( 'This use does not have permissions to manage event\'s hosts.', 'gp-translation-events' ), 403 );
+			$this->die_with_error( esc_html__( "This user does not have permissions to manage event's hosts.", 'gp-translation-events' ), 403 );
 		}
 
 		$event = $this->event_repository->get_event( $event_id );
