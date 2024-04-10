@@ -83,7 +83,7 @@
 	font-weight: bold;
 }
 
-.event-contributors li, .event-atendees li {
+.event-contributors li, .event-attendees li {
 	display: inline-block;
 	list-style-type: none;
 	margin-right: 1em;
@@ -91,12 +91,12 @@
 	width: 15em;
 }
 
-.event-contributors li .avatar, .event-atendees li .avatar {
+.event-contributors li .avatar, .event-attendees li .avatar {
 	border-radius: 50%;
 	vertical-align: middle;
 }
 
-.event-atendees h2 {
+.event-attendees h2 {
 	margin-bottom: 0;
 }
 
