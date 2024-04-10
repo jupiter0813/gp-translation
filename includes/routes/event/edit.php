@@ -66,7 +66,7 @@ class Edit_Route extends Route {
 
 		if ( ! $stats_calculator->event_has_stats( $event->id() ) ) {
 			$current_user = wp_get_current_user();
-			if ( ( $current_user->ID === $event->author_id() || current_user_can( 'manage_options' ) ) && ! $event->end()->is_in_the_past() ) {
+			if ( ( $current_user->ID === $event->author_id() || ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) && ! $event->end()->is_in_the_past() ) {
 				$create_delete_button = true;
 			}
 		}
