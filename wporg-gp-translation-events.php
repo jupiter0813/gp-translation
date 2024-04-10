@@ -213,7 +213,7 @@ class Translation_Events {
 		}
 		if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
 			$event_id            = $post->ID;
-			$user_id             = get_current_user_id();
+			$user_id             = $post->post_author;
 			$attendee_repository = self::get_attendee_repository();
 			$attendee            = $attendee_repository->get_attendee( $event_id, $user_id );
 
