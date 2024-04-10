@@ -42,7 +42,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo get_avatar( $contributor->ID, 48 ); ?></a>
 							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?></a>
 							<?php
-							if ( $attendee->is_host() || current_user_can( 'manage_options' ) ) :
+							if ( ( $user_is_attending &&  $attendee->is_host() ) || current_user_can( 'manage_options' ) ) :
 								$_attendee_repo = new Attendee_Repository();
 								$_attendee      = $_attendee_repo->get_attendee( $event_id, $contributor->ID );
 								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$contributor->ID" ) ) . '">';
@@ -69,7 +69,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>"><?php echo get_avatar( $_user->ID, 48 ); ?></a>
 							<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $_user->ID ) ); ?></a>
 							<?php
-							if ( $attendee->is_host() || current_user_can( 'manage_options' ) ) :
+							if ( ( $user_is_attending &&  $attendee->is_host() ) || current_user_can( 'manage_options' ) ) :
 								$_attendee_repo = new Attendee_Repository();
 								$_attendee      = $_attendee_repo->get_attendee( $event_id, $_user->ID );
 								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$_user->ID" ) ) . '">';
