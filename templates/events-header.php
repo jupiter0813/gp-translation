@@ -36,8 +36,9 @@ use Wporg\TranslationEvents\Event\Event;
 	<?php if ( isset( $event ) && ! isset( $event_form_name ) ) : ?>
 	<p class="event-sub-head">
 			<span class="event-host">Host: <a href="<?php echo esc_attr( get_author_posts_url( $event->author_id() ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $event->author_id() ) ); ?></a></span>
-			<?php if ( current_user_can( 'edit_post', $event->id() ) && ( $is_editable_event ) ) : ?>
-				<a class="event-page-edit-link" href="<?php echo esc_url( gp_url( 'events/edit/' . $event->id() ) ); ?>"><span class="dashicons dashicons-edit"></span>Edit event</a>
+			<?php $show_edit_button = ( ( $user_is_attending && $attendee->is_host() ) || current_user_can( 'edit_post', $event->id() ) ) && $is_editable_event; ?>
+			<?php if ( $show_edit_button ) : ?>
+				<a class="event-page-edit-link" href="<?php echo esc_url( gp_url( 'events/edit/' . $event->id() ) ); ?>"><span class="dashicons dashicons-edit"></span><?php esc_html_e( 'Edit event', 'gp-translation-events' ); ?></a>
 			<?php endif ?>
 		</p>
 		<?php endif; ?>
