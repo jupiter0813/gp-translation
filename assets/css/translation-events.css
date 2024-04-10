@@ -91,7 +91,7 @@
 	width: 15em;
 }
 
-.event-contributors li .avatar, .event-atendees li .avatar {
+.event-contributors li .avatar, .event-attendees li .avatar {
 	border-radius: 50%;
 	vertical-align: middle;
 }
