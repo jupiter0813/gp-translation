@@ -83,7 +83,7 @@
 	font-weight: bold;
 }
 
-.event-contributors li, .event-atendees li {
+.event-contributors li, .event-attendees li {
 	display: inline-block;
 	list-style-type: none;
 	margin-right: 1em;
