@@ -89,7 +89,7 @@ class Translation_Events {
 	}
 
 	public function activate(): void {
-		Upgrade::upgrade();
+		Upgrade::upgrade_if_needed();
 	}
 
 	/**

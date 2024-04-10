@@ -10,7 +10,7 @@ class Upgrade {
 	private const VERSION        = 2;
 	private const VERSION_OPTION = 'wporg_gp_translations_events_version';
 
-	public static function upgrade(): void {
+	public static function upgrade_if_needed(): void {
 		$previous_version = get_option( self::VERSION_OPTION );
 
 		// If previous version is not set yet, set it to version 1.
