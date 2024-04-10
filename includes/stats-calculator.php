@@ -227,8 +227,7 @@ class Stats_Calculator {
 
 		$attendees_not_contributing = array();
 		foreach ( $attendees_not_contributing_ids as $user_id ) {
-			$user                         = new WP_User( $user_id );
-			$attendees_not_contributing[] = $user;
+			$attendees_not_contributing[] = new WP_User( $user_id );
 		}
 
 		return $attendees_not_contributing;
