@@ -7,6 +7,8 @@ namespace Wporg\TranslationEvents;
 
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
+use Wporg\TranslationEvents\Stats\Event_Stats;
+use Wporg\TranslationEvents\Stats\Stats_Row;
 
 /** @var int $event_id */
 /** @var string $event_title */

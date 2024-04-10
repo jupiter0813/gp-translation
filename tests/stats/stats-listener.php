@@ -1,6 +1,6 @@
 <?php
 
-namespace Wporg\Tests;
+namespace Wporg\Tests\Stats;
 
 use GP_Translation;
 use GP_UnitTestCase;
