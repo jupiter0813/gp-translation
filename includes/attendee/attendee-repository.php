@@ -3,6 +3,7 @@
 namespace Wporg\TranslationEvents\Attendee;
 
 use Exception;
+use WP_User;
 
 class Attendee_Repository {
 	/**
@@ -112,6 +113,43 @@ class Attendee_Repository {
 	public function get_attendees( int $event_id ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		// TODO.
 		return array();
+	}
+
+	/**
+	 * Get the hosts' users for an event.
+	 *
+	 * @param int $event_id The id of the event.
+	 * @return array[WP_User] The hosts of the event.
+	 */
+	public function get_hosts( int $event_id ): array {
+		global $wpdb, $gp_table_prefix;
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$host_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"
+				select user_id
+				from {$gp_table_prefix}event_attendees
+				where event_id = %d and is_host = 1
+			",
+				array(
+					$event_id,
+				)
+			)
+		);
+		// phpcs:enable
+
+		$event    = get_post( $event_id );
+		$host_ids = array_unique( array_merge( $host_ids, array( $event->post_author ) ) );
+
+		$hosts = array();
+		foreach ( $host_ids as $host_id ) {
+			$hosts[] = new WP_User( $host_id );
+		}
+
+		return $hosts;
 	}
 
 	/**
