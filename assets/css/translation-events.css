@@ -330,6 +330,7 @@ span.event-details-date-label {
 }
 
 .event-host {
+	display: flex;
 	grid-column: 1;
 }
 
