@@ -38,6 +38,10 @@ class Attend_Event_Route extends Route {
 			$this->die_with_404();
 		}
 
+		if ( $event->is_past() ) {
+			$this->die_with_error( esc_html__( 'Cannot attend or un-attend a past event', 'gp-translation-events' ), 403 );
+		}
+
 		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user_id );
 		if ( $attendee instanceof Attendee ) {
 			$this->attendee_repository->remove_attendee( $event->id(), $user_id );
