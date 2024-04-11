@@ -45,6 +45,7 @@ class Attendee_Repository {
 				'user_id'  => $attendee->user_id(),
 			)
 		);
+		// phpcs:enable
 	}
 
 	/**

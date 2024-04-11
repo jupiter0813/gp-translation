@@ -181,6 +181,11 @@ class Event_Repository implements Event_Repository_Interface {
 	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
+		$user_events = $this->attendee_repository->get_events_for_user( $user_id );
+		if ( empty( $user_events ) ) {
+			return new Events_Query_Result( array(), 1, 1 );
+		}
+
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		return $this->execute_events_query(
@@ -200,7 +205,7 @@ class Event_Repository implements Event_Repository_Interface {
 				'orderby'    => array( 'meta_value', 'ID' ),
 				'order'      => 'DESC',
 			),
-			$this->attendee_repository->get_events_for_user( $user_id )
+			$user_events
 		);
 		// phpcs:enable
 	}
@@ -218,6 +223,46 @@ class Event_Repository implements Event_Repository_Interface {
 				'orderby'     => array( 'meta_value', 'ID' ),
 				'order'       => 'DESC',
 			)
+		);
+		// phpcs:enable
+	}
+
+	public function get_events_hosted_by_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
+		global $wpdb, $gp_table_prefix;
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$events_user_is_hosting_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"
+				select distinct event_id
+				from {$gp_table_prefix}event_attendees
+				where user_id = %d
+				and is_host = 1
+			",
+				array(
+					$user_id,
+				)
+			),
+		);
+
+		if ( empty( $events_user_is_hosting_ids ) ) {
+			return new Events_Query_Result( array(), 1, 1 );
+		}
+
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		return $this->execute_events_query(
+			$page,
+			$page_size,
+			array(
+				'post_status' => array( 'publish', 'draft' ),
+				'meta_key'    => '_event_start',
+				'orderby'     => 'meta_value',
+				'order'       => 'DESC',
+			),
+			$events_user_is_hosting_ids
 		);
 		// phpcs:enable
 	}
