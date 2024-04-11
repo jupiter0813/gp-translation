@@ -200,9 +200,9 @@ class Event_Repository implements Event_Repository_Interface {
 						'type'    => 'DATETIME',
 					),
 				),
-				'meta_key'   => '_event_end',
+				'meta_key'   => '_event_start',
 				'meta_type'  => 'DATETIME',
-				'orderby'    => array( 'meta_value', 'ID' ),
+				'orderby'    => 'meta_value',
 				'order'      => 'DESC',
 			),
 			$user_events
@@ -220,7 +220,7 @@ class Event_Repository implements Event_Repository_Interface {
 				'post_status' => array( 'publish', 'draft' ),
 				'author'      => $user_id,
 				'meta_key'    => '_event_start',
-				'orderby'     => array( 'meta_value', 'ID' ),
+				'orderby'     => 'meta_value',
 				'order'       => 'DESC',
 			)
 		);
