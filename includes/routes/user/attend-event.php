@@ -6,6 +6,7 @@ use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
+use Wporg\TranslationEvents\Stats\Stats_Importer;
 use Wporg\TranslationEvents\Translation_Events;
 
 /**
@@ -16,11 +17,13 @@ use Wporg\TranslationEvents\Translation_Events;
 class Attend_Event_Route extends Route {
 	private Event_Repository_Interface $event_repository;
 	private Attendee_Repository $attendee_repository;
+	private Stats_Importer $stats_importer;
 
 	public function __construct() {
 		parent::__construct();
 		$this->event_repository    = Translation_Events::get_event_repository();
 		$this->attendee_repository = Translation_Events::get_attendee_repository();
+		$this->stats_importer      = new Stats_Importer();
 	}
 
 	public function handle( int $event_id ): void {
@@ -41,6 +44,12 @@ class Attend_Event_Route extends Route {
 		} else {
 			$attendee = new Attendee( $event->id(), $user_id );
 			$this->attendee_repository->insert_attendee( $attendee );
+
+			// If the event is active right now,
+			// import stats for translations the user created since the event started.
+			if ( $event->is_active() ) {
+				$this->stats_importer->import_for_user_and_event( $user_id, $event );
+			}
 		}
 
 		wp_safe_redirect( gp_url( "/events/{$event->slug()}" ) );
