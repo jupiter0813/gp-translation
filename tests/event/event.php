@@ -72,4 +72,44 @@ class Event_Test extends WP_UnitTestCase {
 			'',
 		);
 	}
+
+	public function test_is_active() {
+		$timezone = new DateTimeZone( 'Europe/Lisbon' );
+		$start    = new Event_Start_Date( 'now' );
+		$end      = new Event_End_Date( 'now' );
+
+		$past_event = new Event(
+			0,
+			$start->modify( '-1 hour' ),
+			$end,
+			$timezone,
+			'publish',
+			'Foo title',
+			'',
+		);
+
+		$active_event = new Event(
+			0,
+			$start,
+			$end->modify( '+1 hour' ),
+			$timezone,
+			'publish',
+			'Foo title',
+			'',
+		);
+
+		$future_event = new Event(
+			0,
+			$start->modify( '+1 hour' ),
+			$end->modify( '+2 hours' ),
+			$timezone,
+			'publish',
+			'Foo title',
+			'',
+		);
+
+		$this->assertFalse( $past_event->is_active() );
+		$this->assertTrue( $active_event->is_active() );
+		$this->assertFalse( $future_event->is_active() );
+	}
 }
