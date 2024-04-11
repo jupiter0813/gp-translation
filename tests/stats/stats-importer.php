@@ -39,7 +39,7 @@ class Stats_Importer_Test extends GP_UnitTestCase {
 		$event    = $this->event_repository->get_event( $event_id );
 
 		// Create translations while the event is active.
-		$translation0 = $this->translation_factory->create( $user_id, date( 'Y-m-d H:i:s', time() - DAY_IN_SECONDS ) );
+		$translation0 = $this->translation_factory->create( $user_id, gmdate( 'Y-m-d H:i:s', time() - DAY_IN_SECONDS ) );
 		$translation1 = $this->translation_factory->create( $user_id );
 		$translation2 = $this->translation_factory->create( $user_id );
 
