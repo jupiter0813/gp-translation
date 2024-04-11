@@ -262,7 +262,7 @@ class Stats_Calculator {
 	 *
 	 * @return bool True if the user is a first time contributor, false otherwise.
 	 */
-	public function is_first_time_contributors( $event_start, $user_id ) {
+	public function is_first_time_contributor( $event_start, $user_id ) {
 		global $wpdb, $gp_table_prefix;
 
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared

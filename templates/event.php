@@ -134,7 +134,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 						', ',
 						array_map(
 							function ( $contributor ) use ( $stats_calculator, $event_start ) {
-								$append_tada = $stats_calculator->is_first_time_contributors( $event_start, $contributor->ID ) ? '<span class="first-time-contributor-tada"></span>' : '';
+								$append_tada = $stats_calculator->is_first_time_contributor( $event_start, $contributor->ID ) ? '<span class="first-time-contributor-tada"></span>' : '';
 								return '@' . $contributor->user_login . $append_tada;
 							},
 							$contributors
