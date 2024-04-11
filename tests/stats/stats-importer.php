@@ -35,12 +35,7 @@ class Stats_Importer_Test extends GP_UnitTestCase {
 		// Create a translation before the event starts, which should not be imported.
 		$this->translation_factory->create( $user_id );
 
-		// Wait for the event to start.
-		// It needs to be 2 seconds because the event starts at "now -1 second".
-		// TODO: This makes test runs take longer, we should find another way.
-		sleep( 2 );
-
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( array(), new DateTimeImmutable( '5 minutes ago', new DateTimeZone( 'UTC' ) ) );
 		$event    = $this->event_repository->get_event( $event_id );
 
 		// Create translations while the event is active.
