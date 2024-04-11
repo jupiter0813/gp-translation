@@ -45,7 +45,7 @@ class Stats_Factory {
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		return $wpdb->get_row( $wpdb->prepare( "select * from {$gp_table_prefix}event_actions where event_id = %s", $event_id ), ARRAY_A );
+		return $wpdb->get_results( $wpdb->prepare( "select * from {$gp_table_prefix}event_actions where event_id = %s", $event_id ), ARRAY_A );
 		// phpcs:enable
 	}
 }
