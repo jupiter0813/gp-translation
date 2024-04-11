@@ -112,4 +112,44 @@ class Event_Test extends WP_UnitTestCase {
 		$this->assertTrue( $active_event->is_active() );
 		$this->assertFalse( $future_event->is_active() );
 	}
+
+	public function test_is_past() {
+		$timezone = new DateTimeZone( 'Europe/Lisbon' );
+		$start    = new Event_Start_Date( 'now' );
+		$end      = new Event_End_Date( 'now' );
+
+		$past_event = new Event(
+			0,
+			$start->modify( '-1 hour' ),
+			$end->modify( '-30 minutes' ),
+			$timezone,
+			'publish',
+			'Foo title',
+			'',
+		);
+
+		$active_event = new Event(
+			0,
+			$start,
+			$end->modify( '+1 hour' ),
+			$timezone,
+			'publish',
+			'Foo title',
+			'',
+		);
+
+		$future_event = new Event(
+			0,
+			$start->modify( '+1 hour' ),
+			$end->modify( '+2 hours' ),
+			$timezone,
+			'publish',
+			'Foo title',
+			'',
+		);
+
+		$this->assertTrue( $past_event->is_past() );
+		$this->assertFalse( $active_event->is_past() );
+		$this->assertFalse( $future_event->is_past() );
+	}
 }
