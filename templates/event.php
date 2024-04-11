@@ -45,13 +45,19 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							if ( ( $user_is_attending && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) :
 								$_attendee_repo = new Attendee_Repository();
 								$_attendee      = $_attendee_repo->get_attendee( $event_id, $contributor->ID );
-								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$contributor->ID" ) ) . '">';
-								if ( $_attendee->is_host() ) :
-									echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+								if ( $contributor->ID !== $event->author_id() ) :
+									if ( $_attendee instanceof Attendee ) :
+										echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$contributor->ID" ) ) . '">';
+										if ( $_attendee->is_host() ) :
+											echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+										else :
+											echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
+										endif;
+										echo '</form>';
+									endif;
 								else :
-									echo '<input type="submit" class="button is-secondary convert-to-host" value="Convert to host"/>';
+									echo '<span class="event-creator">' . esc_html__( 'Event creator', 'gp-translation-events' ) . '</span>';
 								endif;
-								echo '</form>';
 							endif;
 							?>
 						</li>
@@ -72,13 +78,19 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							if ( ( $user_is_attending && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) :
 								$_attendee_repo = new Attendee_Repository();
 								$_attendee      = $_attendee_repo->get_attendee( $event_id, $_user->ID );
-								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$_user->ID" ) ) . '">';
-								if ( $_attendee->is_host() ) :
-									echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+								if ( $_user->ID !== $event->author_id() ) :
+									if ( $_attendee instanceof Attendee ) :
+										echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$_user->ID" ) ) . '">';
+										if ( $_attendee->is_host() ) :
+											echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+										else :
+											echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-qhost"/>';
+										endif;
+										echo '</form>';
+									endif;
 								else :
-									echo '<input type="submit" class="button is-secondary convert-to-host" value="Convert to host"/>';
+									echo '<span class="event-creator">' . esc_html__( 'Event creator', 'gp-translation-events' ) . '</span>';
 								endif;
-								echo '</form>';
 							endif;
 							?>
 						</li>
