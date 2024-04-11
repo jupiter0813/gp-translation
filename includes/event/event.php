@@ -93,8 +93,7 @@ class Event {
 	}
 
 	public function is_past(): bool {
-		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		return $this->end->utc() < $now;
+		return $this->end->is_in_the_past();
 	}
 
 	public function timezone(): DateTimeZone {
