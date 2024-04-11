@@ -100,8 +100,10 @@
 	margin-bottom: 0;
 }
 
-span.event-creator {
+span.event-creator, span.event-you {
+	display: block;
 	margin-left: 55px;
+	margin-top: 1em;
 	font-size: smaller;
 }
 .hide-event-url {
