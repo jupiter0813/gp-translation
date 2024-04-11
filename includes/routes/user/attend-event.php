@@ -28,17 +28,18 @@ class Attend_Event_Route extends Route {
 		if ( ! $user ) {
 			$this->die_with_error( esc_html__( 'Only logged-in users can attend events', 'gp-translation-events' ), 403 );
 		}
+		$user_id = $user->ID;
 
 		$event = $this->event_repository->get_event( $event_id );
 		if ( ! $event ) {
 			$this->die_with_404();
 		}
 
-		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user_id );
 		if ( $attendee instanceof Attendee ) {
-			$this->attendee_repository->remove_attendee( $event->id(), $user->ID );
+			$this->attendee_repository->remove_attendee( $event->id(), $user_id );
 		} else {
-			$attendee = new Attendee( $event->id(), $user->ID );
+			$attendee = new Attendee( $event->id(), $user_id );
 			$this->attendee_repository->insert_attendee( $attendee );
 		}
 
