@@ -8,6 +8,8 @@ use WP_User;
 use GP;
 use GP_Locale;
 use GP_Locales;
+use DateTimeImmutable;
+use DateTimeZone;
 
 class Stats_Row {
 	public int $created;
@@ -280,15 +282,13 @@ class Stats_Calculator {
 			)
 		);
 
-		if ( ! $users_first_translation_date ) {
+		if ( get_userdata( $user_id ) && ! $users_first_translation_date ) {
 			return true;
 		}
-		$first_translation_date_in_sec = ( new \DateTime( $users_first_translation_date ) )->getTimestamp();
-		$event_start_date_in_sec       = $event_start->__toSeconds();
-		$days_in_sec                   = 60 * 60 * 24;
-		if ( $event_start_date_time <= $first_translation_date ) {
-			return true;
-	   }
-	   return false;
+		$event_start_date_time  = new DateTimeImmutable( $event_start->__toString(), new DateTimeZone( 'UTC' ) );
+		$first_translation_date = new DateTimeImmutable( $users_first_translation_date, new DateTimeZone( 'UTC' ) );
+		$multiplier             = $users_first_translation_date > $event_start ? 1 : -1;
+		$date_diff              = ( $event_start_date_time->diff( $first_translation_date )->days ) * $multiplier;
+		return $date_diff >= -1;
 	}
 }
