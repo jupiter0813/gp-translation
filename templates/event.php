@@ -69,7 +69,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				</ul>
 			</div>
 		<?php endif; ?>
-		<?php if ( ! empty( $attendees ) ) : ?>
+		<?php if ( ! empty( $attendees ) && ( ! $event->end()->is_in_the_past() || ( ( $user_is_attending && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) ) ) : ?>
 			<div class="event-attendees">
 				<h2><?php esc_html_e( 'Attendees', 'gp-translation-events' ); ?></h2>
 				<ul>
