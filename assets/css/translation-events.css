@@ -331,9 +331,8 @@ a.event-page-edit-link:hover {
 	text-decoration: none;
 }
 ul.text-snippets {
-	list-style-type: none;
 	padding: 0;
-	margin-left: 140px;
+	margin-left: 160px;
 }
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
