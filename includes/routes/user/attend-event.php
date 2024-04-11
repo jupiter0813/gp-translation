@@ -13,6 +13,9 @@ use Wporg\TranslationEvents\Translation_Events;
  * Toggle whether the current user is attending an event.
  * If the user is not currently marked as attending, they will be marked as attending.
  * If the user is currently marked as attending, they will be marked as not attending.
+ *
+ * If the user is marked as attending, and the event is active at that moment, stats for the translations the user
+ * created since the event started are imported.
  */
 class Attend_Event_Route extends Route {
 	private Event_Repository_Interface $event_repository;
