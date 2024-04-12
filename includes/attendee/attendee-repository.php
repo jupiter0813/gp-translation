@@ -119,7 +119,7 @@ class Attendee_Repository {
 	 * Get the hosts' users for an event.
 	 *
 	 * @param int $event_id The id of the event.
-	 * @return array[WP_User] The hosts of the event.
+	 * @return array[Attendee] The hosts of the event.
 	 */
 	public function get_hosts( int $event_id ): array {
 		global $wpdb, $gp_table_prefix;
@@ -141,14 +141,10 @@ class Attendee_Repository {
 		);
 		// phpcs:enable
 
-		$event    = get_post( $event_id );
-		$host_ids = array_unique( array_merge( $host_ids, array( $event->post_author ) ) );
-
 		$hosts = array();
 		foreach ( $host_ids as $host_id ) {
-			$hosts[] = new WP_User( $host_id );
+			$hosts[] = $this->get_attendee( $event_id, $host_id );
 		}
-
 		return $hosts;
 	}
 

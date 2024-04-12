@@ -44,7 +44,8 @@ use Wporg\TranslationEvents\Event\Event;
 				endif;
 				?>
 				<?php foreach ( $hosts as $host ) : ?>
-					&nbsp;<a href="<?php echo esc_attr( get_author_posts_url( $host->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $host->ID ) ); ?></a>
+					<?php $user = get_userdata( $host->user_id() ); ?>
+					&nbsp;<a href="<?php echo esc_attr( get_author_posts_url( $user->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $user->ID ) ); ?></a>
 					<?php if ( end( $hosts ) !== $host ) : ?>
 						,
 					<?php endif; ?>
