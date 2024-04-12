@@ -19,7 +19,7 @@ class Stats_Importer {
 				"
 				insert ignore into {$gp_table_prefix}event_actions
 				    (event_id, user_id, original_id, locale, action, happened_at)
-				select %d, t.user_id, t.original_id, ts.slug, %s, t.date_added
+				select %d, t.user_id, t.original_id, ts.locale, %s, t.date_added
 				from {$gp_table_prefix}translations t,
 				     {$gp_table_prefix}translation_sets ts
 				where t.user_id = %d
