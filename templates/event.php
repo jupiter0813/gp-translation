@@ -10,6 +10,7 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 
+/** @var Attendee $attendee */
 /** @var int $event_id */
 /** @var string $event_title */
 /** @var string $event_description */
@@ -51,7 +52,11 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 											if ( $_attendee instanceof Attendee ) :
 												echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$contributor->ID" ) ) . '">';
 												if ( $_attendee->is_host() ) :
-													echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+													if ( $_attendee->is_unique_host() ) :
+														echo '<input type="submit" class="button is-primary remove-as-host" disabled value="Remove as host"/>';
+													else :
+														echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+													endif;
 												else :
 													echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
 												endif;
@@ -89,7 +94,11 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 											if ( $_attendee instanceof Attendee ) :
 												echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$_user->ID" ) ) . '">';
 												if ( $_attendee->is_host() ) :
-													echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+													if ( $_attendee->is_unique_host() ) :
+														echo '<input type="submit" class="button is-primary remove-as-host" disabled value="Remove as host"/>';
+													else :
+														echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+													endif;
 												else :
 													echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
 												endif;
@@ -238,10 +247,14 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<?php endif; ?>
 			<?php else : ?>
 				<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) ); ?>">
-					<?php if ( ! $user_is_attending ) : ?>
-						<input type="submit" class="button is-primary attend-btn" value="Attend Event"/>
+					<?php if ( $user_is_attending ) : ?>
+						<?php if ( $attendee->is_host() && $attendee->is_unique_host() ) : ?>
+							<input type="submit" class="button is-secondary attending-btn" disabled value="You're attending" />
+						<?php else : ?>
+							<input type="submit" class="button is-secondary attending-btn" value="You're attending" />
+						<?php endif; ?>
 					<?php else : ?>
-						<input type="submit" class="button is-secondary attending-btn" value="You're attending"/>
+						<input type="submit" class="button is-primary attend-btn" value="Attend Event"/>
 					<?php endif; ?>
 				</form>
 			<?php endif; ?>

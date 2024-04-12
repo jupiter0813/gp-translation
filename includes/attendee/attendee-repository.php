@@ -184,4 +184,41 @@ class Attendee_Repository {
 			$rows
 		);
 	}
+
+	/**
+	 * Check if the user is the only host of the event.
+	 *
+	 * @param int $event_id The id of the event.
+	 * @param int $user_id  The id of the user.
+	 * @return bool True if the user is the only host of the event, false otherwise.
+	 */
+	public function is_unique_host( int $event_id, int $user_id ): bool {
+		global $wpdb, $gp_table_prefix;
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$hosts_count = $wpdb->get_var(
+			$wpdb->prepare(
+				"
+				select count(*) as hosts_count
+				from {$gp_table_prefix}event_attendees
+				where event_id = %d
+					and is_host = 1
+					and user_id != %d
+			",
+				array(
+					$event_id,
+					$user_id,
+				),
+			)
+		);
+		// phpcs:enable
+
+		if ( 0 < intval( $hosts_count ) ) {
+			return false;
+		}
+
+		return true;
+	}
 }

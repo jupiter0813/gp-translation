@@ -37,6 +37,15 @@ class Attendee {
 		return $this->is_host;
 	}
 
+	/**
+	 * Check if the user is the unique host of the event.
+	 *
+	 * @return bool
+	 */
+	public function is_unique_host(): bool {
+		return ( new Attendee_Repository() )->is_unique_host( $this->event_id, $this->user_id );
+	}
+
 	public function mark_as_host(): void {
 		$this->is_host = true;
 	}
