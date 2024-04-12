@@ -287,8 +287,8 @@ class Stats_Calculator {
 		}
 		$event_start_date_time  = new DateTimeImmutable( $event_start->__toString(), new DateTimeZone( 'UTC' ) );
 		$first_translation_date = new DateTimeImmutable( $users_first_translation_date, new DateTimeZone( 'UTC' ) );
-		$multiplier             = $users_first_translation_date > $event_start ? 1 : -1;
-		$date_diff              = ( $event_start_date_time->diff( $first_translation_date )->days ) * $multiplier;
-		return $date_diff >= -1;
+		// A first time contributor is someone whose first translation was made not earlier than 24 hours before the event.
+		$event_start_date_time = $event_start_date_time->modify( '-1 day' );
+		return $event_start_date_time <= $first_translation_date;
 	}
 }
