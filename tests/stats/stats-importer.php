@@ -55,7 +55,7 @@ class Stats_Importer_Test extends GP_UnitTestCase {
 		$this->assertEquals( $user_id, $stats1['user_id'] );
 		$this->assertEquals( $translation1->original_id, $stats1['original_id'] );
 		$this->assertEquals( 'create', $stats1['action'] );
-		$this->assertEquals( 'default', $stats1['locale'] );
+		$this->assertEquals( 'aa', $stats1['locale'] );
 		$this->assertEquals( $translation1->date_added, $stats1['happened_at'] );
 
 		$stats2 = $stats[1];
@@ -63,7 +63,7 @@ class Stats_Importer_Test extends GP_UnitTestCase {
 		$this->assertEquals( $user_id, $stats2['user_id'] );
 		$this->assertEquals( $translation2->original_id, $stats2['original_id'] );
 		$this->assertEquals( 'create', $stats2['action'] );
-		$this->assertEquals( 'default', $stats2['locale'] );
+		$this->assertEquals( 'aa', $stats2['locale'] );
 		$this->assertEquals( $translation2->date_added, $stats1['happened_at'] );
 	}
 }
