@@ -80,7 +80,7 @@ class Translations_Route extends Route {
 			$text_direction = 'ltr';
 			foreach ( $translations as $translation ) {
 //				$args['trasnslations'][] = GP::$translation->get( $translation->id );
-				$args['trasnslations'][] = new \Translation_Entry( $translation );
+				$args['translations'][] = new \Translation_Entry( $translation );
 			}
 
 
