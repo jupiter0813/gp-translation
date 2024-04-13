@@ -33,7 +33,7 @@ use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 class Translation_Events {
 	public const CPT = 'translation_event';
 
-	public static function get_instance() {
+	public static function get_instance(): Translation_Events {
 		static $instance = null;
 		if ( null === $instance ) {
 			require_once __DIR__ . '/autoload.php';
@@ -59,18 +59,21 @@ class Translation_Events {
 	}
 
 	public function __construct() {
-		\add_action( 'wp_ajax_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
-		\add_action( 'wp_ajax_nopriv_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
-		\add_action( 'wp_enqueue_scripts', array( $this, 'register_translation_event_js' ) );
-		\add_action( 'init', array( $this, 'register_event_post_type' ) );
-		\add_action( 'add_meta_boxes', array( $this, 'event_meta_boxes' ) );
-		\add_action( 'save_post', array( $this, 'save_event_meta_boxes' ) );
-		\add_action( 'transition_post_status', array( $this, 'event_status_transition' ), 10, 3 );
-		\add_filter( 'gp_nav_menu_items', array( $this, 'gp_event_nav_menu_items' ), 10, 2 );
-		\add_filter( 'wp_insert_post_data', array( $this, 'generate_event_slug' ), 10, 2 );
-		\add_action( 'gp_init', array( $this, 'gp_init' ) );
-		\add_action( 'gp_before_translation_table', array( $this, 'add_active_events_current_user' ) );
-		\register_activation_hook( __FILE__, array( $this, 'activate' ) );
+		add_action( 'wp_ajax_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
+		add_action( 'wp_ajax_nopriv_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_translation_event_js' ) );
+		add_action( 'init', array( $this, 'register_event_post_type' ) );
+		add_action( 'add_meta_boxes', array( $this, 'event_meta_boxes' ) );
+		add_action( 'save_post', array( $this, 'save_event_meta_boxes' ) );
+		add_action( 'transition_post_status', array( $this, 'event_status_transition' ), 10, 3 );
+		add_filter( 'gp_nav_menu_items', array( $this, 'gp_event_nav_menu_items' ), 10, 2 );
+		add_filter( 'wp_insert_post_data', array( $this, 'generate_event_slug' ), 10, 2 );
+		add_action( 'gp_init', array( $this, 'gp_init' ) );
+		add_action( 'gp_before_translation_table', array( $this, 'add_active_events_current_user' ) );
+
+		if ( is_admin() ) {
+			Upgrade::upgrade_if_needed();
+		}
 	}
 
 	public function gp_init() {
@@ -87,10 +90,6 @@ class Translation_Events {
 			self::get_attendee_repository(),
 		);
 		$stats_listener->start();
-	}
-
-	public function activate(): void {
-		Database::upgrade();
 	}
 
 	/**
@@ -127,7 +126,7 @@ class Translation_Events {
 	 * Add meta boxes for the event post type.
 	 */
 	public function event_meta_boxes() {
-		\add_meta_box( 'event_dates', 'Event Dates', array( $this, 'event_dates_meta_box' ), self::CPT, 'normal', 'high' );
+		add_meta_box( 'event_dates', 'Event Dates', array( $this, 'event_dates_meta_box' ), self::CPT, 'normal', 'high' );
 	}
 
 	/**

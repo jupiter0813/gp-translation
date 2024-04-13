@@ -1,5 +1,7 @@
 <?php
 
+use Wporg\TranslationEvents\Upgrade;
+
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 if ( ! $_tests_dir ) {
 	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
@@ -34,7 +36,7 @@ require_once "$_tests_dir/includes/functions.php";
 function _manually_load_plugin() {
 	require_once _glotpress_path( '/tests/phpunit/includes/loader.php' );
 	require_once dirname( __DIR__ ) . '/wporg-gp-translation-events.php';
-	Wporg\TranslationEvents\Translation_Events::get_instance()->activate();
+	Upgrade::upgrade_if_needed();
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 

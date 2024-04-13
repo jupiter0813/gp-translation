@@ -43,8 +43,21 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	<div>
 		<label for="event-description">Event Description</label>
 		<textarea id="event-description" name="event_description" rows="4" required><?php echo esc_html( $event_description ); ?></textarea>
-	</div>
-	<div>
+		<?php
+		echo wp_kses(
+			Event_Text_Snippet::get_snippet_links(),
+			array(
+				'a'  => array(
+					'href'         => array(),
+					'data-snippet' => array(),
+					'class'        => array(),
+				),
+				'ul' => array( 'class' => array() ),
+				'li' => array(),
+			)
+		);
+		?>
+			<div>
 		<label for="event-start">Start Date</label>
 		<input type="datetime-local" id="event-start" name="event_start" value="<?php echo esc_attr( $event_start->format( 'Y-m-d H:i' ) ); ?>" required>
 	</div>
