@@ -35,7 +35,7 @@ class Attend_Event_Route extends Route {
 		}
 
 		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
-		if ( $attendee instanceof Attendee && $attendee->is_host() && $attendee->is_unique_host() ) {
+		if ( $attendee instanceof Attendee && $attendee->is_host() && ( 1 === count( $this->attendee_repository->get_hosts( $event_id ) ) ) ) {
 			$this->die_with_error( esc_html__( 'The event needs a host. Add a new host before stopping to attend the event.', 'gp-translation-events' ), 403 );
 		}
 		if ( $attendee instanceof Attendee ) {

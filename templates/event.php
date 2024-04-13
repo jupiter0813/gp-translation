@@ -5,19 +5,24 @@
 
 namespace Wporg\TranslationEvents;
 
+use WP_User;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
+use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 
+/** @var Attendee_Repository $attendee_repo */
 /** @var Attendee $attendee */
+/** @var Event $event */
 /** @var int $event_id */
 /** @var string $event_title */
 /** @var string $event_description */
 /** @var Event_Start_Date $event_start */
 /** @var Event_End_Date $event_end */
-/** @var bool $user_is_attending */
 /** @var Event_Stats $event_stats */
+/** @var array $projects */
+/** @var WP_User $user */
 
 /* translators: %s: Event title. */
 gp_title( sprintf( __( 'Translation Events - %s' ), esc_html( $event_title ) ) );
@@ -44,14 +49,13 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?></a>
 							<?php
 							if ( ! $event->end()->is_in_the_past() ) :
-								if ( ( $user_is_attending && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) :
+								if ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) :
 									if ( $user->ID !== $contributor->ID ) :
-										$_attendee_repo = new Attendee_Repository();
-										$_attendee      = $_attendee_repo->get_attendee( $event_id, $contributor->ID );
+										$_attendee = $attendee_repo->get_attendee( $event_id, $contributor->ID );
 										if ( $_attendee instanceof Attendee ) :
 											echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$contributor->ID" ) ) . '">';
 											if ( $_attendee->is_host() ) :
-												if ( $_attendee->is_unique_host() ) :
+												if ( 1 === count( $attendee_repo->get_hosts( $event_id ) ) ) :
 													echo '<input type="submit" class="button is-primary remove-as-host" disabled value="Remove as host"/>';
 												else :
 													echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
@@ -61,8 +65,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 											endif;
 											echo '</form>';
 										endif;
-									else :
-										echo '<span class="event-you">' . esc_html__( 'You (host)', 'gp-translation-events' ) . '</span>';
+									elseif ( ( $attendee instanceof Attendee && $attendee->is_host() ) ) :
+											echo '<span class="event-you">' . esc_html__( 'You (host)', 'gp-translation-events' ) . '</span>';
+										else :
+											echo '<span class="event-you">' . esc_html__( 'You (event creator)', 'gp-translation-events' ) . '</span>';
 									endif;
 								endif;
 							endif;
@@ -72,7 +78,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				</ul>
 			</div>
 		<?php endif; ?>
-		<?php if ( ! empty( $attendees ) && ( ! $event->end()->is_in_the_past() || ( ( $user_is_attending && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) ) ) : ?>
+		<?php if ( ! empty( $attendees ) && ( ! $event->end()->is_in_the_past() || ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) ) ) : ?>
 			<div class="event-attendees">
 				<h2><?php esc_html_e( 'Attendees', 'gp-translation-events' ); ?></h2>
 				<ul>
@@ -82,14 +88,13 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $_user->ID ) ); ?></a>
 							<?php
 							if ( ! $event->end()->is_in_the_past() ) :
-								if ( ( $user_is_attending && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) :
+								if ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) :
 									if ( $user->ID !== $_user->ID ) :
-										$_attendee_repo = new Attendee_Repository();
-										$_attendee      = $_attendee_repo->get_attendee( $event_id, $_user->ID );
+										$_attendee = $attendee_repo->get_attendee( $event_id, $_user->ID );
 										if ( $_attendee instanceof Attendee ) :
 											echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$_user->ID" ) ) . '">';
 											if ( $_attendee->is_host() ) :
-												if ( $_attendee->is_unique_host() ) :
+												if ( 1 === count( $attendee_repo->get_hosts( $event_id ) ) ) :
 													echo '<input type="submit" class="button is-primary remove-as-host" disabled value="Remove as host"/>';
 												else :
 													echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
@@ -99,8 +104,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 											endif;
 											echo '</form>';
 										endif;
-									else :
-										echo '<span class="event-you">' . esc_html__( 'You (host)', 'gp-translation-events' ) . '</span>';
+									elseif ( ( $attendee instanceof Attendee && $attendee->is_host() ) ) :
+											echo '<span class="event-you">' . esc_html__( 'You (host)', 'gp-translation-events' ) . '</span>';
+										else :
+											echo '<span class="event-you">' . esc_html__( 'You (event creator)', 'gp-translation-events' ) . '</span>';
 									endif;
 								endif;
 							endif;
@@ -234,13 +241,13 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<?php if ( is_user_logged_in() ) : ?>
 		<div class="event-details-join">
 			<?php if ( $event_end->is_in_the_past() ) : ?>
-				<?php if ( $user_is_attending ) : ?>
+				<?php if ( $attendee instanceof Attendee ) : ?>
 					<button disabled="disabled" class="button is-primary attend-btn"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></button>
 				<?php endif; ?>
 			<?php else : ?>
 				<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) ); ?>">
-					<?php if ( $user_is_attending ) : ?>
-						<?php if ( $attendee->is_host() && $attendee->is_unique_host() ) : ?>
+					<?php if ( $attendee instanceof Attendee ) : ?>
+						<?php if ( $attendee->is_host() && ( 1 === count( $attendee_repo->get_hosts( $event_id ) ) ) ) : ?>
 							<input type="submit" class="button is-secondary attending-btn" disabled value="You're attending" />
 						<?php else : ?>
 							<input type="submit" class="button is-secondary attending-btn" value="You're attending" />

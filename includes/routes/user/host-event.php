@@ -50,7 +50,7 @@ class Host_Event_Route extends Route {
 		}
 
 		$affected_attendee = $this->attendee_repository->get_attendee( $event_id, $user_id );
-		if ( $affected_attendee instanceof Attendee && $affected_attendee->is_host() && $affected_attendee->is_unique_host() ) {
+		if ( $affected_attendee instanceof Attendee && $affected_attendee->is_host() && ( 1 === count( $this->attendee_repository->get_hosts( $event_id ) ) ) ) {
 			$this->die_with_error( esc_html__( 'The event needs a host. Add a new host before stopping to attend the event.', 'gp-translation-events' ), 403 );
 		}
 		// The user is attending to the event, so if I don't find the attendee, I won't create it.
