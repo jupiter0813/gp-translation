@@ -52,26 +52,18 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<?php endif; ?>
 							<?php
 							if ( ! $event->end()->is_in_the_past() ) :
-								if ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) :
-									if ( $user->ID !== $contributor->ID ) :
-										$_attendee = $attendee_repo->get_attendee( $event_id, $contributor->ID );
-										if ( $_attendee instanceof Attendee ) :
-											echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$contributor->ID" ) ) . '">';
-											if ( $_attendee->is_host() ) :
-												if ( 1 === count( $attendee_repo->get_hosts( $event_id ) ) ) :
-													echo '<input type="submit" class="button is-primary remove-as-host" disabled value="Remove as host"/>';
-												else :
-													echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
-												endif;
-											else :
-												echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
-											endif;
-											echo '</form>';
-										endif;
-									elseif ( ( $attendee instanceof Attendee && $attendee->is_host() ) ) :
-											echo '<span class="event-you">' . esc_html__( 'You (host)', 'gp-translation-events' ) . '</span>';
+								if ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) || $user->ID === $event->author_id() ) :
+									$_attendee = $attendee_repo->get_attendee( $event_id, $contributor->ID );
+									if ( $_attendee instanceof Attendee ) :
+										echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$contributor->ID" ) ) . '">';
+										if ( $_attendee->is_host() ) :
+											echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
 										else :
-											echo '<span class="event-you">' . esc_html__( 'You (event creator)', 'gp-translation-events' ) . '</span>';
+											echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
+										endif;
+										echo '</form>';
+									else :
+										echo '<span class="event-you">' . esc_html__( 'Not attending', 'gp-translation-events' ) . '</span>';
 									endif;
 								endif;
 							endif;
@@ -81,7 +73,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				</ul>
 			</div>
 		<?php endif; ?>
-		<?php if ( ! empty( $attendees ) && ( ! $event->end()->is_in_the_past() || ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) ) ) : ?>
+		<?php if ( ! empty( $attendees ) && ( ! $event->end()->is_in_the_past() || ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) || $user->ID === $event->author_id() ) ) ) : ?>
 			<div class="event-attendees">
 				<h2><?php esc_html_e( 'Attendees', 'gp-translation-events' ); ?></h2>
 				<ul>
@@ -94,26 +86,16 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<?php endif; ?>
 							<?php
 							if ( ! $event->end()->is_in_the_past() ) :
-								if ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) :
-									if ( $user->ID !== $_user->ID ) :
-										$_attendee = $attendee_repo->get_attendee( $event_id, $_user->ID );
-										if ( $_attendee instanceof Attendee ) :
-											echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$_user->ID" ) ) . '">';
-											if ( $_attendee->is_host() ) :
-												if ( 1 === count( $attendee_repo->get_hosts( $event_id ) ) ) :
-													echo '<input type="submit" class="button is-primary remove-as-host" disabled value="Remove as host"/>';
-												else :
-													echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
-												endif;
-											else :
-												echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
-											endif;
-											echo '</form>';
-										endif;
-									elseif ( ( $attendee instanceof Attendee && $attendee->is_host() ) ) :
-											echo '<span class="event-you">' . esc_html__( 'You (host)', 'gp-translation-events' ) . '</span>';
+								if ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) || $user->ID === $event->author_id() ) :
+									$_attendee = $attendee_repo->get_attendee( $event_id, $_user->ID );
+									if ( $_attendee instanceof Attendee ) :
+										echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$_user->ID" ) ) . '">';
+										if ( $_attendee->is_host() ) :
+											echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
 										else :
-											echo '<span class="event-you">' . esc_html__( 'You (event creator)', 'gp-translation-events' ) . '</span>';
+											echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
+										endif;
+										echo '</form>';
 									endif;
 								endif;
 							endif;
@@ -257,11 +239,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			<?php else : ?>
 				<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) ); ?>">
 					<?php if ( $attendee instanceof Attendee ) : ?>
-						<?php if ( $attendee->is_host() && ( 1 === count( $attendee_repo->get_hosts( $event_id ) ) ) ) : ?>
-							<input type="submit" class="button is-secondary attending-btn" disabled value="You're attending" />
-						<?php else : ?>
-							<input type="submit" class="button is-secondary attending-btn" value="You're attending" />
-						<?php endif; ?>
+						<input type="submit" class="button is-secondary attending-btn" value="You're attending" />
 					<?php else : ?>
 						<input type="submit" class="button is-primary attend-btn" value="Attend Event"/>
 					<?php endif; ?>
