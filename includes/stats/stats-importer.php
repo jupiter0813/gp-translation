@@ -25,8 +25,7 @@ class Stats_Importer {
 				where t.user_id = %d
 				  and t.translation_set_id = ts.id
 				  and t.status in ('current', 'waiting', 'changesrequested', 'fuzzy' )
-				  and date_added >= %s
-				  AND date_added <= %s
+				  and date_added between %s and %s
 				",
 				array(
 					'event_id'          => $event->id(),
