@@ -5,16 +5,24 @@
 
 namespace Wporg\TranslationEvents;
 
+use WP_User;
+use Wporg\TranslationEvents\Attendee\Attendee;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
+use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 
+/** @var Attendee_Repository $attendee_repo */
+/** @var Attendee $attendee */
+/** @var Event $event */
 /** @var int $event_id */
 /** @var string $event_title */
 /** @var string $event_description */
 /** @var Event_Start_Date $event_start */
 /** @var Event_End_Date $event_end */
-/** @var bool $user_is_attending */
 /** @var Event_Stats $event_stats */
+/** @var array $projects */
+/** @var WP_User $user */
 
 /* translators: %s: Event title. */
 gp_title( sprintf( __( 'Translation Events - %s' ), esc_html( $event_title ) ) );
@@ -31,8 +39,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				echo wp_kses_post( wpautop( make_clickable( $event_description ) ) );
 			?>
 		</div>
-		<?php if ( ! empty( $event_stats->rows() ) ) : ?>
-	<div class="event-contributors">
+		<?php if ( ! empty( $contributors ) ) : ?>
+			<div class="event-contributors">
 				<h2><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></h2>
 				<ul>
 					<?php foreach ( $contributors as $contributor ) : ?>
@@ -42,119 +50,187 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<?php if ( $stats_calculator->is_first_time_contributor( $event_start, $contributor->ID ) ) : ?>
 								<span class="first-time-contributor-tada"></span>
 							<?php endif; ?>
+							<?php
+							if ( ! $event->end()->is_in_the_past() ) :
+								if ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) :
+									if ( $user->ID !== $contributor->ID ) :
+										$_attendee = $attendee_repo->get_attendee( $event_id, $contributor->ID );
+										if ( $_attendee instanceof Attendee ) :
+											echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$contributor->ID" ) ) . '">';
+											if ( $_attendee->is_host() ) :
+												if ( 1 === count( $attendee_repo->get_hosts( $event_id ) ) ) :
+													echo '<input type="submit" class="button is-primary remove-as-host" disabled value="Remove as host"/>';
+												else :
+													echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+												endif;
+											else :
+												echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
+											endif;
+											echo '</form>';
+										endif;
+									elseif ( ( $attendee instanceof Attendee && $attendee->is_host() ) ) :
+											echo '<span class="event-you">' . esc_html__( 'You (host)', 'gp-translation-events' ) . '</span>';
+										else :
+											echo '<span class="event-you">' . esc_html__( 'You (event creator)', 'gp-translation-events' ) . '</span>';
+									endif;
+								endif;
+							endif;
+							?>
 						</li>
 					<?php endforeach; ?>
 				</ul>
 			</div>
-	<div class="event-details-stats">
-		<h2><?php esc_html_e( 'Stats', 'gp-translation-events' ); ?></h2>
-		<table>
-			<thead>
-			<tr>
-				<th scope="col">Locale</th>
-				<th scope="col">Translations created</th>
-				<th scope="col">Translations reviewed</th>
-				<th scope="col">Contributors</th>
-			</tr>
-			</thead>
-			<tbody>
-			<?php /** @var $row Stats_Row */ ?>
-			<?php foreach ( $event_stats->rows() as $_locale => $row ) : ?>
-			<tr>
-				<td title="<?php echo esc_html( $_locale ); ?> "><a href="<?php echo esc_url( gp_url_join( gp_url( '/languages' ), $row->language->slug ) ); ?>"><?php echo esc_html( $row->language->english_name ); ?></a></td>
-				<td><?php echo esc_html( $row->created ); ?></td>
-				<td><?php echo esc_html( $row->reviewed ); ?></td>
-				<td><?php echo esc_html( $row->users ); ?></td>
-			</tr>
-		<?php endforeach ?>
-			<tr class="event-details-stats-totals">
-				<td>Total</td>
-				<td><?php echo esc_html( $event_stats->totals()->created ); ?></td>
-				<td><?php echo esc_html( $event_stats->totals()->reviewed ); ?></td>
-				<td><?php echo esc_html( $event_stats->totals()->users ); ?></td>
-			</tr>
-			</tbody>
-		</table>
-	</div>
-	<div class="event-projects">
-		<h2><?php esc_html_e( 'Projects', 'gp-translation-events' ); ?></h2>
-		<ul>
-			<?php foreach ( $projects as $project_name => $row ) : ?>
-			<li class="event-project" title="<?php echo esc_html( str_replace( ',', ', ', $row->locales ) ); ?>">
-				<a href="<?php echo esc_url( gp_url_project( $row->project ) ); ?>"><?php echo esc_html( $project_name ); ?></a> <small> to
-				<?php
-				foreach ( explode( ',', $row->locales ) as $_locale ) {
-					$_locale = \GP_Locales::by_slug( $_locale );
-					?>
-					<a href="<?php echo esc_url( gp_url_project_locale( $row->project, $_locale, 'default' ) ); ?>"><?php echo esc_html( $_locale->english_name ); ?></a>
+		<?php endif; ?>
+		<?php if ( ! empty( $attendees ) && ( ! $event->end()->is_in_the_past() || ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) ) ) : ?>
+			<div class="event-attendees">
+				<h2><?php esc_html_e( 'Attendees', 'gp-translation-events' ); ?></h2>
+				<ul>
+					<?php foreach ( $attendees as $_user ) : ?>
+						<li class="event-attendee">
+							<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>"><?php echo get_avatar( $_user->ID, 48 ); ?></a>
+							<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $_user->ID ) ); ?></a>
+							<?php if ( $stats_calculator->is_first_time_contributor( $event_start, $_user->ID ) ) : ?>
+								<span class="first-time-contributor-tada"></span>
+							<?php endif; ?>
+							<?php
+							if ( ! $event->end()->is_in_the_past() ) :
+								if ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) ) :
+									if ( $user->ID !== $_user->ID ) :
+										$_attendee = $attendee_repo->get_attendee( $event_id, $_user->ID );
+										if ( $_attendee instanceof Attendee ) :
+											echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$_user->ID" ) ) . '">';
+											if ( $_attendee->is_host() ) :
+												if ( 1 === count( $attendee_repo->get_hosts( $event_id ) ) ) :
+													echo '<input type="submit" class="button is-primary remove-as-host" disabled value="Remove as host"/>';
+												else :
+													echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+												endif;
+											else :
+												echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
+											endif;
+											echo '</form>';
+										endif;
+									elseif ( ( $attendee instanceof Attendee && $attendee->is_host() ) ) :
+											echo '<span class="event-you">' . esc_html__( 'You (host)', 'gp-translation-events' ) . '</span>';
+										else :
+											echo '<span class="event-you">' . esc_html__( 'You (event creator)', 'gp-translation-events' ) . '</span>';
+									endif;
+								endif;
+							endif;
+							?>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		<?php endif; ?>
+		<?php if ( ! empty( $event_stats->rows() ) ) : ?>
+			<div class="event-details-stats">
+				<h2><?php esc_html_e( 'Stats', 'gp-translation-events' ); ?></h2>
+				<table>
+					<thead>
+					<tr>
+						<th scope="col">Locale</th>
+						<th scope="col">Translations created</th>
+						<th scope="col">Translations reviewed</th>
+						<th scope="col">Contributors</th>
+					</tr>
+					</thead>
+					<tbody>
+					<?php /** @var $row Stats_Row */ ?>
+					<?php foreach ( $event_stats->rows() as $_locale => $row ) : ?>
+					<tr>
+						<td title="<?php echo esc_html( $_locale ); ?> "><a href="<?php echo esc_url( gp_url_join( gp_url( '/languages' ), $row->language->slug ) ); ?>"><?php echo esc_html( $row->language->english_name ); ?></a></td>
+						<td><?php echo esc_html( $row->created ); ?></td>
+						<td><?php echo esc_html( $row->reviewed ); ?></td>
+						<td><?php echo esc_html( $row->users ); ?></td>
+					</tr>
+				<?php endforeach ?>
+					<tr class="event-details-stats-totals">
+						<td>Total</td>
+						<td><?php echo esc_html( $event_stats->totals()->created ); ?></td>
+						<td><?php echo esc_html( $event_stats->totals()->reviewed ); ?></td>
+						<td><?php echo esc_html( $event_stats->totals()->users ); ?></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="event-projects">
+				<h2><?php esc_html_e( 'Projects', 'gp-translation-events' ); ?></h2>
+				<ul>
+					<?php foreach ( $projects as $project_name => $row ) : ?>
+					<li class="event-project" title="<?php echo esc_html( str_replace( ',', ', ', $row->locales ) ); ?>">
+						<a href="<?php echo esc_url( gp_url_project( $row->project ) ); ?>"><?php echo esc_html( $project_name ); ?></a> <small> to
+						<?php
+						foreach ( explode( ',', $row->locales ) as $_locale ) {
+							$_locale = \GP_Locales::by_slug( $_locale );
+							?>
+							<a href="<?php echo esc_url( gp_url_project_locale( $row->project, $_locale, 'default' ) ); ?>"><?php echo esc_html( $_locale->english_name ); ?></a>
+							<?php
+						}
+						// translators: %d: Number of contributors.
+						echo esc_html( sprintf( _n( 'by %d contributor', 'by %d contributors', $row->users, 'gp-translation-events' ), $row->users ) );
+						?>
+						</small>
+					</li>
+				<?php endforeach; ?>
+				</ul>
+			</div>
+			<details class="event-stats-summary">
+				<summary>View stats summary in text </summary>
+				<p class="event-stats-text">
 					<?php
-				}
-				// translators: %d: Number of contributors.
-				echo esc_html( sprintf( _n( 'by %d contributor', 'by %d contributors', $row->users, 'gp-translation-events' ), $row->users ) );
-				?>
-				</small>
-			</li>
-		<?php endforeach; ?>
-		</ul>
-	</div>
-	<details class="event-stats-summary">
-		<summary>View stats summary in text </summary>
-		<p class="event-stats-text">
-			<?php
-			echo wp_kses(
-				sprintf(
-					// translators: %1$s: Event title, %2$d: Number of contributors, %3$d: Number of languages, %4$s: List of languages, %5$d: Number of strings translated, %6$d: Number of strings reviewed.
-					__( 'At the <strong>%1$s</strong> event, %2$d people contributed in %3$d languages (%4$s), translated %5$d strings and reviewed %6$d strings.', 'gp-translation-events' ),
-					esc_html( $event_title ),
-					esc_html( $event_stats->totals()->users ),
-					count( $event_stats->rows() ),
-					esc_html(
-						implode(
-							', ',
-							array_map(
-								function ( $row ) {
-									return $row->language->english_name;
-								},
-								$event_stats->rows()
+					echo wp_kses(
+						sprintf(
+							// translators: %1$s: Event title, %2$d: Number of contributors, %3$d: Number of languages, %4$s: List of languages, %5$d: Number of strings translated, %6$d: Number of strings reviewed.
+							__( 'At the <strong>%1$s</strong> event, %2$d people contributed in %3$d languages (%4$s), translated %5$d strings and reviewed %6$d strings.', 'gp-translation-events' ),
+							esc_html( $event_title ),
+							esc_html( $event_stats->totals()->users ),
+							count( $event_stats->rows() ),
+							esc_html(
+								implode(
+									', ',
+									array_map(
+										function ( $row ) {
+											return $row->language->english_name;
+										},
+										$event_stats->rows()
+									)
+								)
+							),
+							esc_html( $event_stats->totals()->created ),
+							esc_html( $event_stats->totals()->reviewed )
+						),
+						array(
+							'strong' => array(),
+						)
+					);
+					?>
+					<?php
+					echo wp_kses(
+						sprintf(
+						// translators: %s the contributors.
+							esc_html__( 'Contributors were %s.', 'gp-translation-events' ),
+							implode(
+								', ',
+								array_map(
+									function ( $contributor ) use ( $stats_calculator, $event_start ) {
+										$append_tada = $stats_calculator->is_first_time_contributor( $event_start, $contributor->ID ) ? '<span class="first-time-contributor-tada"></span>' : '';
+										return '@' . $contributor->user_login . $append_tada;
+									},
+									$contributors
+								)
 							)
+						),
+						array(
+							'span' => array(
+								'class' => array(),
+							),
 						)
-					),
-					esc_html( $event_stats->totals()->created ),
-					esc_html( $event_stats->totals()->reviewed )
-				),
-				array(
-					'strong' => array(),
-				)
-			);
-			?>
-			<?php
-
-			echo wp_kses(
-				sprintf(
-					// translators: %s the contributors.
-					esc_html__( 'Contributors were %s.', 'gp-translation-events' ),
-					implode(
-						', ',
-						array_map(
-							function ( $contributor ) use ( $stats_calculator, $event_start ) {
-								$append_tada = $stats_calculator->is_first_time_contributor( $event_start, $contributor->ID ) ? '<span class="first-time-contributor-tada"></span>' : '';
-								return '@' . $contributor->user_login . $append_tada;
-							},
-							$contributors
-						)
-					)
-				),
-				array(
-					'span' => array(
-						'class' => array(),
-					),
-				)
-			);
-			?>
+					);
+					?>
 			</p>
 	</details>
-
-	<?php endif; ?>
+		<?php endif; ?>
 	</div>
 	<div class="event-details-right">
 		<div class="event-details-date">
@@ -175,15 +251,19 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<?php if ( is_user_logged_in() ) : ?>
 		<div class="event-details-join">
 			<?php if ( $event_end->is_in_the_past() ) : ?>
-				<?php if ( $user_is_attending ) : ?>
+				<?php if ( $attendee instanceof Attendee ) : ?>
 					<button disabled="disabled" class="button is-primary attend-btn"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></button>
 				<?php endif; ?>
 			<?php else : ?>
 				<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) ); ?>">
-					<?php if ( ! $user_is_attending ) : ?>
-						<input type="submit" class="button is-primary attend-btn" value="Attend Event"/>
+					<?php if ( $attendee instanceof Attendee ) : ?>
+						<?php if ( $attendee->is_host() && ( 1 === count( $attendee_repo->get_hosts( $event_id ) ) ) ) : ?>
+							<input type="submit" class="button is-secondary attending-btn" disabled value="You're attending" />
+						<?php else : ?>
+							<input type="submit" class="button is-secondary attending-btn" value="You're attending" />
+						<?php endif; ?>
 					<?php else : ?>
-						<input type="submit" class="button is-secondary attending-btn" value="You're attending"/>
+						<input type="submit" class="button is-primary attend-btn" value="Attend Event"/>
 					<?php endif; ?>
 				</form>
 			<?php endif; ?>

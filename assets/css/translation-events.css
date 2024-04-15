@@ -83,7 +83,7 @@
 	font-weight: bold;
 }
 
-.event-contributors li {
+.event-contributors li, .event-attendees li {
 	display: inline-block;
 	list-style-type: none;
 	margin-right: 1em;
@@ -91,11 +91,21 @@
 	width: 15em;
 }
 
-.event-contributors li .avatar {
+.event-contributors li .avatar, .event-attendees li .avatar {
 	border-radius: 50%;
 	vertical-align: middle;
 }
 
+.event-attendees h2 {
+	margin-bottom: 0;
+}
+
+span.event-creator, span.event-you {
+	display: block;
+	margin-left: 55px;
+	margin-top: 1em;
+	font-size: smaller;
+}
 .hide-event-url {
 	display: none;
 }
@@ -236,6 +246,13 @@ span.active-events-before-translation-table a {
 	padding: 0;
 }
 
+input[type="submit"].remove-as-host, input[type="submit"].convert-to-host {
+	text-align: center;
+	display: inline;
+	margin-top: 1em;
+	font-weight: bold;
+}
+
 input[type="submit"].attend-btn {
 	width: 100%;
 	text-align: center;
@@ -313,6 +330,7 @@ span.event-details-date-label {
 }
 
 .event-host {
+	display: flex;
 	grid-column: 1;
 }
 

@@ -81,6 +81,7 @@ class Translation_Events {
 		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Routes\Event\Create_Route', 'handle' ) );
 		GP::$router->add( '/events/edit/(\d+)', array( 'Wporg\TranslationEvents\Routes\Event\Edit_Route', 'handle' ) );
 		GP::$router->add( '/events/attend/(\d+)', array( 'Wporg\TranslationEvents\Routes\User\Attend_Event_Route', 'handle' ), 'post' );
+		GP::$router->add( '/events/host/(\d+)/(\d+)', array( 'Wporg\TranslationEvents\Routes\User\Host_Event_Route', 'handle' ), 'post' );
 		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Routes\User\My_Events_Route', 'handle' ) );
 		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Routes\Event\Details_Route', 'handle' ) );
 
@@ -173,7 +174,7 @@ class Translation_Events {
 	 * Handle the event form submission for the creation, editing, and deletion of events. This function is called via AJAX.
 	 */
 	public function submit_event_ajax() {
-		$form_handler = new Event_Form_Handler( self::get_event_repository() );
+		$form_handler = new Event_Form_Handler( self::get_event_repository(), self::get_attendee_repository() );
 		// Nonce verification is done by the form handler.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$form_handler->handle( $_POST );
@@ -211,7 +212,7 @@ class Translation_Events {
 		}
 		if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
 			$event_id            = $post->ID;
-			$user_id             = get_current_user_id();
+			$user_id             = $post->post_author;
 			$attendee_repository = self::get_attendee_repository();
 			$attendee            = $attendee_repository->get_attendee( $event_id, $user_id );
 
