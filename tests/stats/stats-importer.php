@@ -4,6 +4,7 @@ namespace Wporg\Tests\Stats;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use GP_Translation;
 use GP_UnitTestCase;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository;
@@ -41,6 +42,14 @@ class Stats_Importer_Test extends GP_UnitTestCase {
 		// Create translations while the event is active.
 		$translation1 = $this->translation_factory->create( $user_id );
 		$translation2 = $this->translation_factory->create( $user_id );
+
+		/** @var GP_Translation $translation_rejected  */
+		/** @var GP_Translation $translation_old  */
+		$translation_rejected = $this->translation_factory->create( $user_id );
+		$translation_old      = $this->translation_factory->create( $user_id );
+
+		$translation_rejected->update( array( 'status' => 'rejected' ) );
+		$translation_old->update( array( 'status' => 'old' ) );
 
 		// Make sure no stats were created yet.
 		$this->assertEquals( 0, $this->stats_factory->get_count() );

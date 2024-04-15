@@ -24,7 +24,8 @@ class Stats_Importer {
 				     {$gp_table_prefix}translation_sets ts
 				where t.user_id = %d
 				  and t.translation_set_id = ts.id
-				  AND date_added >= %s
+				  and ( t.status = 'current' or t.status = 'waiting' or t.status = 'changesrequested' or status = 'fuzzy' )
+				  and date_added >= %s
 				  AND date_added <= %s
 				",
 				array(
