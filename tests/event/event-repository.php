@@ -235,8 +235,8 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	public function test_get_events_created_by_user() {
 		$user_id   = $this->set_normal_user_as_current();
 		$event1_id = $this->event_factory->create_inactive_past();
-		$event2_id = $this->event_factory->create_active();
-		$event3_id = $this->event_factory->create_active();
+		$event2_id = $this->event_factory->create_active( array(), new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) ) );
+		$event3_id = $this->event_factory->create_active( array(), ( new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) ) )->modify( '+5 seconds' ) );
 		$event4_id = $this->event_factory->create_inactive_future();
 
 		$this->set_admin_user_as_current();
@@ -247,9 +247,9 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$events = $this->repository->get_events_created_by_user( $user_id )->events;
 
 		$this->assertCount( 4, $events );
-		$this->assertEquals( $event1_id, $events[0]->id() );
-		$this->assertEquals( $event2_id, $events[1]->id() );
-		$this->assertEquals( $event3_id, $events[2]->id() );
-		$this->assertEquals( $event4_id, $events[3]->id() );
+		$this->assertEquals( $event4_id, $events[0]->id() );
+		$this->assertEquals( $event3_id, $events[1]->id() );
+		$this->assertEquals( $event2_id, $events[2]->id() );
+		$this->assertEquals( $event1_id, $events[3]->id() );
 	}
 }

@@ -26,6 +26,7 @@ class My_Events_Route extends Route {
 		include ABSPATH . 'wp-admin/includes/post.php';
 
 		$_events_i_created_paged  = 1;
+		$_events_i_hosted_paged   = 1;
 		$_events_i_attended_paged = 1;
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
@@ -33,6 +34,12 @@ class My_Events_Route extends Route {
 			$value = sanitize_text_field( wp_unslash( $_GET['events_i_created_paged'] ) );
 			if ( is_numeric( $value ) ) {
 				$_events_i_created_paged = (int) $value;
+			}
+		}
+		if ( isset( $_GET['events_i_hosted_paged'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['events_i_hosted_paged'] ) );
+			if ( is_numeric( $value ) ) {
+				$_events_i_hosted_paged = (int) $value;
 			}
 		}
 		if ( isset( $_GET['events_i_attended_paged'] ) ) {
@@ -44,6 +51,7 @@ class My_Events_Route extends Route {
 		// phpcs:enable
 
 		$events_i_created_query  = $this->event_repository->get_events_created_by_user( get_current_user_id(), $_events_i_created_paged, 10 );
+		$events_i_host_query     = $this->event_repository->get_events_hosted_by_user( get_current_user_id(), $_events_i_hosted_paged, 10 );
 		$events_i_attended_query = $this->event_repository->get_past_events_for_user( get_current_user_id(), $_events_i_attended_paged, 10 );
 
 		$this->tmpl( 'events-my-events', get_defined_vars() );

@@ -3,6 +3,7 @@
 namespace Wporg\TranslationEvents\Attendee;
 
 use Exception;
+use WP_User;
 
 class Attendee_Repository {
 	/**
@@ -22,6 +23,28 @@ class Attendee_Repository {
 					'is_host'  => $attendee->is_host() ? 1 : 0,
 				),
 			),
+		);
+		// phpcs:enable
+	}
+
+	/**
+	 * Update an attendee.
+	 *
+	 * @param Attendee $attendee The attendee to update.
+	 * @return void
+	 */
+	public function update_attendee( Attendee $attendee ): void {
+		global $wpdb, $gp_table_prefix;
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->update(
+			"{$gp_table_prefix}event_attendees",
+			array( 'is_host' => $attendee->is_host() ? 1 : 0 ),
+			array(
+				'event_id' => $attendee->event_id(),
+				'user_id'  => $attendee->user_id(),
+			)
 		);
 		// phpcs:enable
 	}
@@ -90,6 +113,39 @@ class Attendee_Repository {
 	public function get_attendees( int $event_id ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		// TODO.
 		return array();
+	}
+
+	/**
+	 * Get the hosts' users for an event.
+	 *
+	 * @param int $event_id The id of the event.
+	 * @return array[Attendee] The hosts of the event.
+	 */
+	public function get_hosts( int $event_id ): array {
+		global $wpdb, $gp_table_prefix;
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$host_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"
+				select user_id
+				from {$gp_table_prefix}event_attendees
+				where event_id = %d and is_host = 1
+			",
+				array(
+					$event_id,
+				)
+			)
+		);
+		// phpcs:enable
+
+		$hosts = array();
+		foreach ( $host_ids as $host_id ) {
+			$hosts[] = $this->get_attendee( $event_id, $host_id );
+		}
+		return $hosts;
 	}
 
 	/**

@@ -40,4 +40,8 @@ class Attendee {
 	public function mark_as_host(): void {
 		$this->is_host = true;
 	}
+
+	public function mark_as_non_host(): void {
+		$this->is_host = false;
+	}
 }
