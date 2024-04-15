@@ -65,7 +65,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 										endif;
 										echo '</form>';
 									else :
-										echo '<span class="event-you">' . esc_html__( 'Not attending', 'gp-translation-events' ) . '</span>';
+										echo '<span class="event-not-attending">' . esc_html__( 'Not attending', 'gp-translation-events' ) . '</span>';
 									endif;
 								endif;
 							endif;
