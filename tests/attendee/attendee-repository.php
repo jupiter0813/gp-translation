@@ -82,6 +82,40 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->assertNull( $this->repository->get_attendee( $event2_id, $user2_id ) );
 	}
 
+	public function test_get_hosts() {
+		$event1_id = 1;
+		$event2_id = 2;
+		$user1_id  = 42;
+		$user2_id  = 43;
+
+		$host11 = new Attendee( $event1_id, $user1_id );
+		$host11->mark_as_host();
+		$this->repository->insert_attendee( $host11 );
+
+		$host12 = new Attendee( $event1_id, $user2_id );
+		$host12->mark_as_host();
+		$this->repository->insert_attendee( $host12 );
+
+		$host21 = new Attendee( $event2_id, $user1_id );
+		$host21->mark_as_host();
+		$this->repository->insert_attendee( $host21 );
+
+		// Add some more attendees to make sure we get the right ones.
+		$this->repository->insert_attendee( new Attendee( $event1_id, 84 ) );
+		$this->repository->insert_attendee( new Attendee( $event1_id, 85 ) );
+		$this->repository->insert_attendee( new Attendee( $event2_id, 84 ) );
+		$this->repository->insert_attendee( new Attendee( $event2_id, $user1_id ) );
+
+		$hosts = $this->repository->get_hosts( $event1_id );
+		$this->assertCount( 2, $hosts );
+		$this->assertEquals( $host11, $hosts[0] );
+		$this->assertEquals( $host12, $hosts[1] );
+
+		$hosts = $this->repository->get_hosts( $event2_id );
+		$this->assertCount( 1, $hosts );
+		$this->assertEquals( $host21, $hosts[0] );
+	}
+
 	public function test_get_events_for_user() {
 		$event1_id    = 1;
 		$event2_id    = 2;

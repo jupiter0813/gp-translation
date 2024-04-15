@@ -14,6 +14,7 @@ use Wporg\TranslationEvents\Tests\Event_Factory;
 
 class Event_Repository_Cached_Test extends GP_UnitTestCase {
 	private Event_Repository_Cached $repository;
+	private Event_Factory $event_factory;
 
 	public function setUp(): void {
 		parent::setUp();
