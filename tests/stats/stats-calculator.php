@@ -1,9 +1,9 @@
 <?php
 
-namespace Wporg\Tests;
+namespace Wporg\Tests\Stats;
 
 use GP_UnitTestCase;
-use Wporg\TranslationEvents\Stats_Calculator;
+use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 

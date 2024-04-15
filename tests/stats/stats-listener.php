@@ -1,6 +1,6 @@
 <?php
 
-namespace Wporg\Tests;
+namespace Wporg\Tests\Stats;
 
 use GP_Translation;
 use GP_UnitTestCase;
@@ -83,14 +83,14 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$stats_count = $this->stats_factory->get_count();
 		$this->assertEquals( 2, $stats_count );
 
-		$event1_stats = $this->stats_factory->get_by_event_id( $event1_id );
+		$event1_stats = $this->stats_factory->get_by_event_id( $event1_id )[0];
 		$this->assertEquals( $event1_id, $event1_stats['event_id'] );
 		$this->assertEquals( $user_id, $event1_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event1_stats['original_id'] );
 		$this->assertEquals( 'create', $event1_stats['action'] );
 		$this->assertEquals( 'aa', $event1_stats['locale'] );
 
-		$event2_stats = $this->stats_factory->get_by_event_id( $event2_id );
+		$event2_stats = $this->stats_factory->get_by_event_id( $event2_id )[0];
 		$this->assertEquals( $event2_id, $event2_stats['event_id'] );
 		$this->assertEquals( $user_id, $event2_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event2_stats['original_id'] );
@@ -117,14 +117,14 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$stats_count = $this->stats_factory->get_count();
 		$this->assertEquals( 2, $stats_count );
 
-		$event1_stats = $this->stats_factory->get_by_event_id( $event1_id );
+		$event1_stats = $this->stats_factory->get_by_event_id( $event1_id )[0];
 		$this->assertEquals( $event1_id, $event1_stats['event_id'] );
 		$this->assertEquals( $user_id, $event1_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event1_stats['original_id'] );
 		$this->assertEquals( 'approve', $event1_stats['action'] );
 		$this->assertEquals( 'aa', $event1_stats['locale'] );
 
-		$event2_stats = $this->stats_factory->get_by_event_id( $event2_id );
+		$event2_stats = $this->stats_factory->get_by_event_id( $event2_id )[0];
 		$this->assertEquals( $event2_id, $event2_stats['event_id'] );
 		$this->assertEquals( $user_id, $event2_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event2_stats['original_id'] );
@@ -151,14 +151,14 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$stats_count = $this->stats_factory->get_count();
 		$this->assertEquals( 2, $stats_count );
 
-		$event1_stats = $this->stats_factory->get_by_event_id( $event1_id );
+		$event1_stats = $this->stats_factory->get_by_event_id( $event1_id )[0];
 		$this->assertEquals( $event1_id, $event1_stats['event_id'] );
 		$this->assertEquals( $user_id, $event1_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event1_stats['original_id'] );
 		$this->assertEquals( 'reject', $event1_stats['action'] );
 		$this->assertEquals( 'aa', $event1_stats['locale'] );
 
-		$event2_stats = $this->stats_factory->get_by_event_id( $event2_id );
+		$event2_stats = $this->stats_factory->get_by_event_id( $event2_id )[0];
 		$this->assertEquals( $event2_id, $event2_stats['event_id'] );
 		$this->assertEquals( $user_id, $event2_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event2_stats['original_id'] );
@@ -185,14 +185,14 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$stats_count = $this->stats_factory->get_count();
 		$this->assertEquals( 2, $stats_count );
 
-		$event1_stats = $this->stats_factory->get_by_event_id( $event1_id );
+		$event1_stats = $this->stats_factory->get_by_event_id( $event1_id )[0];
 		$this->assertEquals( $event1_id, $event1_stats['event_id'] );
 		$this->assertEquals( $user_id, $event1_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event1_stats['original_id'] );
 		$this->assertEquals( 'request_changes', $event1_stats['action'] );
 		$this->assertEquals( 'aa', $event1_stats['locale'] );
 
-		$event2_stats = $this->stats_factory->get_by_event_id( $event2_id );
+		$event2_stats = $this->stats_factory->get_by_event_id( $event2_id )[0];
 		$this->assertEquals( $event2_id, $event2_stats['event_id'] );
 		$this->assertEquals( $user_id, $event2_stats['user_id'] );
 		$this->assertEquals( $translation->original_id, $event2_stats['original_id'] );
