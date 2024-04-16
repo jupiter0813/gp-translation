@@ -47,7 +47,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<ul>
 					<?php foreach ( $contributors as $contributor ) : ?>
 						<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->locales ) ); ?>">
-							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo get_avatar( $contributor->ID, 48 ); ?></a>
+							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>" class="avatar"><?php echo get_avatar( $contributor->ID, 48 ); ?></a>
 							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?></a>
 							<?php if ( $stats_calculator->is_first_time_contributor( $event_start, $contributor->ID ) ) : ?>
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
