@@ -50,7 +50,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo get_avatar( $contributor->ID, 48 ); ?></a>
 							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?></a>
 							<?php if ( $stats_calculator->is_first_time_contributor( $event_start, $contributor->ID ) ) : ?>
-								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'This user is starting to translate.', 'gp-translation-events' ); ?>"></span>
+								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
 							<?php
 							if ( ! $event->end()->is_in_the_past() ) :
@@ -84,7 +84,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>"><?php echo get_avatar( $_user->ID, 48 ); ?></a>
 							<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $_user->ID ) ); ?></a>
 							<?php if ( $stats_calculator->is_first_time_contributor( $event_start, $_user->ID ) ) : ?>
-								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'This user is starting to translate.', 'gp-translation-events' ); ?>"></span>
+								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
 							<?php
 							if ( ! $event->end()->is_in_the_past() ) :
@@ -200,7 +200,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 									function ( $contributor ) use ( $stats_calculator, $event_start ) {
 										$append_tada = '';
 										if ( $stats_calculator->is_first_time_contributor( $event_start, $contributor->ID ) ) {
-											$append_tada = '<span class="first-time-contributor-tada" title="' . esc_html__( 'This user is starting to translate.', 'gp-translation-events' ) . '"></span>';
+											$append_tada = '<span class="first-time-contributor-tada" title="' . esc_html__( 'New Translation Contributor', 'gp-translation-events' ) . '"></span>';
 										}
 										return '@' . $contributor->user_login . $append_tada;
 									},
