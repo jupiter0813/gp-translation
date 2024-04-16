@@ -45,11 +45,16 @@ use Wporg\TranslationEvents\Event\Event;
 					else :
 						esc_html_e( 'Hosts:', 'gp-translation-events' );
 					endif;
+				else :
+					esc_html_e( 'Created by:', 'gp-translation-events' );
+					?>
+					&nbsp;<a href="<?php echo esc_attr( get_author_posts_url( $user->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $user->ID ) ); ?></a>
+					<?php
 				endif;
 				?>
 				<?php foreach ( $hosts as $host ) : ?>
-					<?php $user = get_userdata( $host->user_id() ); ?>
-					&nbsp;<a href="<?php echo esc_attr( get_author_posts_url( $user->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $user->ID ) ); ?></a>
+					<?php $_user = get_userdata( $host->user_id() ); ?>
+					&nbsp;<a href="<?php echo esc_attr( get_author_posts_url( $_user->ID ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $_user->ID ) ); ?></a>
 					<?php if ( end( $hosts ) !== $host ) : ?>
 						,
 					<?php else : ?>
