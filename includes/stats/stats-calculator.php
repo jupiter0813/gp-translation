@@ -302,14 +302,13 @@ class Stats_Calculator {
 	}
 
 	/**
-	 * Check if a user is a first time contributor.
+	 * Check if a user is a new translation contributor. A new contributor is a user who has made 10 or fewer translations.
 	 *
-	 * @param Event_Start_Date $event_start The event start date.
-	 * @param int              $user_id      The user ID.
+	 * @param int $user_id      The user ID.
 	 *
-	 * @return bool True if the user is a first time contributor, false otherwise.
+	 * @return bool True if the user is a new translation contributor, false otherwise.
 	 */
-	public function is_first_time_contributor( $event_start, $user_id ) {
+	public function is_new_translation_contributor( $user_id ) {
 		global $wpdb, $gp_table_prefix;
 		$new_contributor_max_translation_count = 10;
 
