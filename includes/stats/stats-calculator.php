@@ -302,16 +302,17 @@ class Stats_Calculator {
 	}
 
 	/**
-	 * Check if a user is a new translation contributor. A new contributor is a user who has made 10 or fewer translations.
+	 * Check if a user is a new translation contributor. A new contributor is a user who has made 10 or fewer translations before event start time.
 	 *
-	 * @param int $user_id      The user ID.
+	 * @param Event_Start_Date $event_start The event start date.
+	 * @param int              $user_id      The user ID.
 	 *
 	 * @return bool True if the user is a new translation contributor, false otherwise.
 	 */
-	public function is_new_translation_contributor( $user_id ) {
+	public function is_new_translation_contributor( $event_start, $user_id ) {
 		global $wpdb, $gp_table_prefix;
 		$new_contributor_max_translation_count = 10;
-
+		$event_start_date_time                 = $event_start->__toString();
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -319,10 +320,11 @@ class Stats_Calculator {
 		$user_translations_count = $wpdb->get_var(
 			$wpdb->prepare(
 				"
-			select count(*) from {$gp_table_prefix}translations where user_id = %d
+			select count(*) from {$gp_table_prefix}translations where user_id = %d and date_added < %s
 		",
 				array(
 					$user_id,
+					$event_start_date_time,
 				)
 			)
 		);
