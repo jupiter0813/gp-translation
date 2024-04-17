@@ -43,7 +43,7 @@ use Wporg\TranslationEvents\Event\Event;
  */
 do_action( 'gp_before_translation_table', get_defined_vars() );
 ?>
-<table class="<?php echo esc_attr( apply_filters( 'gp_translation_table_classes', 'gp-table translations ' . $class_rtl, get_defined_vars() ) ); ?>">
+<table data-translation-set="<?php echo esc_attr( $translation_set->id ); ?>" class="<?php echo esc_attr( apply_filters( 'gp_translation_table_classes', 'gp-table translations ' . $class_rtl, get_defined_vars() ) ); ?>">
 	<thead>
 	<tr>
 		<?php
