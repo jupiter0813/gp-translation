@@ -91,15 +91,19 @@ class Translation_Events {
 
 	public function gp_init() {
 		$locale = '(' . implode( '|', wp_list_pluck( GP_Locales::locales(), 'slug' ) ) . ')';
+		$slug   = '([a-z0-9_-]+)';
+		$status = '(waiting)';
+		$id     = '(\d+)';
 
 		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\Routes\Event\List_Route', 'handle' ) );
 		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Routes\Event\Create_Route', 'handle' ) );
-		GP::$router->add( '/events/edit/(\d+)', array( 'Wporg\TranslationEvents\Routes\Event\Edit_Route', 'handle' ) );
-		GP::$router->add( '/events/attend/(\d+)', array( 'Wporg\TranslationEvents\Routes\User\Attend_Event_Route', 'handle' ), 'post' );
-		GP::$router->add( '/events/host/(\d+)/(\d+)', array( 'Wporg\TranslationEvents\Routes\User\Host_Event_Route', 'handle' ), 'post' );
+		GP::$router->add( '/events/edit/', array( 'Wporg\TranslationEvents\Routes\Event\Edit_Route', 'handle' ) );
+		GP::$router->add( "/events/attend/$id", array( 'Wporg\TranslationEvents\Routes\User\Attend_Event_Route', 'handle' ), 'post' );
+		GP::$router->add( "/events/host/$id/$id", array( 'Wporg\TranslationEvents\Routes\User\Host_Event_Route', 'handle' ), 'post' );
 		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Routes\User\My_Events_Route', 'handle' ) );
-		GP::$router->add( '/events/([a-z0-9_-]+)/' . $locale . '(/waiting)?', array( 'Wporg\TranslationEvents\Routes\Event\Translations_Route', 'handle' ) );
-		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Routes\Event\Details_Route', 'handle' ) );
+		GP::$router->add( "/events/$slug/$locale/$status", array( 'Wporg\TranslationEvents\Routes\Event\Translations_Route', 'handle' ) );
+		GP::$router->add( "/events/$slug/$locale", array( 'Wporg\TranslationEvents\Routes\Event\Translations_Route', 'handle' ) );
+		GP::$router->add( "/events/$slug", array( 'Wporg\TranslationEvents\Routes\Event\Details_Route', 'handle' ) );
 
 		$stats_listener = new Stats_Listener(
 			self::get_event_repository(),
