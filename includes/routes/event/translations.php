@@ -48,7 +48,7 @@ class Translations_Route extends Route {
 		$translation_sets = $wpdb->get_results(
 			$wpdb->prepare(
 				"
-				SELECT DISTINCT ts.id as translation_set_id, o.project_id as project_id
+				SELECT DISTINCT ts.id as translation_set_id, ts.name, o.project_id as project_id
 				FROM {$gp_table_prefix}event_actions ea
 				JOIN {$gp_table_prefix}originals o ON ea.original_id = o.id
 				JOIN {$gp_table_prefix}translation_sets ts ON o.project_id = ts.project_id AND ea.locale = ts.locale
@@ -59,6 +59,11 @@ class Translations_Route extends Route {
 				$locale
 			)
 		);
+		$projects         = array();
+		$translations     = array();
+		foreach ( $translation_sets as $ts ) {
+			$projects[ $ts->translation_set_id ] = GP::$project->get( $ts->project_id );
+		}
 		gp_tmpl_load( 'event-translations-header', get_defined_vars(), $this->template_path );
 
 		// Get the translations for the current project_id, event_id and locale
@@ -87,10 +92,11 @@ class Translations_Route extends Route {
 				)
 			);
 			if ( empty( $rows ) ) {
+				echo '<style>li#translations_link_', esc_html( $ts->translation_set_id ), ' { display: none; }</style>';
 				continue;
 			}
 			$translations             = array();
-			$project                  = GP::$project->get( $ts->project_id );
+			$project                  = $projects[ $ts->translation_set_id ];
 			$translation_set          = GP::$translation_set->get( $ts->translation_set_id );
 			$filters                  = array();
 			$sort                     = array();
