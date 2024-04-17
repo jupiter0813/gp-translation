@@ -13,8 +13,8 @@ use Wporg\TranslationEvents\Event\Event;
 		printf(
 			/* translators: 1: Project name. 2: Translation set name. */
 			__( 'Translation of %1$s: %2$s', 'glotpress' ),
-			gp_link_project_get(
-				$project,
+			gp_link_get(
+				gp_url_project_locale( $project, $translation_set->locale, $translation_set->slug ),
 				esc_html(
 					gp_project_names_from_root( $project )
 				)
