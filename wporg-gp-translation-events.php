@@ -95,7 +95,7 @@ class Translation_Events {
 		GP::$router->add( '/events/attend/(\d+)', array( 'Wporg\TranslationEvents\Routes\User\Attend_Event_Route', 'handle' ), 'post' );
 		GP::$router->add( '/events/host/(\d+)/(\d+)', array( 'Wporg\TranslationEvents\Routes\User\Host_Event_Route', 'handle' ), 'post' );
 		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Routes\User\My_Events_Route', 'handle' ) );
-		GP::$router->add( '/events/translations/(\d+)/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Routes\Event\Translations_Route', 'handle' ) );
+		GP::$router->add( '/events/([a-z0-9_-]+)/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Routes\Event\Translations_Route', 'handle' ) );
 		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Routes\Event\Details_Route', 'handle' ) );
 
 		$stats_listener = new Stats_Listener(

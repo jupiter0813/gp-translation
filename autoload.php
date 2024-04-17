@@ -8,6 +8,7 @@ require_once __DIR__ . '/includes/routes/event/create.php';
 require_once __DIR__ . '/includes/routes/event/details.php';
 require_once __DIR__ . '/includes/routes/event/edit.php';
 require_once __DIR__ . '/includes/routes/event/list.php';
+require_once __DIR__ . '/includes/routes/event/translations.php';
 require_once __DIR__ . '/includes/routes/user/attend-event.php';
 require_once __DIR__ . '/includes/routes/user/host-event.php';
 require_once __DIR__ . '/includes/routes/user/my-events.php';
