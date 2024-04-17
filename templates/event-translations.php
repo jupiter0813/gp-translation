@@ -12,11 +12,19 @@ use Wporg\TranslationEvents\Event\Event;
 		<?php
 		printf(
 			/* translators: 1: Project name. 2: Translation set name. */
-			__( 'Translation of %1$s: %2$s', 'glotpress' ),
-			gp_link_get(
-				gp_url_project_locale( $project, $translation_set->locale, $translation_set->slug ),
-				esc_html(
-					gp_project_names_from_root( $project )
+			esc_html__( 'Translation of %1$s: %2$s', 'glotpress' ),
+			wp_kses(
+				gp_link_get(
+					gp_url_project_locale( $project, $translation_set->locale, $translation_set->slug ),
+					esc_html(
+						gp_project_names_from_root( $project )
+					)
+				),
+				array(
+					'a' => array(
+						'href'  => array(),
+						'title' => array(),
+					),
 				)
 			),
 			esc_html( $locale->name )
@@ -53,9 +61,9 @@ do_action( 'gp_before_translation_table', get_defined_vars() );
 			<?php
 		endif;
 		?>
-		<th class="gp-column-priority"><?php /* Translators: Priority */ _e( 'Prio', 'glotpress' ); ?></th>
-		<th class="gp-column-original"><?php _e( 'Original string', 'glotpress' ); ?></th>
-		<th class="gp-column-translation"><?php _e( 'Translation', 'glotpress' ); ?></th>
+		<th class="gp-column-priority"><?php /* Translators: Priority */ esc_html_e( 'Prio', 'glotpress' ); ?></th>
+		<th class="gp-column-original"><?php esc_html_e( 'Original string', 'glotpress' ); ?></th>
+		<th class="gp-column-translation"><?php esc_html_e( 'Translation', 'glotpress' ); ?></th>
 		<th class="gp-column-actions">&mdash;</th>
 	</tr>
 	</thead>
@@ -73,7 +81,7 @@ foreach ( $translations as $translation ) {
 <?php
 if ( ! $translations ) :
 	?>
-	<tr><td colspan="<?php echo $can_approve ? 5 : 4; ?>"><?php _e( 'No translations were found!', 'glotpress' ); ?></td></tr>
+	<tr><td colspan="<?php echo $can_approve ? 5 : 4; ?>"><?php esc_html_e( 'No translations were found!', 'glotpress' ); ?></td></tr>
 	<?php
 	endif;
 ?>
@@ -96,10 +104,10 @@ do_action( 'gp_after_translation_table', get_defined_vars() );
 	}
 	?>
 	<div id="legend">
-		<div><strong><?php _e( 'Legend:', 'glotpress' ); ?></strong></div>
+		<div><strong><?php esc_html_e( 'Legend:', 'glotpress' ); ?></strong></div>
 		<?php
 		foreach ( GP::$translation->get_static( 'statuses' ) as $legend_status ) :
-			if ( ( 'changesrequested' == $legend_status ) && ( ! apply_filters( 'gp_enable_changesrequested_status', false ) ) ) { // todo: delete when we merge the gp-translation-helpers in GlotPress
+			if ( ( 'changesrequested' === $legend_status ) && ( ! apply_filters( 'gp_enable_changesrequested_status', false ) ) ) { // todo: delete when we merge the gp-translation-helpers in GlotPress.
 				continue;
 			}
 			?>
@@ -108,25 +116,25 @@ do_action( 'gp_after_translation_table', get_defined_vars() );
 				<?php
 				switch ( $legend_status ) {
 					case 'current':
-						_e( 'Current', 'glotpress' );
+						esc_html_e( 'Current', 'glotpress' );
 						break;
 					case 'waiting':
-						_e( 'Waiting', 'glotpress' );
+						esc_html_e( 'Waiting', 'glotpress' );
 						break;
 					case 'fuzzy':
-						_e( 'Fuzzy', 'glotpress' );
+						esc_html_e( 'Fuzzy', 'glotpress' );
 						break;
 					case 'old':
-						_e( 'Old', 'glotpress' );
+						esc_html_e( 'Old', 'glotpress' );
 						break;
 					case 'rejected':
-						_e( 'Rejected', 'glotpress' );
+						esc_html_e( 'Rejected', 'glotpress' );
 						break;
 					case 'changesrequested':
-						if ( apply_filters( 'gp_enable_changesrequested_status', false ) ) { // todo: delete when we merge the gp-translation-helpers in GlotPress
-							_e( 'Changes requested', 'glotpress' );
+						if ( apply_filters( 'gp_enable_changesrequested_status', false ) ) { // todo: delete when we merge the gp-translation-helpers in GlotPress.
+							esc_html_e( 'Changes requested', 'glotpress' );
 						} else {
-							_e( 'Rejected', 'glotpress' );
+							esc_html_e( 'Rejected', 'glotpress' );
 						}
 						break;
 					default:
@@ -138,7 +146,7 @@ do_action( 'gp_after_translation_table', get_defined_vars() );
 		endforeach;
 		?>
 		<div class="box has-warnings"></div>
-		<div><?php _e( 'With warnings', 'glotpress' ); ?></div>
+		<div><?php esc_html_e( 'With warnings', 'glotpress' ); ?></div>
 	</div>
 </div>
 </div>

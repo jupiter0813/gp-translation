@@ -22,7 +22,6 @@ class Translations_Route extends Route {
 	public function __construct() {
 		parent::__construct();
 		$this->event_repository = Translation_Events::get_event_repository();
-		// $this->attendee_repository = Translation_Events::get_attendee_repository();
 	}
 
 	public function handle( string $event_slug, string $locale, string $status = '%' ): void {
@@ -44,7 +43,9 @@ class Translations_Route extends Route {
 
 		global $wpdb, $gp_table_prefix;
 
-		// Get the different projects for the event and locale
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 		$translation_sets = $wpdb->get_results(
 			$wpdb->prepare(
 				"
@@ -68,7 +69,6 @@ class Translations_Route extends Route {
 		}
 		gp_tmpl_load( 'event-translations-header', get_defined_vars(), $this->template_path );
 
-		// Get the translations for the current project_id, event_id and locale
 		foreach ( $translation_sets as $ts ) {
 			$rows = $wpdb->get_results(
 				$wpdb->prepare(
@@ -95,6 +95,7 @@ class Translations_Route extends Route {
 					$status
 				)
 			);
+			// phpcs:enable
 			if ( empty( $rows ) ) {
 				echo '<style>li#translations_link_', esc_html( $ts->translation_set_id ), ' { display: none; }</style>';
 				continue;
@@ -125,7 +126,8 @@ class Translations_Route extends Route {
 			$editor_options[ $translation_set->id ] = compact( 'can_approve', 'can_write', 'url', 'discard_warning_url', 'set_priority_url', 'set_status_url', 'word_count_type' );
 
 			foreach ( (array) $rows as $row ) {
-				$row->user = $row->user_last_modified = null;
+				$row->user               = null;
+				$row->user_last_modified = null;
 
 				if ( $row->user_id ) {
 					$user = get_userdata( $row->user_id );
