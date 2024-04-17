@@ -32,10 +32,32 @@ gp_tmpl_header();
 </h2>
 </div>
 <div class="event-page-wrapper">
-	<h4>Projects</h4>
+	<h4>
+	<?php
+	echo esc_html(
+		sprintf(
+		// Translators: %s is the locale name.
+			__( 'Translations to %s', 'glotpress' ),
+			$locale->english_name
+		)
+	);
+	?>
+	</h4>
 	<ul>
 	<?php foreach ( $translation_sets as $translation_set ) : ?>
 		<li id="translations_link_<?php echo esc_attr( $translation_set->translation_set_id ); ?>"><a href="#translations_<?php echo esc_attr( $translation_set->translation_set_id ); ?>"><?php echo esc_html( gp_project_names_from_root( $projects[ $translation_set->translation_set_id ] ) ); ?></a></li>
 	<?php endforeach; ?>
 	</ul>
+
+	<?php
+	if ( '%' === $status ) {
+		?>
+		<a href="<?php echo esc_url( gp_url_join( gp_url(), wp_make_link_relative( get_the_permalink( $event->id() ) ), $locale->slug, 'waiting' ) ); ?>"><?php esc_html_e( 'Show only waiting translations', 'glotpress' ); ?></a>
+		<?php
+	} else {
+		?>
+		<a href="<?php echo esc_url( gp_url_join( gp_url(), wp_make_link_relative( get_the_permalink( $event->id() ) ), $locale->slug ) ); ?>"><?php esc_html_e( 'Show all contributed translations', 'glotpress' ); ?></a>
+		<?php
+	}
+	?>
 	<hr>

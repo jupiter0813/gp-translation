@@ -19,7 +19,7 @@ use Wporg\TranslationEvents\Event\Event;
 					gp_project_names_from_root( $project )
 				)
 			),
-			esc_html( $translation_set->name )
+			esc_html( $locale->name )
 		);
 		?>
 	</h3>

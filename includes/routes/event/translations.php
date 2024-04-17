@@ -25,7 +25,7 @@ class Translations_Route extends Route {
 		// $this->attendee_repository = Translation_Events::get_attendee_repository();
 	}
 
-	public function handle( string $event_slug, string $locale ): void {
+	public function handle( string $event_slug, string $locale, string $status = '%' ): void {
 		$user  = wp_get_current_user();
 		$event = get_page_by_path( $event_slug, OBJECT, Translation_Events::CPT );
 		if ( ! $event ) {
@@ -61,8 +61,10 @@ class Translations_Route extends Route {
 		);
 		$projects         = array();
 		$translations     = array();
+		$locale           = GP_Locales::by_slug( $locale );
 		foreach ( $translation_sets as $ts ) {
 			$projects[ $ts->translation_set_id ] = GP::$project->get( $ts->project_id );
+
 		}
 		gp_tmpl_load( 'event-translations-header', get_defined_vars(), $this->template_path );
 
@@ -86,9 +88,11 @@ class Translations_Route extends Route {
 					WHERE ea.event_id = %d
 					AND t.translation_set_id = %d
 					AND t.user_id = ea.user_id
+					AND t.status LIKE %s
 					",
 					$event->id(),
-					$ts->translation_set_id
+					$ts->translation_set_id,
+					$status
 				)
 			);
 			if ( empty( $rows ) ) {
@@ -105,7 +109,6 @@ class Translations_Route extends Route {
 			$per_page                 = 10000;
 			$total_translations_count = 0;
 			$text_direction           = 'ltr';
-			$locale                   = GP_Locales::by_slug( $translation_set->locale );
 			$locale_slug              = $translation_set->slug;
 			$word_count_type          = $locale->word_count_type;
 			$can_edit                 = $this->can( 'edit', 'translation-set', $translation_set->id );
