@@ -43,7 +43,12 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		</div>
 		<?php if ( ! empty( $contributors ) ) : ?>
 			<div class="event-contributors">
-				<h2><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></h2>
+				<h2>
+				<?php
+				// translators: %d is the number of contributors.
+				echo esc_html( sprintf( __( 'Contributors (%d)', 'gp-translation-events' ), number_format_i18n( count( $contributors ) ) ) );
+				?>
+				</h2>
 				<ul>
 					<?php foreach ( $contributors as $contributor ) : ?>
 						<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->locales ) ); ?>">
@@ -77,7 +82,12 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<?php endif; ?>
 		<?php if ( ! empty( $attendees ) && ( ! $event->end()->is_in_the_past() || ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'manage_options' ) || $user->ID === $event->author_id() ) ) ) : ?>
 			<div class="event-attendees">
-				<h2><?php esc_html_e( 'Attendees', 'gp-translation-events' ); ?></h2>
+				<h2>
+				<?php
+				// translators: %d is the number of attendees.
+				echo esc_html( sprintf( __( 'Attendees (%d)', 'gp-translation-events' ), number_format_i18n( count( $attendees ) ) ) );
+				?>
+				</h2>
 				<ul>
 					<?php foreach ( $attendees as $_user ) : ?>
 						<li class="event-attendee">
