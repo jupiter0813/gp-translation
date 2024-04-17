@@ -20,4 +20,6 @@ jQuery( function($) {
 <?php } ?>
 } );
 </script>
-<?php gp_tmpl_footer(); ?>
+<?php
+gp_enqueue_script( 'wporg-translate-editor' );
+gp_tmpl_footer(); ?>
