@@ -10,7 +10,7 @@ use Translation_Entry;
 use Wporg\TranslationEvents\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
-use Wporg\TranslationEvents\Stats_Calculator;
+use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
 
 /**
