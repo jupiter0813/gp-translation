@@ -53,6 +53,7 @@
 .event-details-stats table {
 	margin: 1rem;
 }
+
 .event-details-stats table {
 	width: 100%;
 	table-layout: fixed;
@@ -348,12 +349,17 @@ a.event-page-edit-link:hover {
 	border-bottom: var(--gp-color-btn-primary-bg) thin solid;
 	text-decoration: none;
 }
+
 ul.text-snippets {
 	padding: 0;
 	margin-left: 160px;
 }
 .first-time-contributor-tada::after {
 	content: ' 🎉';
+}
+
+ul#translation-links li {
+	margin-bottom: .5em;
 }
 
 /* show the event-details-right below instead of on the right on mobile */

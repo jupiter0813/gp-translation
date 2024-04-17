@@ -43,7 +43,7 @@ gp_tmpl_header();
 	);
 	?>
 	</h4>
-	<ul>
+	<ul id="translation-links">
 	<?php foreach ( $translation_sets as $translation_set ) : ?>
 		<li id="translations_link_<?php echo esc_attr( $translation_set->translation_set_id ); ?>"><a href="#translations_<?php echo esc_attr( $translation_set->translation_set_id ); ?>"><?php echo esc_html( gp_project_names_from_root( $projects[ $translation_set->translation_set_id ] ) ); ?></a></li>
 	<?php endforeach; ?>
