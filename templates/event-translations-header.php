@@ -50,7 +50,7 @@ gp_tmpl_header();
 	</ul>
 
 	<?php
-	if ( '%' === $status ) {
+	if ( trim( $status, '/' ) !== 'waiting' ) {
 		?>
 		<a href="<?php echo esc_url( gp_url_join( gp_url(), wp_make_link_relative( get_the_permalink( $event->id() ) ), $locale->slug, 'waiting' ) ); ?>"><?php esc_html_e( 'Show only waiting translations', 'glotpress' ); ?></a>
 		<?php

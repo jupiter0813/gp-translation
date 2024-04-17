@@ -22,6 +22,7 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use GP;
+use GP_Locales;
 use WP_Post;
 use WP_Query;
 use Wporg\TranslationEvents\Attendee\Attendee;
@@ -89,13 +90,15 @@ class Translation_Events {
 	}
 
 	public function gp_init() {
+		$locale = '(' . implode( '|', wp_list_pluck( GP_Locales::locales(), 'slug' ) ) . ')';
+
 		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\Routes\Event\List_Route', 'handle' ) );
 		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Routes\Event\Create_Route', 'handle' ) );
 		GP::$router->add( '/events/edit/(\d+)', array( 'Wporg\TranslationEvents\Routes\Event\Edit_Route', 'handle' ) );
 		GP::$router->add( '/events/attend/(\d+)', array( 'Wporg\TranslationEvents\Routes\User\Attend_Event_Route', 'handle' ), 'post' );
 		GP::$router->add( '/events/host/(\d+)/(\d+)', array( 'Wporg\TranslationEvents\Routes\User\Host_Event_Route', 'handle' ), 'post' );
 		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Routes\User\My_Events_Route', 'handle' ) );
-		GP::$router->add( '/events/([a-z0-9_-]+)/([a-z0-9_-]+)(?:/([a-z0-9_-]+))?', array( 'Wporg\TranslationEvents\Routes\Event\Translations_Route', 'handle' ) );
+		GP::$router->add( '/events/([a-z0-9_-]+)/' . $locale . '(/waiting)?', array( 'Wporg\TranslationEvents\Routes\Event\Translations_Route', 'handle' ) );
 		GP::$router->add( '/events/([a-z0-9_-]+)', array( 'Wporg\TranslationEvents\Routes\Event\Details_Route', 'handle' ) );
 
 		$stats_listener = new Stats_Listener(

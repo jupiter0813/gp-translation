@@ -24,7 +24,7 @@ class Translations_Route extends Route {
 		$this->event_repository = Translation_Events::get_event_repository();
 	}
 
-	public function handle( string $event_slug, string $locale, string $status = '%' ): void {
+	public function handle( string $event_slug, string $locale, string $status = 'any' ): void {
 		$user  = wp_get_current_user();
 		$event = get_page_by_path( $event_slug, OBJECT, Translation_Events::CPT );
 		if ( ! $event ) {
@@ -92,7 +92,7 @@ class Translations_Route extends Route {
 					",
 					$event->id(),
 					$ts->translation_set_id,
-					$status
+					trim( $status, '/' ) === 'waiting' ? 'waiting' : '%'
 				)
 			);
 			// phpcs:enable
