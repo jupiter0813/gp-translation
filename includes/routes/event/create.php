@@ -16,6 +16,11 @@ class Create_Route extends Route {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
 			exit;
 		}
+
+		if ( ! current_user_can( 'create_translation_event' ) ) {
+			$this->die_with_error( 'You do not have permission to create events.' );
+		}
+
 		$event_page_title         = 'Create Event';
 		$event_form_name          = 'create_event';
 		$css_show_url             = 'hide-event-url';

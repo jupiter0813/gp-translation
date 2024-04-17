@@ -37,7 +37,7 @@ class Event_Form_Handler {
 		 * @param bool $can_crud_event Whether the user can create, edit, or delete an event.
 		 */
 		$can_crud_event = apply_filters( 'gp_translation_events_can_crud_event', GP::$permission->current_user_can( 'admin' ) );
-		if ( 'create_event' === $action && ( ! $can_crud_event ) ) {
+		if ( 'create_event' === $action && ( ! current_user_can( 'create_translation_event' ) ) ) {
 			wp_send_json_error( esc_html__( 'The user does not have permission to create an event.', 'gp-translation-events' ), 403 );
 		}
 		if ( 'edit_event' === $action ) {

@@ -2,6 +2,7 @@
 
 namespace Wporg\TranslationEvents\Event;
 
+use GP;
 use WP_User;
 
 class Event_Capabilities {
@@ -21,8 +22,11 @@ class Event_Capabilities {
 	}
 
 	private function has_create( WP_User $user ): bool {
-		// TODO.
-		return true;
+		return $this->has_gp_crud( $user );
+	}
+
+	private function has_gp_crud( WP_User $user ): bool {
+		return apply_filters( 'gp_translation_events_can_crud_event', GP::$permission->user_can( $user, 'admin' ) );
 	}
 
 	public function register_hooks(): void {
