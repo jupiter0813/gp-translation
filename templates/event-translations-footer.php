@@ -6,7 +6,7 @@ jQuery( function($) {
 	?>
 		$('#translations_<?php echo esc_html( $translation_set_id ); ?>' ).click( function() {
 		$gp_editor_options = <?php echo wp_json_encode( $options ); ?>;
-		$( '#translation' ).attr('id', null);
+		$( '#translations' ).attr( 'id', null );
 		$( '#translations_<?php echo esc_html( $translation_set_id ); ?> table' ).attr( 'id', 'translations' );
 		$gp.editor.init( $( '#translations_<?php echo esc_html( $translation_set_id ); ?>' ) );
 	} );
