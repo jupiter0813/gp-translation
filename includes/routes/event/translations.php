@@ -9,6 +9,8 @@ use Translation_Entry;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
+use Wporg\TranslationEvents\Event\Event_Repository_Cached;
+use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 
 /**
  * Displays the event details page.
