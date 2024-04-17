@@ -8,7 +8,7 @@ use Wporg\TranslationEvents\Event\Event;
 ?>
 <div id="translations_<?php echo esc_attr( $translation_set->id ); ?>">
 <div class="gp-heading">
-	<h2>
+	<h3>
 		<?php
 		printf(
 			/* translators: 1: Project name. 2: Translation set name. */
@@ -22,7 +22,7 @@ use Wporg\TranslationEvents\Event\Event;
 			esc_html( $translation_set->name )
 		);
 		?>
-	</h2>
+	</h3>
 </div>
 <div class="gp-table-actions top">
 	<?php
