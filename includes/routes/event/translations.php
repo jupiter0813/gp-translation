@@ -14,7 +14,7 @@ use Wporg\TranslationEvents\Translation_Events;
  * Displays the event details page.
  */
 class Translations_Route extends Route {
-	private $event_repository;
+	private Event_Repository_Interface $event_repository;
 
 	public function __construct() {
 		parent::__construct();
