@@ -80,7 +80,7 @@ class Translations_Route extends Route {
 					JOIN {$gp_table_prefix}translations t ON t.original_id = ea.original_id
 					WHERE ea.event_id = %d
 					AND t.translation_set_id = %d
-					AND t.date_added >= ea.happened_at
+					AND t.user_id = ea.user_id
 					",
 					$event->id(),
 					$ts->translation_set_id
