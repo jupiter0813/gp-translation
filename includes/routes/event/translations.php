@@ -2,7 +2,6 @@
 
 namespace Wporg\TranslationEvents\Routes\Event;
 
-use Exception;
 use GP;
 use GP_Locales;
 use GP_Original;
