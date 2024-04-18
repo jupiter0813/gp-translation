@@ -183,7 +183,11 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 
 					$new_contributors_text = '';
 					if ( ! empty( $new_contributors ) ) {
-						$new_contributors_text = sprintf( _n( '(%d new contributor!)', '(%d new contributors!)', count( $new_contributors ), 'gp-translation-events' ), count($new_contributors)	);
+						$new_contributors_text = sprintf(
+							// translators: %d is the number of new contributors.
+							_n( '(%d new contributor!)', '(%d new contributors!)', count( $new_contributors ), 'gp-translation-events' ),
+							count( $new_contributors )
+						);
 					}
 
 					echo wp_kses(
