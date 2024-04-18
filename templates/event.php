@@ -65,9 +65,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 									if ( $_attendee instanceof Attendee ) :
 										echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$contributor->ID" ) ) . '">';
 										if ( $_attendee->is_host() ) :
-											echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+											echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
 										else :
-											echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
+											echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
 										endif;
 										echo '</form>';
 									else :
@@ -104,9 +104,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 									if ( $_attendee instanceof Attendee ) :
 										echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$_user->ID" ) ) . '">';
 										if ( $_attendee->is_host() ) :
-											echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+											echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
 										else :
-											echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
+											echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
 										endif;
 										echo '</form>';
 									endif;
@@ -124,10 +124,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<table>
 					<thead>
 					<tr>
-						<th scope="col">Locale</th>
-						<th scope="col">Translations created</th>
-						<th scope="col">Translations reviewed</th>
-						<th scope="col">Contributors</th>
+						<th scope="col"><?php esc_html_e( 'Locale', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Translations created', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Translations reviewed', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -273,9 +273,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			<?php else : ?>
 				<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) ); ?>">
 					<?php if ( $attendee instanceof Attendee ) : ?>
-						<input type="submit" class="button is-secondary attending-btn" value="You're attending" />
+						<input type="submit" class="button is-secondary attending-btn" value="<?php esc_attr_e( "You're attending", 'gp-translation-events' ); ?>" />
 					<?php else : ?>
-						<input type="submit" class="button is-primary attend-btn" value="Attend Event"/>
+						<input type="submit" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event', 'gp-translation-events' ); ?>"/>
 					<?php endif; ?>
 				</form>
 			<?php endif; ?>
