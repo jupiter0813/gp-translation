@@ -51,23 +51,7 @@ class Event_Capabilities {
 			case self::CREATE:
 				return $this->has_create( $user );
 			case self::VIEW:
-				if ( ! isset( $args[2] ) || ! is_int( $args[2] ) ) {
-					return false;
-				}
-				$event = $this->event_repository->get_event( $args[2] );
-				if ( ! $event ) {
-					return false;
-				}
-				return $this->has_view( $user, $event );
 			case self::EDIT:
-				if ( ! isset( $args[2] ) || ! is_int( $args[2] ) ) {
-					return false;
-				}
-				$event = $this->event_repository->get_event( $args[2] );
-				if ( ! $event ) {
-					return false;
-				}
-				return $this->has_edit( $user, $event );
 			case self::DELETE:
 				if ( ! isset( $args[2] ) || ! is_int( $args[2] ) ) {
 					return false;
@@ -76,7 +60,15 @@ class Event_Capabilities {
 				if ( ! $event ) {
 					return false;
 				}
-				return $this->has_delete( $user, $event );
+
+				if ( self::VIEW === $cap ) {
+					return $this->has_view( $user, $event );
+				} elseif ( self::EDIT === $cap ) {
+					return $this->has_edit( $user, $event );
+				} elseif ( self::DELETE === $cap ) {
+					return $this->has_delete( $user, $event );
+				}
+				break;
 		}
 
 		return false;
