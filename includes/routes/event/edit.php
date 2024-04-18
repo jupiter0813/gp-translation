@@ -28,10 +28,14 @@ class Edit_Route extends Route {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
 			exit;
 		}
-		$event    = $this->event_repository->get_event( $event_id );
-		$attendee = $this->attendee_repository->get_attendee( $event->id(), get_current_user_id() );
 
-		if ( ! $event || ! ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'edit_post', $event->id() ) || $event->author_id() === get_current_user_id() ) ) {
+		$event = $this->event_repository->get_event( $event_id );
+		if ( ! $event ) {
+			$this->die_with_404();
+		}
+
+		$attendee = $this->attendee_repository->get_attendee( $event->id(), get_current_user_id() );
+		if ( ! ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'edit_post', $event->id() ) || $event->author_id() === get_current_user_id() ) ) {
 			$this->die_with_error( esc_html__( 'Event does not exist, or you do not have permission to edit it.', 'gp-translation-events' ), 403 );
 		}
 		if ( 'trash' === $event->status() ) {
