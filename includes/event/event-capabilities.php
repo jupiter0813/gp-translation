@@ -130,7 +130,7 @@ class Event_Capabilities {
 			return false;
 		}
 
-		if ( user_can( $user->ID, 'manage_options' ) ) {
+		if ( user_can( $user->ID, 'delete_post', $event->id() ) ) {
 			return true;
 		}
 

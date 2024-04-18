@@ -105,7 +105,7 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->assertFalse( user_can( $non_author_user_id, 'delete_translation_event', $event_id ) );
 	}
 
-	public function test_cannot_delete_without_manage_options_capability() {
+	public function test_cannot_delete_without_delete_post_capability() {
 		$this->set_normal_user_as_current();
 
 		$event_id = $this->event_factory->create_active();
@@ -113,7 +113,7 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->assertFalse( current_user_can( 'delete_translation_event', $event_id ) );
 	}
 
-	public function test_can_delete_with_manage_options_capability() {
+	public function test_can_delete_with_delete_post_capability() {
 		$this->set_admin_user_as_current();
 
 		$event_id = $this->event_factory->create_active();
