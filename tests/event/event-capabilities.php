@@ -3,6 +3,7 @@
 namespace Wporg\Tests\Event;
 
 use GP_UnitTestCase;
+use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
@@ -32,5 +33,56 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
 
 		$this->assertTrue( current_user_can( 'create_translation_event' ) );
+	}
+
+	public function test_author_can_edit() {
+		$this->set_normal_user_as_current();
+
+		$event_id = $this->event_factory->create_active();
+
+		$this->assertTrue( current_user_can( 'edit_translation_event', $event_id ) );
+	}
+
+	public function test_non_author_cannot_edit() {
+		$this->set_normal_user_as_current();
+		$non_author_user_id = get_current_user_id();
+		$this->set_normal_user_as_current(); // This user is the author.
+
+		$event_id = $this->event_factory->create_active();
+
+		$this->assertFalse( user_can( $non_author_user_id, 'edit_translation_event', $event_id ) );
+	}
+
+	public function test_host_can_edit() {
+		$this->set_normal_user_as_current();
+		$non_author_user_id = get_current_user_id();
+		$this->set_normal_user_as_current(); // This user is the author.
+
+		$event_id = $this->event_factory->create_active();
+
+		$attendee = new Attendee( $event_id, $non_author_user_id );
+		$attendee->mark_as_host();
+		$this->attendee_repository->insert_attendee( $attendee );
+
+		$this->assertTrue( user_can( $non_author_user_id, 'edit_translation_event', $event_id ) );
+	}
+
+
+	public function test_cannot_edit_past_event() {
+		$this->set_normal_user_as_current();
+
+		$event_id = $this->event_factory->create_inactive_past();
+
+		$this->assertFalse( current_user_can( 'edit_translation_event', $event_id ) );
+	}
+
+	public function test_cannot_edit_event_with_stats() {
+		$this->set_normal_user_as_current();
+		$author_user_id = get_current_user_id();
+
+		$event_id = $this->event_factory->create_active();
+		$this->stats_factory->create( $event_id, $author_user_id, 1, 'create' );
+
+		$this->assertFalse( current_user_can( 'edit_translation_event', $event_id ) );
 	}
 }
