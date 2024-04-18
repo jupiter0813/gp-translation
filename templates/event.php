@@ -5,6 +5,7 @@
 
 namespace Wporg\TranslationEvents;
 
+use GP_Locales;
 use WP_User;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
@@ -156,9 +157,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 						<a href="<?php echo esc_url( gp_url_project( $row->project ) ); ?>"><?php echo esc_html( $project_name ); ?></a> <small> to
 						<?php
 						foreach ( explode( ',', $row->locales ) as $_locale ) {
-							$_locale = \GP_Locales::by_slug( $_locale );
+							$_locale = GP_Locales::by_slug( $_locale );
 							?>
-							<a href="<?php echo esc_url( gp_url_project_locale( $row->project, $_locale, 'default' ) ); ?>"><?php echo esc_html( $_locale->english_name ); ?></a>
+							<a href="<?php echo esc_url( gp_url_project_locale( $row->project, $_locale->slug, 'default' ) ); ?>"><?php echo esc_html( $_locale->english_name ); ?></a>
 							<?php
 						}
 						// translators: %d: Number of contributors.
