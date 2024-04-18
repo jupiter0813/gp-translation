@@ -101,8 +101,8 @@ class Translation_Events {
 		GP::$router->add( "/events/attend/$id", array( 'Wporg\TranslationEvents\Routes\User\Attend_Event_Route', 'handle' ), 'post' );
 		GP::$router->add( "/events/host/$id/$id", array( 'Wporg\TranslationEvents\Routes\User\Host_Event_Route', 'handle' ), 'post' );
 		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Routes\User\My_Events_Route', 'handle' ) );
-		GP::$router->add( "/events/$slug/$locale/$status", array( 'Wporg\TranslationEvents\Routes\Event\Translations_Route', 'handle' ) );
-		GP::$router->add( "/events/$slug/$locale", array( 'Wporg\TranslationEvents\Routes\Event\Translations_Route', 'handle' ) );
+		GP::$router->add( "/events/$slug/translations/$locale/$status", array( 'Wporg\TranslationEvents\Routes\Event\Translations_Route', 'handle' ) );
+		GP::$router->add( "/events/$slug/translations/$locale", array( 'Wporg\TranslationEvents\Routes\Event\Translations_Route', 'handle' ) );
 		GP::$router->add( "/events/$slug", array( 'Wporg\TranslationEvents\Routes\Event\Details_Route', 'handle' ) );
 
 		$stats_listener = new Stats_Listener(
