@@ -7,12 +7,14 @@ use WP_User;
 
 class Event_Capabilities {
 	private const CREATE = 'create_translation_event';
+	private const EDIT   = 'edit_translation_event';
 
 	/**
 	 * All the capabilities that concern an Event.
 	 */
 	private const CAPS = array(
 		self::CREATE,
+		self::EDIT,
 	);
 
 	private Event_Repository_Interface $event_repository;
@@ -33,6 +35,15 @@ class Event_Capabilities {
 		switch ( $cap ) {
 			case self::CREATE:
 				return $this->has_create( $user );
+			case self::EDIT:
+				if ( ! isset( $args[2] ) || ! is_int( $args[2] ) ) {
+					return false;
+				}
+				$event = $this->event_repository->get_event( $args[2] );
+				if ( ! $event ) {
+					return false;
+				}
+				return $this->has_edit( $user, $event );
 		}
 
 		return false;
@@ -46,6 +57,18 @@ class Event_Capabilities {
 	 */
 	private function has_create( WP_User $user ): bool {
 		return $this->is_gp_admin( $user );
+	}
+
+	/**
+	 * Evaluate whether a user can edit a specific event.
+	 *
+	 * @param WP_User $user  User for which we're evaluating the capability.
+	 * @param Event   $event Event for which we're evaluating the capability.
+	 * @return bool
+	 */
+	private function has_edit( WP_User $user, Event $event ): bool {
+		// TODO.
+		return false;
 	}
 
 	/**
