@@ -35,6 +35,30 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->assertTrue( current_user_can( 'create_translation_event' ) );
 	}
 
+	public function test_cannot_view_non_published_events() {
+		$this->set_normal_user_as_current();
+
+		$event_id = $this->event_factory->create_active();
+		$event    = $this->event_repository->get_event( $event_id );
+		$event->set_status( 'draft' );
+		$this->event_repository->update_event( $event );
+
+		$this->assertFalse( current_user_can( 'view_translation_event', $event_id ) );
+	}
+
+	public function test_gp_admin_can_view_non_published_events() {
+		$this->set_normal_user_as_current();
+
+		$event_id = $this->event_factory->create_active();
+		$event    = $this->event_repository->get_event( $event_id );
+		$event->set_status( 'draft' );
+		$this->event_repository->update_event( $event );
+
+		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
+
+		$this->assertTrue( current_user_can( 'view_translation_event', $event_id ) );
+	}
+
 	public function test_author_can_edit() {
 		$this->set_normal_user_as_current();
 

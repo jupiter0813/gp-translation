@@ -10,6 +10,7 @@ use Wporg\TranslationEvents\Stats\Stats_Calculator;
 
 class Event_Capabilities {
 	private const CREATE = 'create_translation_event';
+	private const VIEW   = 'view_translation_event';
 	private const EDIT   = 'edit_translation_event';
 	private const DELETE = 'delete_translation_event';
 
@@ -18,6 +19,7 @@ class Event_Capabilities {
 	 */
 	private const CAPS = array(
 		self::CREATE,
+		self::VIEW,
 		self::EDIT,
 		self::DELETE,
 	);
@@ -48,6 +50,15 @@ class Event_Capabilities {
 		switch ( $cap ) {
 			case self::CREATE:
 				return $this->has_create( $user );
+			case self::VIEW:
+				if ( ! isset( $args[2] ) || ! is_int( $args[2] ) ) {
+					return false;
+				}
+				$event = $this->event_repository->get_event( $args[2] );
+				if ( ! $event ) {
+					return false;
+				}
+				return $this->has_view( $user, $event );
 			case self::EDIT:
 				if ( ! isset( $args[2] ) || ! is_int( $args[2] ) ) {
 					return false;
@@ -79,6 +90,21 @@ class Event_Capabilities {
 	 */
 	private function has_create( WP_User $user ): bool {
 		return $this->is_gp_admin( $user );
+	}
+
+	/**
+	 * Evaluate whether a user can view a specific event.
+	 *
+	 * @param WP_User $user  User for which we're evaluating the capability.
+	 * @param Event   $event Event for which we're evaluating the capability.
+	 * @return bool
+	 */
+	private function has_view( WP_User $user, Event $event ): bool {
+		if ( $this->is_gp_admin( $user ) ) {
+			return true;
+		}
+
+		return 'publish' === $event->status();
 	}
 
 	/**
