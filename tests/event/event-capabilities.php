@@ -67,6 +67,16 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->assertTrue( user_can( $non_author_user_id, 'edit_translation_event', $event_id ) );
 	}
 
+	public function test_gp_admin_can_edit() {
+		$this->set_normal_user_as_current();
+		$non_author_user_id = get_current_user_id();
+		$this->set_normal_user_as_current(); // This user is the author.
+
+		$event_id = $this->event_factory->create_active();
+		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
+
+		$this->assertTrue( user_can( $non_author_user_id, 'edit_translation_event', $event_id ) );
+	}
 
 	public function test_cannot_edit_past_event() {
 		$this->set_normal_user_as_current();

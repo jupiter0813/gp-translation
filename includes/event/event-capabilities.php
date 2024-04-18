@@ -110,6 +110,10 @@ class Event_Capabilities {
 			return true;
 		}
 
+		if ( $this->is_gp_admin( $user ) ) {
+			return true;
+		}
+
 		return false;
 	}
 
