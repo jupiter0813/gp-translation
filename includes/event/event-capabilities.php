@@ -8,10 +8,21 @@ use WP_User;
 class Event_Capabilities {
 	private const CREATE = 'create_translation_event';
 
+	/**
+	 * All the capabilities that concern an Event.
+	 */
 	private const CAPS = array(
 		self::CREATE,
 	);
 
+	/**
+	 * This function is automatically called whenever user_can() is called for one the capabilities in self::CAPS.
+	 *
+	 * @param string  $cap  Requested capability.
+	 * @param array   $args Arguments that accompany the requested capability check.
+	 * @param WP_User $user User for which we're evaluating the capability.
+	 * @return bool
+	 */
 	private function has_cap( string $cap, array $args, WP_User $user ): bool {
 		switch ( $cap ) {
 			case self::CREATE:
@@ -21,11 +32,23 @@ class Event_Capabilities {
 		return false;
 	}
 
+	/**
+	 * Evaluate whether a user can create events.
+	 *
+	 * @param WP_User $user User for which we're evaluating the capability.
+	 * @return bool
+	 */
 	private function has_create( WP_User $user ): bool {
-		return $this->has_gp_crud( $user );
+		return $this->is_gp_admin( $user );
 	}
 
-	private function has_gp_crud( WP_User $user ): bool {
+	/**
+	 * Evaluate whether a user is a GlotPress admin.
+	 *
+	 * @param WP_User $user User for which we're evaluating the capability.
+	 * @return bool
+	 */
+	private function is_gp_admin( WP_User $user ): bool {
 		return apply_filters( 'gp_translation_events_can_crud_event', GP::$permission->user_can( $user, 'admin' ) );
 	}
 
