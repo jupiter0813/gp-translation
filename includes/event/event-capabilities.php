@@ -4,6 +4,7 @@ namespace Wporg\TranslationEvents\Event;
 
 use GP;
 use WP_User;
+use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 
@@ -77,7 +78,27 @@ class Event_Capabilities {
 	 * @return bool
 	 */
 	private function has_edit( WP_User $user, Event $event ): bool {
-		// TODO.
+		if ( $event->end()->is_in_the_past() ) {
+			return false;
+		}
+
+		if ( $this->stats_calculator->event_has_stats( $event->id() ) ) {
+			return false;
+		}
+
+		if ( $event->author_id() === $user->ID ) {
+			return true;
+		}
+
+		if ( user_can( $user->ID, 'edit_post', $event->id() ) ) {
+			return true;
+		}
+
+		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		if ( ( $attendee instanceof Attendee ) && $attendee->is_host() ) {
+			return true;
+		}
+
 		return false;
 	}
 
