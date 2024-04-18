@@ -62,11 +62,6 @@ class Details_Route extends Route {
 			$this->die_with_error( esc_html__( 'Failed to calculate event stats', 'gp-translation-events' ) );
 		}
 
-		$is_editable_event = true;
-		if ( $event_end->is_in_the_past() || $stats_calculator->event_has_stats( $event->id() ) ) {
-			$is_editable_event = false;
-		}
-
 		$this->tmpl( 'event', get_defined_vars() );
 	}
 }

@@ -8,7 +8,6 @@ use Wporg\TranslationEvents\Event\Event;
 /** @var Attendee $attendee */
 /** @var Event  $event */
 /** @var string $event_page_title */
-/** @var bool   $is_editable_event */
 ?>
 
 <div class="event-list-top-bar">
@@ -54,8 +53,7 @@ use Wporg\TranslationEvents\Event\Event;
 					<?php endif; ?>
 				<?php endforeach; ?>
 			</span>
-			<?php $show_edit_button = ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'edit_post', $event->id() ) ) && $is_editable_event; ?>
-			<?php if ( $show_edit_button ) : ?>
+			<?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
 				<a class="event-page-edit-link" href="<?php echo esc_url( gp_url( 'events/edit/' . $event->id() ) ); ?>"><span class="dashicons dashicons-edit"></span><?php esc_html_e( 'Edit event', 'gp-translation-events' ); ?></a>
 			<?php endif ?>
 		</p>
