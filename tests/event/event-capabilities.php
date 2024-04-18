@@ -10,6 +10,11 @@ use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 
 class Event_Capabilities_Test extends GP_UnitTestCase {
+	private Event_Factory $event_factory;
+	private Stats_Factory $stats_factory;
+	private Attendee_Repository $attendee_repository;
+	private Event_Repository $event_repository;
+
 	public function setUp(): void {
 		parent::setUp();
 		$this->event_factory       = new Event_Factory();
