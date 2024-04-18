@@ -170,8 +170,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<?php endforeach; ?>
 				</ul>
 			</div>
-			<details class="event-stats-summary">
-				<summary>View stats summary in text </summary>
+			<details class="event-stats-summary" open>
+				<summary><?php esc_html_e( 'View stats summary in text', 'gp-translation-events' ); ?></summary>
 				<p class="event-stats-text">
 					<?php
 					$new_contributors = array_filter(
@@ -185,7 +185,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					if ( ! empty( $new_contributors ) ) {
 						$new_contributors_text = sprintf(
 							// translators: %d is the number of new contributors.
-							_n( '(%d new contributor!)', '(%d new contributors!)', count( $new_contributors ), 'gp-translation-events' ),
+							_n( '(%d new contributor 🎉)', '(%d new contributors 🎉)', count( $new_contributors ), 'gp-translation-events' ),
 							count( $new_contributors )
 						);
 					}
