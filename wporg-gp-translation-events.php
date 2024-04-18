@@ -79,7 +79,7 @@ class Translation_Events {
 			Upgrade::upgrade_if_needed();
 		}
 
-		$this->event_capabilities = new Event_Capabilities();
+		$this->event_capabilities = new Event_Capabilities( self::get_event_repository() );
 		$this->event_capabilities->register_hooks();
 	}
 

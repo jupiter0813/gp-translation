@@ -15,6 +15,12 @@ class Event_Capabilities {
 		self::CREATE,
 	);
 
+	private Event_Repository_Interface $event_repository;
+
+	public function __construct( Event_Repository_Interface $event_repository ) {
+		$this->event_repository = $event_repository;
+	}
+
 	/**
 	 * This function is automatically called whenever user_can() is called for one the capabilities in self::CAPS.
 	 *
