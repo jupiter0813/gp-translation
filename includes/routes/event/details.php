@@ -35,13 +35,7 @@ class Details_Route extends Route {
 			$this->die_with_404();
 		}
 
-		/**
-		 * Filter the ability to create, edit, or delete an event.
-		 *
-		 * @param bool $can_crud_event Whether the user can create, edit, or delete an event.
-		 */
-		$can_crud_event = apply_filters( 'gp_translation_events_can_crud_event', GP::$permission->current_user_can( 'admin' ) );
-		if ( 'publish' !== $event->status() && ! $can_crud_event ) {
+		if ( ! current_user_can( 'view_translation_event', $event->id() ) ) {
 			$this->die_with_error( esc_html__( 'You are not authorized to view this page.', 'gp-translation-events' ), 403 );
 		}
 
