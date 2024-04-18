@@ -25,13 +25,15 @@ class Event_Form_Handler {
 			wp_send_json_error( esc_html__( 'Invalid form name.', 'gp-translation-events' ), 403 );
 		}
 
+		$event_id = isset( $form_data['event_id'] ) ? sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) : 0;
+
 		if ( 'create_event' === $action && ( ! current_user_can( 'create_translation_event' ) ) ) {
 			wp_send_json_error( esc_html__( 'You do not have permissions to create events.', 'gp-translation-events' ), 403 );
 		}
-		if ( 'edit_event' === $action && ( ! current_user_can( 'edit_translation_event' ) ) ) {
+		if ( 'edit_event' === $action && ( ! current_user_can( 'edit_translation_event', $event_id ) ) ) {
 			wp_send_json_error( esc_html__( 'You do not have permissions to edit this event.', 'gp-translation-events' ), 403 );
 		}
-		if ( 'delete_event' === $action && ( ! current_user_can( 'delete_translation_event' ) ) ) {
+		if ( 'delete_event' === $action && ( ! current_user_can( 'delete_translation_event', $event_id ) ) ) {
 			wp_send_json_error( esc_html__( 'You do not have permissions to delete this event.', 'gp-translation-events' ), 403 );
 		}
 

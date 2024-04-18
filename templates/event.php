@@ -59,7 +59,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
 							<?php
-							if ( current_user_can( 'edit_translation_event' ) ) :
+							if ( current_user_can( 'edit_translation_event', $event->id() ) ) :
 								$_attendee = $attendee_repo->get_attendee( $event_id, $contributor->ID );
 								if ( $_attendee instanceof Attendee ) :
 									echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$contributor->ID" ) ) . '">';
@@ -79,7 +79,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				</ul>
 			</div>
 		<?php endif; ?>
-		<?php if ( ! empty( $attendees ) && current_user_can( 'edit_translation_event' ) ) : ?>
+		<?php if ( ! empty( $attendees ) && current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
 			<div class="event-attendees">
 				<h2>
 				<?php

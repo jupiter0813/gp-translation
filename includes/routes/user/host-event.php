@@ -39,7 +39,7 @@ class Host_Event_Route extends Route {
 			$this->die_with_error( esc_html__( "Only logged-in users can manage the event's hosts.", 'gp-translation-events' ), 403 );
 		}
 
-		if ( ! current_user_can( 'edit_translation_event' ) ) {
+		if ( ! current_user_can( 'edit_translation_event', $event_id ) ) {
 			$this->die_with_error( esc_html__( "You do not have permissions to manage the event's hosts.", 'gp-translation-events' ), 403 );
 		}
 
