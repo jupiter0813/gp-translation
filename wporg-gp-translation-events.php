@@ -30,6 +30,7 @@ use Wporg\TranslationEvents\Event\Event_Capabilities;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
+use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Listener;
 
 class Translation_Events {
@@ -79,7 +80,11 @@ class Translation_Events {
 			Upgrade::upgrade_if_needed();
 		}
 
-		$this->event_capabilities = new Event_Capabilities( self::get_event_repository() );
+		$this->event_capabilities = new Event_Capabilities(
+			self::get_event_repository(),
+			self::get_attendee_repository(),
+			new Stats_Calculator()
+		);
 		$this->event_capabilities->register_hooks();
 	}
 

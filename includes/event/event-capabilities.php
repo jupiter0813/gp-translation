@@ -4,6 +4,8 @@ namespace Wporg\TranslationEvents\Event;
 
 use GP;
 use WP_User;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
+use Wporg\TranslationEvents\Stats\Stats_Calculator;
 
 class Event_Capabilities {
 	private const CREATE = 'create_translation_event';
@@ -18,9 +20,17 @@ class Event_Capabilities {
 	);
 
 	private Event_Repository_Interface $event_repository;
+	private Attendee_Repository $attendee_repository;
+	private Stats_Calculator $stats_calculator;
 
-	public function __construct( Event_Repository_Interface $event_repository ) {
-		$this->event_repository = $event_repository;
+	public function __construct(
+		Event_Repository_Interface $event_repository,
+		Attendee_Repository $attendee_repository,
+		Stats_Calculator $stats_calculator
+	) {
+		$this->event_repository    = $event_repository;
+		$this->attendee_repository = $attendee_repository;
+		$this->stats_calculator    = $stats_calculator;
 	}
 
 	/**
