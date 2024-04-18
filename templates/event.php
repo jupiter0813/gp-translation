@@ -228,7 +228,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 									function ( $contributor ) use ( $stats_calculator, $event_start ) {
 										$append_tada = '';
 										if ( $stats_calculator->is_new_translation_contributor( $event_start, $contributor->ID ) ) {
-											$append_tada = '<span class="first-time-contributor-tada" title="' . esc_html__( 'New Translation Contributor', 'gp-translation-events' ) . '"></span>';
+											$append_tada = '<span class="new-contributor" title="' . esc_html__( 'New Translation Contributor', 'gp-translation-events' ) . '">🎉</span>';
 										}
 										return '@' . $contributor->user_login . $append_tada;
 									},
