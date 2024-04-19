@@ -7,6 +7,7 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
+use Wporg\TranslationEvents\Urls;
 
 /**
  * Toggle whether the current user is hosting an event.
@@ -61,7 +62,7 @@ class Host_Event_Route extends Route {
 			$this->attendee_repository->update_attendee( $affected_attendee );
 		}
 
-		wp_safe_redirect( gp_url( "/events/{$event->slug()}" ) );
+		wp_safe_redirect( Urls::event_details( $event->id() ) );
 		exit;
 	}
 }
