@@ -12,4 +12,12 @@ class Urls {
 		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 		return str_replace( '%postname%', $post_name, $permalink );
 	}
+
+	public static function event_edit( int $event_id ): string {
+		return gp_url( '/events/edit/' . $event_id );
+	}
+
+	public static function my_events(): string {
+		return gp_url( '/events/my-events/' );
+	}
 }

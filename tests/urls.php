@@ -34,4 +34,16 @@ class Urls_Test extends GP_UnitTestCase {
 		$expected = site_url() . "/events/{$event->slug()}";
 		$this->assertEquals( $expected, Urls::event_details_absolute( $event_id ) );
 	}
+
+	public function test_event_edit() {
+		$event_id = $this->event_factory->create_active();
+
+		$expected = "/glotpress/events/edit/$event_id";
+		$this->assertEquals( $expected, Urls::event_edit( $event_id ) );
+	}
+
+	public function test_my_events() {
+		$expected = '/glotpress/events/my-events';
+		$this->assertEquals( $expected, Urls::my_events() );
+	}
 }
