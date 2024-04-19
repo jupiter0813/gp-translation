@@ -63,9 +63,11 @@ class Event_Capabilities {
 
 				if ( self::VIEW === $cap ) {
 					return $this->has_view( $user, $event );
-				} elseif ( self::EDIT === $cap ) {
+				}
+				if ( self::EDIT === $cap ) {
 					return $this->has_edit( $user, $event );
-				} elseif ( self::DELETE === $cap ) {
+				}
+				if ( self::DELETE === $cap ) {
 					return $this->has_delete( $user, $event );
 				}
 				break;
