@@ -19,6 +19,11 @@ class Urls_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 	}
 
+	public function test_events_home() {
+		$expected = '/glotpress/events';
+		$this->assertEquals( $expected, Urls::events_home() );
+	}
+
 	public function test_event_details() {
 		$event_id = $this->event_factory->create_active();
 		$event    = $this->event_repository->get_event( $event_id );
