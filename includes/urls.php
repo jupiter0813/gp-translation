@@ -22,6 +22,14 @@ class Urls {
 		return gp_url( '/events/new/' );
 	}
 
+	public static function event_toggle_attendee( int $event_id ): string {
+		return gp_url( "/events/attend/$event_id" );
+	}
+
+	public static function event_toggle_host( int $event_id, int $user_id ): string {
+		return gp_url( "/events/host/$event_id/$user_id" );
+	}
+
 	public static function my_events(): string {
 		return gp_url( '/events/my-events/' );
 	}

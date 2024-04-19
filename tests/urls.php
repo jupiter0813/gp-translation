@@ -42,6 +42,21 @@ class Urls_Test extends GP_UnitTestCase {
 		$this->assertEquals( $expected, Urls::event_edit( $event_id ) );
 	}
 
+	public function test_event_toggle_attendee() {
+		$event_id = $this->event_factory->create_active();
+
+		$expected = "/glotpress/events/attend/$event_id";
+		$this->assertEquals( $expected, Urls::event_toggle_attendee( $event_id ) );
+	}
+
+	public function test_event_toggle_host() {
+		$user_id  = get_current_user_id();
+		$event_id = $this->event_factory->create_active();
+
+		$expected = "/glotpress/events/host/$event_id/$user_id";
+		$this->assertEquals( $expected, Urls::event_toggle_host( $event_id, $user_id ) );
+	}
+
 	public function test_event_create() {
 		$expected = '/glotpress/events/new';
 		$this->assertEquals( $expected, Urls::event_create() );
