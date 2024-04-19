@@ -64,6 +64,14 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->assertTrue( current_user_can( 'view_translation_event', $event_id ) );
 	}
 
+	public function test_event_id_as_string() {
+		$this->set_normal_user_as_current();
+
+		$event_id = $this->event_factory->create_active();
+
+		$this->assertTrue( current_user_can( 'edit_translation_event', (string) $event_id ) );
+	}
+
 	public function test_author_can_edit() {
 		$this->set_normal_user_as_current();
 

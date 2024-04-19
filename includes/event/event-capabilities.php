@@ -53,10 +53,10 @@ class Event_Capabilities {
 			case self::VIEW:
 			case self::EDIT:
 			case self::DELETE:
-				if ( ! isset( $args[2] ) || ! is_int( $args[2] ) ) {
+				if ( ! isset( $args[2] ) || ! is_numeric( $args[2] ) ) {
 					return false;
 				}
-				$event = $this->event_repository->get_event( $args[2] );
+				$event = $this->event_repository->get_event( intval( $args[2] ) );
 				if ( ! $event ) {
 					return false;
 				}
