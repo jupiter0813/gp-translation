@@ -134,6 +134,10 @@ class Stats_Calculator {
 				$lang = null;
 			}
 
+			if ( is_null( $row->waiting ) ) {
+				$row->waiting = 0;
+			}
+
 			$stats_row = new Stats_Row(
 				$row->created,
 				$row->total - $row->created,
