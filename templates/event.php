@@ -118,9 +118,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<table>
 					<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Locale', 'gp-translation-events' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Translations created', 'gp-translation-events' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Translations reviewed', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Translations', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Created', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Waiting', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Reviewed', 'gp-translation-events' ); ?></th>
 						<th scope="col"><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></th>
 					</tr>
 					</thead>
@@ -137,6 +138,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					<tr class="event-details-stats-totals">
 						<td>Total</td>
 						<td><?php echo esc_html( $event_stats->totals()->created ); ?></td>
+						<td><?php echo esc_html( $event_stats->totals()->waiting ); ?></td>
 						<td><?php echo esc_html( $event_stats->totals()->reviewed ); ?></td>
 						<td><?php echo esc_html( $event_stats->totals()->users ); ?></td>
 					</tr>
