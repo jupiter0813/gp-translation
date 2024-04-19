@@ -135,6 +135,7 @@ class Stats_Calculator {
 			}
 
 			if ( is_null( $row->waiting ) ) {
+				// The corresponding translations are missing. Could be a unit test or data corruption.
 				$row->waiting = 0;
 			}
 
