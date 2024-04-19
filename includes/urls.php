@@ -18,6 +18,10 @@ class Urls {
 		return gp_url( '/events/edit/' . $event_id );
 	}
 
+	public static function event_create(): string {
+		return gp_url( '/events/new/' );
+	}
+
 	public static function my_events(): string {
 		return gp_url( '/events/my-events/' );
 	}
