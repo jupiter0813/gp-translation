@@ -201,8 +201,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 
 					echo wp_kses(
 						wp_sprintf(
-							// translators: %1$s: Event title, %2$d: Number of contributors, %3$s: is a parenthesis with potential text "x new contributors", %4$d: Number of languages, %5$s: List of languages, %6$d: Number of strings translated, %7$d: Number of strings reviewed.
-							__( 'At the <strong>%1$s</strong> event, we had %2$d people %3$s who contributed in %4$d languages (%5$s), translated %6$d strings and reviewed %7$d strings.', 'gp-translation-events' ),
+							// translators: %1$s: Event title, %2$d: Number of contributors, %3$s: is a parenthesis with potential text "x new contributors", %4$d: Number of languages, %5$l: List of languages, %6$d: Number of strings translated, %7$d: Number of strings reviewed.
+							__( 'At the <strong>%1$s</strong> event, we had %2$d people %3$s who contributed in %4$d languages (%5$l), translated %6$d strings and reviewed %7$d strings.', 'gp-translation-events' ),
 							esc_html( $event_title ),
 							esc_html( $event_stats->totals()->users ),
 							$new_contributors_text,
