@@ -17,14 +17,10 @@ class Urls_Test extends GP_UnitTestCase {
 		$this->event_factory    = new Event_Factory();
 		$this->event_repository = new Event_Repository( new Attendee_Repository() );
 		$this->set_normal_user_as_current();
-
-		if ( ! defined( 'GP_URL_BASE' ) ) {
-			define( 'GP_URL_BASE', '/' );
-		}
 	}
 
 	public function test_events_home() {
-		$expected = '/events';
+		$expected = '/glotpress/events';
 		$this->assertEquals( $expected, Urls::events_home() );
 	}
 
@@ -32,7 +28,7 @@ class Urls_Test extends GP_UnitTestCase {
 		$event_id = $this->event_factory->create_active();
 		$event    = $this->event_repository->get_event( $event_id );
 
-		$expected = "/events/{$event->slug()}";
+		$expected = "/glotpress/events/{$event->slug()}";
 		$this->assertEquals( $expected, Urls::event_details( $event_id ) );
 	}
 
@@ -40,21 +36,21 @@ class Urls_Test extends GP_UnitTestCase {
 		$event_id = $this->event_factory->create_active();
 		$event    = $this->event_repository->get_event( $event_id );
 
-		$expected = site_url() . "/events/{$event->slug()}";
+		$expected = site_url() . "/glotpress/events/{$event->slug()}";
 		$this->assertEquals( $expected, Urls::event_details_absolute( $event_id ) );
 	}
 
 	public function test_event_edit() {
 		$event_id = $this->event_factory->create_active();
 
-		$expected = "/events/edit/$event_id";
+		$expected = "/glotpress/events/edit/$event_id";
 		$this->assertEquals( $expected, Urls::event_edit( $event_id ) );
 	}
 
 	public function test_event_toggle_attendee() {
 		$event_id = $this->event_factory->create_active();
 
-		$expected = "/events/attend/$event_id";
+		$expected = "/glotpress/events/attend/$event_id";
 		$this->assertEquals( $expected, Urls::event_toggle_attendee( $event_id ) );
 	}
 
@@ -62,17 +58,17 @@ class Urls_Test extends GP_UnitTestCase {
 		$user_id  = get_current_user_id();
 		$event_id = $this->event_factory->create_active();
 
-		$expected = "/events/host/$event_id/$user_id";
+		$expected = "/glotpress/events/host/$event_id/$user_id";
 		$this->assertEquals( $expected, Urls::event_toggle_host( $event_id, $user_id ) );
 	}
 
 	public function test_event_create() {
-		$expected = '/events/new';
+		$expected = '/glotpress/events/new';
 		$this->assertEquals( $expected, Urls::event_create() );
 	}
 
 	public function test_my_events() {
-		$expected = '/events/my-events';
+		$expected = '/glotpress/events/my-events';
 		$this->assertEquals( $expected, Urls::my_events() );
 	}
 }
