@@ -319,26 +319,21 @@ class Translation_Events {
 		/* translators: %d: Number of events */
 		$content .= sprintf( _n( 'Contributing to %d event:', 'Contributing to %d events:', $number_of_events, 'gp-translation-events' ), $number_of_events );
 		$content .= '&nbsp;&nbsp;';
-		if ( $number_of_events > 3 ) {
-			$counter = 0;
-			while ( $user_attending_events_query->have_posts() && $counter < 2 ) {
-				$user_attending_events_query->the_post();
-				$url      = esc_url( gp_url( '/events/' . get_post_field( 'post_name', get_post() ) ) );
-				$content .= '<span class="active-events-before-translation-table"><a href="' . $url . '" target="_blank">' . get_the_title() . '</a></span>';
-				++$counter;
-			}
 
+		$counter = 0;
+		while ( $user_attending_events_query->have_posts() && $counter < 2 ) {
+			$user_attending_events_query->the_post();
+			$url      = esc_url( gp_url( '/events/' . get_post_field( 'post_name', get_post() ) ) );
+			$content .= '<span class="active-events-before-translation-table"><a href="' . $url . '" target="_blank">' . get_the_title() . '</a></span>';
+			++$counter;
+		}
+
+		if ( $number_of_events > 3 ) {
 			$remaining_events = $number_of_events - 2;
 			/* translators: %d: Number of remaining events */
 			$content .= '<span class="remaining-events"><a href="' . esc_url( Urls::events_home() ) . '" target="_blank">' . sprintf( esc_html__( ' and %d more events.', 'gp-translation-events' ), $remaining_events ) . '</a></span>';
-
-		} else {
-			while ( $user_attending_events_query->have_posts() ) {
-				$user_attending_events_query->the_post();
-				$url      = esc_url( gp_url( '/events/' . get_post_field( 'post_name', get_post() ) ) );
-				$content .= '<span class="active-events-before-translation-table"><a href="' . $url . '" target="_blank">' . get_the_title() . '</a></span>';
-			}
 		}
+
 		$content .= '</div>';
 
 		echo wp_kses(
