@@ -5,62 +5,41 @@ namespace Wporg\TranslationEvents\Event;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use GP;
 use WP_Error;
-use Wporg\TranslationEvents\Attendee\Attendee;
-use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Urls;
 
 class Event_Form_Handler {
 	private Event_Repository_Interface $event_repository;
-	private Attendee_Repository $attendee_repository;
 
-	public function __construct( Event_Repository_Interface $event_repository, Attendee_Repository $attendee_repository ) {
-		$this->event_repository    = $event_repository;
-		$this->attendee_repository = $attendee_repository;
+	public function __construct( Event_Repository_Interface $event_repository ) {
+		$this->event_repository = $event_repository;
 	}
 
 	public function handle( array $form_data ): void {
 		if ( ! is_user_logged_in() ) {
 			wp_send_json_error( esc_html__( 'The user must be logged in.', 'gp-translation-events' ), 403 );
 		}
-		$action           = isset( $form_data['form_name'] ) ? sanitize_text_field( wp_unslash( $form_data['form_name'] ) ) : '';
-		$response_message = '';
-		$is_nonce_valid   = false;
-		$nonce_name       = '_event_nonce';
+
+		$action = isset( $form_data['form_name'] ) ? sanitize_text_field( wp_unslash( $form_data['form_name'] ) ) : '';
 		if ( ! in_array( $action, array( 'create_event', 'edit_event', 'delete_event' ), true ) ) {
 			wp_send_json_error( esc_html__( 'Invalid form name.', 'gp-translation-events' ), 403 );
 		}
-		/**
-		 * Filter the ability to create, edit, or delete an event.
-		 *
-		 * @param bool $can_crud_event Whether the user can create, edit, or delete an event.
-		 */
-		$can_crud_event = apply_filters( 'gp_translation_events_can_crud_event', GP::$permission->current_user_can( 'admin' ) );
-		if ( 'create_event' === $action && ( ! $can_crud_event ) ) {
-			wp_send_json_error( esc_html__( 'The user does not have permission to create an event.', 'gp-translation-events' ), 403 );
+
+		$event_id = isset( $form_data['event_id'] ) ? sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) : 0;
+
+		if ( 'create_event' === $action && ( ! current_user_can( 'create_translation_event' ) ) ) {
+			wp_send_json_error( esc_html__( 'You do not have permissions to create events.', 'gp-translation-events' ), 403 );
 		}
-		if ( 'edit_event' === $action ) {
-			$event_id = isset( $form_data['event_id'] ) ? sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) : '';
-			$event    = $this->event_repository->get_event( $event_id );
-			$attendee = $this->attendee_repository->get_attendee( $event->id(), get_current_user_id() );
-			if ( ! ( $can_crud_event || ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'edit_post', $event_id ) || $event->author_id() === get_current_user_id() ) ) {
-				wp_send_json_error( esc_html__( 'The user does not have permission to edit or delete the event.', 'gp-translation-events' ), 403 );
-			}
+		if ( 'edit_event' === $action && ( ! current_user_can( 'edit_translation_event', $event_id ) ) ) {
+			wp_send_json_error( esc_html__( 'You do not have permissions to edit this event.', 'gp-translation-events' ), 403 );
 		}
-		if ( 'delete_event' === $action ) {
-			$event_id         = isset( $form_data['event_id'] ) ? sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) : '';
-			$event            = $this->event_repository->get_event( $event_id );
-			$attendee         = $this->attendee_repository->get_attendee( $event->id(), get_current_user_id() );
-			$stats_calculator = new Stats_Calculator();
-			if ( $stats_calculator->event_has_stats( $event->id() ) ) {
-				wp_send_json_error( esc_html__( 'The event has stats so it cannot be deleted.', 'gp-translation-events' ), 422 );
-			}
-			if ( ! ( $can_crud_event || ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'delete_post', $event_id ) || get_current_user_id() === $event->author_id() ) ) {
-				wp_send_json_error( esc_html__( 'You do not have permission to delete this event.', 'gp-translation-events' ), 403 );
-			}
+		if ( 'delete_event' === $action && ( ! current_user_can( 'delete_translation_event', $event_id ) ) ) {
+			wp_send_json_error( esc_html__( 'You do not have permissions to delete this event.', 'gp-translation-events' ), 403 );
 		}
+
+		$is_nonce_valid = false;
+		$nonce_name     = '_event_nonce';
 		if ( isset( $form_data[ $nonce_name ] ) ) {
 			$nonce_value = sanitize_text_field( wp_unslash( $form_data[ $nonce_name ] ) );
 			if ( wp_verify_nonce( $nonce_value, $nonce_name ) ) {
@@ -71,6 +50,7 @@ class Event_Form_Handler {
 			wp_send_json_error( esc_html__( 'Nonce verification failed.', 'gp-translation-events' ), 403 );
 		}
 
+		$response_message = '';
 		if ( 'delete_event' === $action ) {
 			// Delete event.
 			$event_id = intval( sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) );
