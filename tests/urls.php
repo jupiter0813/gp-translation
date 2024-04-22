@@ -71,4 +71,14 @@ class Urls_Test extends GP_UnitTestCase {
 		$expected = '/glotpress/events/my-events';
 		$this->assertEquals( $expected, Urls::my_events() );
 	}
+
+	/**
+	 * This test must be last because once it runs, the GP_URL_BASE constant
+	 * will be changed from the default ('/glotpress') to '/'.
+	 */
+	public function test_custom_gp_url_base() {
+		define( 'GP_URL_BASE', '/' );
+		$expected = '/events';
+		$this->assertEquals( $expected, Urls::events_home() );
+	}
 }
