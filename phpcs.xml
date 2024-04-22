@@ -12,6 +12,9 @@
     <file>./wporg-gp-translation-events.php</file>
 
     <rule ref="WordPress">
+        <properties>
+            <property name="custom_capabilities[]" value="create_translation_event,view_translation_event,edit_translation_event,delete_translation_event"/>
+        </properties>
         <exclude name="Squiz.Commenting.ClassComment.Missing"/>
         <exclude name="Squiz.Commenting.FileComment.Missing"/>
         <exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
