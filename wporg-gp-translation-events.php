@@ -247,7 +247,7 @@ class Translation_Events {
 		if ( 'main' !== $location ) {
 			return $items;
 		}
-		$new[ esc_url( gp_url( '/events/' ) ) ] = esc_html__( 'Events', 'gp-translation-events' );
+		$new[ esc_url( Urls::events_home() ) ] = esc_html__( 'Events', 'gp-translation-events' );
 		return array_merge( $items, $new );
 	}
 
@@ -340,9 +340,8 @@ class Translation_Events {
 			}
 
 			$remaining_events = $number_of_events - 2;
-			$url              = esc_url( gp_url( '/events/' ) );
 			/* translators: %d: Number of remaining events */
-			$content .= '<span class="remaining-events"><a href="' . $url . '" target="_blank">' . sprintf( esc_html__( ' and %d more events.', 'gp-translation-events' ), $remaining_events ) . '</a></span>';
+			$content .= '<span class="remaining-events"><a href="' . esc_url( Urls::events_home() ) . '" target="_blank">' . sprintf( esc_html__( ' and %d more events.', 'gp-translation-events' ), $remaining_events ) . '</a></span>';
 
 		} else {
 			while ( $user_attending_events_query->have_posts() ) {

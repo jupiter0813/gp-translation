@@ -7,6 +7,7 @@ use DateTimeZone;
 use Exception;
 use WP_Error;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
+use Wporg\TranslationEvents\Urls;
 
 class Event_Form_Handler {
 	private Event_Repository_Interface $event_repository;
@@ -144,16 +145,14 @@ class Event_Form_Handler {
 			$event_status = $new_event->status();
 		}
 
-		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
-		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 		wp_send_json_success(
 			array(
 				'message'        => $response_message,
 				'eventId'        => $event_id,
-				'eventUrl'       => str_replace( '%pagename%', $post_name, $permalink ),
 				'eventStatus'    => $event_status,
-				'eventEditUrl'   => esc_url( gp_url( '/events/edit/' . $event_id ) ),
-				'eventDeleteUrl' => esc_url( gp_url( '/events/my-events/' ) ),
+				'eventUrl'       => Urls::event_details_absolute( $event_id ),
+				'eventEditUrl'   => Urls::event_edit( $event_id ),
+				'eventDeleteUrl' => Urls::my_events(), // The URL the user is redirected to after deleting.
 			)
 		);
 	}

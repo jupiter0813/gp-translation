@@ -62,7 +62,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							if ( current_user_can( 'edit_translation_event', $event->id() ) ) :
 								$_attendee = $attendee_repo->get_attendee( $event_id, $contributor->ID );
 								if ( $_attendee instanceof Attendee ) :
-									echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$contributor->ID" ) ) . '">';
+									echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $contributor->ID ) ) . '">';
 									if ( $_attendee->is_host() ) :
 										echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
 									else :
@@ -98,7 +98,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<?php
 							$_attendee = $attendee_repo->get_attendee( $event_id, $_user->ID );
 							if ( $_attendee instanceof Attendee ) :
-								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( gp_url( "/events/host/$event_id/$_user->ID" ) ) . '">';
+								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $_user->ID ) ) . '">';
 								if ( $_attendee->is_host() ) :
 									echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
 								else :
@@ -265,7 +265,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					<button disabled="disabled" class="button is-primary attend-btn"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></button>
 				<?php endif; ?>
 			<?php else : ?>
-				<form class="event-details-attend" method="post" action="<?php echo esc_url( gp_url( "/events/attend/$event_id" ) ); ?>">
+				<form class="event-details-attend" method="post" action="<?php echo esc_url( Urls::event_toggle_attendee( $event_id ) ); ?>">
 					<?php if ( $attendee instanceof Attendee ) : ?>
 						<input type="submit" class="button is-secondary attending-btn" value="You're attending" />
 					<?php else : ?>

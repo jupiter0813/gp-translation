@@ -5,6 +5,7 @@ namespace Wporg\TranslationEvents\Routes\Event;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
+use Wporg\TranslationEvents\Urls;
 
 /**
  * Displays the event edit page.
@@ -34,21 +35,19 @@ class Edit_Route extends Route {
 		}
 
 		include ABSPATH . 'wp-admin/includes/post.php';
-		$event_page_title              = 'Edit Event';
-		$event_form_name               = 'edit_event';
-		$css_show_url                  = '';
-		$event_title                   = $event->title();
-		$event_description             = $event->description();
-		$event_status                  = $event->status();
-		list( $permalink, $post_name ) = get_sample_permalink( $event->id() );
-		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
-		$event_url                     = get_site_url() . gp_url( wp_make_link_relative( $permalink ) );
-		$event_timezone                = $event->timezone();
-		$event_start                   = $event->start();
-		$event_end                     = $event->end();
-		$create_delete_button          = false;
-		$visibility_delete_button      = 'inline-flex';
-		$create_delete_button          = current_user_can( 'delete_translation_event', $event->id() );
+		$event_page_title         = 'Edit Event';
+		$event_form_name          = 'edit_event';
+		$css_show_url             = '';
+		$event_title              = $event->title();
+		$event_description        = $event->description();
+		$event_status             = $event->status();
+		$event_url                = Urls::event_details_absolute( $event_id );
+		$event_timezone           = $event->timezone();
+		$event_start              = $event->start();
+		$event_end                = $event->end();
+		$create_delete_button     = false;
+		$visibility_delete_button = 'inline-flex';
+		$create_delete_button     = current_user_can( 'delete_translation_event', $event->id() );
 
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
