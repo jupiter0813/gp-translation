@@ -4,6 +4,8 @@ namespace Wporg\Tests\Stats;
 
 use GP_UnitTestCase;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
+use Wporg\TranslationEvents\Event\Event_Repository_Interface;
+use Wporg\TranslationEvents\Translation_Events;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 
@@ -11,12 +13,15 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 	private Event_Factory $event_factory;
 	private Stats_Factory $stats_factory;
 	private Stats_Calculator $calculator;
+	private Event_Repository_Interface $event_repository;
+
 
 	public function setUp(): void {
 		parent::setUp();
-		$this->event_factory = new Event_Factory();
-		$this->stats_factory = new Stats_Factory();
-		$this->calculator    = new Stats_Calculator();
+		$this->event_factory    = new Event_Factory();
+		$this->stats_factory    = new Stats_Factory();
+		$this->calculator       = new Stats_Calculator();
+		$this->event_repository = Translation_Events::get_event_repository();
 	}
 
 	public function test_tells_that_event_has_no_stats() {
@@ -89,5 +94,19 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 		$this->assertEquals( 5, $stats->totals()->created );
 		$this->assertEquals( 5, $stats->totals()->reviewed );
 		$this->assertEquals( 3, $stats->totals()->users );
+	}
+
+	public function test_is_new_translation_contributor() {
+		$this->set_normal_user_as_current();
+		$user1_id = 52;
+		$user2_id = 53;
+
+		$event1_id = $this->event_factory->create_active( array( $user1_id ) );
+
+		$event1             = get_post( $event1_id );
+		$event              = $this->event_repository->get_event( $event1->ID );
+		$event_start        = $event->start();
+		$is_new_contributor = $this->calculator->is_new_translation_contributor( $event_start, $user2_id );
+		$this->assertTrue( $is_new_contributor );
 	}
 }
