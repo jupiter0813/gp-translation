@@ -64,9 +64,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 								if ( $_attendee instanceof Attendee ) :
 									echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $contributor->ID ) ) . '">';
 									if ( $_attendee->is_host() ) :
-										echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+										echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
 									else :
-										echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
+										echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
 									endif;
 									echo '</form>';
 								else :
@@ -100,9 +100,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							if ( $_attendee instanceof Attendee ) :
 								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $_user->ID ) ) . '">';
 								if ( $_attendee->is_host() ) :
-									echo '<input type="submit" class="button is-primary remove-as-host" value="Remove as host"/>';
+									echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
 								else :
-									echo '<input type="submit" class="button is-secondary convert-to-host" value="Make co-host"/>';
+									echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
 								endif;
 								echo '</form>';
 							endif;
@@ -118,10 +118,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<table>
 					<thead>
 					<tr>
-						<th scope="col">Locale</th>
-						<th scope="col">Translations created</th>
-						<th scope="col">Translations reviewed</th>
-						<th scope="col">Contributors</th>
+						<th scope="col"><?php esc_html_e( 'Locale', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Translations created', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Translations reviewed', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -148,18 +148,27 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<ul>
 					<?php foreach ( $projects as $project_name => $row ) : ?>
 					<li class="event-project" title="<?php echo esc_html( str_replace( ',', ', ', $row->locales ) ); ?>">
-						<a href="<?php echo esc_url( gp_url_project( $row->project ) ); ?>"><?php echo esc_html( $project_name ); ?></a> <small> to
 						<?php
+						$row_locales = array();
 						foreach ( explode( ',', $row->locales ) as $_locale ) {
-							$_locale = GP_Locales::by_slug( $_locale );
-							?>
-							<a href="<?php echo esc_url( gp_url_project_locale( $row->project, $_locale->slug, 'default' ) ); ?>"><?php echo esc_html( $_locale->english_name ); ?></a>
-							<?php
+							$_locale       = GP_Locales::by_slug( $_locale );
+							$row_locales[] = '<a href="' . esc_url( gp_url_project_locale( $row->project, $_locale->slug, 'default' ) ) . '">' . esc_html( $_locale->english_name ) . '</a>';
 						}
-						// translators: %d: Number of contributors.
-						echo esc_html( sprintf( _n( 'by %d contributor', 'by %d contributors', $row->users, 'gp-translation-events' ), $row->users ) );
+						echo wp_kses_post(
+							wp_sprintf(
+								// translators: 1: Project translated. 2: List of languages. 3: Number of contributors.
+								_n(
+									'%1$s <small>to %2$l by %3$d contributor</small>',
+									'%1$s <small>to %2$l by %3$d contributors</small>',
+									$row->users,
+									'gp-translation-events'
+								),
+								'<a href="' . esc_url( gp_url_project( $row->project ) ) . '">' . esc_html( $project_name ) . '</a>',
+								$row_locales,
+								$row->users
+							)
+						);
 						?>
-						</small>
 					</li>
 				<?php endforeach; ?>
 				</ul>
@@ -185,23 +194,18 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					}
 
 					echo wp_kses(
-						sprintf(
-							// translators: %1$s: Event title, %2$d: Number of contributors, %3$s: is a parenthesis with potential text "x new contributors", %4$d: Number of languages, %5$s: List of languages, %6$d: Number of strings translated, %7$d: Number of strings reviewed.
-							__( 'At the <strong>%1$s</strong> event, we had %2$d people %3$s who contributed in %4$d languages (%5$s), translated %6$d strings and reviewed %7$d strings.', 'gp-translation-events' ),
+						wp_sprintf(
+							// translators: %1$s: Event title, %2$d: Number of contributors, %3$s: is a parenthesis with potential text "x new contributors", %4$d: Number of languages, %5$l: List of languages, %6$d: Number of strings translated, %7$d: Number of strings reviewed.
+							__( 'At the <strong>%1$s</strong> event, we had %2$d people %3$s who contributed in %4$d languages (%5$l), translated %6$d strings and reviewed %7$d strings.', 'gp-translation-events' ),
 							esc_html( $event_title ),
 							esc_html( $event_stats->totals()->users ),
 							$new_contributors_text,
 							count( $event_stats->rows() ),
-							esc_html(
-								implode(
-									', ',
-									array_map(
-										function ( $row ) {
-											return $row->language->english_name;
-										},
-										$event_stats->rows()
-									)
-								)
+							array_map(
+								function ( $row ) {
+									return $row->language->english_name;
+								},
+								$event_stats->rows()
 							),
 							esc_html( $event_stats->totals()->created ),
 							esc_html( $event_stats->totals()->reviewed )
@@ -213,21 +217,23 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					?>
 					<?php
 					echo wp_kses(
-						sprintf(
-						// translators: %s the contributors.
-							esc_html__( 'Contributors were %s.', 'gp-translation-events' ),
-							implode(
-								', ',
-								array_map(
-									function ( $contributor ) use ( $stats_calculator, $event_start ) {
-										$append_tada = '';
-										if ( $stats_calculator->is_new_translation_contributor( $event_start, $contributor->ID ) ) {
+						wp_sprintf(
+							// translators: %s List of contributors.
+							_n(
+								'Contributor was %l.',
+								'Contributors were %l.',
+								count( $contributors ),
+								'gp-translation-events'
+							),
+							array_map(
+								function ( $contributor ) use ( $stats_calculator, $event_start ) {
+									$append_tada = '';
+									if ( $stats_calculator->is_new_translation_contributor( $event_start, $contributor->ID ) ) {
 											$append_tada = ' <span class="new-contributor" title="' . esc_html__( 'New Translation Contributor', 'gp-translation-events' ) . '">🎉</span>';
-										}
-										return '@' . $contributor->user_login . $append_tada;
-									},
-									$contributors
-								)
+									}
+									return '@' . $contributor->user_login . $append_tada;
+								},
+								$contributors
 							)
 						),
 						array(
@@ -267,9 +273,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 			<?php else : ?>
 				<form class="event-details-attend" method="post" action="<?php echo esc_url( Urls::event_toggle_attendee( $event_id ) ); ?>">
 					<?php if ( $attendee instanceof Attendee ) : ?>
-						<input type="submit" class="button is-secondary attending-btn" value="You're attending" />
+						<input type="submit" class="button is-secondary attending-btn" value="<?php esc_attr_e( "You're attending", 'gp-translation-events' ); ?>" />
 					<?php else : ?>
-						<input type="submit" class="button is-primary attend-btn" value="Attend Event"/>
+						<input type="submit" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event', 'gp-translation-events' ); ?>"/>
 					<?php endif; ?>
 				</form>
 			<?php endif; ?>
