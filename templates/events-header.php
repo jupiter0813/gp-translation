@@ -2,14 +2,12 @@
 
 namespace Wporg\TranslationEvents;
 
-use GP;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Event\Event;
 
 /** @var Attendee $attendee */
 /** @var Event  $event */
 /** @var string $event_page_title */
-/** @var bool   $is_editable_event */
 ?>
 
 <div class="event-list-top-bar">
@@ -21,17 +19,11 @@ use Wporg\TranslationEvents\Event\Event;
 </h2>
 	<ul class="event-list-nav">
 		<?php if ( is_user_logged_in() ) : ?>
-			<li><a href="<?php echo esc_url( gp_url( '/events/my-events/' ) ); ?>">My Events</a></li>
+			<li><a href="<?php echo esc_url( Urls::my_events() ); ?>">My Events</a></li>
 			<?php
-			/**
-			 * Filter the ability to create, edit, or delete an event.
-			 *
-			 * @param bool $can_crud_event Whether the user can create, edit, or delete an event.
-			 */
-			$can_crud_event = apply_filters( 'gp_translation_events_can_crud_event', GP::$permission->current_user_can( 'admin' ) );
-			if ( $can_crud_event ) :
+			if ( current_user_can( 'create_translation_event' ) ) :
 				?>
-				<li><a class="button is-primary" href="<?php echo esc_url( gp_url( '/events/new/' ) ); ?>">Create Event</a></li>
+				<li><a class="button is-primary" href="<?php echo esc_url( Urls::event_create() ); ?>">Create Event</a></li>
 			<?php endif; ?>
 		<?php endif; ?>
 	</ul>
@@ -61,9 +53,8 @@ use Wporg\TranslationEvents\Event\Event;
 					<?php endif; ?>
 				<?php endforeach; ?>
 			</span>
-			<?php $show_edit_button = ( ( $attendee instanceof Attendee && $attendee->is_host() ) || current_user_can( 'edit_post', $event->id() ) ) && $is_editable_event; ?>
-			<?php if ( $show_edit_button ) : ?>
-				<a class="event-page-edit-link" href="<?php echo esc_url( gp_url( 'events/edit/' . $event->id() ) ); ?>"><span class="dashicons dashicons-edit"></span><?php esc_html_e( 'Edit event', 'gp-translation-events' ); ?></a>
+			<?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
+				<a class="event-page-edit-link" href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>"><span class="dashicons dashicons-edit"></span><?php esc_html_e( 'Edit event', 'gp-translation-events' ); ?></a>
 			<?php endif ?>
 		</p>
 		<?php endif; ?>

@@ -8,6 +8,7 @@ use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats\Stats_Importer;
 use Wporg\TranslationEvents\Translation_Events;
+use Wporg\TranslationEvents\Urls;
 
 /**
  * Toggle whether the current user is attending an event.
@@ -59,7 +60,7 @@ class Attend_Event_Route extends Route {
 			}
 		}
 
-		wp_safe_redirect( gp_url( "/events/{$event->slug()}" ) );
+		wp_safe_redirect( Urls::event_details( $event->id() ) );
 		exit;
 	}
 }

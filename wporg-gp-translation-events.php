@@ -26,15 +26,18 @@ use WP_Post;
 use WP_Query;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
+use Wporg\TranslationEvents\Event\Event_Capabilities;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Notifications\Notifications_Cron;
-
+use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Listener;
 
 class Translation_Events {
 	public const CPT = 'translation_event';
+
+	private Event_Capabilities $event_capabilities;
 
 	public static function get_instance(): Translation_Events {
 		static $instance = null;
@@ -78,6 +81,13 @@ class Translation_Events {
 		if ( is_admin() ) {
 			Upgrade::upgrade_if_needed();
 		}
+
+		$this->event_capabilities = new Event_Capabilities(
+			self::get_event_repository(),
+			self::get_attendee_repository(),
+			new Stats_Calculator()
+		);
+		$this->event_capabilities->register_hooks();
 	}
 
 	public function gp_init() {
@@ -178,7 +188,7 @@ class Translation_Events {
 	 * Handle the event form submission for the creation, editing, and deletion of events. This function is called via AJAX.
 	 */
 	public function submit_event_ajax() {
-		$form_handler = new Event_Form_Handler( self::get_event_repository(), self::get_attendee_repository() );
+		$form_handler = new Event_Form_Handler( self::get_event_repository() );
 		// Nonce verification is done by the form handler.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$form_handler->handle( $_POST );
@@ -239,7 +249,7 @@ class Translation_Events {
 		if ( 'main' !== $location ) {
 			return $items;
 		}
-		$new[ esc_url( gp_url( '/events/' ) ) ] = esc_html__( 'Events', 'gp-translation-events' );
+		$new[ esc_url( Urls::events_home() ) ] = esc_html__( 'Events', 'gp-translation-events' );
 		return array_merge( $items, $new );
 	}
 
@@ -332,9 +342,8 @@ class Translation_Events {
 			}
 
 			$remaining_events = $number_of_events - 2;
-			$url              = esc_url( gp_url( '/events/' ) );
 			/* translators: %d: Number of remaining events */
-			$content .= '<span class="remaining-events"><a href="' . $url . '" target="_blank">' . sprintf( esc_html__( ' and %d more events.', 'gp-translation-events' ), $remaining_events ) . '</a></span>';
+			$content .= '<span class="remaining-events"><a href="' . esc_url( Urls::events_home() ) . '" target="_blank">' . sprintf( esc_html__( ' and %d more events.', 'gp-translation-events' ), $remaining_events ) . '</a></span>';
 
 		} else {
 			while ( $user_attending_events_query->have_posts() ) {
