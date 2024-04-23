@@ -109,7 +109,8 @@ class Translations_Route extends Route {
 			$per_page                 = 10000;
 			$total_translations_count = 0;
 			$text_direction           = 'ltr';
-			$locale_slug              = $translation_set->slug;
+			$locale_slug              = $translation_set->locale;
+			$translation_set_slug     = $translation_set->slug;
 			$word_count_type          = $locale->word_count_type;
 			$can_edit                 = $this->can( 'edit', 'translation-set', $translation_set->id );
 			$can_write                = $this->can( 'write', 'project', $project->id );
@@ -175,9 +176,9 @@ class Translations_Route extends Route {
 					);
 				}
 
-				$translations[] = new Translation_Entry( (array) $row );
+				$translations[ $row->row_id ] = new Translation_Entry( (array) $row );
 			}
-			gp_tmpl_load( 'event-translations', get_defined_vars(), $this->template_path );
+			gp_tmpl_load( 'translations', get_defined_vars(), $this->template_path );
 		}
 
 		gp_tmpl_load( 'event-translations-footer', get_defined_vars(), $this->template_path );
