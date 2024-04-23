@@ -42,7 +42,7 @@ class Notifications {
 				$this->send_email_notifications( $event, 24 );
 			}
 			$need_to_send_notifications = $this->need_to_send_notifications( $event, 1 );
-			if ( ! $need_to_send_notifications ) {
+			if ( $need_to_send_notifications ) {
 				$this->send_email_notifications( $event, 1 );
 			}
 		}
