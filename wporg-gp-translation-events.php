@@ -29,6 +29,8 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
+use Wporg\TranslationEvents\Notifications\Notifications_Cron;
+
 use Wporg\TranslationEvents\Stats\Stats_Listener;
 
 class Translation_Events {
@@ -64,6 +66,7 @@ class Translation_Events {
 		add_action( 'wp_ajax_nopriv_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_translation_event_js' ) );
 		add_action( 'init', array( $this, 'register_event_post_type' ) );
+		add_action( 'init', array( $this, 'enqueue_cron' ) );
 		add_action( 'add_meta_boxes', array( $this, 'event_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_event_meta_boxes' ) );
 		add_action( 'transition_post_status', array( $this, 'event_status_transition' ), 10, 3 );
@@ -358,6 +361,13 @@ class Translation_Events {
 				),
 			)
 		);
+	}
+
+	/**
+	 * Enqueue the cron job for sending notifications.
+	 */
+	public function enqueue_cron() {
+		new Notifications_Cron( self::get_event_repository(), self::get_attendee_repository() );
 	}
 }
 Translation_Events::get_instance();

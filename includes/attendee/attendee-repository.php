@@ -108,11 +108,38 @@ class Attendee_Repository {
 	}
 
 	/**
+	 * Get all attendees for an event, with or without contributions.
+	 *
+	 * @param int $event_id The id of the event.
+	 *
 	 * @return Attendee[] Attendees of the event.
 	 */
-	public function get_attendees( int $event_id ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		// TODO.
-		return array();
+	public function get_attendees( int $event_id ): array {
+	 // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		global $wpdb, $gp_table_prefix;
+		$attendees = array();
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+				select event_id, user_id
+				from {$gp_table_prefix}event_attendees
+				where event_id = %d
+			",
+				array(
+					$event_id,
+				)
+			)
+		);
+		// phpcs:enable
+
+		foreach ( $rows as $row ) {
+			$attendees[] = new Attendee( $row->event_id, $row->user_id );
+		}
+		return $attendees;
 	}
 
 	/**
