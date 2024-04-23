@@ -16,6 +16,7 @@ jQuery( function($) {
 		$( '#translations' ).attr( 'id', null );
 		$( '#translations_<?php echo esc_html( $translation_set_id ); ?> table' ).attr( 'id', 'translations' );
 		$gp.editor.init( $( '#translations_<?php echo esc_html( $translation_set_id ); ?>' ) );
+		$gp_translation_helpers_editor = $gp_translation_helpers_editor_<?php echo esc_html( $translation_set_id ); ?>;
 		}
 <?php } ?>
 } );
