@@ -18,6 +18,10 @@ class Urls {
 		return get_site_url() . gp_url( wp_make_link_relative( $permalink ) );
 	}
 
+	public static function event_translations( int $event_id, string $locale, string $status = '' ): string {
+		return gp_url_join( self::event_details( $event_id ), 'translations', $locale, $status );
+	}
+
 	public static function event_edit( int $event_id ): string {
 		return gp_url( '/events/edit/' . $event_id );
 	}
