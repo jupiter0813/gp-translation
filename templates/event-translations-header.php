@@ -9,7 +9,7 @@ use Wporg\TranslationEvents\Event\Event;
 
 /* translators: %s: Event title. */
 gp_title( sprintf( __( 'Translation Events - %s' ), esc_html( $event->title() ) ) );
-gp_breadcrumb_translation_events( array( '<a href="' . esc_attr( gp_url( wp_make_link_relative( get_the_permalink( $event->id() ) ) ) ) . '">' . esc_html( $event->title() ) . '</a>', __( 'Translations', 'glotpress' ), $locale->english_name ) );
+gp_breadcrumb_translation_events( array( '<a href="' . esc_url( Urls::event_details( $event->id() ) ) . '">' . esc_html( $event->title() ) . '</a>', __( 'Translations', 'glotpress' ), $locale->english_name ) );
 gp_enqueue_scripts( array( 'gp-editor', 'gp-translations-page' ) );
 wp_localize_script(
 	'gp-translations-page',
@@ -52,11 +52,11 @@ gp_tmpl_header();
 	<?php
 	if ( trim( $status, '/' ) !== 'waiting' ) {
 		?>
-		<a href="<?php echo esc_url( gp_url_join( gp_url(), wp_make_link_relative( get_the_permalink( $event->id() ) ), $locale->slug, 'waiting' ) ); ?>"><?php esc_html_e( 'Show only waiting translations', 'glotpress' ); ?></a>
+		<a href="<?php echo esc_url( Urls::event_translations( $event->id(), $locale->slug, 'waiting' ) ); ?>"><?php esc_html_e( 'Show only waiting translations', 'glotpress' ); ?></a>
 		<?php
 	} else {
 		?>
-		<a href="<?php echo esc_url( gp_url_join( gp_url(), wp_make_link_relative( get_the_permalink( $event->id() ) ), $locale->slug ) ); ?>"><?php esc_html_e( 'Show all contributed translations', 'glotpress' ); ?></a>
+		<a href="<?php echo esc_url( Urls::event_translations( $event->id(), $locale->slug ) ); ?>"><?php esc_html_e( 'Show all contributed translations', 'glotpress' ); ?></a>
 		<?php
 	}
 	?>

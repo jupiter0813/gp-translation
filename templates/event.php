@@ -130,8 +130,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					<?php foreach ( $event_stats->rows() as $_locale => $row ) : ?>
 					<tr>
 						<td title="<?php echo esc_html( $_locale ); ?> "><a href="<?php echo esc_url( gp_url_join( gp_url( '/languages' ), $row->language->slug ) ); ?>"><?php echo esc_html( $row->language->english_name ); ?></a></td>
-						<td><a href="<?php echo esc_url( wp_make_link_relative( gp_url_join( get_the_permalink( $event_id ), 'translations', $row->language->slug ) ) ); ?>"><?php echo esc_html( $row->created ); ?></a></td>
-						<td><a href="<?php echo esc_url( wp_make_link_relative( gp_url_join( get_the_permalink( $event_id ), 'translations', $row->language->slug, 'waiting' ) ) ); ?>"><?php echo esc_html( $row->waiting ); ?></a></td>
+						<td><a href="<?php echo esc_url( Urls::event_translations( $event->id(), $row->language->slug ) ); ?>"><?php echo esc_html( $row->created ); ?></a></td>
+						<td><a href="<?php echo esc_url( Urls::event_translations( $event->id(), $row->language->slug, 'waiting' ) ); ?>"><?php echo esc_html( $row->waiting ); ?></a></td>
 						<td><?php echo esc_html( $row->reviewed ); ?></td>
 						<td><?php echo esc_html( $row->users ); ?></td>
 					</tr>
