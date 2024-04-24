@@ -7,9 +7,7 @@ use GP_Locales;
 use GP_Original;
 use Translation_Entry;
 use Wporg\TranslationEvents\Routes\Route;
-use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
-use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 
 /**
@@ -32,12 +30,6 @@ class Translations_Route extends Route {
 		$event = $this->event_repository->get_event( $event->ID );
 		if ( ! $event ) {
 			$this->die_with_404();
-		}
-
-		$stats_calculator  = new Stats_Calculator();
-		$is_editable_event = true;
-		if ( $event->end()->is_in_the_past() || $stats_calculator->event_has_stats( $event->id() ) ) {
-			$is_editable_event = false;
 		}
 
 		global $wpdb, $gp_table_prefix;
