@@ -355,6 +355,12 @@ ul.text-snippets {
 .first-time-contributor-tada::after {
 	content: ' 🎉';
 }
+.icons li .name {
+	display: none;
+}
+.icons li  {
+	width: auto !important;
+}
 
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
