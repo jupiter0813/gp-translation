@@ -361,7 +361,10 @@ ul.text-snippets {
 .icons li  {
 	width: auto !important;
 }
-
+.event-attendees h2, .event-contributors h2 {
+	cursor: pointer;
+	display: inline-block;
+}
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
 
