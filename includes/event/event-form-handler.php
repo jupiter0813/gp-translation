@@ -145,6 +145,8 @@ class Event_Form_Handler {
 					return;
 				}
 				$response_message = esc_html__( 'Event updated successfully', 'gp-translation-events' );
+				$notifications_schedule = new Notifications_Schedule( $this->event_repository );
+				$notifications_schedule->schedule_emails( $result );
 			}
 
 			$event_id     = $new_event->id();
