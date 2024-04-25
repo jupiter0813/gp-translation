@@ -41,4 +41,8 @@ class Urls {
 	public static function my_events(): string {
 		return gp_url( '/events/my-events/' );
 	}
+
+	public static function event_attendees( int $event_id ): string {
+		return gp_url( "/events/$event_id/attendees" );
+	}
 }
