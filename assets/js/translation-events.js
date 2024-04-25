@@ -38,6 +38,15 @@
 						textArea.val( textAreaContent + $( this ).data( 'snippet' ) );
 					}
 				);
+
+				$( '.event-attendees h2, .event-contributors h2' ).on(
+					'click',
+					function ( e ) {
+							e.preventDefault();
+							$( this ).closest( 'body' ).toggleClass( 'icons' );
+							$( '.convert-to-host, .remove-as-host' ).toggle();
+					}
+				);
 			}
 		);
 
