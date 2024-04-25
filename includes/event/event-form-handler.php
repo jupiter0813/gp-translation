@@ -77,8 +77,10 @@ class Event_Form_Handler {
 				$response_message = esc_html__( 'Failed to delete event.', 'gp-translation-events' );
 				$event_status     = $event->status();
 			} else {
-				$response_message = esc_html__( 'Event deleted successfully.', 'gp-translation-events' );
-				$event_status     = 'deleted';
+				$response_message       = esc_html__( 'Event deleted successfully.', 'gp-translation-events' );
+				$event_status           = 'deleted';
+				$notifications_schedule = new Notifications_Schedule( $this->event_repository );
+				$notifications_schedule->delete_scheduled_emails( $event_id );
 			}
 		} else {
 			// Create or update event.
@@ -144,7 +146,7 @@ class Event_Form_Handler {
 					wp_send_json_error( esc_html__( 'Failed to update event.', 'gp-translation-events' ), 422 );
 					return;
 				}
-				$response_message = esc_html__( 'Event updated successfully', 'gp-translation-events' );
+				$response_message       = esc_html__( 'Event updated successfully', 'gp-translation-events' );
 				$notifications_schedule = new Notifications_Schedule( $this->event_repository );
 				$notifications_schedule->schedule_emails( $result );
 			}
