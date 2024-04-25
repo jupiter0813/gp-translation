@@ -2,7 +2,6 @@
 
 namespace Wporg\TranslationEvents\Notifications;
 
-use DateTimeImmutable;
 use DateTimeZone;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
@@ -10,12 +9,14 @@ use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use WP_User;
 
-class Notifications {
+class Notifications_Send {
 
 	private Attendee_Repository $attendee_repository;
 	private Event_Repository_Interface $event_repository;
 
 	/**
+	 * Notifications_Cron constructor.
+	 *
 	 * @param Event_Repository_Interface $event_repository    Event repository.
 	 * @param Attendee_Repository        $attendee_repository Attendee repository.
 	 */
@@ -25,57 +26,25 @@ class Notifications {
 	) {
 		$this->event_repository    = $event_repository;
 		$this->attendee_repository = $attendee_repository;
+		add_action( 'wporg_gp_translation_events_email_notifications_1h', array( $this, 'send_notification' ), 10, 1 );
+		add_action( 'wporg_gp_translation_events_email_notifications_24h', array( $this, 'send_notification' ), 10, 1 );
 	}
 
 	/**
-	 * Send notifications to active events.
+	 * Send notifications to the attendees of the event.
 	 *
-	 * Send notifications 24 hours and 1 hour before the event starts.
+	 * @param array $args The arguments.
 	 *
 	 * @return void
 	 */
-	public function send_notifications_to_active_events(): void {
-		$active_events = $this->event_repository->get_upcoming_events();
-		foreach ( $active_events->events as $event ) {
-			$need_to_send_notifications = $this->need_to_send_notifications( $event, 24 );
-			if ( $need_to_send_notifications ) {
-				$this->send_email_notifications( $event, 24 );
-			}
-			$need_to_send_notifications = $this->need_to_send_notifications( $event, 1 );
-			if ( $need_to_send_notifications ) {
-				$this->send_email_notifications( $event, 1 );
-			}
+	public function send_notification( array $args ) {
+		$hours_before = 1;
+		if ( 'wporg_gp_translation_events_email_notifications_24h' === current_filter() ) {
+			$hours_before = 24;
+		} elseif ( 'wporg_gp_translation_events_email_notifications_1h' !== current_filter() ) {
+			return;
 		}
-	}
-
-	/**
-	 * Check if the event needs to send notifications.
-	 *
-	 * @param Event $event        The event.
-	 * @param int   $hours_before The number of hours before the event starts.
-	 *
-	 * @return bool True if the event needs to send notifications.
-	 */
-	private function need_to_send_notifications( Event $event, int $hours_before ): bool {
-		$event_hours_before = $event->start()->modify( '-' . $hours_before . ' hours' );
-		$now                = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$start_of_hour      = $now->setTime( $now->format( 'H' ), 0, 0 )->modify( '-1 hour' );
-		$start_of_hour      = $start_of_hour->modify( '-' . $hours_before . ' hours' );
-		$end_of_hour        = $now->setTime( $now->format( 'H' ), 59, 59 )->modify( '-1 hour' );
-		$end_of_hour        = $end_of_hour->modify( '-' . $hours_before . ' hours' );
-
-		return $start_of_hour <= $event_hours_before && $event_hours_before <= $end_of_hour;
-	}
-
-	/**
-	 * Send email notifications to the attendees of the event.
-	 *
-	 * @param Event $event        The event.
-	 * @param int   $hours_before The number of hours before the event starts.
-	 *
-	 * @return void
-	 */
-	private function send_email_notifications( Event $event, int $hours_before ) {
+		$event     = $this->event_repository->get_event( $args['post_id'] );
 		$attendees = $this->attendee_repository->get_attendees( $event->id() );
 		foreach ( $attendees as $attendee ) {
 			$this->send_email_notification( $event, $attendee, $hours_before );

@@ -30,7 +30,8 @@ use Wporg\TranslationEvents\Event\Event_Capabilities;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
-use Wporg\TranslationEvents\Notifications\Notifications_Cron;
+use Wporg\TranslationEvents\Notifications\Notifications_Schedule;
+use Wporg\TranslationEvents\Notifications\Notifications_Send;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Listener;
 
@@ -69,9 +70,10 @@ class Translation_Events {
 		add_action( 'wp_ajax_nopriv_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_translation_event_js' ) );
 		add_action( 'init', array( $this, 'register_event_post_type' ) );
-		add_action( 'init', array( $this, 'enqueue_cron' ) );
+		add_action( 'init', array( $this, 'send_notifications' ) );
 		add_action( 'add_meta_boxes', array( $this, 'event_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_event_meta_boxes' ) );
+		add_action( 'save_post', array( $this, 'create_update_scheduled_notifications' ) );
 		add_action( 'transition_post_status', array( $this, 'event_status_transition' ), 10, 3 );
 		add_filter( 'gp_nav_menu_items', array( $this, 'gp_event_nav_menu_items' ), 10, 2 );
 		add_filter( 'wp_insert_post_data', array( $this, 'generate_event_slug' ), 10, 2 );
@@ -373,10 +375,25 @@ class Translation_Events {
 	}
 
 	/**
-	 * Enqueue the cron job for sending notifications.
+	 * Send notifications for the events.
 	 */
-	public function enqueue_cron() {
-		new Notifications_Cron( self::get_event_repository(), self::get_attendee_repository() );
+	public function send_notifications() {
+		new Notifications_Send( self::get_event_repository(), self::get_attendee_repository() );
+	}
+
+	/**
+	 * Create or update scheduled notifications for the event.
+	 *
+	 * @param int     $post_id The post ID.
+	 * @param WP_Post $post    The post object.
+	 */
+	public function create_update_scheduled_notifications( int $post_id, WP_Post $post ) {
+		if ( 'publish' !== $post->post_status ) {
+			return;
+		}
+
+		$notifications_schedule = new Notifications_Schedule( self::get_event_repository(), self::get_attendee_repository() );
+		$notifications_schedule->schedule_emails( $post_id );
 	}
 }
 Translation_Events::get_instance();
