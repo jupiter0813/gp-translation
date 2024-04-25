@@ -6,14 +6,18 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use WP_Error;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
+use Wporg\TranslationEvents\Notifications\Notifications_Schedule;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Urls;
 
 class Event_Form_Handler {
 	private Event_Repository_Interface $event_repository;
+	private Attendee_Repository $attendee_repository;
 
-	public function __construct( Event_Repository_Interface $event_repository ) {
-		$this->event_repository = $event_repository;
+	public function __construct( Event_Repository_Interface $event_repository, Attendee_Repository $attendee_repository ) {
+		$this->event_repository    = $event_repository;
+		$this->attendee_repository = $attendee_repository;
 	}
 
 	public function handle( array $form_data ): void {
@@ -114,7 +118,9 @@ class Event_Form_Handler {
 					wp_send_json_error( esc_html__( 'Failed to create event.', 'gp-translation-events' ), 422 );
 					return;
 				}
-				$response_message = esc_html__( 'Event created successfully.', 'gp-translation-events' );
+				$response_message       = esc_html__( 'Event created successfully.', 'gp-translation-events' );
+				$notifications_schedule = new Notifications_Schedule( $this->event_repository );
+				$notifications_schedule->schedule_emails( $result );
 			}
 			if ( 'edit_event' === $action ) {
 				$event = $this->event_repository->get_event( $new_event->id() );

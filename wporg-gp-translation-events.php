@@ -30,7 +30,6 @@ use Wporg\TranslationEvents\Event\Event_Capabilities;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
-use Wporg\TranslationEvents\Notifications\Notifications_Schedule;
 use Wporg\TranslationEvents\Notifications\Notifications_Send;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Listener;
@@ -176,22 +175,19 @@ class Translation_Events {
 				return;
 			}
 		}
-
 		$fields = array( 'event_start', 'event_end' );
 		foreach ( $fields as $field ) {
 			if ( isset( $_POST[ $field ] ) ) {
 				update_post_meta( $post_id, '_' . $field, sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) );
 			}
 		}
-
-		$this->create_update_scheduled_notifications( $post_id, get_post( $post_id ) );
 	}
 
 	/**
 	 * Handle the event form submission for the creation, editing, and deletion of events. This function is called via AJAX.
 	 */
 	public function submit_event_ajax() {
-		$form_handler = new Event_Form_Handler( self::get_event_repository() );
+		$form_handler = new Event_Form_Handler( self::get_event_repository(), self::get_attendee_repository() );
 		// Nonce verification is done by the form handler.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$form_handler->handle( $_POST );
@@ -380,21 +376,6 @@ class Translation_Events {
 	 */
 	public function send_notifications() {
 		new Notifications_Send( self::get_event_repository(), self::get_attendee_repository() );
-	}
-
-	/**
-	 * Create or update scheduled notifications for the event.
-	 *
-	 * @param int     $post_id The post ID.
-	 * @param WP_Post $post    The post object.
-	 */
-	public function create_update_scheduled_notifications( int $post_id, WP_Post $post ) {
-		if ( 'publish' !== $post->post_status ) {
-			return;
-		}
-
-		$notifications_schedule = new Notifications_Schedule( self::get_event_repository(), self::get_attendee_repository() );
-		$notifications_schedule->schedule_emails( $post_id );
 	}
 }
 Translation_Events::get_instance();

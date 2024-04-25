@@ -6,18 +6,15 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 
 class Notifications_Schedule {
-	private Attendee_Repository $attendee_repository;
 	private Event_Repository_Interface $event_repository;
 
 	/**
 	 * Notifications_Cron constructor.
 	 *
 	 * @param Event_Repository_Interface $event_repository    Event repository.
-	 * @param Attendee_Repository        $attendee_repository Attendee repository.
 	 */
-	public function __construct( Event_Repository_Interface $event_repository, Attendee_Repository $attendee_repository ) {
-		$this->event_repository    = $event_repository;
-		$this->attendee_repository = $attendee_repository;
+	public function __construct( Event_Repository_Interface $event_repository ) {
+		$this->event_repository = $event_repository;
 	}
 
 	/**
