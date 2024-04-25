@@ -73,7 +73,6 @@ class Translation_Events {
 		add_action( 'init', array( $this, 'send_notifications' ) );
 		add_action( 'add_meta_boxes', array( $this, 'event_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_event_meta_boxes' ) );
-		add_action( 'save_post', array( $this, 'create_update_scheduled_notifications' ) );
 		add_action( 'transition_post_status', array( $this, 'event_status_transition' ), 10, 3 );
 		add_filter( 'gp_nav_menu_items', array( $this, 'gp_event_nav_menu_items' ), 10, 2 );
 		add_filter( 'wp_insert_post_data', array( $this, 'generate_event_slug' ), 10, 2 );
@@ -184,6 +183,8 @@ class Translation_Events {
 				update_post_meta( $post_id, '_' . $field, sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) );
 			}
 		}
+
+		$this->create_update_scheduled_notifications( $post_id, get_post( $post_id ) );
 	}
 
 	/**
