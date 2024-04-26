@@ -28,7 +28,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<?php foreach ( $attendees as $attendee ) : ?>
 			<tr>
 				<td>
-					<a href="<?php echo esc_url( get_author_posts_url( $attendee->user_id() ) ); ?>" class="avatar"><?php echo get_avatar( $attendee->user_id(), 48 ); ?></a>
+					<a class="attendee-avatar" href="<?php echo esc_url( get_author_posts_url( $attendee->user_id() ) ); ?>" class="avatar"><?php echo get_avatar( $attendee->user_id(), 48 ); ?></a>
 					<a href="<?php echo esc_url( get_author_posts_url( $attendee->user_id() ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $attendee->user_id() ) ); ?></a>
 				</td>
 				<td>
