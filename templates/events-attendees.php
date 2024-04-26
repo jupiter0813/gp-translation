@@ -16,8 +16,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
 <div class="event-page-wrapper">
 <div class="event-details-stats">
-				<h2><?php esc_html_e( 'Stats', 'gp-translation-events' ); ?></h2>
-				<table>
+<table>
 	<thead>
 		<tr>
 			<th scope="col"><?php esc_html_e( 'Name', 'gp-translation-events' ); ?></th>
