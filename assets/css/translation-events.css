@@ -372,7 +372,13 @@ ul#translation-links li {
 	cursor: pointer;
 	display: inline-block;
 }
-
+ul.event-attendees-filter {
+	padding-left: 1rem;
+}
+ul.event-attendees-filter li {
+	display: inline;
+	margin-right: .4em;
+}
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
 
