@@ -188,51 +188,6 @@ class Stats_Calculator {
 	}
 
 	/**
-	 * Get attendees without contributions for an event.
-	 */
-	public function get_attendees_not_contributing( int $event_id ): array {
-		global $wpdb, $gp_table_prefix;
-
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$all_attendees_ids = $wpdb->get_col(
-			$wpdb->prepare(
-				"
-				select distinct user_id
-				from {$gp_table_prefix}event_attendees
-				where event_id = %d
-			",
-				array(
-					$event_id,
-				)
-			),
-		);
-
-		$contributing_ids = $wpdb->get_col(
-			$wpdb->prepare(
-				"
-				select distinct user_id
-				from {$gp_table_prefix}event_actions
-				where event_id = %d
-			",
-				array(
-					$event_id,
-				)
-			)
-		);
-
-		$attendees_not_contributing_ids = array_diff( $all_attendees_ids, $contributing_ids );
-
-		$attendees_not_contributing = array();
-		foreach ( $attendees_not_contributing_ids as $user_id ) {
-			$attendees_not_contributing[] = new WP_User( $user_id );
-		}
-
-		return $attendees_not_contributing;
-	}
-
-	/**
 	 * Check if an event has stats.
 	 *
 	 * @param int $event_id The id of the event to check.

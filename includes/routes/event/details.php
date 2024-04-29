@@ -53,9 +53,9 @@ class Details_Route extends Route {
 		try {
 			$event_stats   = $stats_calculator->for_event( $event->id() );
 			$contributors  = $stats_calculator->get_contributors( $event->id() );
-			$attendees     = $stats_calculator->get_attendees_not_contributing( $event->id() );
 			$attendee_repo = $this->attendee_repository;
 			$hosts         = $this->attendee_repository->get_hosts( $event->id() );
+			$attendees     = $this->attendee_repository->get_attendees_not_contributing( $event->id() );
 			$projects      = $project_repository->get_for_event( $event->id() );
 		} catch ( Exception $e ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
