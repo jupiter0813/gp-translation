@@ -119,6 +119,35 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->assertEquals( $host21, $hosts[0] );
 	}
 
+	public function test_get_attendees() {
+		$event1_id = 1;
+		$event2_id = 2;
+		$user1_id  = 42;
+		$user2_id  = 43;
+
+		$attendee11 = new Attendee( $event1_id, $user1_id );
+		$attendee11->mark_as_host();
+		$this->repository->insert_attendee( $attendee11 );
+
+		$attendee12 = new Attendee( $event1_id, $user2_id );
+		$this->repository->insert_attendee( $attendee12 );
+
+		$attendee21 = new Attendee( $event2_id, $user1_id );
+		$this->repository->insert_attendee( $attendee21 );
+
+		$attendees = $this->repository->get_attendees( $event1_id );
+		$this->assertCount( 2, $attendees );
+		$this->assertEquals( $attendee11, $attendees[0] );
+		$this->assertEquals( $attendee12, $attendees[1] );
+		$this->assertTrue( $attendees[0]->is_host() );
+		$this->assertFalse( $attendees[1]->is_host() );
+
+		$attendees = $this->repository->get_attendees( $event2_id );
+		$this->assertCount( 1, $attendees );
+		$this->assertEquals( $attendee21, $attendees[0] );
+		$this->assertFalse( $attendees[0]->is_host() );
+	}
+
 	public function test_get_attendees_not_contributing() {
 		$event1_id = 1;
 		$user1_id  = 42;
