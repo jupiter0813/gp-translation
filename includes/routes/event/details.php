@@ -52,9 +52,17 @@ class Details_Route extends Route {
 		$user_is_attending          = $attendee instanceof Attendee;
 		$contributors               = $stats_calculator->get_contributors( $event->id() );
 		$attendee_repo              = $this->attendee_repository;
-		$hosts                      = $this->attendee_repository->get_hosts( $event->id() );
 		$attendees_not_contributing = $this->attendee_repository->get_attendees_not_contributing( $event->id() );
 		$projects                   = $project_repository->get_for_event( $event->id() );
+
+		$attendees = $this->attendee_repository->get_attendees( $event->id() );
+
+		$hosts = array();
+		foreach ( $attendees as $attendee ) {
+			if ( $attendee->is_host() ) {
+				$hosts[] = $attendee;
+			}
+		}
 
 		try {
 			$event_stats = $stats_calculator->for_event( $event->id() );
