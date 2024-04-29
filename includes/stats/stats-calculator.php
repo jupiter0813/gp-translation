@@ -314,6 +314,7 @@ class Stats_Calculator {
 		global $wpdb, $gp_table_prefix;
 		$new_contributor_max_translation_count = 10;
 		$event_start_date_time                 = $event_start->__toString();
+
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -329,6 +330,7 @@ class Stats_Calculator {
 				)
 			)
 		);
+		// phpcs:enable
 
 		if ( get_userdata( $user_id ) && ! $user_translations_count ) {
 			return true;
