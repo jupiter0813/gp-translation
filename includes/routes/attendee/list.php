@@ -25,6 +25,15 @@ class List_Route extends Route {
 	}
 
 	public function handle( int $event_id ): void {
+		global $wp;
+
+		if ( ! is_user_logged_in() ) {
+			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
+			exit;
+		}
+		if ( ! current_user_can( 'edit_translation_event', $event_id() ) ) {
+			$this->die_with_error( esc_html__( 'You do not have permission to edit this event.', 'gp-translation-events' ), 403 );
+		}
 		$attendees = array();
 		if ( gp_get( 'filter' ) && 'hosts' !== gp_get( 'filter' ) ) {
 			$filtered_result = $this->filter_attendees( gp_get( 'filter' ), $event_id );
@@ -44,7 +53,6 @@ class List_Route extends Route {
 			$attendees = $this->attendee_repository->get_attendees( $event_id );
 		}
 
-		$url = gp_url( 'events/' . $event_id . '/attendees' );
 		$this->tmpl( 'events-attendees', get_defined_vars() );
 	}
 
