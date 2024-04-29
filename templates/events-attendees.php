@@ -17,7 +17,12 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 <div class="event-page-wrapper">
 	<div class="event-details-stats">
 	<ul class="event-attendees-filter">
-		<li><a href="<?php echo esc_url( Urls::event_attendees( $event_id ) ); ?>"><?php esc_html_e( 'All attendees', 'gp-translation-events' ); ?></a></li>
+		<li><a href="<?php echo esc_url( Urls::event_attendees( $event_id ) ); ?>">
+		<?php
+			// translators: %d is the number of attendees.
+			echo esc_html( sprintf( __( 'All attendees (%d)', 'gp-translation-events' ), number_format_i18n( count( $attendees ) ) ) );
+		?>
+			</a></li>
 		<li><a href="?filter=hosts"><?php esc_html_e( 'Hosts', 'gp-translation-events' ); ?></a></li>
 		<li><a href="?filter=contributors"><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></a></li>
 		<li><a href="?filter=new-contributors"><?php esc_html_e( 'New Translation Contributors', 'gp-translation-events' ); ?></a></li>
