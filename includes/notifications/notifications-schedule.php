@@ -2,14 +2,13 @@
 
 namespace Wporg\TranslationEvents\Notifications;
 
-use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 
 class Notifications_Schedule {
 	private Event_Repository_Interface $event_repository;
 
 	/**
-	 * Notifications_Cron constructor.
+	 * Notifications_Schedule constructor.
 	 *
 	 * @param Event_Repository_Interface $event_repository    Event repository.
 	 */
@@ -30,15 +29,20 @@ class Notifications_Schedule {
 			return;
 		}
 
-		$deleted_sheduled_emails = $this->delete_scheduled_emails( $post_id );
-		if ( 'publish' === get_post_status( $post_id ) && $deleted_sheduled_emails ) {
+		$this->delete_scheduled_emails( $post_id );
+		if ( 'publish' === get_post_status( $post_id ) ) {
 			$args                  = array(
 				'post_id' => $post_id,
 			);
+			$now                   = time();
 			$new_next_1h_schedule  = $event->start()->getTimestamp() - HOUR_IN_SECONDS;
 			$new_next_24h_schedule = $event->start()->getTimestamp() - 24 * HOUR_IN_SECONDS;
-			wp_schedule_single_event( $new_next_1h_schedule, 'wporg_gp_translation_events_email_notifications_1h', $args );
-			wp_schedule_single_event( $new_next_24h_schedule, 'wporg_gp_translation_events_email_notifications_24h', $args );
+			if ( $new_next_1h_schedule > $now ) {
+				wp_schedule_single_event( $new_next_1h_schedule, 'wporg_gp_translation_events_email_notifications_1h', $args );
+			}
+			if ( $new_next_24h_schedule > $now ) {
+				wp_schedule_single_event( $new_next_24h_schedule, 'wporg_gp_translation_events_email_notifications_24h', $args );
+			}
 		}
 	}
 
@@ -47,9 +51,9 @@ class Notifications_Schedule {
 	 *
 	 * @param int $post_id Post ID.
 	 *
-	 * @return bool
+	 * @return void
 	 */
-	public function delete_scheduled_emails( int $post_id ): bool {
+	public function delete_scheduled_emails( int $post_id ): void {
 		$args = array(
 			'post_id' => $post_id,
 		);
@@ -64,7 +68,5 @@ class Notifications_Schedule {
 		if ( $next_24h_schedule ) {
 			$unscheduled_24h = wp_unschedule_event( $next_24h_schedule, 'wporg_gp_translation_events_email_notifications_24h', $args );
 		}
-
-		return ( true === $unscheduled_1h && true === $unscheduled_24h );
 	}
 }

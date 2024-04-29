@@ -17,7 +17,7 @@ class Notifications_Send {
 	private Event_Repository_Interface $event_repository;
 
 	/**
-	 * Notifications_Cron constructor.
+	 * Notifications_Send constructor.
 	 *
 	 * @param Event_Repository_Interface $event_repository    Event repository.
 	 * @param Attendee_Repository        $attendee_repository Attendee repository.
@@ -28,8 +28,8 @@ class Notifications_Send {
 	) {
 		$this->event_repository    = $event_repository;
 		$this->attendee_repository = $attendee_repository;
-		add_action( 'wporg_gp_translation_events_email_notifications_1h', array( $this, 'send_notification' ), 10, 1 );
-		add_action( 'wporg_gp_translation_events_email_notifications_24h', array( $this, 'send_notification' ), 10, 1 );
+		add_action( 'wporg_gp_translation_events_email_notifications_1h', array( $this, 'send_notifications' ), 10, 1 );
+		add_action( 'wporg_gp_translation_events_email_notifications_24h', array( $this, 'send_notifications' ), 10, 1 );
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Notifications_Send {
 	 *
 	 * @return void
 	 */
-	public function send_notification( int $post_id ) {
+	public function send_notifications( int $post_id ) {
 		$event     = $this->event_repository->get_event( $post_id );
 		$attendees = $this->attendee_repository->get_attendees( $event->id() );
 		foreach ( $attendees as $attendee ) {
@@ -75,11 +75,14 @@ class Notifications_Send {
 	 * @return string
 	 */
 	private function get_email_subject( Event $event ): string {
-		$subject = esc_html__( 'Event Reminder. ', 'gp-translation-events' );
-		// translators: %s: Event title.
-		$subject .= sprintf( esc_html__( 'You have the %s event in', 'gp-translation-events' ), esc_html( $event->title() ) );
+		$subject  = esc_html__( 'Event Reminder.', 'gp-translation-events' );
 		$subject .= ' ';
-		$subject .= $this->calculate_time_until_event( $event->start() );
+		$subject .= sprintf(
+		// translators: %1$s: Event title. %2$s Time until event starts.
+			esc_html__( 'You have the %1$s event in %2$s', 'gp-translation-events' ),
+			esc_html( $event->title() ),
+			esc_html( $this->calculate_time_until_event( $event->start() ) )
+		);
 
 		return $subject;
 	}
@@ -87,8 +90,8 @@ class Notifications_Send {
 	/**
 	 * Get the email message.
 	 *
-	 * @param WP_User $user         The user.
-	 * @param Event   $event        The event.
+	 * @param WP_User $user  The user.
+	 * @param Event   $event The event.
 	 *
 	 * @return string
 	 */
@@ -97,25 +100,28 @@ class Notifications_Send {
 		// translators: %s: User display name.
 		$message  = sprintf( esc_html__( 'Hi %s', 'gp-translation-events' ), $user->display_name );
 		$message .= '<br><br>';
-		// translators: %s: Event title.
-		$message         .= sprintf( esc_html__( 'You have the %s event in', 'gp-translation-events' ), esc_html( $event->title() ) );
-		$message         .= ' ';
-		$message         .= $this->calculate_time_until_event( $event->start() ) . '.';
+		$message .= sprintf(
+			// translators: %1$s: Event title. %2$s: Time until event starts.
+			esc_html__( 'You have the %1$s event in %2$s.', 'gp-translation-events' ),
+			esc_html( $event->title() ),
+			esc_html( $this->calculate_time_until_event( $event->start() ) )
+		);
 		$message         .= '<br>';
 		$local_start_date = $event->start()->setTimezone( new DateTimeZone( $event->timezone()->getName() ) );
-		// translators: %s: Event start date in 'Y-m-d H:i' format.
-		$message .= sprintf( esc_html__( 'The event will start at %s', 'gp-translation-events' ), $local_start_date->format( 'Y-m-d H:i' ) );
-		$message .= ' ';
-		// translators: %s: Event timezone name.
-		$message .= sprintf( esc_html__( '(local %s time).', 'gp-translation-events' ), $local_start_date->getTimezone()->getName() );
+		$message         .= sprintf(
+			// translators: %1$s: Event start date in 'Y-m-d H:i' format. %2$s: Event timezone name.
+			esc_html__( 'The event will start at %1$s (local %2$s time).', 'gp-translation-events' ),
+			$local_start_date->format( 'Y-m-d H:i' ),
+			$local_start_date->getTimezone()->getName()
+		);
 		$message .= '<br><br>';
-		$message .= sprintf(
-			wp_kses(
-			// translators: %s: Event permalink.
-				__( 'You can get more info about the event or stop attending the event <a href="%s">at this link</a>.', 'gp-translation-events' ),
-				array( 'a' => array( 'href' => array() ) )
+		$message .= wp_kses(
+			sprintf(
+				// translators: %1$s: Event permalink.
+				__( 'You can get more info about the event or stop attending <a href="%1$s">at this link</a>.', 'gp-translation-events' ),
+				esc_url( home_url( gp_url( wp_make_link_relative( get_the_permalink( $event->id() ) ) ) ) )
 			),
-			esc_url( home_url( gp_url( wp_make_link_relative( get_the_permalink( $event->id() ) ) ) ) )
+			array( 'a' => array( 'href' => array() ) )
 		);
 		$message .= '<br><br>';
 		$message .= esc_html__( 'Have a nice day', 'gp-translation-events' );
@@ -153,6 +159,7 @@ class Notifications_Send {
 			// translators: %d: Number of minutes.
 			$message .= sprintf( _n( '%d minute', '%d minutes', $minutes_to_start, 'gp-translation-events' ), $minutes_to_start );
 		}
+
 		return $message;
 	}
 }
