@@ -48,8 +48,8 @@ class Details_Route extends Route {
 		$stats_calculator   = new Stats_Calculator();
 		$project_repository = new Project_Repository();
 
-		$attendee                   = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
-		$user_is_attending          = $attendee instanceof Attendee;
+		$current_user_attendee      = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		$user_is_attending          = $current_user_attendee instanceof Attendee;
 		$contributors               = $stats_calculator->get_contributors( $event->id() );
 		$attendee_repo              = $this->attendee_repository;
 		$attendees_not_contributing = $this->attendee_repository->get_attendees_not_contributing( $event->id() );

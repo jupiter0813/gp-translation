@@ -16,9 +16,9 @@ use Wporg\TranslationEvents\Stats\Event_Stats;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Row;
 
+/** @var bool $user_is_attending */
 /** @var Attendee[] $attendees_not_contributing */
 /** @var Attendee_Repository $attendee_repo */
-/** @var Attendee $attendee */
 /** @var Event $event */
 /** @var int $event_id */
 /** @var string $event_title */
@@ -267,12 +267,12 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<?php if ( is_user_logged_in() ) : ?>
 		<div class="event-details-join">
 			<?php if ( $event_end->is_in_the_past() ) : ?>
-				<?php if ( $attendee instanceof Attendee ) : ?>
+				<?php if ( $user_is_attending ) : ?>
 					<button disabled="disabled" class="button is-primary attend-btn"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></button>
 				<?php endif; ?>
 			<?php else : ?>
 				<form class="event-details-attend" method="post" action="<?php echo esc_url( Urls::event_toggle_attendee( $event_id ) ); ?>">
-					<?php if ( $attendee instanceof Attendee ) : ?>
+					<?php if ( $user_is_attending ) : ?>
 						<input type="submit" class="button is-secondary attending-btn" value="<?php esc_attr_e( "You're attending", 'gp-translation-events' ); ?>" />
 					<?php else : ?>
 						<input type="submit" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event', 'gp-translation-events' ); ?>"/>
