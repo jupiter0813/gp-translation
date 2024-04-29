@@ -13,6 +13,7 @@ use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Stats\Event_Stats;
+use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Row;
 
 /** @var Attendee_Repository $attendee_repo */
@@ -26,6 +27,7 @@ use Wporg\TranslationEvents\Stats\Stats_Row;
 /** @var Event_Stats $event_stats */
 /** @var array $projects */
 /** @var WP_User $user */
+/** @var Stats_Calculator $stats_calculator */
 
 /* translators: %s: Event title. */
 gp_title( sprintf( __( 'Translation Events - %s' ), esc_html( $event_title ) ) );

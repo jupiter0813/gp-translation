@@ -10,6 +10,7 @@ use GP_Locale;
 use GP_Locales;
 use DateTimeImmutable;
 use DateTimeZone;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
 
 class Stats_Row {
 	public int $created;
@@ -309,7 +310,7 @@ class Stats_Calculator {
 	 *
 	 * @return bool True if the user is a new translation contributor, false otherwise.
 	 */
-	public function is_new_translation_contributor( $event_start, $user_id ) {
+	public function is_new_translation_contributor( Event_Start_Date $event_start, int $user_id ): bool {
 		global $wpdb, $gp_table_prefix;
 		$new_contributor_max_translation_count = 10;
 		$event_start_date_time                 = $event_start->__toString();
