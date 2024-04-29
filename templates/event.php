@@ -16,6 +16,7 @@ use Wporg\TranslationEvents\Stats\Event_Stats;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Row;
 
+/** @var Attendee[] $attendees */
 /** @var Attendee_Repository $attendee_repo */
 /** @var Attendee $attendee */
 /** @var Event $event */
@@ -90,17 +91,16 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				?>
 				</h2>
 				<ul>
-					<?php foreach ( $attendees as $_user ) : ?>
+					<?php foreach ( $attendees as $_attendee ) : ?>
 						<li class="event-attendee">
-							<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>" class="avatar"><?php echo get_avatar( $_user->ID, 48 ); ?></a>
-							<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $_user->ID ) ); ?></a>
-							<?php if ( $stats_calculator->is_new_translation_contributor( $event_start, $_user->ID ) ) : ?>
+							<a href="<?php echo esc_url( get_author_posts_url( $_attendee->user_id() ) ); ?>" class="avatar"><?php echo get_avatar( $_attendee->user_id(), 48 ); ?></a>
+							<a href="<?php echo esc_url( get_author_posts_url( $_attendee->user_id() ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $_attendee->user_id() ) ); ?></a>
+							<?php if ( $stats_calculator->is_new_translation_contributor( $event_start, $_attendee->user_id() ) ) : ?>
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
 							<?php
-							$_attendee = $attendee_repo->get_attendee( $event_id, $_user->ID );
 							if ( $_attendee instanceof Attendee ) :
-								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $_user->ID ) ) . '">';
+								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $_attendee->user_id() ) ) . '">';
 								if ( $_attendee->is_host() ) :
 									echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
 								else :

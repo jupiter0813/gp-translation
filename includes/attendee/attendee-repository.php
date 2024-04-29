@@ -117,6 +117,9 @@ class Attendee_Repository {
 
 	/**
 	 * Get attendees without contributions for an event.
+	 *
+	 * @return Attendee[]
+	 * @throws Exception
 	 */
 	public function get_attendees_not_contributing( int $event_id ): array {
 		global $wpdb, $gp_table_prefix;
@@ -154,7 +157,7 @@ class Attendee_Repository {
 
 		$attendees_not_contributing = array();
 		foreach ( $attendees_not_contributing_ids as $user_id ) {
-			$attendees_not_contributing[] = new WP_User( $user_id );
+			$attendees_not_contributing[] = new Attendee( $event_id, $user_id );
 		}
 
 		return $attendees_not_contributing;
