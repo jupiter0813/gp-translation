@@ -3,10 +3,10 @@
 namespace Wporg\TranslationEvents\Routes\Event;
 
 use Exception;
-use GP;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
+use Wporg\TranslationEvents\Project\Project_Repository;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
@@ -48,14 +48,15 @@ class Details_Route extends Route {
 		$attendee          = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
 		$user_is_attending = $attendee instanceof Attendee;
 
-		$stats_calculator = new Stats_Calculator();
+		$stats_calculator   = new Stats_Calculator();
+		$project_repository = new Project_Repository();
 		try {
 			$event_stats   = $stats_calculator->for_event( $event->id() );
 			$contributors  = $stats_calculator->get_contributors( $event->id() );
 			$attendees     = $stats_calculator->get_attendees_not_contributing( $event->id() );
 			$attendee_repo = $this->attendee_repository;
 			$hosts         = $this->attendee_repository->get_hosts( $event->id() );
-			$projects      = $stats_calculator->get_projects( $event->id() );
+			$projects      = $project_repository->get_for_event( $event->id() );
 		} catch ( Exception $e ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $e );
