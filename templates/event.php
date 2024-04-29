@@ -16,7 +16,7 @@ use Wporg\TranslationEvents\Stats\Event_Stats;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Row;
 
-/** @var Attendee[] $attendees */
+/** @var Attendee[] $attendees_not_contributing */
 /** @var Attendee_Repository $attendee_repo */
 /** @var Attendee $attendee */
 /** @var Event $event */
@@ -82,16 +82,16 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				</ul>
 			</div>
 		<?php endif; ?>
-		<?php if ( ! empty( $attendees ) && current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
+		<?php if ( ! empty( $attendees_not_contributing ) && current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
 			<div class="event-attendees">
 				<h2>
 				<?php
 				// translators: %d is the number of attendees.
-				echo esc_html( sprintf( __( 'Attendees (%d)', 'gp-translation-events' ), number_format_i18n( count( $attendees ) ) ) );
+				echo esc_html( sprintf( __( 'Attendees (%d)', 'gp-translation-events' ), number_format_i18n( count( $attendees_not_contributing ) ) ) );
 				?>
 				</h2>
 				<ul>
-					<?php foreach ( $attendees as $_attendee ) : ?>
+					<?php foreach ( $attendees_not_contributing as $_attendee ) : ?>
 						<li class="event-attendee">
 							<a href="<?php echo esc_url( get_author_posts_url( $_attendee->user_id() ) ); ?>" class="avatar"><?php echo get_avatar( $_attendee->user_id(), 48 ); ?></a>
 							<a href="<?php echo esc_url( get_author_posts_url( $_attendee->user_id() ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $_attendee->user_id() ) ); ?></a>

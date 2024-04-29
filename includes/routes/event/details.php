@@ -48,13 +48,13 @@ class Details_Route extends Route {
 		$stats_calculator   = new Stats_Calculator();
 		$project_repository = new Project_Repository();
 
-		$attendee          = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
-		$user_is_attending = $attendee instanceof Attendee;
-		$contributors      = $stats_calculator->get_contributors( $event->id() );
-		$attendee_repo     = $this->attendee_repository;
-		$hosts             = $this->attendee_repository->get_hosts( $event->id() );
-		$attendees         = $this->attendee_repository->get_attendees_not_contributing( $event->id() );
-		$projects          = $project_repository->get_for_event( $event->id() );
+		$attendee                   = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		$user_is_attending          = $attendee instanceof Attendee;
+		$contributors               = $stats_calculator->get_contributors( $event->id() );
+		$attendee_repo              = $this->attendee_repository;
+		$hosts                      = $this->attendee_repository->get_hosts( $event->id() );
+		$attendees_not_contributing = $this->attendee_repository->get_attendees_not_contributing( $event->id() );
+		$projects                   = $project_repository->get_for_event( $event->id() );
 
 		try {
 			$event_stats = $stats_calculator->for_event( $event->id() );
