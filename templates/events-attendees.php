@@ -45,6 +45,13 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<?php endif; ?>
 					</td>
 					<td>
+					<form class="add-remove-user-as-host" method="post" action="<?php echo esc_url( Urls::event_toggle_host( $event_id, $attendee->user_id() ) ); ?>">
+						<?php if ( $attendee->is_host() ) : ?>
+							<input type="submit" class="button is-primary remove-as-host" value="<?php echo esc_attr__( 'Remove as host', 'gp-translation-events' ); ?>"/>
+							<?php else : ?>
+									<input type="submit" class="button is-secondary convert-to-host" value="<?php echo esc_attr__( 'Make co-host', 'gp-translation-events' ); ?>"/>
+							<?php endif; ?>
+						</form>
 						<a href="">Remove</a>
 					</td>
 				</tr>
