@@ -99,15 +99,13 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
 							<?php
-							if ( $_attendee instanceof Attendee ) :
-								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $_attendee->user_id() ) ) . '">';
-								if ( $_attendee->is_host() ) :
-									echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
-								else :
-									echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
-								endif;
-								echo '</form>';
+							echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $_attendee->user_id() ) ) . '">';
+							if ( $_attendee->is_host() ) :
+								echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
+							else :
+								echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
 							endif;
+							echo '</form>';
 							?>
 						</li>
 					<?php endforeach; ?>
