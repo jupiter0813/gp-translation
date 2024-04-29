@@ -26,13 +26,17 @@ use WP_Post;
 use WP_Query;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
+use Wporg\TranslationEvents\Event\Event_Capabilities;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
+use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Listener;
 
 class Translation_Events {
 	public const CPT = 'translation_event';
+
+	private Event_Capabilities $event_capabilities;
 
 	public static function get_instance(): Translation_Events {
 		static $instance = null;
@@ -75,6 +79,13 @@ class Translation_Events {
 		if ( is_admin() ) {
 			Upgrade::upgrade_if_needed();
 		}
+
+		$this->event_capabilities = new Event_Capabilities(
+			self::get_event_repository(),
+			self::get_attendee_repository(),
+			new Stats_Calculator()
+		);
+		$this->event_capabilities->register_hooks();
 	}
 
 	public function gp_init() {
@@ -175,7 +186,7 @@ class Translation_Events {
 	 * Handle the event form submission for the creation, editing, and deletion of events. This function is called via AJAX.
 	 */
 	public function submit_event_ajax() {
-		$form_handler = new Event_Form_Handler( self::get_event_repository(), self::get_attendee_repository() );
+		$form_handler = new Event_Form_Handler( self::get_event_repository() );
 		// Nonce verification is done by the form handler.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$form_handler->handle( $_POST );
