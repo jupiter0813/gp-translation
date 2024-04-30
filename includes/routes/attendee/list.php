@@ -44,7 +44,7 @@ class List_Route extends Route {
 			$this->die_with_error( esc_html__( 'You do not have permission to edit this event.', 'gp-translation-events' ), 403 );
 		}
 		$attendees = array();
-		if ( gp_get( 'filter' ) && 'hosts' == gp_get( 'filter' ) ) {
+		if ( gp_get( 'filter' ) && 'hosts' === gp_get( 'filter' ) ) {
 			$attendees = $this->attendee_repository->get_hosts( $event->id() );
 		} else {
 			$attendees = $this->attendee_repository->get_attendees( $event->id() );
