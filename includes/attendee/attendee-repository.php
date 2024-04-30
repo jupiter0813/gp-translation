@@ -116,7 +116,7 @@ class Attendee_Repository {
 	 * @return Attendee[] Attendees of the event.
 	 * @throws Exception
 	 */
-	public function get_attendees( int $event_id ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	public function get_attendees( int $event_id ): array {
 		global $wpdb, $gp_table_prefix;
 
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -125,8 +125,16 @@ class Attendee_Repository {
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
 				"
-				select event_id, user_id, is_host
-				from {$gp_table_prefix}event_attendees
+				select
+					user_id,
+					is_host,
+					exists(
+						select 1
+						from {$gp_table_prefix}event_actions
+						where event_id = attendees.event_id
+						  and user_id = attendees.user_id
+					) as is_contributor
+				from {$gp_table_prefix}event_attendees attendees
 				where event_id = %d
 			",
 				array(
@@ -136,13 +144,12 @@ class Attendee_Repository {
 		);
 		// phpcs:enable
 
-		$attendees = array();
-		foreach ( $rows as $row ) {
-			// TODO.
-			$is_contributor = false;
-			$attendees[]    = new Attendee( $row->event_id, $row->user_id, '1' === $row->is_host, $is_contributor );
-		}
-		return $attendees;
+		return array_map(
+			function ( $row ) use ( $event_id ) {
+				return new Attendee( $event_id, $row->user_id, '1' === $row->is_host, '1' === $row->is_contributor );
+			},
+			$rows,
+		);
 	}
 
 	/**

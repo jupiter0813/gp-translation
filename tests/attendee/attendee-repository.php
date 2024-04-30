@@ -126,14 +126,23 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$user1_id  = 42;
 		$user2_id  = 43;
 
-		$attendee11 = new Attendee( $event1_id, $user1_id, true );
+		// Host, contributor.
+		$attendee11 = new Attendee( $event1_id, $user1_id, true, true );
+		$this->stats_factory->create( $event1_id, $user1_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee11 );
 
-		$attendee12 = new Attendee( $event1_id, $user2_id );
+		// Non-host, non-contributor.
+		$attendee12 = new Attendee( $event1_id, $user2_id, false, false );
 		$this->repository->insert_attendee( $attendee12 );
 
-		$attendee21 = new Attendee( $event2_id, $user1_id );
+		// Host, non-contributor.
+		$attendee21 = new Attendee( $event2_id, $user1_id, true, false );
 		$this->repository->insert_attendee( $attendee21 );
+
+		// Non-host, contributor.
+		$attendee22 = new Attendee( $event2_id, $user2_id, false, true );
+		$this->stats_factory->create( $event2_id, $user2_id, 1, 'create' );
+		$this->repository->insert_attendee( $attendee22 );
 
 		$attendees = $this->repository->get_attendees( $event1_id );
 		$this->assertCount( 2, $attendees );
@@ -141,11 +150,17 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->assertEquals( $attendee12, $attendees[1] );
 		$this->assertTrue( $attendees[0]->is_host() );
 		$this->assertFalse( $attendees[1]->is_host() );
+		$this->assertTrue( $attendees[0]->is_contributor() );
+		$this->assertFalse( $attendees[1]->is_contributor() );
 
 		$attendees = $this->repository->get_attendees( $event2_id );
-		$this->assertCount( 1, $attendees );
+		$this->assertCount( 2, $attendees );
 		$this->assertEquals( $attendee21, $attendees[0] );
-		$this->assertFalse( $attendees[0]->is_host() );
+		$this->assertEquals( $attendee22, $attendees[1] );
+		$this->assertTrue( $attendees[0]->is_host() );
+		$this->assertFalse( $attendees[1]->is_host() );
+		$this->assertFalse( $attendees[0]->is_contributor() );
+		$this->assertTrue( $attendees[1]->is_contributor() );
 	}
 
 	public function test_get_attendees_not_contributing() {
