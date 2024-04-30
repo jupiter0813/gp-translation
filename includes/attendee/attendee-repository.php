@@ -169,46 +169,14 @@ class Attendee_Repository {
 	 * @throws Exception
 	 */
 	public function get_attendees_not_contributing( int $event_id ): array {
-		global $wpdb, $gp_table_prefix;
-
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$all_attendees = $wpdb->get_results(
-			$wpdb->prepare(
-				"
-				select user_id, is_host
-				from {$gp_table_prefix}event_attendees
-				where event_id = %d
-			",
-				array(
-					$event_id,
-				)
-			),
-		);
-
-		$contributing_ids = $wpdb->get_col(
-			$wpdb->prepare(
-				"
-				select distinct user_id
-				from {$gp_table_prefix}event_actions
-				where event_id = %d
-			",
-				array(
-					$event_id,
-				)
+		return array_values(
+			array_filter(
+				$this->get_attendees( $event_id ),
+				function ( Attendee $attendee ) {
+					return ! $attendee->is_contributor();
+				}
 			)
 		);
-		// phpcs:enable
-
-		$attendees_not_contributing = array();
-		foreach ( $all_attendees as $attendee_row ) {
-			if ( ! in_array( $attendee_row->user_id, $contributing_ids, true ) ) {
-				$attendees_not_contributing[] = new Attendee( $event_id, $attendee_row->user_id, '1' === $attendee_row->is_host );
-			}
-		}
-
-		return $attendees_not_contributing;
 	}
 
 	/**
@@ -263,32 +231,14 @@ class Attendee_Repository {
 	 * @throws Exception
 	 */
 	public function get_hosts( int $event_id ): array {
-		global $wpdb, $gp_table_prefix;
-
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$rows = $wpdb->get_results(
-			$wpdb->prepare(
-				"
-				select event_id, user_id
-				from {$gp_table_prefix}event_attendees
-				where event_id = %d and is_host = 1
-			",
-				array(
-					$event_id,
-				)
+		return array_values(
+			array_filter(
+				$this->get_attendees( $event_id ),
+				function ( Attendee $attendee ) {
+					return $attendee->is_host();
+				}
 			)
 		);
-		// phpcs:enable
-
-		$hosts = array();
-		foreach ( $rows as $row ) {
-			// TODO.
-			$locales = array();
-			$hosts[] = new Attendee( $row->event_id, $row->user_id, true, $locales );
-		}
-		return $hosts;
 	}
 
 	/**
