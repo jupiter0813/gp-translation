@@ -82,7 +82,7 @@ class Attendee_Repository {
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
 				"
-				select *
+				select user_id, is_host
 				from {$gp_table_prefix}event_attendees
 				where event_id = %d
 				  and user_id = %d
@@ -99,7 +99,7 @@ class Attendee_Repository {
 			return null;
 		}
 
-		$attendee = new Attendee( $row->event_id, $row->user_id );
+		$attendee = new Attendee( $event_id, $row->user_id );
 		if ( '1' === $row->is_host ) {
 			$attendee->mark_as_host();
 		}
@@ -127,10 +127,10 @@ class Attendee_Repository {
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$all_attendees_ids = $wpdb->get_col(
+		$all_attendees = $wpdb->get_results(
 			$wpdb->prepare(
 				"
-				select distinct user_id
+				select user_id, is_host
 				from {$gp_table_prefix}event_attendees
 				where event_id = %d
 			",
@@ -152,12 +152,17 @@ class Attendee_Repository {
 				)
 			)
 		);
-
-		$attendees_not_contributing_ids = array_diff( $all_attendees_ids, $contributing_ids );
+		// phpcs:enable
 
 		$attendees_not_contributing = array();
-		foreach ( $attendees_not_contributing_ids as $user_id ) {
-			$attendees_not_contributing[] = new Attendee( $event_id, $user_id );
+		foreach ( $all_attendees as $attendee_row ) {
+			if ( ! in_array( $attendee_row->user_id, $contributing_ids, true ) ) {
+				$attendee = new Attendee( $event_id, $attendee_row->user_id );
+				if ( '1' === $attendee_row->is_host ) {
+					$attendee->mark_as_host();
+				}
+				$attendees_not_contributing[] = $attendee;
+			}
 		}
 
 		return $attendees_not_contributing;
