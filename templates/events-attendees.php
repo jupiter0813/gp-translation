@@ -17,7 +17,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 <div class="event-page-wrapper">
 	<div class="event-details-stats">
 	<ul class="event-attendees-filter">
-		<li><a href="<?php echo esc_url( Urls::event_attendees( $event_id ) ); ?>"><?php esc_html_e( 'All attendees', 'gp-translation-events' ); ?></a></a></li>
+		<li><a href="<?php echo esc_url( Urls::event_attendees( $event_slug ) ); ?>"><?php esc_html_e( 'All attendees', 'gp-translation-events' ); ?></a></a></li>
 		<li><a href="?filter=hosts"><?php esc_html_e( 'Hosts', 'gp-translation-events' ); ?></a></li>
 	</ul>
 <?php if ( ! empty( $attendees ) ) : ?>
@@ -42,7 +42,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<?php endif; ?>
 					</td>
 					<td>
-					<form class="add-remove-user-as-host" method="post" action="<?php echo esc_url( Urls::event_toggle_host( $event_id, $attendee->user_id() ) ); ?>">
+					<form class="add-remove-user-as-host" method="post" action="<?php echo esc_url( Urls::event_toggle_host( $event->id(), $attendee->user_id() ) ); ?>">
 						<?php if ( $attendee->is_host() ) : ?>
 							<input type="submit" class="button is-primary remove-as-host" value="<?php echo esc_attr__( 'Remove as host', 'gp-translation-events' ); ?>"/>
 							<?php else : ?>
