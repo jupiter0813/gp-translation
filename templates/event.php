@@ -18,6 +18,7 @@ use Wporg\TranslationEvents\Stats\Stats_Row;
 
 /** @var bool $user_is_attending */
 /** @var Attendee[] $attendees_not_contributing */
+/** @var Attendee[] $contributors */
 /** @var Attendee_Repository $attendee_repo */
 /** @var Event $event */
 /** @var int $event_id */
@@ -55,26 +56,21 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				</h2>
 				<ul>
 					<?php foreach ( $contributors as $contributor ) : ?>
-						<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->locales ) ); ?>">
-							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>" class="avatar"><?php echo get_avatar( $contributor->ID, 48 ); ?></a>
-							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?></a>
-							<?php if ( $stats_calculator->is_new_translation_contributor( $event_start, $contributor->ID ) ) : ?>
+						<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->contributed_locales() ) ); ?>">
+							<a href="<?php echo esc_url( get_author_posts_url( $contributor->user_id() ) ); ?>" class="avatar"><?php echo get_avatar( $contributor->user_id(), 48 ); ?></a>
+							<a href="<?php echo esc_url( get_author_posts_url( $contributor->user_id() ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->user_id() ) ); ?></a>
+							<?php if ( $stats_calculator->is_new_translation_contributor( $event_start, $contributor->user_id() ) ) : ?>
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
 							<?php
 							if ( current_user_can( 'edit_translation_event', $event->id() ) ) :
-								$_attendee = $attendee_repo->get_attendee( $event_id, $contributor->ID );
-								if ( $_attendee instanceof Attendee ) :
-									echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $contributor->ID ) ) . '">';
-									if ( $_attendee->is_host() ) :
-										echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
-									else :
-										echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
-									endif;
-									echo '</form>';
+								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $contributor->user_id() ) ) . '">';
+								if ( $contributor->is_host() ) :
+									echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
 								else :
-									echo '<span class="event-not-attending">' . esc_html__( 'Not attending', 'gp-translation-events' ) . '</span>';
+									echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
 								endif;
+								echo '</form>';
 							endif;
 							?>
 						</li>
@@ -180,7 +176,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					$new_contributors = array_filter(
 						$contributors,
 						function ( $contributor ) use ( $stats_calculator, $event_start ) {
-							return $stats_calculator->is_new_translation_contributor( $event_start, $contributor->ID );
+							return $stats_calculator->is_new_translation_contributor( $event_start, $contributor->user_id() );
 						}
 					);
 
@@ -228,10 +224,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							array_map(
 								function ( $contributor ) use ( $stats_calculator, $event_start ) {
 									$append_tada = '';
-									if ( $stats_calculator->is_new_translation_contributor( $event_start, $contributor->ID ) ) {
+									if ( $stats_calculator->is_new_translation_contributor( $event_start, $contributor->user_id() ) ) {
 											$append_tada = ' <span class="new-contributor" title="' . esc_html__( 'New Translation Contributor', 'gp-translation-events' ) . '">🎉</span>';
 									}
-									return '@' . $contributor->user_login . $append_tada;
+									return '@' . ( new WP_User( $contributor->user_id() ) )->user_login . $append_tada;
 								},
 								$contributors
 							)
