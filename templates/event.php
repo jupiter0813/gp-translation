@@ -19,7 +19,6 @@ use Wporg\TranslationEvents\Stats\Stats_Row;
 /** @var bool $user_is_attending */
 /** @var Attendee[] $attendees_not_contributing */
 /** @var Attendee[] $contributors */
-/** @var Attendee_Repository $attendee_repo */
 /** @var Event $event */
 /** @var int $event_id */
 /** @var string $event_title */
