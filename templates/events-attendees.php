@@ -16,7 +16,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
 <div class="event-page-wrapper">
 	<div class="event-details-stats">
-	<a href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>" class="view-event-page">View Event</a>
+	<a href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>" class="view-event-page">Go to event page</a>
 	<ul class="event-attendees-filter">
 		<li><a class="<?php echo ( ! $is_active_filter ) ? 'active-filter' : ''; ?>" href="<?php echo esc_url( Urls::event_attendees( $event_slug ) ); ?>"><?php esc_html_e( 'All attendees', 'gp-translation-events' ); ?></a></a></li>
 		<li><a class="<?php echo ( $is_active_filter ) ? 'active-filter' : ''; ?>" href="?filter=hosts"><?php esc_html_e( 'Hosts', 'gp-translation-events' ); ?></a></li>
