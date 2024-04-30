@@ -53,6 +53,7 @@
 .event-details-stats table {
 	margin: 1rem;
 }
+
 .event-details-stats table {
 	width: 100%;
 	table-layout: fixed;
@@ -348,6 +349,7 @@ a.event-page-edit-link:hover {
 	border-bottom: var(--gp-color-btn-primary-bg) thin solid;
 	text-decoration: none;
 }
+
 ul.text-snippets {
 	padding: 0;
 	margin-left: 160px;
@@ -355,6 +357,11 @@ ul.text-snippets {
 .first-time-contributor-tada::after {
 	content: ' 🎉';
 }
+
+ul#translation-links li {
+	margin-bottom: .5em;
+}
+
 .icons li .name {
 	display: none;
 }
@@ -365,6 +372,7 @@ ul.text-snippets {
 	cursor: pointer;
 	display: inline-block;
 }
+
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
 

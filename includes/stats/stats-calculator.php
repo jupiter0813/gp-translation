@@ -14,12 +14,14 @@ use DateTimeZone;
 class Stats_Row {
 	public int $created;
 	public int $reviewed;
+	public int $waiting;
 	public int $users;
 	public ?GP_Locale $language = null;
 
-	public function __construct( $created, $reviewed, $users, ?GP_Locale $language = null ) {
+	public function __construct( $created, $reviewed, $waiting, $users, ?GP_Locale $language = null ) {
 		$this->created  = $created;
 		$this->reviewed = $reviewed;
+		$this->waiting  = $waiting;
 		$this->users    = $users;
 		$this->language = $language;
 	}
@@ -103,8 +105,10 @@ class Stats_Calculator {
 				select locale,
 					sum(action = 'create') as created,
 					count(*) as total,
-					count(distinct user_id) as users
-				from {$gp_table_prefix}event_actions
+					sum(t.status = 'waiting') as waiting,
+					count(distinct ea.user_id) as users
+				from {$gp_table_prefix}event_actions ea
+				left join {$gp_table_prefix}translations t ON ea.original_id = t.original_id and ea.user_id = t.user_id
 				where event_id = %d
 				group by locale with rollup
 			",
@@ -130,9 +134,15 @@ class Stats_Calculator {
 				$lang = null;
 			}
 
+			if ( is_null( $row->waiting ) ) {
+				// The corresponding translations are missing. Could be a unit test or data corruption.
+				$row->waiting = 0;
+			}
+
 			$stats_row = new Stats_Row(
 				$row->created,
 				$row->total - $row->created,
+				$row->waiting,
 				$row->users,
 				$lang
 			);

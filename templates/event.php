@@ -118,9 +118,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<table>
 					<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Locale', 'gp-translation-events' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Translations created', 'gp-translation-events' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Translations reviewed', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Translations', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Created', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Waiting', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Reviewed', 'gp-translation-events' ); ?></th>
 						<th scope="col"><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></th>
 					</tr>
 					</thead>
@@ -129,7 +130,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					<?php foreach ( $event_stats->rows() as $_locale => $row ) : ?>
 					<tr>
 						<td title="<?php echo esc_html( $_locale ); ?> "><a href="<?php echo esc_url( gp_url_join( gp_url( '/languages' ), $row->language->slug ) ); ?>"><?php echo esc_html( $row->language->english_name ); ?></a></td>
-						<td><?php echo esc_html( $row->created ); ?></td>
+						<td><a href="<?php echo esc_url( Urls::event_translations( $event->id(), $row->language->slug ) ); ?>"><?php echo esc_html( $row->created ); ?></a></td>
+						<td><a href="<?php echo esc_url( Urls::event_translations( $event->id(), $row->language->slug, 'waiting' ) ); ?>"><?php echo esc_html( $row->waiting ); ?></a></td>
 						<td><?php echo esc_html( $row->reviewed ); ?></td>
 						<td><?php echo esc_html( $row->users ); ?></td>
 					</tr>
@@ -137,6 +139,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					<tr class="event-details-stats-totals">
 						<td>Total</td>
 						<td><?php echo esc_html( $event_stats->totals()->created ); ?></td>
+						<td><?php echo esc_html( $event_stats->totals()->waiting ); ?></td>
 						<td><?php echo esc_html( $event_stats->totals()->reviewed ); ?></td>
 						<td><?php echo esc_html( $event_stats->totals()->users ); ?></td>
 					</tr>
