@@ -394,6 +394,9 @@ div.event-edit-right {
 a.active-filter {
 	font-weight: bold;
 }
+.event-edit-right a.manage-attendees-btn {
+	margin-top: 1em;
+}
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
 

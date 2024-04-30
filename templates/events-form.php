@@ -127,7 +127,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 </form>
 </div>
 <div class="event-edit-right">
-		<a href="<?php echo esc_url( Urls::event_attendees( $event->slug() ) ); ?>"><?php esc_html_e( 'Manage Attendees', 'gp-translation-events' ); ?></a>
+		<a class="manage-attendees-btn button is-primary" href="<?php echo esc_url( Urls::event_attendees( $event->slug() ) ); ?>"><?php esc_html_e( 'Manage Attendees', 'gp-translation-events' ); ?></a>
 	</div>
 <div class="clear"></div>
 <?php gp_tmpl_footer(); ?>
