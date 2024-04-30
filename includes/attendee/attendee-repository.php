@@ -85,12 +85,12 @@ class Attendee_Repository {
 				select
 					user_id,
 					is_host,
-					exists(
-						select 1
+					(
+						select group_concat( distinct locale )
 						from {$gp_table_prefix}event_actions
 						where event_id = attendees.event_id
 						  and user_id = attendees.user_id
-					) as is_contributor
+					) as locales
 				from {$gp_table_prefix}event_attendees attendees
 				where event_id = %d
 				  and user_id = %d
@@ -101,13 +101,18 @@ class Attendee_Repository {
 				),
 			)
 		);
+		// phpcs:enable
 
 		if ( ! $row ) {
 			return null;
 		}
-		// phpcs:enable
 
-		return new Attendee( $event_id, $row->user_id, '1' === $row->is_host, '1' === $row->is_contributor );
+		return new Attendee(
+			$event_id,
+			$row->user_id,
+			'1' === $row->is_host,
+			null === $row->locales ? array() : explode( ',', $row->locales ),
+		);
 	}
 
 	/**
@@ -128,12 +133,12 @@ class Attendee_Repository {
 				select
 					user_id,
 					is_host,
-					exists(
-						select 1
+					(
+						select group_concat( distinct locale )
 						from {$gp_table_prefix}event_actions
 						where event_id = attendees.event_id
 						  and user_id = attendees.user_id
-					) as is_contributor
+					) as locales
 				from {$gp_table_prefix}event_attendees attendees
 				where event_id = %d
 			",
@@ -146,7 +151,12 @@ class Attendee_Repository {
 
 		return array_map(
 			function ( $row ) use ( $event_id ) {
-				return new Attendee( $event_id, $row->user_id, '1' === $row->is_host, '1' === $row->is_contributor );
+				return new Attendee(
+					$event_id,
+					$row->user_id,
+					'1' === $row->is_host,
+					null === $row->locales ? array() : explode( ',', $row->locales ),
+				);
 			},
 			$rows,
 		);
@@ -194,7 +204,7 @@ class Attendee_Repository {
 		$attendees_not_contributing = array();
 		foreach ( $all_attendees as $attendee_row ) {
 			if ( ! in_array( $attendee_row->user_id, $contributing_ids, true ) ) {
-				$attendees_not_contributing[] = new Attendee( $event_id, $attendee_row->user_id, '1' === $attendee_row->is_host, false );
+				$attendees_not_contributing[] = new Attendee( $event_id, $attendee_row->user_id, '1' === $attendee_row->is_host );
 			}
 		}
 
@@ -275,8 +285,8 @@ class Attendee_Repository {
 		$hosts = array();
 		foreach ( $rows as $row ) {
 			// TODO.
-			$is_contributor = false;
-			$hosts[]        = new Attendee( $row->event_id, $row->user_id, true, $is_contributor );
+			$locales = array();
+			$hosts[] = new Attendee( $row->event_id, $row->user_id, true, $locales );
 		}
 		return $hosts;
 	}

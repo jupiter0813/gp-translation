@@ -63,7 +63,7 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$user2_id  = 43;
 
 		// Host contributor.
-		$attendee11 = new Attendee( $event1_id, $user1_id, true, true );
+		$attendee11 = new Attendee( $event1_id, $user1_id, true, array( 'aa' ) );
 		$this->stats_factory->create( $event1_id, $user1_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee11 );
 
@@ -127,20 +127,20 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$user2_id  = 43;
 
 		// Host, contributor.
-		$attendee11 = new Attendee( $event1_id, $user1_id, true, true );
+		$attendee11 = new Attendee( $event1_id, $user1_id, true, array( 'aa' ) );
 		$this->stats_factory->create( $event1_id, $user1_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee11 );
 
 		// Non-host, non-contributor.
-		$attendee12 = new Attendee( $event1_id, $user2_id, false, false );
+		$attendee12 = new Attendee( $event1_id, $user2_id, false );
 		$this->repository->insert_attendee( $attendee12 );
 
 		// Host, non-contributor.
-		$attendee21 = new Attendee( $event2_id, $user1_id, true, false );
+		$attendee21 = new Attendee( $event2_id, $user1_id, true );
 		$this->repository->insert_attendee( $attendee21 );
 
 		// Non-host, contributor.
-		$attendee22 = new Attendee( $event2_id, $user2_id, false, true );
+		$attendee22 = new Attendee( $event2_id, $user2_id, false, array( 'aa' ) );
 		$this->stats_factory->create( $event2_id, $user2_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee22 );
 
