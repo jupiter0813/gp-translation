@@ -82,8 +82,16 @@ class Attendee_Repository {
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
 				"
-				select user_id, is_host
-				from {$gp_table_prefix}event_attendees
+				select
+					user_id,
+					is_host,
+					exists(
+						select 1
+						from {$gp_table_prefix}event_actions
+						where event_id = attendees.event_id
+						  and user_id = attendees.user_id
+					) as is_contributor
+				from {$gp_table_prefix}event_attendees attendees
 				where event_id = %d
 				  and user_id = %d
 			",
@@ -93,16 +101,13 @@ class Attendee_Repository {
 				),
 			)
 		);
-		// phpcs:enable
 
 		if ( ! $row ) {
 			return null;
 		}
+		// phpcs:enable
 
-		// TODO.
-		$is_contributor = false;
-
-		return new Attendee( $event_id, $row->user_id, '1' === $row->is_host, $is_contributor );
+		return new Attendee( $event_id, $row->user_id, '1' === $row->is_host, '1' === $row->is_contributor );
 	}
 
 	/**
