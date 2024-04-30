@@ -45,7 +45,8 @@ class List_Route extends Route {
 		}
 		$attendees = array();
 		if ( gp_get( 'filter' ) && 'hosts' === gp_get( 'filter' ) ) {
-			$attendees = $this->attendee_repository->get_hosts( $event->id() );
+			$is_active_filter = true;
+			$attendees        = $this->attendee_repository->get_hosts( $event->id() );
 		} else {
 			$attendees = $this->attendee_repository->get_attendees( $event->id() );
 		}
