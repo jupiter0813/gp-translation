@@ -198,6 +198,49 @@ class Attendee_Repository {
 	}
 
 	/**
+	 * Get contributors for an event.
+	 */
+	public function get_contributors( int $event_id ): array {
+		global $wpdb, $gp_table_prefix;
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs thinks we're doing a schema change but we aren't.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+				select user_id, group_concat( distinct locale ) as locales
+				from {$gp_table_prefix}event_actions
+				where event_id = %d
+				group by user_id
+			",
+				array(
+					$event_id,
+				)
+			)
+		);
+		// phpcs:enable
+
+		$users = array();
+		foreach ( $rows as $row ) {
+			$user          = new WP_User( $row->user_id );
+			$user->locales = explode( ',', $row->locales );
+			$users[]       = $user;
+		}
+
+		uasort(
+			$users,
+			function ( $a, $b ) {
+				return strcasecmp( $a->display_name, $b->display_name );
+			}
+		);
+
+		return $users;
+	}
+
+	/**
 	 * Get the hosts' users for an event.
 	 *
 	 * @param int $event_id The id of the event.

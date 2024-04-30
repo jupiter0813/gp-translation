@@ -5,7 +5,6 @@ namespace Wporg\TranslationEvents;
 use Exception;
 use WP_Query;
 use Wporg\TranslationEvents\Attendee\Attendee;
-use Wporg\TranslationEvents\Stats\Stats_Calculator;
 
 class Upgrade {
 	private const VERSION        = 2;
@@ -87,14 +86,13 @@ class Upgrade {
 		);
 
 		$events              = $query->get_posts();
-		$stats_calculator    = new Stats_Calculator();
 		$attendee_repository = Translation_Events::get_attendee_repository();
 		foreach ( $events as $event ) {
 			$host_attendee = new Attendee( $event->ID, intval( $event->post_author ) );
 			$host_attendee->mark_as_host();
 			$attendee_repository->insert_attendee( $host_attendee );
 
-			foreach ( $stats_calculator->get_contributors( $event->ID ) as $user ) {
+			foreach ( $attendee_repository->get_contributors( $event->ID ) as $user ) {
 				$attendee = $attendee_repository->get_attendee( $event->ID, $user->id );
 				if ( ! $attendee ) {
 					$attendee = new Attendee( $event->ID, $user->ID );
