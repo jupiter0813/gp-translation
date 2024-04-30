@@ -17,12 +17,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 <div class="event-page-wrapper">
 	<div class="event-details-stats">
 	<ul class="event-attendees-filter">
-		<li><a href="<?php echo esc_url( Urls::event_attendees( $event_id ) ); ?>">
-		<?php
-			// translators: %d is the number of attendees.
-			echo esc_html( sprintf( __( 'All attendees (%d)', 'gp-translation-events' ), number_format_i18n( count( $attendees ) ) ) );
-		?>
-			</a></li>
+		<li><a href="<?php echo esc_url( Urls::event_attendees( $event_id ) ); ?>"><?php esc_html_e( 'All attendees', 'gp-translation-events' ); ?></a></a></li>
 		<li><a href="?filter=hosts"><?php esc_html_e( 'Hosts', 'gp-translation-events' ); ?></a></li>
 	</ul>
 <?php if ( ! empty( $attendees ) ) : ?>
@@ -30,7 +25,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<thead>
 			<tr>
 				<th scope="col"><?php esc_html_e( 'Name', 'gp-translation-events' ); ?></th>
-				<th><?php esc_html_e( 'Role', 'gp-translation-events' ); ?></th>
+				<th><?php esc_html_e( 'Host', 'gp-translation-events' ); ?></th>
 				<th><?php esc_html_e( 'Action', 'gp-translation-events' ); ?></th>
 			</tr>
 		</thead>
@@ -43,7 +38,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					</td>
 					<td>
 						<?php if ( $attendee->is_host() ) : ?>
-							<span>Host</span>
+							<span><?php esc_html_e( 'Yes', 'gp-translation-events' ); ?></span>
 							<?php endif; ?>
 					</td>
 					<td>
