@@ -48,11 +48,10 @@ class Details_Route extends Route {
 		$stats_calculator   = new Stats_Calculator();
 		$project_repository = new Project_Repository();
 
-		$current_user_attendee      = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
-		$user_is_attending          = $current_user_attendee instanceof Attendee;
-		$attendees_not_contributing = $this->attendee_repository->get_attendees_not_contributing( $event->id() );
-		$projects                   = $project_repository->get_for_event( $event->id() );
-		$attendees                  = $this->attendee_repository->get_attendees( $event->id() );
+		$current_user_attendee = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		$user_is_attending     = $current_user_attendee instanceof Attendee;
+		$projects              = $project_repository->get_for_event( $event->id() );
+		$attendees             = $this->attendee_repository->get_attendees( $event->id() );
 
 		$hosts = array();
 		foreach ( $attendees as $attendee ) {
@@ -65,6 +64,13 @@ class Details_Route extends Route {
 		foreach ( $attendees as $attendee ) {
 			if ( $attendee->is_contributor() ) {
 				$contributors[] = $attendee;
+			}
+		}
+
+		$attendees_not_contributing = array();
+		foreach ( $attendees as $attendee ) {
+			if ( ! $attendee->is_contributor() ) {
+				$attendees_not_contributing[] = $attendee;
 			}
 		}
 
