@@ -53,26 +53,26 @@ class Details_Route extends Route {
 		$projects              = $project_repository->get_for_event( $event->id() );
 		$attendees             = $this->attendee_repository->get_attendees( $event->id() );
 
-		$hosts = array();
-		foreach ( $attendees as $attendee ) {
-			if ( $attendee->is_host() ) {
-				$hosts[] = $attendee;
+		$hosts = array_filter(
+			$attendees,
+			function ( Attendee $attendee ) {
+				return $attendee->is_host();
 			}
-		}
+		);
 
-		$contributors = array();
-		foreach ( $attendees as $attendee ) {
-			if ( $attendee->is_contributor() ) {
-				$contributors[] = $attendee;
+		$contributors = array_filter(
+			$attendees,
+			function ( Attendee $attendee ) {
+				return $attendee->is_contributor();
 			}
-		}
+		);
 
-		$attendees_not_contributing = array();
-		foreach ( $attendees as $attendee ) {
-			if ( ! $attendee->is_contributor() ) {
-				$attendees_not_contributing[] = $attendee;
+		$attendees_not_contributing = array_filter(
+			$attendees,
+			function ( Attendee $attendee ) {
+				return ! $attendee->is_contributor();
 			}
-		}
+		);
 
 		try {
 			$event_stats = $stats_calculator->for_event( $event->id() );
