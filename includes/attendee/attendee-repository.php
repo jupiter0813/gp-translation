@@ -99,12 +99,10 @@ class Attendee_Repository {
 			return null;
 		}
 
-		$attendee = new Attendee( $event_id, $row->user_id );
-		if ( '1' === $row->is_host ) {
-			$attendee->mark_as_host();
-		}
+		// TODO.
+		$is_contributor = false;
 
-		return $attendee;
+		return new Attendee( $event_id, $row->user_id, '1' === $row->is_host, $is_contributor );
 	}
 
 	/**
@@ -135,11 +133,9 @@ class Attendee_Repository {
 
 		$attendees = array();
 		foreach ( $rows as $row ) {
-			$attendee = new Attendee( $row->event_id, $row->user_id );
-			if ( '1' === $row->is_host ) {
-				$attendee->mark_as_host();
-			}
-			$attendees[] = $attendee;
+			// TODO.
+			$is_contributor = false;
+			$attendees[]    = new Attendee( $row->event_id, $row->user_id, '1' === $row->is_host, $is_contributor );
 		}
 		return $attendees;
 	}
@@ -186,11 +182,7 @@ class Attendee_Repository {
 		$attendees_not_contributing = array();
 		foreach ( $all_attendees as $attendee_row ) {
 			if ( ! in_array( $attendee_row->user_id, $contributing_ids, true ) ) {
-				$attendee = new Attendee( $event_id, $attendee_row->user_id );
-				if ( '1' === $attendee_row->is_host ) {
-					$attendee->mark_as_host();
-				}
-				$attendees_not_contributing[] = $attendee;
+				$attendees_not_contributing[] = new Attendee( $event_id, $attendee_row->user_id, '1' === $attendee_row->is_host, false );
 			}
 		}
 
@@ -270,9 +262,9 @@ class Attendee_Repository {
 
 		$hosts = array();
 		foreach ( $rows as $row ) {
-			$host = new Attendee( $row->event_id, $row->user_id );
-			$host->mark_as_host();
-			$hosts[] = $host;
+			// TODO.
+			$is_contributor = false;
+			$hosts[]        = new Attendee( $row->event_id, $row->user_id, true, $is_contributor );
 		}
 		return $hosts;
 	}

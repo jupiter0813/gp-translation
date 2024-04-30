@@ -229,8 +229,7 @@ class Translation_Events {
 			$attendee            = $attendee_repository->get_attendee( $event_id, $user_id );
 
 			if ( null === $attendee ) {
-				$attendee = new Attendee( $event_id, $user_id );
-				$attendee->mark_as_host();
+				$attendee = new Attendee( $event_id, $user_id, true );
 				$attendee_repository->insert_attendee( $attendee );
 			}
 		}

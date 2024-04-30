@@ -62,8 +62,7 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$user1_id  = 42;
 		$user2_id  = 43;
 
-		$attendee11 = new Attendee( $event1_id, $user1_id );
-		$attendee11->mark_as_host();
+		$attendee11 = new Attendee( $event1_id, $user1_id, true );
 		$this->repository->insert_attendee( $attendee11 );
 
 		$attendee12 = new Attendee( $event1_id, $user2_id );
@@ -91,16 +90,13 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$user1_id  = 42;
 		$user2_id  = 43;
 
-		$host11 = new Attendee( $event1_id, $user1_id );
-		$host11->mark_as_host();
+		$host11 = new Attendee( $event1_id, $user1_id, true );
 		$this->repository->insert_attendee( $host11 );
 
-		$host12 = new Attendee( $event1_id, $user2_id );
-		$host12->mark_as_host();
+		$host12 = new Attendee( $event1_id, $user2_id, true );
 		$this->repository->insert_attendee( $host12 );
 
-		$host21 = new Attendee( $event2_id, $user1_id );
-		$host21->mark_as_host();
+		$host21 = new Attendee( $event2_id, $user1_id, true );
 		$this->repository->insert_attendee( $host21 );
 
 		// Add some more attendees to make sure we get the right ones.
@@ -125,8 +121,7 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$user1_id  = 42;
 		$user2_id  = 43;
 
-		$attendee11 = new Attendee( $event1_id, $user1_id );
-		$attendee11->mark_as_host();
+		$attendee11 = new Attendee( $event1_id, $user1_id, true );
 		$this->repository->insert_attendee( $attendee11 );
 
 		$attendee12 = new Attendee( $event1_id, $user2_id );
@@ -160,8 +155,7 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->repository->insert_attendee( $attendee11 );
 
 		// Host non-contributor.
-		$attendee12 = new Attendee( $event1_id, $user2_id );
-		$attendee12->mark_as_host();
+		$attendee12 = new Attendee( $event1_id, $user2_id, true );
 		$this->repository->insert_attendee( $attendee12 );
 
 		// Non-host non-contributor.
