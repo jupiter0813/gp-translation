@@ -24,9 +24,6 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		?>
 			</a></li>
 		<li><a href="?filter=hosts"><?php esc_html_e( 'Hosts', 'gp-translation-events' ); ?></a></li>
-		<li><a href="?filter=contributors"><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></a></li>
-		<li><a href="?filter=new-contributors"><?php esc_html_e( 'New Translation Contributors', 'gp-translation-events' ); ?></a></li>
-		<li><a href="?filter=non-contributors"><?php esc_html_e( 'Non-Contributors', 'gp-translation-events' ); ?></a></li>
 	</ul>
 <?php if ( ! empty( $attendees ) ) : ?>
 	<table>
