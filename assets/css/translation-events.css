@@ -388,6 +388,9 @@ div.event-edit-right {
 	width: 15%;
 	text-align: right;
 }
+.view-event-page {
+	float: right;
+}
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
 
