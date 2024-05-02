@@ -5,7 +5,6 @@ namespace Wporg\TranslationEvents\Stats;
 use Exception;
 use GP_Locale;
 use GP_Locales;
-use Wporg\TranslationEvents\Event\Event_Start_Date;
 
 class Stats_Row {
 	public int $created;
@@ -158,41 +157,5 @@ class Stats_Calculator {
 		}
 
 		return ! empty( $stats->rows() );
-	}
-
-	/**
-	 * Check if a user is a new translation contributor. A new contributor is a user who has made 10 or fewer translations before event start time.
-	 *
-	 * @param Event_Start_Date $event_start The event start date.
-	 * @param int              $user_id      The user ID.
-	 *
-	 * @return bool True if the user is a new translation contributor, false otherwise.
-	 */
-	public function is_new_translation_contributor( Event_Start_Date $event_start, int $user_id ): bool {
-		global $wpdb, $gp_table_prefix;
-		$new_contributor_max_translation_count = 10;
-		$event_start_date_time                 = $event_start->__toString();
-
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
-		$user_translations_count = $wpdb->get_var(
-			$wpdb->prepare(
-				"
-			select count(*) from {$gp_table_prefix}translations where user_id = %d and date_added < %s
-		",
-				array(
-					$user_id,
-					$event_start_date_time,
-				)
-			)
-		);
-		// phpcs:enable
-
-		if ( get_userdata( $user_id ) && ! $user_translations_count ) {
-			return true;
-		}
-		return $user_translations_count <= $new_contributor_max_translation_count;
 	}
 }
