@@ -24,4 +24,5 @@ require_once __DIR__ . '/includes/stats/stats-calculator.php';
 require_once __DIR__ . '/includes/stats/stats-importer.php';
 require_once __DIR__ . '/includes/stats/stats-listener.php';
 require_once __DIR__ . '/includes/project/project-repository.php';
+require_once __DIR__ . '/includes/translation/translation-repository.php';
 require_once __DIR__ . '/includes/event-text-snippet.php';
