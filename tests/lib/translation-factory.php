@@ -22,7 +22,7 @@ class Translation_Factory {
 			)
 		);
 		if ( $date_added ) {
-			$original->update( array( 'date_added' => $date_added ) );
+			$original->update( array( 'date_added' => $date_added->format( 'Y-m-d H:i:s' ) ) );
 		}
 
 		$translation = $this->gp_factory->translation->create(
@@ -34,7 +34,7 @@ class Translation_Factory {
 			)
 		);
 		if ( $date_added ) {
-			$translation->update( array( 'date_added' => $date_added ) );
+			$translation->update( array( 'date_added' => $date_added->format( 'Y-m-d H:i:s' ) ) );
 		}
 		return $translation;
 	}
