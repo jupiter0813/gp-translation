@@ -57,4 +57,8 @@ class Urls {
 	public static function event_attendees( int $event_id ): string {
 		return self::event_details( $event_id ) . 'attendees/';
 	}
+
+	public static function event_remove_attendee( string $event_slug, int $user_id ): string {
+		return gp_url( "/events/$event_slug/attendees/remove/$user_id" );
+	}
 }
