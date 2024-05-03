@@ -5,13 +5,16 @@ namespace Wporg\Tests\Attendee;
 use WP_UnitTestCase;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
+use Wporg\TranslationEvents\Tests\Stats_Factory;
 
 class Attendee_Repository_Test extends WP_UnitTestCase {
 	private Attendee_Repository $repository;
+	private Stats_Factory $stats_factory;
 
 	protected function setUp(): void {
 		parent::setUp();
-		$this->repository = new Attendee_Repository();
+		$this->repository    = new Attendee_Repository();
+		$this->stats_factory = new Stats_Factory();
 	}
 
 	public function test_add_attendee_invalid_event_id() {
@@ -114,6 +117,34 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$hosts = $this->repository->get_hosts( $event2_id );
 		$this->assertCount( 1, $hosts );
 		$this->assertEquals( $host21, $hosts[0] );
+	}
+
+	public function test_get_attendees_not_contributing() {
+		$event1_id = 1;
+		$user1_id  = 42;
+		$user2_id  = 43;
+		$user3_id  = 44;
+
+		// Contributor.
+		$attendee11 = new Attendee( $event1_id, $user1_id );
+		$this->stats_factory->create( $event1_id, $user1_id, 1, 'create' );
+		$this->repository->insert_attendee( $attendee11 );
+
+		// Host non-contributor.
+		$attendee12 = new Attendee( $event1_id, $user2_id );
+		$attendee12->mark_as_host();
+		$this->repository->insert_attendee( $attendee12 );
+
+		// Non-host non-contributor.
+		$attendee13 = new Attendee( $event1_id, $user3_id );
+		$this->repository->insert_attendee( $attendee13 );
+
+		$attendees = $this->repository->get_attendees_not_contributing( $event1_id );
+		$this->assertCount( 2, $attendees );
+		$this->assertEquals( $attendee12, $attendees[0] );
+		$this->assertEquals( $attendee13, $attendees[1] );
+		$this->assertTrue( $attendees[0]->is_host() );
+		$this->assertFalse( $attendees[1]->is_host() );
 	}
 
 	public function test_get_events_for_user() {
