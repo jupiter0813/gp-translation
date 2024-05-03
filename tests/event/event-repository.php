@@ -176,6 +176,34 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( $event2_id, $events[1]->id() );
 	}
 
+	public function test_get_current_events_for_user() {
+		$user_id   = $this->set_normal_user_as_current();
+		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event1_id = $this->event_factory->create_active( array( $user_id ), $now );
+		$event2_id = $this->event_factory->create_active( array( $user_id ), $now );
+		$this->event_factory->create_active( array( $user_id ), $now->modify( '+2 hours' ) );
+		$this->event_factory->create_active( array( $user_id ), $now->modify( '+2 months' ) );
+		$this->event_factory->create_active( array(), $now );
+		$this->event_factory->create_inactive_past( array( $user_id ) );
+
+		$events = $this->repository->get_current_events_for_user( $user_id )->events;
+		$this->assertCount( 2, $events );
+		$this->assertEquals( $event1_id, $events[0]->id() );
+		$this->assertEquals( $event2_id, $events[1]->id() );
+
+		$result = $this->repository->get_current_events_for_user( $user_id, 1, 1 );
+		$events = $result->events;
+		$this->assertCount( 1, $events );
+		$this->assertEquals( 2, $result->page_count );
+		$this->assertEquals( $event1_id, $events[0]->id() );
+
+		$result = $this->repository->get_current_events_for_user( $user_id, 2, 1 );
+		$events = $result->events;
+		$this->assertCount( 1, $events );
+		$this->assertEquals( 2, $result->page_count );
+		$this->assertEquals( $event2_id, $events[0]->id() );
+	}
+
 	public function test_get_current_and_upcoming_events_for_user() {
 		$user_id   = $this->set_normal_user_as_current();
 		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );

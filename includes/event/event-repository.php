@@ -152,6 +152,38 @@ class Event_Repository implements Event_Repository_Interface {
 		// phpcs:enable
 	}
 
+	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		return $this->execute_events_query(
+			$page,
+			$page_size,
+			array(
+				'meta_query' => array(
+					array(
+						'key'     => '_event_start',
+						'value'   => $now->format( 'Y-m-d H:i:s' ),
+						'compare' => '<=',
+						'type'    => 'DATETIME',
+					),
+					array(
+						'key'     => '_event_end',
+						'value'   => $now->format( 'Y-m-d H:i:s' ),
+						'compare' => '>=',
+						'type'    => 'DATETIME',
+					),
+				),
+				'meta_key'   => '_event_start',
+				'orderby'    => 'meta_value',
+				'order'      => 'ASC',
+			),
+			$this->attendee_repository->get_events_for_user( $user_id ),
+		);
+		// phpcs:enable
+	}
+
 	public function get_current_and_upcoming_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 

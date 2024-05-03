@@ -89,6 +89,18 @@ interface Event_Repository_Interface {
 	 * @return Events_Query_Result
 	 * @throws Exception
 	 */
+	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result;
+
+	/**
+	 * Get events that are currently active or happening in the future, for a given user.
+	 *
+	 * @param int $user_id   Id of the user.
+	 * @param int $page      Index of the page to return.
+	 * @param int $page_size Page size.
+	 *
+	 * @return Events_Query_Result
+	 * @throws Exception
+	 */
 	public function get_current_and_upcoming_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result;
 
 	/**

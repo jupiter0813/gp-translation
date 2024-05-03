@@ -297,40 +297,11 @@ class Translation_Events {
 	 * @throws Exception
 	 */
 	public function add_active_events_current_user(): void {
-		$attendee_repository      = new Attendee_Repository();
-		$user_attending_event_ids = $attendee_repository->get_events_for_user( get_current_user_id() );
-		if ( empty( $user_attending_event_ids ) ) {
-			return;
-		}
+		$event_repository            = self::get_event_repository();
+		$user_attending_events_query = $event_repository->get_current_events_for_user( get_current_user_id() );
+		$events                      = $user_attending_events_query->events;
 
-		$current_datetime_utc       = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d H:i:s' );
-		$user_attending_events_args = array(
-			'post_type'   => self::CPT,
-			'post__in'    => $user_attending_event_ids,
-			'post_status' => 'publish',
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-			'meta_query'  => array(
-				array(
-					'key'     => '_event_start',
-					'value'   => $current_datetime_utc,
-					'compare' => '<=',
-					'type'    => 'DATETIME',
-				),
-				array(
-					'key'     => '_event_end',
-					'value'   => $current_datetime_utc,
-					'compare' => '>=',
-					'type'    => 'DATETIME',
-				),
-			),
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			'meta_key'    => '_event_start',
-			'orderby'     => 'meta_value',
-			'order'       => 'ASC',
-		);
-
-		$user_attending_events_query = new WP_Query( $user_attending_events_args );
-		$number_of_events            = $user_attending_events_query->post_count;
+		$number_of_events = count( $events );
 		if ( 0 === $number_of_events ) {
 			return;
 		}
@@ -339,26 +310,17 @@ class Translation_Events {
 		/* translators: %d: Number of events */
 		$content .= sprintf( _n( 'Contributing to %d event:', 'Contributing to %d events:', $number_of_events, 'gp-translation-events' ), $number_of_events );
 		$content .= '&nbsp;&nbsp;';
-		if ( $number_of_events > 3 ) {
-			$counter = 0;
-			while ( $user_attending_events_query->have_posts() && $counter < 2 ) {
-				$user_attending_events_query->the_post();
-				$url      = esc_url( gp_url( '/events/' . get_post_field( 'post_name', get_post() ) ) );
-				$content .= '<span class="active-events-before-translation-table"><a href="' . $url . '" target="_blank">' . get_the_title() . '</a></span>';
-				++$counter;
-			}
 
+		foreach ( array_splice( $events, 0, 2 ) as $event ) {
+			$content .= '<span class="active-events-before-translation-table"><a href="' . Urls::event_details( $event->id() ) . '" target="_blank">' . esc_html( $event->title() ) . '</a></span>';
+		}
+
+		if ( $number_of_events > 3 ) {
 			$remaining_events = $number_of_events - 2;
 			/* translators: %d: Number of remaining events */
 			$content .= '<span class="remaining-events"><a href="' . esc_url( Urls::events_home() ) . '" target="_blank">' . sprintf( esc_html__( ' and %d more events.', 'gp-translation-events' ), $remaining_events ) . '</a></span>';
-
-		} else {
-			while ( $user_attending_events_query->have_posts() ) {
-				$user_attending_events_query->the_post();
-				$url      = esc_url( gp_url( '/events/' . get_post_field( 'post_name', get_post() ) ) );
-				$content .= '<span class="active-events-before-translation-table"><a href="' . $url . '" target="_blank">' . get_the_title() . '</a></span>';
-			}
 		}
+
 		$content .= '</div>';
 
 		echo wp_kses(
