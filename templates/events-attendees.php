@@ -1,9 +1,14 @@
 <?php
 /**
- * Events list page.
+ * Attendees list page.
  */
 
 namespace Wporg\TranslationEvents;
+
+use Wporg\TranslationEvents\Event\Event;
+
+/**  @var Event $event */
+/** @var bool $is_active_filter */
 
 gp_title( __( 'Translation Events', 'gp-translation-events' ) );
 gp_breadcrumb_translation_events();
@@ -18,7 +23,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	<div class="event-details-stats">
 	<a href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>" class="view-event-page">Go to event page</a>
 	<ul class="event-attendees-filter">
-		<li><a class="<?php echo ( ! $is_active_filter ) ? 'active-filter' : ''; ?>" href="<?php echo esc_url( Urls::event_attendees( $event_slug ) ); ?>"><?php esc_html_e( 'All attendees', 'gp-translation-events' ); ?></a></a></li>
+		<li><a class="<?php echo ( ! $is_active_filter ) ? 'active-filter' : ''; ?>" href="<?php echo esc_url( Urls::event_attendees( $event->slug() ) ); ?>"><?php esc_html_e( 'All attendees', 'gp-translation-events' ); ?></a></a></li>
 		<li><a class="<?php echo ( $is_active_filter ) ? 'active-filter' : ''; ?>" href="?filter=hosts"><?php esc_html_e( 'Hosts', 'gp-translation-events' ); ?></a></li>
 	</ul>
 <?php if ( ! empty( $attendees ) ) : ?>
