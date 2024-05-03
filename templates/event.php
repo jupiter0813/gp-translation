@@ -15,6 +15,7 @@ use Wporg\TranslationEvents\Stats\Event_Stats;
 use Wporg\TranslationEvents\Stats\Stats_Row;
 
 /** @var bool $user_is_attending */
+/** @var bool $user_is_contributor */
 /** @var Attendee[] $attendees_not_contributing */
 /** @var Attendee[] $contributors */
 /** @var array $new_contributor_ids */
@@ -256,6 +257,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<?php if ( $user_is_attending ) : ?>
 					<button disabled="disabled" class="button is-primary attend-btn"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></button>
 				<?php endif; ?>
+			<?php elseif ( $user_is_contributor ) : ?>
+				<?php // Contributors can't un-attend so don't show anything. ?>
 			<?php else : ?>
 				<form class="event-details-attend" method="post" action="<?php echo esc_url( Urls::event_toggle_attendee( $event_id ) ); ?>">
 					<?php if ( $user_is_attending ) : ?>
