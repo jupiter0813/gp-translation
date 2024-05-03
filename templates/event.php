@@ -61,22 +61,6 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<?php if ( $stats_calculator->is_new_translation_contributor( $event_start, $contributor->ID ) ) : ?>
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
-							<?php
-							if ( current_user_can( 'edit_translation_event', $event->id() ) ) :
-								$_attendee = $attendee_repo->get_attendee( $event_id, $contributor->ID );
-								if ( $_attendee instanceof Attendee ) :
-									echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $contributor->ID ) ) . '">';
-									if ( $_attendee->is_host() ) :
-										echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
-									else :
-										echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
-									endif;
-									echo '</form>';
-								else :
-									echo '<span class="event-not-attending">' . esc_html__( 'Not attending', 'gp-translation-events' ) . '</span>';
-								endif;
-							endif;
-							?>
 						</li>
 					<?php endforeach; ?>
 				</ul>
@@ -98,15 +82,6 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<?php if ( $stats_calculator->is_new_translation_contributor( $event_start, $_attendee->user_id() ) ) : ?>
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
-							<?php
-							echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $_attendee->user_id() ) ) . '">';
-							if ( $_attendee->is_host() ) :
-								echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
-							else :
-								echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
-							endif;
-							echo '</form>';
-							?>
 						</li>
 					<?php endforeach; ?>
 				</ul>
@@ -118,9 +93,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<table>
 					<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Locale', 'gp-translation-events' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Translations created', 'gp-translation-events' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Translations reviewed', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Translations', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Created', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Waiting', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Reviewed', 'gp-translation-events' ); ?></th>
 						<th scope="col"><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></th>
 					</tr>
 					</thead>
@@ -129,7 +105,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					<?php foreach ( $event_stats->rows() as $_locale => $row ) : ?>
 					<tr>
 						<td title="<?php echo esc_html( $_locale ); ?> "><a href="<?php echo esc_url( gp_url_join( gp_url( '/languages' ), $row->language->slug ) ); ?>"><?php echo esc_html( $row->language->english_name ); ?></a></td>
-						<td><?php echo esc_html( $row->created ); ?></td>
+						<td><a href="<?php echo esc_url( Urls::event_translations( $event->id(), $row->language->slug ) ); ?>"><?php echo esc_html( $row->created ); ?></a></td>
+						<td><a href="<?php echo esc_url( Urls::event_translations( $event->id(), $row->language->slug, 'waiting' ) ); ?>"><?php echo esc_html( $row->waiting ); ?></a></td>
 						<td><?php echo esc_html( $row->reviewed ); ?></td>
 						<td><?php echo esc_html( $row->users ); ?></td>
 					</tr>
@@ -137,6 +114,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					<tr class="event-details-stats-totals">
 						<td>Total</td>
 						<td><?php echo esc_html( $event_stats->totals()->created ); ?></td>
+						<td><?php echo esc_html( $event_stats->totals()->waiting ); ?></td>
 						<td><?php echo esc_html( $event_stats->totals()->reviewed ); ?></td>
 						<td><?php echo esc_html( $event_stats->totals()->users ); ?></td>
 					</tr>

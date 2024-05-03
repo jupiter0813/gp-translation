@@ -40,6 +40,17 @@ class Urls_Test extends GP_UnitTestCase {
 		$this->assertEquals( $expected, Urls::event_details_absolute( $event_id ) );
 	}
 
+	public function test_event_translations() {
+		$event_id = $this->event_factory->create_active();
+		$event    = $this->event_repository->get_event( $event_id );
+
+		$expected = "/glotpress/events/{$event->slug()}/translations/pt";
+		$this->assertEquals( $expected, Urls::event_translations( $event_id, 'pt' ) );
+
+		$expected = "/glotpress/events/{$event->slug()}/translations/pt/waiting";
+		$this->assertEquals( $expected, Urls::event_translations( $event_id, 'pt', 'waiting' ) );
+	}
+
 	public function test_event_edit() {
 		$event_id = $this->event_factory->create_active();
 
