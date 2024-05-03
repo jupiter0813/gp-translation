@@ -53,6 +53,7 @@
 .event-details-stats table {
 	margin: 1rem;
 }
+
 .event-details-stats table {
 	width: 100%;
 	table-layout: fixed;
@@ -91,7 +92,7 @@
 	width: 15em;
 }
 
-.event-contributors li .avatar, .event-attendees li .avatar {
+.event-contributors li .avatar, .event-attendees li .avatar, td a.attendee-avatar .avatar {
 	border-radius: 50%;
 	vertical-align: middle;
 }
@@ -348,6 +349,7 @@ a.event-page-edit-link:hover {
 	border-bottom: var(--gp-color-btn-primary-bg) thin solid;
 	text-decoration: none;
 }
+
 ul.text-snippets {
 	padding: 0;
 	margin-left: 160px;
@@ -355,6 +357,11 @@ ul.text-snippets {
 .first-time-contributor-tada::after {
 	content: ' 🎉';
 }
+
+ul#translation-links li {
+	margin-bottom: .5em;
+}
+
 .icons li .name {
 	display: none;
 }
@@ -364,6 +371,31 @@ ul.text-snippets {
 .event-attendees h2, .event-contributors h2 {
 	cursor: pointer;
 	display: inline-block;
+}
+ul.event-attendees-filter {
+	padding-left: 1rem;
+}
+ul.event-attendees-filter li {
+	display: inline;
+	margin-right: .4em;
+}
+form.translation-event-form {
+	float: left;
+	width: 85%;
+}
+div.event-edit-right {
+	float: right;
+	width: 15%;
+	text-align: right;
+}
+.view-event-page {
+	float: right;
+}
+a.active-filter {
+	font-weight: bold;
+}
+.event-edit-right a.manage-attendees-btn {
+	margin-top: 1em;
 }
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
