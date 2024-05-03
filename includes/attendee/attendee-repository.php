@@ -117,7 +117,7 @@ class Attendee_Repository {
 	/**
 	 * Retrieve all the attendees of an event.
 	 *
-	 * @return Attendee[] Attendees of the event.
+	 * @return Attendee[] Attendees of the event. Associative array with user_id as key.
 	 * @throws Exception
 	 */
 	public function get_attendees( int $event_id ): array {
@@ -144,7 +144,8 @@ class Attendee_Repository {
 				array(
 					$event_id,
 				)
-			)
+			),
+			OBJECT_K,
 		);
 		// phpcs:enable
 
@@ -164,17 +165,17 @@ class Attendee_Repository {
 	/**
 	 * Get attendees without contributions for an event.
 	 *
-	 * @return Attendee[]
+	 * @param int $event_id The id of the event.
+	 *
+	 * @return Attendee[] Associative array with user_id as key.
 	 * @throws Exception
 	 */
 	public function get_attendees_not_contributing( int $event_id ): array {
-		return array_values(
-			array_filter(
-				$this->get_attendees( $event_id ),
-				function ( Attendee $attendee ) {
-					return ! $attendee->is_contributor();
-				}
-			)
+		return array_filter(
+			$this->get_attendees( $event_id ),
+			function ( Attendee $attendee ) {
+				return ! $attendee->is_contributor();
+			}
 		);
 	}
 
@@ -183,17 +184,15 @@ class Attendee_Repository {
 	 *
 	 * @param int $event_id The id of the event.
 	 *
-	 * @return Attendee[] The hosts of the event.
+	 * @return Attendee[] The hosts of the event. Associative array with user_id as key.
 	 * @throws Exception
 	 */
 	public function get_hosts( int $event_id ): array {
-		return array_values(
-			array_filter(
-				$this->get_attendees( $event_id ),
-				function ( Attendee $attendee ) {
-					return $attendee->is_host();
-				}
-			)
+		return array_filter(
+			$this->get_attendees( $event_id ),
+			function ( Attendee $attendee ) {
+				return $attendee->is_host();
+			}
 		);
 	}
 
