@@ -44,10 +44,7 @@ class Translation_Repository {
 		);
 		// phpcs:enable
 
-		$results = array();
-		foreach ( $user_ids as $user_id ) {
-			$results[ $user_id ] = 0;
-		}
+		$results = array_fill_keys( $user_ids, 0 );
 
 		foreach ( $rows as $user_id => $row ) {
 			$results[ $user_id ] = $row->cnt;
