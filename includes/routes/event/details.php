@@ -19,12 +19,16 @@ class Details_Route extends Route {
 	private Event_Repository_Interface $event_repository;
 	private Attendee_Repository $attendee_repository;
 	private Translation_Repository $translation_repository;
+	private Project_Repository $project_repository;
+	private Stats_Calculator $stats_calculator;
 
 	public function __construct() {
 		parent::__construct();
 		$this->event_repository       = Translation_Events::get_event_repository();
 		$this->attendee_repository    = Translation_Events::get_attendee_repository();
 		$this->translation_repository = new Translation_Repository();
+		$this->project_repository     = new Project_Repository();
+		$this->stats_calculator       = new Stats_Calculator();
 	}
 
 	public function handle( string $event_slug ): void {
@@ -48,10 +52,7 @@ class Details_Route extends Route {
 		$event_start       = $event->start();
 		$event_end         = $event->end();
 
-		$stats_calculator   = new Stats_Calculator();
-		$project_repository = new Project_Repository();
-
-		$projects              = $project_repository->get_for_event( $event->id() );
+		$projects              = $this->project_repository->get_for_event( $event->id() );
 		$attendees             = $this->attendee_repository->get_attendees( $event->id() );
 		$current_user_attendee = $attendees[ $user->ID ];
 		$user_is_attending     = $current_user_attendee instanceof Attendee;
@@ -94,7 +95,7 @@ class Details_Route extends Route {
 		}
 
 		try {
-			$event_stats = $stats_calculator->for_event( $event->id() );
+			$event_stats = $this->stats_calculator->for_event( $event->id() );
 		} catch ( Exception $e ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( $e );
