@@ -14,7 +14,9 @@ class Translation_Repository {
 	 * @return array Associative array with user id as key and number of translations as value.
 	 */
 	public function count_translations_before( array $user_ids, DateTimeImmutable $before ): array {
-		global $wpdb, $gp_table_prefix;
+		if ( empty( $user_ids ) ) {
+			return array();
+		}
 
 		// Prevent SQL injection.
 		foreach ( $user_ids as $user_id ) {
@@ -23,11 +25,13 @@ class Translation_Repository {
 			}
 		}
 
-		$user_ids_param = implode( ',', $user_ids );
+		global $wpdb, $gp_table_prefix;
+
+		$user_id_params = implode( ',', array_fill( 0, count( $user_ids ), '%d' ) );
 		$query          = "
 			select user_id, count(*) as cnt
 			from {$gp_table_prefix}translations
-			where user_id in ($user_ids_param)
+			where user_id in ($user_id_params)
 			  and date_added < %s
 			group by user_id
 		";
@@ -38,14 +42,16 @@ class Translation_Repository {
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
 				$query,
-				$before->format( 'Y-m-d H:i:s' ),
+				array_merge(
+					$user_ids,
+					array( $before->format( 'Y-m-d H:i:s' ) ),
+				),
 			),
 			OBJECT_K
 		);
 		// phpcs:enable
 
 		$results = array_fill_keys( $user_ids, 0 );
-
 		foreach ( $rows as $user_id => $row ) {
 			$results[ $user_id ] = $row->cnt;
 		}
