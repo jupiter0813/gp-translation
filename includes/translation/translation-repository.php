@@ -26,22 +26,21 @@ class Translation_Repository {
 		}
 
 		global $wpdb, $gp_table_prefix;
-
 		$user_id_params = implode( ',', array_fill( 0, count( $user_ids ), '%d' ) );
-		$query          = "
-			select user_id, count(*) as cnt
-			from {$gp_table_prefix}translations
-			where user_id in ($user_id_params)
-			  and date_added < %s
-			group by user_id
-		";
 
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
-				$query,
+				"
+					select user_id, count(*) as cnt
+					from {$gp_table_prefix}translations
+					where user_id in ($user_id_params)
+					  and date_added < %s
+					group by user_id
+				",
 				array_merge(
 					$user_ids,
 					array( $before->format( 'Y-m-d H:i:s' ) ),
