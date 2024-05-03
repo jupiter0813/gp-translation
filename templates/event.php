@@ -58,22 +58,6 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<?php if ( $stats_calculator->is_new_translation_contributor( $event_start, $contributor->ID ) ) : ?>
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
-							<?php
-							if ( current_user_can( 'edit_translation_event', $event->id() ) ) :
-								$_attendee = $attendee_repo->get_attendee( $event_id, $contributor->ID );
-								if ( $_attendee instanceof Attendee ) :
-									echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $contributor->ID ) ) . '">';
-									if ( $_attendee->is_host() ) :
-										echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
-									else :
-										echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
-									endif;
-									echo '</form>';
-								else :
-									echo '<span class="event-not-attending">' . esc_html__( 'Not attending', 'gp-translation-events' ) . '</span>';
-								endif;
-							endif;
-							?>
 						</li>
 					<?php endforeach; ?>
 				</ul>
@@ -95,18 +79,6 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 							<?php if ( $stats_calculator->is_new_translation_contributor( $event_start, $_user->ID ) ) : ?>
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
-							<?php
-							$_attendee = $attendee_repo->get_attendee( $event_id, $_user->ID );
-							if ( $_attendee instanceof Attendee ) :
-								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $_user->ID ) ) . '">';
-								if ( $_attendee->is_host() ) :
-									echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
-								else :
-									echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
-								endif;
-								echo '</form>';
-							endif;
-							?>
 						</li>
 					<?php endforeach; ?>
 				</ul>
