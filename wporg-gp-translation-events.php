@@ -347,9 +347,9 @@ class Translation_Events {
 	 */
 	public function send_notifications() {
 		new Notifications_Send( self::get_event_repository(), self::get_attendee_repository() );
-  }
-  
-  /**
+	}
+
+	/**
 	 * Add the event meta keys to the list of meta keys to keep in post revisions.
 	 *
 	 * @param array $keys The list of meta keys to keep in post revisions.

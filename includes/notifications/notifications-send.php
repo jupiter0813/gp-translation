@@ -97,19 +97,23 @@ class Notifications_Send {
 		// translators: %s: User display name.
 		$message  = sprintf( esc_html__( 'Hi %s,', 'gp-translation-events' ), $user->display_name );
 		$message .= '<br><br>';
-		$message .= esc_html( sprintf(
+		$message .= esc_html(
+			sprintf(
 			// translators: %s is the event title.
-			__( 'We are sending you this e-mail because you have signed up for the translation event "%1$s".', 'gp-translation-events' ),
-			$event->title()
-		) );
+				__( 'We are sending you this e-mail because you have signed up for the translation event "%1$s".', 'gp-translation-events' ),
+				$event->title()
+			)
+		);
 		$message .= ' ';
-		$message .= esc_html( sprintf(
+		$message .= esc_html(
+			sprintf(
 			// translators: %s: Time until event starts.
-			__( 'The event will start in %s.', 'gp-translation-events' ),
-			$this->calculate_time_until_event( $event->start() )
-		) );
+				__( 'The event will start in %s.', 'gp-translation-events' ),
+				$this->calculate_time_until_event( $event->start() )
+			)
+		);
 		$message         .= ' ';
-		$message         .= esc_html__( "We're looking forward to translating with you!", 'gp-translation-events' ),
+		$message         .= esc_html__( "We're looking forward to translating with you!", 'gp-translation-events' );
 		$message         .= '<br>';
 		$local_start_date = $event->start()->setTimezone( new DateTimeZone( $event->timezone()->getName() ) );
 		$message         .= sprintf(
