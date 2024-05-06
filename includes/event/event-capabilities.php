@@ -9,10 +9,11 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 
 class Event_Capabilities {
-	private const CREATE = 'create_translation_event';
-	private const VIEW   = 'view_translation_event';
-	private const EDIT   = 'edit_translation_event';
-	private const DELETE = 'delete_translation_event';
+	private const CREATE                 = 'create_translation_event';
+	private const VIEW                   = 'view_translation_event';
+	private const EDIT                   = 'edit_translation_event';
+	private const DELETE                 = 'delete_translation_event';
+	private const MANAGE_EVENT_ATTENDEES = 'manage_translation_event_attendees';
 
 	/**
 	 * All the capabilities that concern an Event.
@@ -22,6 +23,7 @@ class Event_Capabilities {
 		self::VIEW,
 		self::EDIT,
 		self::DELETE,
+		self::MANAGE_EVENT_ATTENDEES,
 	);
 
 	private Event_Repository_Interface $event_repository;
@@ -53,6 +55,7 @@ class Event_Capabilities {
 			case self::VIEW:
 			case self::EDIT:
 			case self::DELETE:
+			case self::MANAGE_EVENT_ATTENDEES:
 				if ( ! isset( $args[2] ) || ! is_numeric( $args[2] ) ) {
 					return false;
 				}
@@ -69,6 +72,9 @@ class Event_Capabilities {
 				}
 				if ( self::DELETE === $cap ) {
 					return $this->has_delete( $user, $event );
+				}
+				if ( self::MANAGE_EVENT_ATTENDEES === $cap ) {
+					return $this->has_manage_attendees( $user, $event );
 				}
 				break;
 		}
@@ -151,6 +157,30 @@ class Event_Capabilities {
 		}
 
 		if ( user_can( $user->ID, 'delete_post', $event->id() ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Evaluate whether a user can manage attendees for a specific event.
+	 *
+	 * @param WP_User $user  User for which we're evaluating the capability.
+	 * @param Event   $event Event for which we're evaluating the capability.
+	 * @return bool
+	 */
+	private function has_manage_attendees( WP_User $user, Event $event ): bool {
+		if ( $this->is_gp_admin( $user ) ) {
+			return true;
+		}
+
+		if ( $event->author_id() === $user->ID ) {
+			return true;
+		}
+
+		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		if ( ( $attendee instanceof Attendee ) && $attendee->is_host() ) {
 			return true;
 		}
 
