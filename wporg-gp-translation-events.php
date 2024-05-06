@@ -379,7 +379,7 @@ class Translation_Events {
 	 * @return array The modified list of meta keys to keep in post revisions.
 	 */
 	public function wp_post_revision_meta_keys( array $keys ): array {
-		$meta_keys_to_keep = array( '_event_start', '_event_end', '_event_timezone' );
+		$meta_keys_to_keep = array( '_event_start', '_event_end', '_event_timezone', '_hosts' );
 		return array_merge( $keys, $meta_keys_to_keep );
 	}
 }
