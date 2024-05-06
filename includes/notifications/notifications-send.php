@@ -38,9 +38,13 @@ class Notifications_Send {
 	 * @param int $post_id Post ID.
 	 *
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function send_notifications( int $post_id ) {
-		$event     = $this->event_repository->get_event( $post_id );
+		$event = $this->event_repository->get_event( $post_id );
+		if ( null === $event ) {
+			return;
+		}
 		$attendees = $this->attendee_repository->get_attendees( $event->id() );
 		foreach ( $attendees as $attendee ) {
 			$this->send_email_notification( $event, $attendee );
