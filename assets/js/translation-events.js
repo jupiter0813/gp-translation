@@ -47,6 +47,59 @@
 							$( '.convert-to-host, .remove-as-host' ).toggle();
 					}
 				);
+
+				$( '#quick-add' ).on(
+					'toggle',
+					function () {
+						if ( $( this ).data( 'loaded' ) ) {
+							return;
+						}
+						$( this ).addClass( 'loading' );
+						const options = {
+							weekday: 'short',
+							day: 'numeric',
+							month: 'short',
+							year: 'numeric'
+						};
+
+						fetch( 'https://central.wordcamp.org/wp-json/wp/v2/wordcamps?per_page=30&status=wcpt-scheduled' ).then(
+							response => response.json()
+						).then(
+							function ( data ) {
+								data.sort( ( a, b ) => a['Start Date (YYYY-mm-dd)'] - b['Start Date (YYYY-mm-dd)'] );
+								const ul = $( '<ul>' );
+								for ( const wordcamp of data ) {
+									const li = $( '<li>' ).data( 'wordcamp', wordcamp );
+									li.append( $( '<a>' ).attr( 'href', wordcamp.link ).text( wordcamp.title.rendered ) );
+									li.append( $( '<span>' ).text( ' ' + new Date( 1000 * wordcamp['Start Date (YYYY-mm-dd)'] ).toLocaleDateString( navigator.language, options ) + ' - ' + new Date( 1000 * wordcamp['End Date (YYYY-mm-dd)'] ).toLocaleDateString( navigator.language, options ) ) );
+									ul.append( li );
+								}
+								$( '#quick-add' ).data( 'loaded', true ).removeClass( 'loading' ).append( ul );
+							}
+						);
+					}
+				);
+				$( document ).on(
+					'click',
+					'#quick-add a',
+					function ( e ) {
+						e.preventDefault();
+						e.stopPropagation();
+
+						const wordcamp = $( e.target ).closest( 'li' ).data( 'wordcamp' );
+						if ( ! wordcamp ) {
+							return;
+						}
+
+						$( '#event-title' ).val( wordcamp.title.rendered );
+						$( '#event-description' ).val( wordcamp.content.rendered );
+						$( '#event-start' ).val( new Date( 1000 * wordcamp['Start Date (YYYY-mm-dd)'] ).toISOString().slice( 0,11 ) + '09:00' );
+						$( '#event-end' ).val( new Date( 1000 * wordcamp['End Date (YYYY-mm-dd)'] ).toISOString().slice( 0,11 ) + '18:00' );
+						$( '#event-timezone' ).val( wordcamp['Event Timezone'] );
+
+					}
+				);
+
 			}
 		);
 

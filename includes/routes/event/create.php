@@ -33,6 +33,7 @@ class Create_Route extends Route {
 		$event_timezone           = null;
 		$event_start              = new Event_Start_Date( date_i18n( 'Y - m - d H:i' ) );
 		$event_end                = new Event_End_Date( date_i18n( 'Y - m - d H:i' ) );
+		$event_slug               = '';
 
 		$this->tmpl( 'events-form', get_defined_vars() );
 	}
