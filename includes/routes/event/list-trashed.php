@@ -28,7 +28,17 @@ class List_Trashed_Route extends Route {
 			$this->die_with_error( 'You do not have permission to manage events.' );
 		}
 
-		// TODO.
+		$current_page = 1;
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['page'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['page'] ) );
+			if ( is_numeric( $value ) ) {
+				$current_page = (int) $value;
+			}
+		}
+		// phpcs:enable
+
+		$trashed_events_query = $this->event_repository->get_trashed_events( $current_page, 10 );
 
 		$this->tmpl( 'events-list-trashed', get_defined_vars() );
 	}

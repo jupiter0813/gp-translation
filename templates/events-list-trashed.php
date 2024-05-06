@@ -2,6 +2,10 @@
 
 namespace Wporg\TranslationEvents;
 
+use Wporg\TranslationEvents\Event\Events_Query_Result;
+
+/** @var Events_Query_Result $trashed_events_query */
+
 gp_title( __( 'Trashed Translation Events', 'gp-translation-events' ) );
 gp_breadcrumb_translation_events();
 gp_tmpl_header();
@@ -11,7 +15,37 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 
 <div class="event-page-wrapper">
 	<div class="event-left-col">
-		<?php // TODO. ?>
+		<?php if ( empty( $trashed_events_query->events ) ) : ?>
+			<?php esc_html_e( 'No trashed events found.', 'gp-translation-events' ); ?>
+		<?php else : ?>
+			<ul class="event-list">
+				<?php foreach ( $trashed_events_query->events as $event ) : ?>
+					<li class="event-list-item">
+						<a href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>"><?php echo esc_html( $event->title() ); ?></a>
+						<?php if ( $event->is_past() ) : ?>
+							<span class="event-list-date">ended <?php $event->end()->print_relative_time_html(); ?></time></span>
+						<?php else : ?>
+							<span class="event-list-date">ends <?php $event->end()->print_relative_time_html(); ?></time></span>
+						<?php endif; ?>
+						<?php echo esc_html( get_the_excerpt( $event->id() ) ); ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+
+			<?php
+			echo wp_kses_post(
+				paginate_links(
+					array(
+						'total'     => $trashed_events_query->page_count,
+						'current'   => $trashed_events_query->current_page,
+						'format'    => '?page=%#%',
+						'prev_text' => '&laquo; Previous',
+						'next_text' => 'Next &raquo;',
+					)
+				) ?? ''
+			);
+			?>
+		<?php endif; ?>
 	</div>
 </div>
 
