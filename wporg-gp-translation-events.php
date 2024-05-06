@@ -76,6 +76,7 @@ class Translation_Events {
 		add_filter( 'wp_insert_post_data', array( $this, 'generate_event_slug' ), 10, 2 );
 		add_action( 'gp_init', array( $this, 'gp_init' ) );
 		add_action( 'gp_before_translation_table', array( $this, 'add_active_events_current_user' ) );
+		add_filter( 'wp_post_revision_meta_keys', array( $this, 'wp_post_revision_meta_keys' ) );
 
 		if ( is_admin() ) {
 			Upgrade::upgrade_if_needed();
@@ -338,6 +339,18 @@ class Translation_Events {
 				),
 			)
 		);
+	}
+
+	/**
+	 * Add the event meta keys to the list of meta keys to keep in post revisions.
+	 *
+	 * @param array $keys The list of meta keys to keep in post revisions.
+	 *
+	 * @return array The modified list of meta keys to keep in post revisions.
+	 */
+	public function wp_post_revision_meta_keys( array $keys ): array {
+		$meta_keys_to_keep = array( '_event_start', '_event_end', '_event_timezone', '_hosts' );
+		return array_merge( $keys, $meta_keys_to_keep );
 	}
 }
 Translation_Events::get_instance();

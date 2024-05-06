@@ -445,8 +445,17 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	private function update_event_meta( Event $event ) {
+		$hosts     = $this->attendee_repository->get_hosts( $event->id() );
+		$hosts_ids = array_map(
+			function ( $host ) {
+				return $host->user_id();
+			},
+			$hosts
+		);
+		$hosts_ids = implode( ', ', $hosts_ids );
 		update_post_meta( $event->id(), '_event_start', $event->start()->utc()->format( 'Y-m-d H:i:s' ) );
 		update_post_meta( $event->id(), '_event_end', $event->end()->utc()->format( 'Y-m-d H:i:s' ) );
 		update_post_meta( $event->id(), '_event_timezone', $event->timezone()->getName() );
+		update_post_meta( $event->id(), '_hosts', $hosts_ids );
 	}
 }
