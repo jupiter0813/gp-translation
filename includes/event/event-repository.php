@@ -21,6 +21,22 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function insert_event( Event $event ) {
+		$year        = $event->start()->utc()->format( 'Y' );
+		$parent_post = get_page_by_path( $year, OBJECT, self::POST_TYPE );
+		if ( ! $parent_post ) {
+			$parent_post = wp_insert_post(
+				array(
+					'post_type'    => self::POST_TYPE,
+					'post_title'   => $year,
+					'post_status'  => 'publish',
+					'post_content' => '',
+				)
+			);
+			if ( $parent_post instanceof WP_Error ) {
+				return $parent_post;
+			}
+		}
+
 		$event_id_or_error = wp_insert_post(
 			array(
 				'post_type'    => self::POST_TYPE,
@@ -28,6 +44,7 @@ class Event_Repository implements Event_Repository_Interface {
 				'post_title'   => $event->title(),
 				'post_content' => $event->description(),
 				'post_status'  => $event->status(),
+				'post_parent'  => $parent_post->ID,
 			)
 		);
 		if ( $event_id_or_error instanceof WP_Error ) {

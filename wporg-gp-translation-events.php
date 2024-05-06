@@ -92,7 +92,7 @@ class Translation_Events {
 
 	public function gp_init() {
 		$locale = '(' . implode( '|', wp_list_pluck( GP_Locales::locales(), 'slug' ) ) . ')';
-		$slug   = '([a-z0-9_-]+)';
+		$slug   = '(2[0-9]{3}/[a-z0-9_-]+)';
 		$status = '(waiting)';
 		$id     = '(\d+)';
 
@@ -133,13 +133,14 @@ class Translation_Events {
 		);
 
 		$args = array(
-			'labels'      => $labels,
-			'public'      => true,
-			'has_archive' => true,
-			'menu_icon'   => 'dashicons-calendar',
-			'supports'    => array( 'title', 'editor', 'thumbnail', 'revisions' ),
-			'rewrite'     => array( 'slug' => 'events' ),
-			'show_ui'     => false,
+			'labels'       => $labels,
+			'public'       => true,
+			'has_archive'  => true,
+			'hierarchical' => true,
+			'menu_icon'    => 'dashicons-calendar',
+			'supports'     => array( 'title', 'editor', 'thumbnail', 'revisions' ),
+			'rewrite'      => array( 'slug' => 'events' ),
+			'show_ui'      => false,
 		);
 
 		register_post_type( self::CPT, $args );
