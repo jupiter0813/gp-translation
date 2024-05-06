@@ -28,7 +28,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 <div class="event-page-wrapper">
 <form class="translation-event-form" action="" method="post">
 	<?php wp_nonce_field( '_event_nonce', '_event_nonce' ); ?>
-	<details id="quick-add"><summary><?php esc_html_e( 'Quick Add', 'gp-translation-events' ); ?></summary><div class="loading"></div></details>
+	<?php if ( ! $event_id ) : ?>
+		<details id="quick-add"><summary><?php esc_html_e( 'Upcoming WordCamps', 'gp-translation-events' ); ?></summary><div class="loading"></div></details>
+	<?php endif; ?>
 	<input type="hidden" name="action" value="submit_event_ajax">
 	<input type="hidden" id="form-name" name="form_name" value="<?php echo esc_attr( $event_form_name ); ?>">
 	<input type="hidden" id="event-id" name="event_id" value="<?php echo esc_attr( $event_id ); ?>">
