@@ -77,6 +77,7 @@ class Translation_Events {
 		add_action( 'gp_init', array( $this, 'gp_init' ) );
 		add_action( 'gp_before_translation_table', array( $this, 'add_active_events_current_user' ) );
 		add_filter( 'wp_post_revision_meta_keys', array( $this, 'wp_post_revision_meta_keys' ) );
+		add_filter( 'pre_wp_unique_post_slug', array( $this, 'pre_wp_unique_post_slug' ), 10, 6 );
 
 		if ( is_admin() ) {
 			Upgrade::upgrade_if_needed();
@@ -274,6 +275,9 @@ class Translation_Events {
 	 */
 	public function generate_event_slug( array $data, array $postarr ): array {
 		if ( self::CPT === $data['post_type'] ) {
+			if ( isset( $data['post_name'] ) && preg_match( '/^2[0-9]+$/', $data['post_name'] ) ) {
+				return $data;
+			}
 			if ( 'draft' === $data['post_status'] ) {
 				$data['post_name'] = sanitize_title( $data['post_title'] );
 			}
@@ -352,6 +356,16 @@ class Translation_Events {
 	public function wp_post_revision_meta_keys( array $keys ): array {
 		$meta_keys_to_keep = array( '_event_start', '_event_end', '_event_timezone', '_hosts' );
 		return array_merge( $keys, $meta_keys_to_keep );
+	}
+
+	public function pre_wp_unique_post_slug( $override_slug, string $slug, int $post_id, string $post_status, string $post_type, int $post_parent ) {
+		if ( self::CPT !== $post_type || $post_parent ) {
+			return $override_slug;
+		}
+		if ( preg_match( '/^2[0-9]{3}$/', $slug ) ) {
+			return $slug;
+		}
+		return $override_slug;
 	}
 }
 Translation_Events::get_instance();
