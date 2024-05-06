@@ -152,6 +152,16 @@ class Event_Repository implements Event_Repository_Interface {
 		// phpcs:enable
 	}
 
+	public function get_trashed_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
+		return $this->execute_events_query(
+			$page,
+			$page_size,
+			array(
+				'post_status' => 'trash',
+			)
+		);
+	}
+
 	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 

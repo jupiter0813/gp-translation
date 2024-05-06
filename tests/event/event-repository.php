@@ -121,7 +121,8 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$event = $this->repository->get_event( $event_id );
 		$this->repository->trash_event( $event );
 
-		$this->assertNull( $this->repository->get_event( $event_id ) );
+		$event = $this->repository->get_event( $event_id );
+		$this->assertEquals( 'trash', $event->status() );
 	}
 
 	public function test_get_active_events() {
@@ -174,6 +175,24 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->assertCount( 2, $events );
 		$this->assertEquals( $event1_id, $events[0]->id() );
 		$this->assertEquals( $event2_id, $events[1]->id() );
+	}
+
+	public function test_get_trashed_events() {
+		$event1_id = $this->event_factory->create_active();
+		$event2_id = $this->event_factory->create_inactive_past();
+		$this->event_factory->create_active();
+		$this->event_factory->create_inactive_future();
+
+		$event1 = $this->repository->get_event( $event1_id );
+		$event2 = $this->repository->get_event( $event2_id );
+
+		$this->repository->trash_event( $event1 );
+		$this->repository->trash_event( $event2 );
+
+		$events = $this->repository->get_trashed_events()->events;
+		$this->assertCount( 2, $events );
+		$this->assertEquals( $event1_id, $events[1]->id() );
+		$this->assertEquals( $event2_id, $events[0]->id() );
 	}
 
 	public function test_get_current_events_for_user() {
