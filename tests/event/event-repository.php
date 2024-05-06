@@ -115,11 +115,11 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( $updated_description, $updated_event->description() );
 	}
 
-	public function test_delete_event() {
+	public function test_trash_event() {
 		$event_id = $this->event_factory->create_active();
 
 		$event = $this->repository->get_event( $event_id );
-		$this->repository->delete_event( $event );
+		$this->repository->trash_event( $event );
 
 		$this->assertNull( $this->repository->get_event( $event_id ) );
 	}

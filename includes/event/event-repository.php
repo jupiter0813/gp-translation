@@ -57,7 +57,7 @@ class Event_Repository implements Event_Repository_Interface {
 		return $event->id();
 	}
 
-	public function delete_event( Event $event ) {
+	public function trash_event( Event $event ) {
 		$result = wp_trash_post( $event->id() );
 		if ( ! $result ) {
 			return false;

@@ -92,12 +92,12 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 		$this->assertFalse( wp_cache_get( 'translation-events-active-events' ) );
 	}
 
-	public function test_invalidates_cache_when_events_are_deleted() {
+	public function test_invalidates_cache_when_events_are_trashed() {
 		$event_id = $this->event_factory->create_active();
 		$event    = $this->repository->get_event( $event_id );
 
 		wp_cache_set( 'translation-events-active-events', 'foo' );
-		$this->repository->delete_event( $event );
+		$this->repository->trash_event( $event );
 		$this->assertFalse( wp_cache_get( 'translation-events-active-events' ) );
 	}
 }

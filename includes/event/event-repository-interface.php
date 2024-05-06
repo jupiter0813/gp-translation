@@ -25,13 +25,13 @@ interface Event_Repository_Interface {
 	public function update_event( Event $event );
 
 	/**
-	 * Delete an Event.
+	 * Trash an Event.
 	 *
-	 * @param Event $event Event to delete.
+	 * @param Event $event Event to trash.
 	 *
-	 * @return Event|false Deleted event or false on error.
+	 * @return Event|false Trashed event or false on error.
 	 */
-	public function delete_event( Event $event );
+	public function trash_event( Event $event );
 
 	/**
 	 * Get an Event.

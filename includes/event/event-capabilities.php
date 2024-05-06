@@ -12,7 +12,7 @@ class Event_Capabilities {
 	private const CREATE = 'create_translation_event';
 	private const VIEW   = 'view_translation_event';
 	private const EDIT   = 'edit_translation_event';
-	private const DELETE = 'delete_translation_event';
+	private const TRASH  = 'trash_translation_event';
 
 	/**
 	 * All the capabilities that concern an Event.
@@ -21,7 +21,7 @@ class Event_Capabilities {
 		self::CREATE,
 		self::VIEW,
 		self::EDIT,
-		self::DELETE,
+		self::TRASH,
 	);
 
 	private Event_Repository_Interface $event_repository;
@@ -52,7 +52,7 @@ class Event_Capabilities {
 				return $this->has_create( $user );
 			case self::VIEW:
 			case self::EDIT:
-			case self::DELETE:
+			case self::TRASH:
 				if ( ! isset( $args[2] ) || ! is_numeric( $args[2] ) ) {
 					return false;
 				}
@@ -67,8 +67,8 @@ class Event_Capabilities {
 				if ( self::EDIT === $cap ) {
 					return $this->has_edit( $user, $event );
 				}
-				if ( self::DELETE === $cap ) {
-					return $this->has_delete( $user, $event );
+				if ( self::TRASH === $cap ) {
+					return $this->has_trash( $user, $event );
 				}
 				break;
 		}
@@ -138,14 +138,14 @@ class Event_Capabilities {
 	}
 
 	/**
-	 * Evaluate whether a user can delete a specific event.
+	 * Evaluate whether a user can trash a specific event.
 	 *
 	 * @param WP_User $user  User for which we're evaluating the capability.
 	 * @param Event   $event Event for which we're evaluating the capability.
 	 * @return bool
 	 */
-	private function has_delete( WP_User $user, Event $event ): bool {
-		// Must be able to edit in order to delete.
+	private function has_trash( WP_User $user, Event $event ): bool {
+		// Must be able to edit in order to trash.
 		if ( ! $this->has_edit( $user, $event ) ) {
 			return false;
 		}
