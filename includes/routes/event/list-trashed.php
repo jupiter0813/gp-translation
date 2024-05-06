@@ -18,7 +18,18 @@ class List_Trashed_Route extends Route {
 	}
 
 	public function handle(): void {
+		if ( ! is_user_logged_in() ) {
+			global $wp;
+			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
+			exit;
+		}
+
+		if ( ! current_user_can( 'manage_translation_events' ) ) {
+			$this->die_with_error( 'You do not have permission to manage events.' );
+		}
+
 		// TODO.
+
 		$this->tmpl( 'events-list-trashed', get_defined_vars() );
 	}
 }

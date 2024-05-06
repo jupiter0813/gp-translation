@@ -156,15 +156,21 @@ class Event_Capabilities {
 	 *
 	 * @param WP_User $user  User for which we're evaluating the capability.
 	 * @param Event   $event Event for which we're evaluating the capability.
+	 *
 	 * @return bool
+	 * @throws \Exception
 	 */
 	private function has_trash( WP_User $user, Event $event ): bool {
-		// Must be able to edit in order to trash.
-		if ( ! $this->has_edit( $user, $event ) ) {
-			return false;
+		if ( $event->author_id() === $user->ID ) {
+			return true;
 		}
 
-		if ( user_can( $user->ID, 'delete_post', $event->id() ) ) {
+		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		if ( ( $attendee instanceof Attendee ) && $attendee->is_host() ) {
+			return true;
+		}
+
+		if ( $this->is_gp_admin( $user ) ) {
 			return true;
 		}
 

@@ -149,7 +149,13 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->assertFalse( current_user_can( 'edit_translation_event', $event_id ) );
 	}
 
-	public function test_cannot_trash_if_cannot_edit() {
+	public function test_author_can_trash() {
+		$this->set_normal_user_as_current();
+		$event_id = $this->event_factory->create_active();
+		$this->assertTrue( current_user_can( 'trash_translation_event', $event_id ) );
+	}
+
+	public function test_non_author_cannot_trash() {
 		$this->set_normal_user_as_current();
 		$non_author_user_id = get_current_user_id();
 		$this->set_normal_user_as_current(); // This user is the author.
@@ -158,19 +164,23 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->assertFalse( user_can( $non_author_user_id, 'trash_translation_event', $event_id ) );
 	}
 
-	public function test_cannot_trash_without_delete_post_capability() {
+	public function test_host_can_trash() {
 		$this->set_normal_user_as_current();
+		$non_author_user_id = get_current_user_id();
+		$this->set_normal_user_as_current(); // This user is the author.
 
 		$event_id = $this->event_factory->create_active();
 
-		$this->assertFalse( current_user_can( 'trash_translation_event', $event_id ) );
+		$attendee = new Attendee( $event_id, $non_author_user_id, true );
+		$this->attendee_repository->insert_attendee( $attendee );
+
+		$this->assertTrue( user_can( $non_author_user_id, 'trash_translation_event', $event_id ) );
 	}
 
-	public function test_can_trash_with_delete_post_capability() {
-		$this->set_admin_user_as_current();
-
+	public function test_gp_admin_can_trash() {
+		$this->set_normal_user_as_current();
 		$event_id = $this->event_factory->create_active();
-
-		$this->assertFalse( current_user_can( 'trash_translation_event', $event_id ) );
+		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
+		$this->assertTrue( current_user_can( 'trash_translation_event', $event_id ) );
 	}
 }
