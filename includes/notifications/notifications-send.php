@@ -103,12 +103,11 @@ class Notifications_Send {
 			$event->title()
 		) );
 		$message .= ' ';
-		$message .= sprintf(
-			// translators: %1$s: Event title. %2$s: Time until event starts.
-			esc_html__( 'You have the %1$s event in %2$s.', 'gp-translation-events' ),
-			esc_html( $event->title() ),
-			esc_html( $this->calculate_time_until_event( $event->start() ) )
-		);
+		$message .= esc_html( sprintf(
+			// translators: %s: Time until event starts.
+			__( 'The event will start in %s.', 'gp-translation-events' ),
+			$this->calculate_time_until_event( $event->start() )
+		) );
 		$message         .= ' ';
 		$message         .= esc_html__( "We're looking forward to translating with you!", 'gp-translation-events' ),
 		$message         .= '<br>';
