@@ -122,7 +122,7 @@ class Notifications_Send {
 		$message .= wp_kses(
 			sprintf(
 				// translators: %1$s: Event permalink.
-				__( 'You can get more info about the event or stop attending <a href="%1$s">at this link</a>.', 'gp-translation-events' ),
+				__( 'You can get more information about the event or stop attending go to <a href="%1$s">%1$s</a>.', 'gp-translation-events' ),
 				esc_url( home_url( gp_url( wp_make_link_relative( get_the_permalink( $event->id() ) ) ) ) )
 			),
 			array( 'a' => array( 'href' => array() ) )
