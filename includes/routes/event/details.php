@@ -54,7 +54,7 @@ class Details_Route extends Route {
 
 		$projects              = $this->project_repository->get_for_event( $event->id() );
 		$attendees             = $this->attendee_repository->get_attendees( $event->id() );
-		$current_user_attendee = $attendees[ $user->ID ];
+		$current_user_attendee = $attendees[ $user->ID ] ?? null;
 		$user_is_attending     = $current_user_attendee instanceof Attendee;
 		$user_is_contributor   = $user_is_attending && $current_user_attendee->is_contributor();
 
