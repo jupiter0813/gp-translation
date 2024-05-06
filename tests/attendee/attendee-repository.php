@@ -62,10 +62,12 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$user1_id  = 42;
 		$user2_id  = 43;
 
-		$attendee11 = new Attendee( $event1_id, $user1_id );
-		$attendee11->mark_as_host();
+		// Host contributor.
+		$attendee11 = new Attendee( $event1_id, $user1_id, true, array( 'aa' ) );
+		$this->stats_factory->create( $event1_id, $user1_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee11 );
 
+		// Non-host, non-contributor.
 		$attendee12 = new Attendee( $event1_id, $user2_id );
 		$this->repository->insert_attendee( $attendee12 );
 
@@ -77,10 +79,12 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$retrieved_attendee_11 = $this->repository->get_attendee( $event1_id, $user1_id );
 		$this->assertEquals( $attendee11, $retrieved_attendee_11 );
 		$this->assertTrue( $retrieved_attendee_11->is_host() );
+		$this->assertTrue( $retrieved_attendee_11->is_contributor() );
 
 		$retrieved_attendee_12 = $this->repository->get_attendee( $event1_id, $user2_id );
 		$this->assertEquals( $attendee12, $retrieved_attendee_12 );
 		$this->assertFalse( $retrieved_attendee_12->is_host() );
+		$this->assertFalse( $retrieved_attendee_12->is_contributor() );
 
 		$this->assertNull( $this->repository->get_attendee( $event2_id, $user2_id ) );
 	}
@@ -91,16 +95,13 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$user1_id  = 42;
 		$user2_id  = 43;
 
-		$host11 = new Attendee( $event1_id, $user1_id );
-		$host11->mark_as_host();
+		$host11 = new Attendee( $event1_id, $user1_id, true );
 		$this->repository->insert_attendee( $host11 );
 
-		$host12 = new Attendee( $event1_id, $user2_id );
-		$host12->mark_as_host();
+		$host12 = new Attendee( $event1_id, $user2_id, true );
 		$this->repository->insert_attendee( $host12 );
 
-		$host21 = new Attendee( $event2_id, $user1_id );
-		$host21->mark_as_host();
+		$host21 = new Attendee( $event2_id, $user1_id, true );
 		$this->repository->insert_attendee( $host21 );
 
 		// Add some more attendees to make sure we get the right ones.
@@ -111,12 +112,55 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 
 		$hosts = $this->repository->get_hosts( $event1_id );
 		$this->assertCount( 2, $hosts );
-		$this->assertEquals( $host11, $hosts[0] );
-		$this->assertEquals( $host12, $hosts[1] );
+		$this->assertEquals( $host11, $hosts[ $user1_id ] );
+		$this->assertEquals( $host12, $hosts[ $user2_id ] );
 
 		$hosts = $this->repository->get_hosts( $event2_id );
 		$this->assertCount( 1, $hosts );
-		$this->assertEquals( $host21, $hosts[0] );
+		$this->assertEquals( $host21, $hosts[ $user1_id ] );
+	}
+
+	public function test_get_attendees() {
+		$event1_id = 1;
+		$event2_id = 2;
+		$user1_id  = 42;
+		$user2_id  = 43;
+
+		// Host, contributor.
+		$attendee11 = new Attendee( $event1_id, $user1_id, true, array( 'aa' ) );
+		$this->stats_factory->create( $event1_id, $user1_id, 1, 'create' );
+		$this->repository->insert_attendee( $attendee11 );
+
+		// Non-host, non-contributor.
+		$attendee12 = new Attendee( $event1_id, $user2_id, false );
+		$this->repository->insert_attendee( $attendee12 );
+
+		// Host, non-contributor.
+		$attendee21 = new Attendee( $event2_id, $user1_id, true );
+		$this->repository->insert_attendee( $attendee21 );
+
+		// Non-host, contributor.
+		$attendee22 = new Attendee( $event2_id, $user2_id, false, array( 'aa' ) );
+		$this->stats_factory->create( $event2_id, $user2_id, 1, 'create' );
+		$this->repository->insert_attendee( $attendee22 );
+
+		$attendees = $this->repository->get_attendees( $event1_id );
+		$this->assertCount( 2, $attendees );
+		$this->assertEquals( $attendee11, $attendees[ $user1_id ] );
+		$this->assertEquals( $attendee12, $attendees[ $user2_id ] );
+		$this->assertTrue( $attendees[ $user1_id ]->is_host() );
+		$this->assertFalse( $attendees[ $user2_id ]->is_host() );
+		$this->assertTrue( $attendees[ $user1_id ]->is_contributor() );
+		$this->assertFalse( $attendees[ $user2_id ]->is_contributor() );
+
+		$attendees = $this->repository->get_attendees( $event2_id );
+		$this->assertCount( 2, $attendees );
+		$this->assertEquals( $attendee21, $attendees[ $user1_id ] );
+		$this->assertEquals( $attendee22, $attendees[ $user2_id ] );
+		$this->assertTrue( $attendees[ $user1_id ]->is_host() );
+		$this->assertFalse( $attendees[ $user2_id ]->is_host() );
+		$this->assertFalse( $attendees[ $user1_id ]->is_contributor() );
+		$this->assertTrue( $attendees[ $user2_id ]->is_contributor() );
 	}
 
 	public function test_get_attendees_not_contributing() {
@@ -131,8 +175,7 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->repository->insert_attendee( $attendee11 );
 
 		// Host non-contributor.
-		$attendee12 = new Attendee( $event1_id, $user2_id );
-		$attendee12->mark_as_host();
+		$attendee12 = new Attendee( $event1_id, $user2_id, true );
 		$this->repository->insert_attendee( $attendee12 );
 
 		// Non-host non-contributor.
@@ -141,10 +184,10 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 
 		$attendees = $this->repository->get_attendees_not_contributing( $event1_id );
 		$this->assertCount( 2, $attendees );
-		$this->assertEquals( $attendee12, $attendees[0] );
-		$this->assertEquals( $attendee13, $attendees[1] );
-		$this->assertTrue( $attendees[0]->is_host() );
-		$this->assertFalse( $attendees[1]->is_host() );
+		$this->assertEquals( $attendee12, $attendees[ $user2_id ] );
+		$this->assertEquals( $attendee13, $attendees[ $user3_id ] );
+		$this->assertTrue( $attendees[ $user2_id ]->is_host() );
+		$this->assertFalse( $attendees[ $user3_id ]->is_host() );
 	}
 
 	public function test_get_events_for_user() {

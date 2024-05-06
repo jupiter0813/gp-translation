@@ -48,6 +48,9 @@ class Attend_Event_Route extends Route {
 
 		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user_id );
 		if ( $attendee instanceof Attendee ) {
+			if ( $attendee->is_contributor() ) {
+				$this->die_with_error( esc_html__( 'Contributors cannot un-attend the event', 'gp-translation-events' ), 403 );
+			}
 			$this->attendee_repository->remove_attendee( $event->id(), $user_id );
 		} else {
 			$attendee = new Attendee( $event->id(), $user_id );

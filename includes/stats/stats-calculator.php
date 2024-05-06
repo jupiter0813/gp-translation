@@ -3,10 +3,8 @@
 namespace Wporg\TranslationEvents\Stats;
 
 use Exception;
-use WP_User;
 use GP_Locale;
 use GP_Locales;
-use Wporg\TranslationEvents\Event\Event_Start_Date;
 
 class Stats_Row {
 	public int $created;
@@ -155,49 +153,6 @@ class Stats_Calculator {
 	}
 
 	/**
-	 * Get contributors for an event.
-	 */
-	public function get_contributors( int $event_id ): array {
-		global $wpdb, $gp_table_prefix;
-
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		// phpcs thinks we're doing a schema change but we aren't.
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
-		$rows = $wpdb->get_results(
-			$wpdb->prepare(
-				"
-				select user_id, group_concat( distinct locale ) as locales
-				from {$gp_table_prefix}event_actions
-				where event_id = %d
-				group by user_id
-			",
-				array(
-					$event_id,
-				)
-			)
-		);
-		// phpcs:enable
-
-		$users = array();
-		foreach ( $rows as $row ) {
-			$user          = new WP_User( $row->user_id );
-			$user->locales = explode( ',', $row->locales );
-			$users[]       = $user;
-		}
-
-		uasort(
-			$users,
-			function ( $a, $b ) {
-				return strcasecmp( $a->display_name, $b->display_name );
-			}
-		);
-
-		return $users;
-	}
-
-	/**
 	 * Check if an event has stats.
 	 *
 	 * @param int $event_id The id of the event to check.
@@ -212,41 +167,5 @@ class Stats_Calculator {
 		}
 
 		return ! empty( $stats->rows() );
-	}
-
-	/**
-	 * Check if a user is a new translation contributor. A new contributor is a user who has made 10 or fewer translations before event start time.
-	 *
-	 * @param Event_Start_Date $event_start The event start date.
-	 * @param int              $user_id      The user ID.
-	 *
-	 * @return bool True if the user is a new translation contributor, false otherwise.
-	 */
-	public function is_new_translation_contributor( Event_Start_Date $event_start, int $user_id ): bool {
-		global $wpdb, $gp_table_prefix;
-		$new_contributor_max_translation_count = 10;
-		$event_start_date_time                 = $event_start->__toString();
-
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
-		$user_translations_count = $wpdb->get_var(
-			$wpdb->prepare(
-				"
-			select count(*) from {$gp_table_prefix}translations where user_id = %d and date_added < %s
-		",
-				array(
-					$user_id,
-					$event_start_date_time,
-				)
-			)
-		);
-		// phpcs:enable
-
-		if ( get_userdata( $user_id ) && ! $user_translations_count ) {
-			return true;
-		}
-		return $user_translations_count <= $new_contributor_max_translation_count;
 	}
 }

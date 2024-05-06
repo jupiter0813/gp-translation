@@ -3,7 +3,6 @@
 namespace Wporg\TranslationEvents\Attendee;
 
 use Exception;
-use WP_User;
 
 class Attendee_Repository {
 	/**
@@ -82,8 +81,16 @@ class Attendee_Repository {
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
 				"
-				select user_id, is_host
-				from {$gp_table_prefix}event_attendees
+				select
+					user_id,
+					is_host,
+					(
+						select group_concat( distinct locale )
+						from {$gp_table_prefix}event_actions
+						where event_id = attendees.event_id
+						  and user_id = attendees.user_id
+					) as locales
+				from {$gp_table_prefix}event_attendees attendees
 				where event_id = %d
 				  and user_id = %d
 			",
@@ -99,109 +106,21 @@ class Attendee_Repository {
 			return null;
 		}
 
-		$attendee = new Attendee( $event_id, $row->user_id );
-		if ( '1' === $row->is_host ) {
-			$attendee->mark_as_host();
-		}
-
-		return $attendee;
-	}
-
-	/**
-	 * @return Attendee[] Attendees of the event.
-	 */
-	public function get_attendees( int $event_id ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		global $wpdb, $gp_table_prefix;
-
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$result = $wpdb->get_results(
-			$wpdb->prepare(
-				"
-				select *
-				from {$gp_table_prefix}event_attendees
-				where event_id = %d
-			",
-				array(
-					$event_id,
-				)
-			),
+		return new Attendee(
+			$event_id,
+			$row->user_id,
+			'1' === $row->is_host,
+			null === $row->locales ? array() : explode( ',', $row->locales ),
 		);
-		// phpcs:enable
-		$attendees = array();
-		foreach ( $result as $row ) {
-			$attendee = new Attendee( $row->event_id, $row->user_id );
-			if ( '1' === $row->is_host ) {
-				$attendee->mark_as_host();
-			}
-			$attendees[] = $attendee;
-		}
-		return $attendees;
 	}
 
 	/**
-	 * Get attendees without contributions for an event.
+	 * Retrieve all the attendees of an event.
 	 *
-	 * @return Attendee[]
+	 * @return Attendee[] Attendees of the event. Associative array with user_id as key.
 	 * @throws Exception
 	 */
-	public function get_attendees_not_contributing( int $event_id ): array {
-		global $wpdb, $gp_table_prefix;
-
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$all_attendees = $wpdb->get_results(
-			$wpdb->prepare(
-				"
-				select user_id, is_host
-				from {$gp_table_prefix}event_attendees
-				where event_id = %d
-			",
-				array(
-					$event_id,
-				)
-			),
-		);
-
-		$contributing_ids = $wpdb->get_col(
-			$wpdb->prepare(
-				"
-				select distinct user_id
-				from {$gp_table_prefix}event_actions
-				where event_id = %d
-			",
-				array(
-					$event_id,
-				)
-			)
-		);
-		// phpcs:enable
-
-		$attendees_not_contributing = array();
-		foreach ( $all_attendees as $attendee_row ) {
-			if ( ! in_array( $attendee_row->user_id, $contributing_ids, true ) ) {
-				$attendee = new Attendee( $event_id, $attendee_row->user_id );
-				if ( '1' === $attendee_row->is_host ) {
-					$attendee->mark_as_host();
-				}
-				$attendees_not_contributing[] = $attendee;
-			}
-		}
-
-		return $attendees_not_contributing;
-	}
-
-	/**
-	 * Get the hosts' users for an event.
-	 *
-	 * @param int $event_id The id of the event.
-	 *
-	 * @return Attendee[] The hosts of the event.
-	 * @throws Exception
-	 */
-	public function get_hosts( int $event_id ): array {
+	public function get_attendees( int $event_id ): array {
 		global $wpdb, $gp_table_prefix;
 
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -210,24 +129,71 @@ class Attendee_Repository {
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
 				"
-				select event_id, user_id
-				from {$gp_table_prefix}event_attendees
-				where event_id = %d and is_host = 1
+				select
+					user_id,
+					is_host,
+					(
+						select group_concat( distinct locale )
+						from {$gp_table_prefix}event_actions
+						where event_id = attendees.event_id
+						  and user_id = attendees.user_id
+					) as locales
+				from {$gp_table_prefix}event_attendees attendees
+				where event_id = %d
 			",
 				array(
 					$event_id,
 				)
-			)
+			),
+			OBJECT_K,
 		);
 		// phpcs:enable
 
-		$hosts = array();
-		foreach ( $rows as $row ) {
-			$host = new Attendee( $row->event_id, $row->user_id );
-			$host->mark_as_host();
-			$hosts[] = $host;
-		}
-		return $hosts;
+		return array_map(
+			function ( $row ) use ( $event_id ) {
+				return new Attendee(
+					$event_id,
+					$row->user_id,
+					'1' === $row->is_host,
+					null === $row->locales ? array() : explode( ',', $row->locales ),
+				);
+			},
+			$rows,
+		);
+	}
+
+	/**
+	 * Get attendees without contributions for an event.
+	 *
+	 * @param int $event_id The id of the event.
+	 *
+	 * @return Attendee[] Associative array with user_id as key.
+	 * @throws Exception
+	 */
+	public function get_attendees_not_contributing( int $event_id ): array {
+		return array_filter(
+			$this->get_attendees( $event_id ),
+			function ( Attendee $attendee ) {
+				return ! $attendee->is_contributor();
+			}
+		);
+	}
+
+	/**
+	 * Get the hosts' users for an event.
+	 *
+	 * @param int $event_id The id of the event.
+	 *
+	 * @return Attendee[] The hosts of the event. Associative array with user_id as key.
+	 * @throws Exception
+	 */
+	public function get_hosts( int $event_id ): array {
+		return array_filter(
+			$this->get_attendees( $event_id ),
+			function ( Attendee $attendee ) {
+				return $attendee->is_host();
+			}
+		);
 	}
 
 	/**

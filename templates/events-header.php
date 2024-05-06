@@ -2,11 +2,14 @@
 
 namespace Wporg\TranslationEvents;
 
+use WP_User;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Event\Event;
 
+/** @var WP_User $user */
+/** @var Attendee[] $hosts */
 /** @var Attendee $attendee */
-/** @var Event  $event */
+/** @var Event $event */
 /** @var string $event_page_title */
 ?>
 
