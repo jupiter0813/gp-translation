@@ -9,6 +9,7 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 
 class Event_Capabilities {
+	private const MANAGE = 'manage_translation_events';
 	private const CREATE = 'create_translation_event';
 	private const VIEW   = 'view_translation_event';
 	private const EDIT   = 'edit_translation_event';
@@ -18,6 +19,7 @@ class Event_Capabilities {
 	 * All the capabilities that concern an Event.
 	 */
 	private const CAPS = array(
+		self::MANAGE,
 		self::CREATE,
 		self::VIEW,
 		self::EDIT,
@@ -48,6 +50,8 @@ class Event_Capabilities {
 	 */
 	private function has_cap( string $cap, array $args, WP_User $user ): bool {
 		switch ( $cap ) {
+			case self::MANAGE:
+				return $this->has_manage( $user );
 			case self::CREATE:
 				return $this->has_create( $user );
 			case self::VIEW:
@@ -74,6 +78,16 @@ class Event_Capabilities {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Evaluate whether a user can manage events.
+	 *
+	 * @param WP_User $user User for which we're evaluating the capability.
+	 * @return bool
+	 */
+	private function has_manage( WP_User $user ): bool {
+		return $this->is_gp_admin( $user );
 	}
 
 	/**

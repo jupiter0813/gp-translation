@@ -23,6 +23,23 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->event_repository    = new Event_Repository( $this->attendee_repository );
 	}
 
+	public function test_cannot_manage_if_no_crud_permission() {
+		$this->set_normal_user_as_current();
+
+		add_filter( 'gp_translation_events_can_crud_event', '__return_false' );
+
+		$this->assertFalse( current_user_can( 'manage_translation_events' ) );
+	}
+
+	public function test_can_manage_if_crud_permission() {
+		$this->set_normal_user_as_current();
+		get_current_user_id();
+
+		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
+
+		$this->assertTrue( current_user_can( 'manage_translation_events' ) );
+	}
+
 	public function test_cannot_create_if_no_crud_permission() {
 		$this->set_normal_user_as_current();
 
