@@ -75,13 +75,10 @@ class Notifications_Send {
 	 * @return string
 	 */
 	private function get_email_subject( Event $event ): string {
-		$subject  = esc_html__( 'Event Reminder.', 'gp-translation-events' );
-		$subject .= ' ';
-		$subject .= sprintf(
-		// translators: %1$s: Event title. %2$s Time until event starts.
-			esc_html__( 'You have the %1$s event in %2$s', 'gp-translation-events' ),
-			esc_html( $event->title() ),
-			esc_html( $this->calculate_time_until_event( $event->start() ) )
+		$subject = sprintf(
+		// translators: %s: Event title.
+			esc_html__( 'Translation Event Coming Up: %s', 'gp-translation-events' ),
+			esc_html( $event->title() )
 		);
 
 		return $subject;
