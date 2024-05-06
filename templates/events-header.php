@@ -60,6 +60,8 @@ use Wporg\TranslationEvents\Event\Event;
 			</span>
 			<?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
 				<a class="event-page-edit-link" href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>"><span class="dashicons dashicons-edit"></span><?php esc_html_e( 'Edit event', 'gp-translation-events' ); ?></a>
+			<?php elseif ( current_user_can( 'manage_translation_event_attendees', $event->id() ) ) : ?>
+				<a class="event-page-attendees-link" href="<?php echo esc_url( Urls::event_attendees( $event->slug() ) ); ?>"><?php esc_html_e( 'Manage attendees', 'gp-translation-events' ); ?></a>
 			<?php endif ?>
 		</p>
 		<?php endif; ?>

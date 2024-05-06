@@ -286,7 +286,7 @@ a.button.is-primary.attend-btn {
 	margin-bottom: 1em;
 }
 
-.event-page-edit-link {
+.event-page-edit-link, .event-page-attendees-link {
 	float: right;
 	text-decoration: none;
 	justify-self: end;
