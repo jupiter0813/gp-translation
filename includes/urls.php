@@ -30,6 +30,10 @@ class Urls {
 		return gp_url( '/events/edit/' . $event_id );
 	}
 
+	public static function event_trash( int $event_id ): string {
+		return gp_url( '/events/trash/' . $event_id );
+	}
+
 	public static function event_create(): string {
 		return gp_url( '/events/new/' );
 	}

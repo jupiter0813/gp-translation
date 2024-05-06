@@ -102,6 +102,7 @@ class Translation_Events {
 		GP::$router->add( '/events/trashed?', array( 'Wporg\TranslationEvents\Routes\Event\List_Trashed_Route', 'handle' ) );
 		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Routes\Event\Create_Route', 'handle' ) );
 		GP::$router->add( "/events/edit/$id", array( 'Wporg\TranslationEvents\Routes\Event\Edit_Route', 'handle' ) );
+		GP::$router->add( "/events/trash/$id", array( 'Wporg\TranslationEvents\Routes\Event\Trash_Route', 'handle' ) );
 		GP::$router->add( "/events/attend/$id", array( 'Wporg\TranslationEvents\Routes\User\Attend_Event_Route', 'handle' ), 'post' );
 		GP::$router->add( "/events/host/$id/$id", array( 'Wporg\TranslationEvents\Routes\User\Host_Event_Route', 'handle' ), 'post' );
 		GP::$router->add( '/events/my-events', array( 'Wporg\TranslationEvents\Routes\User\My_Events_Route', 'handle' ) );
