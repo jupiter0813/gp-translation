@@ -97,8 +97,7 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 
 		$event_id = $this->event_factory->create_active();
 
-		$attendee = new Attendee( $event_id, $non_author_user_id );
-		$attendee->mark_as_host();
+		$attendee = new Attendee( $event_id, $non_author_user_id, true );
 		$this->attendee_repository->insert_attendee( $attendee );
 
 		$this->assertTrue( user_can( $non_author_user_id, 'edit_translation_event', $event_id ) );

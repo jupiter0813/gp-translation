@@ -8,15 +8,17 @@ namespace Wporg\TranslationEvents;
 use GP_Locales;
 use WP_User;
 use Wporg\TranslationEvents\Attendee\Attendee;
-use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Stats\Event_Stats;
 use Wporg\TranslationEvents\Stats\Stats_Row;
 
-/** @var Attendee_Repository $attendee_repo */
-/** @var Attendee $attendee */
+/** @var bool $user_is_attending */
+/** @var bool $user_is_contributor */
+/** @var Attendee[] $attendees_not_contributing */
+/** @var Attendee[] $contributors */
+/** @var array $new_contributor_ids */
 /** @var Event $event */
 /** @var int $event_id */
 /** @var string $event_title */
@@ -52,61 +54,33 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				</h2>
 				<ul>
 					<?php foreach ( $contributors as $contributor ) : ?>
-						<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->locales ) ); ?>">
-							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>" class="avatar"><?php echo get_avatar( $contributor->ID, 48 ); ?></a>
-							<a href="<?php echo esc_url( get_author_posts_url( $contributor->ID ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->ID ) ); ?></a>
-							<?php if ( $stats_calculator->is_new_translation_contributor( $event_start, $contributor->ID ) ) : ?>
+						<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->contributed_locales() ) ); ?>">
+							<a href="<?php echo esc_url( get_author_posts_url( $contributor->user_id() ) ); ?>" class="avatar"><?php echo get_avatar( $contributor->user_id(), 48 ); ?></a>
+							<a href="<?php echo esc_url( get_author_posts_url( $contributor->user_id() ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->user_id() ) ); ?></a>
+							<?php if ( isset( $new_contributor_ids[ $contributor->user_id() ] ) ) : ?>
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
-							<?php
-							if ( current_user_can( 'edit_translation_event', $event->id() ) ) :
-								$_attendee = $attendee_repo->get_attendee( $event_id, $contributor->ID );
-								if ( $_attendee instanceof Attendee ) :
-									echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $contributor->ID ) ) . '">';
-									if ( $_attendee->is_host() ) :
-										echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
-									else :
-										echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
-									endif;
-									echo '</form>';
-								else :
-									echo '<span class="event-not-attending">' . esc_html__( 'Not attending', 'gp-translation-events' ) . '</span>';
-								endif;
-							endif;
-							?>
 						</li>
 					<?php endforeach; ?>
 				</ul>
 			</div>
 		<?php endif; ?>
-		<?php if ( ! empty( $attendees ) && current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
+		<?php if ( ! empty( $attendees_not_contributing ) && current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
 			<div class="event-attendees">
 				<h2>
 				<?php
 				// translators: %d is the number of attendees.
-				echo esc_html( sprintf( __( 'Attendees (%d)', 'gp-translation-events' ), number_format_i18n( count( $attendees ) ) ) );
+				echo esc_html( sprintf( __( 'Attendees (%d)', 'gp-translation-events' ), number_format_i18n( count( $attendees_not_contributing ) ) ) );
 				?>
 				</h2>
 				<ul>
-					<?php foreach ( $attendees as $_user ) : ?>
+					<?php foreach ( $attendees_not_contributing as $_attendee ) : ?>
 						<li class="event-attendee">
-							<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>" class="avatar"><?php echo get_avatar( $_user->ID, 48 ); ?></a>
-							<a href="<?php echo esc_url( get_author_posts_url( $_user->ID ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $_user->ID ) ); ?></a>
-							<?php if ( $stats_calculator->is_new_translation_contributor( $event_start, $_user->ID ) ) : ?>
+							<a href="<?php echo esc_url( get_author_posts_url( $_attendee->user_id() ) ); ?>" class="avatar"><?php echo get_avatar( $_attendee->user_id(), 48 ); ?></a>
+							<a href="<?php echo esc_url( get_author_posts_url( $_attendee->user_id() ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $_attendee->user_id() ) ); ?></a>
+							<?php if ( isset( $new_contributor_ids[ $_attendee->user_id() ] ) ) : ?>
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
-							<?php
-							$_attendee = $attendee_repo->get_attendee( $event_id, $_user->ID );
-							if ( $_attendee instanceof Attendee ) :
-								echo '<form class="add-remove-user-as-host" method="post" action="' . esc_url( Urls::event_toggle_host( $event_id, $_user->ID ) ) . '">';
-								if ( $_attendee->is_host() ) :
-									echo '<input type="submit" class="button is-primary remove-as-host" value="' . esc_attr__( 'Remove as host', 'gp-translation-events' ) . '"/>';
-								else :
-									echo '<input type="submit" class="button is-secondary convert-to-host" value="' . esc_attr__( 'Make co-host', 'gp-translation-events' ) . '"/>';
-								endif;
-								echo '</form>';
-							endif;
-							?>
 						</li>
 					<?php endforeach; ?>
 				</ul>
@@ -118,9 +92,10 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<table>
 					<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Locale', 'gp-translation-events' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Translations created', 'gp-translation-events' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Translations reviewed', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Translations', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Created', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Waiting', 'gp-translation-events' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Reviewed', 'gp-translation-events' ); ?></th>
 						<th scope="col"><?php esc_html_e( 'Contributors', 'gp-translation-events' ); ?></th>
 					</tr>
 					</thead>
@@ -129,7 +104,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					<?php foreach ( $event_stats->rows() as $_locale => $row ) : ?>
 					<tr>
 						<td title="<?php echo esc_html( $_locale ); ?> "><a href="<?php echo esc_url( gp_url_join( gp_url( '/languages' ), $row->language->slug ) ); ?>"><?php echo esc_html( $row->language->english_name ); ?></a></td>
-						<td><?php echo esc_html( $row->created ); ?></td>
+						<td><a href="<?php echo esc_url( Urls::event_translations( $event->id(), $row->language->slug ) ); ?>"><?php echo esc_html( $row->created ); ?></a></td>
+						<td><a href="<?php echo esc_url( Urls::event_translations( $event->id(), $row->language->slug, 'waiting' ) ); ?>"><?php echo esc_html( $row->waiting ); ?></a></td>
 						<td><?php echo esc_html( $row->reviewed ); ?></td>
 						<td><?php echo esc_html( $row->users ); ?></td>
 					</tr>
@@ -137,6 +113,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 					<tr class="event-details-stats-totals">
 						<td>Total</td>
 						<td><?php echo esc_html( $event_stats->totals()->created ); ?></td>
+						<td><?php echo esc_html( $event_stats->totals()->waiting ); ?></td>
 						<td><?php echo esc_html( $event_stats->totals()->reviewed ); ?></td>
 						<td><?php echo esc_html( $event_stats->totals()->users ); ?></td>
 					</tr>
@@ -177,19 +154,12 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<summary><?php esc_html_e( 'View stats summary in text', 'gp-translation-events' ); ?></summary>
 				<p class="event-stats-text">
 					<?php
-					$new_contributors = array_filter(
-						$contributors,
-						function ( $contributor ) use ( $stats_calculator, $event_start ) {
-							return $stats_calculator->is_new_translation_contributor( $event_start, $contributor->ID );
-						}
-					);
-
 					$new_contributors_text = '';
-					if ( ! empty( $new_contributors ) ) {
+					if ( ! empty( $new_contributor_ids ) ) {
 						$new_contributors_text = sprintf(
 							// translators: %d is the number of new contributors.
-							_n( '(%d new contributor 🎉)', '(%d new contributors 🎉)', count( $new_contributors ), 'gp-translation-events' ),
-							count( $new_contributors )
+							_n( '(%d new contributor 🎉)', '(%d new contributors 🎉)', count( $new_contributor_ids ), 'gp-translation-events' ),
+							count( $new_contributor_ids )
 						);
 					}
 
@@ -226,12 +196,12 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 								'gp-translation-events'
 							),
 							array_map(
-								function ( $contributor ) use ( $stats_calculator, $event_start ) {
+								function ( $contributor ) {
 									$append_tada = '';
-									if ( $stats_calculator->is_new_translation_contributor( $event_start, $contributor->ID ) ) {
+									if ( isset( $new_contributor_ids[ $contributor->user_id() ] ) ) {
 											$append_tada = ' <span class="new-contributor" title="' . esc_html__( 'New Translation Contributor', 'gp-translation-events' ) . '">🎉</span>';
 									}
-									return '@' . $contributor->user_login . $append_tada;
+									return '@' . ( new WP_User( $contributor->user_id() ) )->user_login . $append_tada;
 								},
 								$contributors
 							)
@@ -267,12 +237,14 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<?php if ( is_user_logged_in() ) : ?>
 		<div class="event-details-join">
 			<?php if ( $event_end->is_in_the_past() ) : ?>
-				<?php if ( $attendee instanceof Attendee ) : ?>
+				<?php if ( $user_is_attending ) : ?>
 					<button disabled="disabled" class="button is-primary attend-btn"><?php esc_html_e( 'You attended', 'gp-translation-events' ); ?></button>
 				<?php endif; ?>
+			<?php elseif ( $user_is_contributor ) : ?>
+				<?php // Contributors can't un-attend so don't show anything. ?>
 			<?php else : ?>
 				<form class="event-details-attend" method="post" action="<?php echo esc_url( Urls::event_toggle_attendee( $event_id ) ); ?>">
-					<?php if ( $attendee instanceof Attendee ) : ?>
+					<?php if ( $user_is_attending ) : ?>
 						<input type="submit" class="button is-secondary attending-btn" value="<?php esc_attr_e( "You're attending", 'gp-translation-events' ); ?>" />
 					<?php else : ?>
 						<input type="submit" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event', 'gp-translation-events' ); ?>"/>

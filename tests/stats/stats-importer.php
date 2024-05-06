@@ -34,7 +34,7 @@ class Stats_Importer_Test extends GP_UnitTestCase {
 		$user_id = wp_get_current_user()->ID;
 
 		// Create a translation before the event starts, which should not be imported.
-		$this->translation_factory->create( $user_id, gmdate( 'Y-m-d H:i:s', time() - DAY_IN_SECONDS ) );
+		$this->translation_factory->create( $user_id, new DateTimeImmutable( '1 day ago', new DateTimeZone( 'UTC' ) ) );
 
 		$event_id = $this->event_factory->create_active( array(), new DateTimeImmutable( '5 minutes ago', new DateTimeZone( 'UTC' ) ) );
 		$event    = $this->event_repository->get_event( $event_id );

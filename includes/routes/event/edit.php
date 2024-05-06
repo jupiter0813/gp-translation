@@ -45,6 +45,7 @@ class Edit_Route extends Route {
 		$event_timezone           = $event->timezone();
 		$event_start              = $event->start();
 		$event_end                = $event->end();
+		$event_slug               = $event->slug();
 		$create_delete_button     = false;
 		$visibility_delete_button = 'inline-flex';
 		$create_delete_button     = current_user_can( 'delete_translation_event', $event->id() );
