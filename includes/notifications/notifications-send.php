@@ -97,6 +97,12 @@ class Notifications_Send {
 		// translators: %s: User display name.
 		$message  = sprintf( esc_html__( 'Hi %s,', 'gp-translation-events' ), $user->display_name );
 		$message .= '<br><br>';
+		$message .= esc_html( sprintf(
+			// translators: %s is the event title.
+			__( 'We are sending you this e-mail because you have signed up for the translation event "%1$s".', 'gp-translation-events' ),
+			$event->title()
+		) );
+		$message .= ' ';
 		$message .= sprintf(
 			// translators: %1$s: Event title. %2$s: Time until event starts.
 			esc_html__( 'You have the %1$s event in %2$s.', 'gp-translation-events' ),
