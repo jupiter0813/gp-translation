@@ -106,6 +106,8 @@ class Notifications_Send {
 			esc_html( $event->title() ),
 			esc_html( $this->calculate_time_until_event( $event->start() ) )
 		);
+		$message         .= ' ';
+		$message         .= esc_html__( "We're looking forward to translating with you!", 'gp-translation-events' ),
 		$message         .= '<br>';
 		$local_start_date = $event->start()->setTimezone( new DateTimeZone( $event->timezone()->getName() ) );
 		$message         .= sprintf(
