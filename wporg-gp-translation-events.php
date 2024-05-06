@@ -362,6 +362,7 @@ class Translation_Events {
 		if ( self::CPT !== $post_type || $post_parent ) {
 			return $override_slug;
 		}
+		// Normally the slug is not allowed to be a year, this overrides it since we have a CPT and translate.wordpress.org doesn't have blog posts.
 		if ( preg_match( '/^2[0-9]{3}$/', $slug ) ) {
 			return $slug;
 		}
