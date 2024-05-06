@@ -62,7 +62,7 @@
 							year: 'numeric'
 						};
 
-						fetch( 'https://central.wordcamp.org/wp-json/wp/v2/wordcamps?per_page=30&status=wcpt-scheduled&order=desc' ).then(
+						fetch( 'https://central.wordcamp.org/wp-json/wp/v2/wordcamps?per_page=30&status=wcpt-scheduled' ).then(
 							response => response.json()
 						).then(
 							function ( data ) {
