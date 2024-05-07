@@ -37,6 +37,9 @@ class Delete_Route extends Route {
 			$this->die_with_error( esc_html__( 'You do not have permission to delete this event.', 'gp-translation-events' ), 403 );
 		}
 
-		// TODO.
+		$this->event_repository->delete_event( $event );
+
+		wp_safe_redirect( Urls::events_home() );
+		exit;
 	}
 }
