@@ -9,6 +9,7 @@ require_once __DIR__ . '/includes/routes/event/create.php';
 require_once __DIR__ . '/includes/routes/event/details.php';
 require_once __DIR__ . '/includes/routes/event/edit.php';
 require_once __DIR__ . '/includes/routes/event/trash.php';
+require_once __DIR__ . '/includes/routes/event/delete.php';
 require_once __DIR__ . '/includes/routes/event/list.php';
 require_once __DIR__ . '/includes/routes/event/list-trashed.php';
 require_once __DIR__ . '/includes/routes/event/translations.php';
