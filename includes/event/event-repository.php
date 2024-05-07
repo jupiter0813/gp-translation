@@ -20,7 +20,10 @@ class Event_Repository implements Event_Repository_Interface {
 		$this->attendee_repository = $attendee_repository;
 	}
 
-	private function get_year_post_id( $year ) {
+        /*
+         * @return int|WP_Error
+         */
+	private function get_year_post_id( string $year ) {
 		$year_post = get_page_by_path( $year, OBJECT, self::POST_TYPE );
 		if ( ! $year_post ) {
 			return wp_insert_post(
