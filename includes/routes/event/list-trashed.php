@@ -40,6 +40,6 @@ class List_Trashed_Route extends Route {
 
 		$trashed_events_query = $this->event_repository->get_trashed_events( $current_page, 10 );
 
-		$this->tmpl( 'events-list-trashed', get_defined_vars() );
+		$this->render( 'events-list-trashed', get_defined_vars() );
 	}
 }

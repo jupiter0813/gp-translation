@@ -35,6 +35,6 @@ class Create_Route extends Route {
 		$event_end               = new Event_End_Date( date_i18n( 'Y - m - d H:i' ) );
 		$event_slug              = '';
 
-		$this->tmpl( 'events-form', get_defined_vars() );
+		$this->render( 'events-form', get_defined_vars() );
 	}
 }

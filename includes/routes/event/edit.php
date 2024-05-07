@@ -49,6 +49,6 @@ class Edit_Route extends Route {
 		$create_trash_button     = current_user_can( 'trash_translation_event', $event->id() );
 		$visibility_trash_button = 'inline-flex';
 
-		$this->tmpl( 'events-form', get_defined_vars() );
+		$this->render( 'events-form', get_defined_vars() );
 	}
 }

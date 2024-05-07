@@ -52,6 +52,6 @@ class List_Route extends Route {
 			$attendees = $this->attendee_repository->get_attendees( $event->id() );
 		}
 
-		$this->tmpl( 'events-attendees', get_defined_vars() );
+		$this->render( 'events-attendees', get_defined_vars() );
 	}
 }
