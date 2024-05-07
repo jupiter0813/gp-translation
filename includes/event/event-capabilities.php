@@ -74,7 +74,7 @@ class Event_Capabilities {
 					return $this->has_delete( $user, $event );
 				}
 				if ( self::EDIT_ATTENDEES === $cap ) {
-					return $this->has_manage_attendees( $user, $event );
+					return $this->has_edit_attendees( $user, $event );
 				}
 				break;
 		}
@@ -164,13 +164,13 @@ class Event_Capabilities {
 	}
 
 	/**
-	 * Evaluate whether a user can manage attendees for a specific event.
+	 * Evaluate whether a user can edit attendees for a specific event.
 	 *
 	 * @param WP_User $user  User for which we're evaluating the capability.
 	 * @param Event   $event Event for which we're evaluating the capability.
 	 * @return bool
 	 */
-	private function has_manage_attendees( WP_User $user, Event $event ): bool {
+	private function has_edit_attendees( WP_User $user, Event $event ): bool {
 		if ( $this->is_gp_admin( $user ) ) {
 			return true;
 		}
