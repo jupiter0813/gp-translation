@@ -52,10 +52,6 @@
 }
 
 .event-details-stats table {
-	margin: 1rem;
-}
-
-.event-details-stats table {
 	width: 100%;
 	table-layout: fixed;
 }
@@ -385,7 +381,7 @@ ul#translation-links li {
 }
 
 ul.event-attendees-filter {
-	margin-left: 1rem;
+	margin-left: 0;
 }
 
 ul.event-attendees-filter li {
