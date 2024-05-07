@@ -44,7 +44,6 @@ class List_Route extends Route {
 		if ( ! current_user_can( 'edit_translation_event_attendees', $event->id() ) ) {
 			$this->die_with_error( esc_html__( 'You do not have permission to edit this event\'s attendees.', 'gp-translation-events' ), 403 );
 		}
-		$attendees = array();
 		if ( gp_get( 'filter' ) && 'hosts' === gp_get( 'filter' ) ) {
 			$is_active_filter = true;
 			$attendees        = $this->attendee_repository->get_hosts( $event->id() );
@@ -52,6 +51,13 @@ class List_Route extends Route {
 			$attendees = $this->attendee_repository->get_attendees( $event->id() );
 		}
 
-		$this->render( 'events-attendees', get_defined_vars() );
+		$this->render(
+			'events-attendees',
+			array(
+				'event'            => $event,
+				'attendees'        => $attendees,
+				'is_active_filter' => $is_active_filter,
+			),
+		);
 	}
 }

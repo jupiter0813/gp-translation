@@ -16,7 +16,6 @@ use Wporg\TranslationEvents\Stats\Stats_Row;
 
 /** @var bool $user_is_attending */
 /** @var bool $user_is_contributor */
-/** @var Attendee $attendee */
 /** @var Attendee[] $hosts */
 /** @var Attendee[] $attendees_not_contributing */
 /** @var Attendee[] $contributors */

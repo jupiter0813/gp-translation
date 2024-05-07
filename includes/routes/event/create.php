@@ -21,20 +21,22 @@ class Create_Route extends Route {
 			$this->die_with_error( 'You do not have permission to create events.' );
 		}
 
-		$page_title              = 'Create Event';
-		$event_form_name         = 'create_event';
-		$css_show_url            = 'hide-event-url';
-		$event_id                = null;
-		$event_title             = '';
-		$event_description       = '';
-		$event_url               = '';
-		$create_trash_button     = true;
-		$visibility_trash_button = 'none';
-		$event_timezone          = null;
-		$event_start             = new Event_Start_Date( date_i18n( 'Y - m - d H:i' ) );
-		$event_end               = new Event_End_Date( date_i18n( 'Y - m - d H:i' ) );
-		$event_slug              = '';
-
-		$this->render( 'events-form', get_defined_vars() );
+		$this->render(
+			'events-form',
+			array(
+				'page_title'              => 'Create Event',
+				'css_show_url'            => 'hide-event-url',
+				'event_id'                => null,
+				'event_title'             => '',
+				'event_description'       => '',
+				'event_url'               => '',
+				'create_trash_button'     => true,
+				'visibility_trash_button' => 'none',
+				'event_timezone'          => null,
+				'event_start'             => new Event_Start_Date( date_i18n( 'Y - m - d H:i' ) ),
+				'event_end'               => new Event_End_Date( date_i18n( 'Y - m - d H:i' ) ),
+				'event_slug'              => '',
+			),
+		);
 	}
 }

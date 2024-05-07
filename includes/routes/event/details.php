@@ -46,12 +46,6 @@ class Details_Route extends Route {
 			$this->die_with_error( esc_html__( 'You are not authorized to view this page.', 'gp-translation-events' ), 403 );
 		}
 
-		$event_id          = $event->id();
-		$event_title       = $event->title();
-		$event_description = $event->description();
-		$event_start       = $event->start();
-		$event_end         = $event->end();
-
 		$projects              = $this->project_repository->get_for_event( $event->id() );
 		$attendees             = $this->attendee_repository->get_attendees( $event->id() );
 		$current_user_attendee = $attendees[ $user->ID ] ?? null;
@@ -102,6 +96,25 @@ class Details_Route extends Route {
 			$this->die_with_error( esc_html__( 'Failed to calculate event stats', 'gp-translation-events' ) );
 		}
 
-		$this->render( 'event', get_defined_vars() );
+		$this->render(
+			'event',
+			array(
+				'event'                      => $event,
+				'user_is_attending'          => $user_is_attending,
+				'user_is_contributor'        => $user_is_contributor,
+				'hosts'                      => $hosts,
+				'attendees_not_contributing' => $attendees_not_contributing,
+				'contributors'               => $contributors,
+				'new_contributor_ids'        => $new_contributor_ids,
+				'event_id'                   => $event->id(),
+				'event_title'                => $event->title(),
+				'event_description'          => $event->description(),
+				'event_start'                => $event->start(),
+				'event_end'                  => $event->end(),
+				'event_stats'                => $event_stats,
+				'projects'                   => $projects,
+				'user'                       => $user,
+			),
+		);
 	}
 }

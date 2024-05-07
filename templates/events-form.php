@@ -12,6 +12,7 @@ use Wporg\TranslationEvents\Event\Event_Start_Date;
 /** @var string $page_title */
 /** @var string $event_form_name */
 /** @var int    $event_id */
+/** @var string $event_slug */
 /** @var string $event_title */
 /** @var string $event_description */
 /** @var Event_Start_Date $event_start */

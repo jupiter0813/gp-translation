@@ -2,7 +2,9 @@
 
 namespace Wporg\TranslationEvents\Routes\Event;
 
+use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
+use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
 use Wporg\TranslationEvents\Urls;
@@ -35,20 +37,25 @@ class Edit_Route extends Route {
 		}
 
 		include ABSPATH . 'wp-admin/includes/post.php';
-		$page_title              = 'Edit Event';
-		$event_form_name         = 'edit_event';
-		$css_show_url            = '';
-		$event_title             = $event->title();
-		$event_description       = $event->description();
-		$event_status            = $event->status();
-		$event_url               = Urls::event_details_absolute( $event_id );
-		$event_timezone          = $event->timezone();
-		$event_start             = $event->start();
-		$event_end               = $event->end();
-		$event_slug              = $event->slug();
-		$create_trash_button     = current_user_can( 'trash_translation_event', $event->id() );
-		$visibility_trash_button = 'inline-flex';
 
-		$this->render( 'events-form', get_defined_vars() );
+		$this->render(
+			'events-form',
+			array(
+				'page_title'              => 'Edit Event',
+				'event_form_name'         => 'edit_event',
+				'event_id'                => $event->id(),
+				'event_status'            => $event->status(),
+				'event_slug'              => $event->slug(),
+				'event_title'             => $event->title(),
+				'event_description'       => $event->description(),
+				'event_start'             => $event->start(),
+				'event_end'               => $event->end(),
+				'event_timezone'          => $event->timezone(),
+				'event_url'               => Urls::event_details_absolute( $event_id ),
+				'css_show_url'            => '',
+				'create_trash_button'     => current_user_can( 'trash_translation_event', $event->id() ),
+				'visibility_trash_button' => 'inline-flex',
+			),
+		);
 	}
 }
