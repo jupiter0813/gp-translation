@@ -12,11 +12,13 @@ use Wporg\TranslationEvents\Stats\Stats_Calculator;
 /** @var Events_Query_Result $events_i_host_query */
 /** @var Events_Query_Result $events_i_attended_query */
 
-gp_title( esc_html__( 'Translation Events', 'gp-translation-events' ) . ' - ' . esc_html__( 'My Events', 'gp-translation-events' ) );
-gp_breadcrumb_translation_events( array( esc_html__( 'My Events', 'gp-translation-events' ) ) );
-gp_tmpl_header();
-$event_page_title = __( 'My Events', 'gp-translation-events' );
-gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
+Templates::header(
+	array(
+		'page_title'       => esc_html__( 'Translation Events', 'gp-translation-events' ) . ' - ' . esc_html__( 'My Events', 'gp-translation-events' ),
+		'event_page_title' => __( 'My Events', 'gp-translation-events' ),
+		'breadcrumbs'      => array( esc_html__( 'My Events', 'gp-translation-events' ) ),
+	),
+);
 ?>
 
 <div class="event-page-wrapper">

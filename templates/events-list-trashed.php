@@ -6,11 +6,13 @@ use Wporg\TranslationEvents\Event\Events_Query_Result;
 
 /** @var Events_Query_Result $trashed_events_query */
 
-gp_title( __( 'Deleted Translation Events', 'gp-translation-events' ) );
-gp_breadcrumb_translation_events();
-gp_tmpl_header();
-$event_page_title = __( 'Deleted Translation Events', 'gp-translation-events' );
-gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
+Templates::header(
+	array(
+		'page_title'       => __( 'Deleted Translation Events', 'gp-translation-events' ),
+		'event_page_title' => __( 'Deleted Translation Events', 'gp-translation-events' ),
+		'breadcrumbs'      => array(),
+	),
+);
 ?>
 
 <div class="event-page-wrapper">
