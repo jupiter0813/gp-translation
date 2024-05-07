@@ -183,4 +183,36 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
 		$this->assertTrue( current_user_can( 'trash_translation_event', $event_id ) );
 	}
+
+	public function test_cannot_delete_if_not_trashed() {
+		$this->set_normal_user_as_current();
+		$event_id = $this->event_factory->create_active();
+
+		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
+		$this->assertFalse( current_user_can( 'delete_translation_event', $event_id ) );
+	}
+
+	public function test_non_gp_admin_cannot_delete() {
+		$this->set_normal_user_as_current();
+		$event_id = $this->event_factory->create_active();
+		$event    = $this->event_repository->get_event( $event_id );
+
+		$event->set_status( 'trash' );
+		$this->event_repository->update_event( $event );
+
+		add_filter( 'gp_translation_events_can_crud_event', '__return_false' );
+		$this->assertFalse( current_user_can( 'delete_translation_event', $event_id ) );
+	}
+
+	public function test_gp_admin_can_delete() {
+		$this->set_normal_user_as_current();
+		$event_id = $this->event_factory->create_active();
+		$event    = $this->event_repository->get_event( $event_id );
+
+		$event->set_status( 'trash' );
+		$this->event_repository->update_event( $event );
+
+		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
+		$this->assertTrue( current_user_can( 'delete_translation_event', $event_id ) );
+	}
 }
