@@ -11,15 +11,20 @@ use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Tests\Event_Factory;
+use Wporg\TranslationEvents\Tests\Stats_Factory;
 
 class Event_Repository_Test extends GP_UnitTestCase {
 	private Event_Factory $event_factory;
+	private Stats_Factory $stats_factory;
+	private Attendee_Repository $attendee_repository;
 	private Event_Repository $repository;
 
 	public function setUp(): void {
 		parent::setUp();
-		$this->event_factory = new Event_Factory();
-		$this->repository    = new Event_Repository( new Attendee_Repository() );
+		$this->event_factory       = new Event_Factory();
+		$this->stats_factory       = new Stats_Factory();
+		$this->attendee_repository = new Attendee_Repository();
+		$this->repository          = new Event_Repository( new Attendee_Repository() );
 
 		$this->set_normal_user_as_current();
 	}
@@ -123,6 +128,32 @@ class Event_Repository_Test extends GP_UnitTestCase {
 
 		$event = $this->repository->get_event( $event_id );
 		$this->assertEquals( 'trash', $event->status() );
+	}
+
+	public function test_delete_event() {
+		$user_id = get_current_user_id();
+
+		// The event to be deleted.
+		$event_id = $this->event_factory->create_active( array( $user_id ) );
+		$this->stats_factory->create( $event_id, $user_id, 0, 'create' );
+
+		// An event that should not be deleted.
+		$another_event_id = $this->event_factory->create_active( array( $user_id ) );
+		$this->stats_factory->create( $another_event_id, $user_id, 0, 'create' );
+
+		$event = $this->repository->get_event( $event_id );
+		$this->repository->delete_event( $event );
+
+		$event = $this->repository->get_event( $event_id );
+		$this->assertNull( $event );
+		$this->assertEmpty( $this->attendee_repository->get_attendees( $event_id ) );
+		$this->assertEmpty( $this->stats_factory->get_by_event_id( $event_id ) );
+
+		// Make sure the other event wasn't deleted.
+		$another_event = $this->repository->get_event( $another_event_id );
+		$this->assertNotNull( $another_event );
+		$this->assertNotEmpty( $this->attendee_repository->get_attendees( $another_event_id ) );
+		$this->assertNotEmpty( $this->stats_factory->get_by_event_id( $another_event_id ) );
 	}
 
 	public function test_get_active_events() {

@@ -65,6 +65,32 @@ class Event_Repository implements Event_Repository_Interface {
 		return $event;
 	}
 
+	public function delete_event( Event $event ) {
+		$result = wp_delete_post( $event->id(), true );
+		if ( ! $result ) {
+			return false;
+		}
+
+		// Delete attendees.
+		$attendees = $this->attendee_repository->get_attendees( $event->id() );
+		foreach ( $attendees as $attendee ) {
+			$this->attendee_repository->remove_attendee( $event->id(), $attendee->user_id() );
+		}
+
+		// Delete stats.
+		global $wpdb, $gp_table_prefix;
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->delete(
+			"{$gp_table_prefix}event_actions",
+			array( 'event_id' => $event->id() ),
+			array( '%d' ),
+		);
+		// phpcs:enable
+
+		return $event;
+	}
+
 	public function get_event( int $id ): ?Event {
 		$post = $this->get_event_post( $id );
 		if ( ! $post ) {

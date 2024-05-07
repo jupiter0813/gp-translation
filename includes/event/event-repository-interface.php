@@ -34,6 +34,15 @@ interface Event_Repository_Interface {
 	public function trash_event( Event $event );
 
 	/**
+	 * Permanently delete an Event.
+	 *
+	 * @param Event $event Event to permanently delete.
+	 *
+	 * @return Event|false Deleted event or false on error.
+	 */
+	public function delete_event( Event $event );
+
+	/**
 	 * Get an Event.
 	 *
 	 * @param int $id Event id.
