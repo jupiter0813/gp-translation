@@ -33,6 +33,10 @@ class Delete_Route extends Route {
 			$this->die_with_404();
 		}
 
+		if ( ! current_user_can( 'manage_translation_events', $event->id() ) ) {
+			$this->die_with_error( esc_html__( 'You do not have permission to delete events.', 'gp-translation-events' ), 403 );
+		}
+
 		if ( ! current_user_can( 'delete_translation_event', $event->id() ) ) {
 			$this->die_with_error( esc_html__( 'You do not have permission to delete this event.', 'gp-translation-events' ), 403 );
 		}
