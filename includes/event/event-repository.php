@@ -20,9 +20,11 @@ class Event_Repository implements Event_Repository_Interface {
 		$this->attendee_repository = $attendee_repository;
 	}
 
-        /*
-         * @return int|WP_Error
-         */
+	/**
+	 * Get or create the parent post for the year.
+	 *
+	 * @return int|WP_Error
+	 */
 	private function get_year_post_id( string $year ) {
 		$year_post = get_page_by_path( $year, OBJECT, self::POST_TYPE );
 		if ( ! $year_post ) {
