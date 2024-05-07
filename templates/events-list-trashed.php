@@ -22,6 +22,9 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 				<?php foreach ( $trashed_events_query->events as $event ) : ?>
 					<li class="event-list-item">
 						<a href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>"><?php echo esc_html( $event->title() ); ?></a>
+						<?php if ( current_user_can( 'trash_translation_event', $event->id() ) ) : ?>
+							<a href="<?php echo esc_url( Urls::event_trash( $event->id() ) ); ?>" class="button is-small">Restore</a>
+						<?php endif; ?>
 						<?php if ( $event->is_past() ) : ?>
 							<span class="event-list-date">ended <?php $event->end()->print_relative_time_html(); ?></time></span>
 						<?php else : ?>
