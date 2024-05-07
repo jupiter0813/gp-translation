@@ -4,22 +4,22 @@ use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Urls;
 
-/** @var WP_User $user */
+/** @var string $html_title */
 /** @var string $page_title */
 /** @var string[] $breadcrumbs */
+/** @var WP_User $user */
 
-/** @var string $event_page_title */
 /** @var Event $event */
 /** @var Attendee[] $hosts */
 
-gp_title( $page_title );
+gp_title( $html_title );
 gp_breadcrumb_translation_events( $breadcrumbs );
 gp_tmpl_header();
 ?>
 
 <div class="event-list-top-bar">
 	<h2 class="event-page-title">
-		<?php echo esc_html( $event_page_title ); ?>
+		<?php echo esc_html( $page_title ); ?>
 		<?php if ( isset( $event ) && 'draft' === $event->status() ) : ?>
 			<span class="event-label-draft"><?php echo esc_html( $event->status() ); ?></span>
 		<?php endif; ?>

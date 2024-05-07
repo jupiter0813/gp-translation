@@ -21,7 +21,7 @@ class Create_Route extends Route {
 			$this->die_with_error( 'You do not have permission to create events.' );
 		}
 
-		$event_page_title        = 'Create Event';
+		$page_title              = 'Create Event';
 		$event_form_name         = 'create_event';
 		$css_show_url            = 'hide-event-url';
 		$event_id                = null;

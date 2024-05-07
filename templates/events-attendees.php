@@ -12,10 +12,10 @@ use Wporg\TranslationEvents\Event\Event;
 
 Templates::header(
 	array(
-		'page_title'       => __( 'Translation Events', 'gp-translation-events' ),
-		'event_page_title' => __( 'Manage Attendees', 'gp-translation-events' ),
-		'breadcrumbs'      => array(),
-		'event'            => $event,
+		'html_title'  => __( 'Translation Events', 'gp-translation-events' ),
+		'page_title'  => __( 'Manage Attendees', 'gp-translation-events' ),
+		'breadcrumbs' => array(),
+		'event'       => $event,
 	),
 );
 ?>

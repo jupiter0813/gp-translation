@@ -9,7 +9,7 @@ use DateTimeZone;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 
-/** @var string $event_page_title */
+/** @var string $page_title */
 /** @var string $event_form_name */
 /** @var int    $event_id */
 /** @var string $event_title */
@@ -22,9 +22,9 @@ use Wporg\TranslationEvents\Event\Event_Start_Date;
 
 Templates::header(
 	array(
-		'page_title'       => __( 'Translation Events' ) . ' - ' . esc_html( $event_page_title . ' - ' . $event_title ),
-		'event_page_title' => $event_page_title,
-		'breadcrumbs'      => array( esc_html( $event_page_title ) ),
+		'html_title'  => __( 'Translation Events' ) . ' - ' . esc_html( $page_title . ' - ' . $event_title ),
+		'page_title'  => $page_title,
+		'breadcrumbs' => array( esc_html( $page_title ) ),
 	),
 );
 ?>

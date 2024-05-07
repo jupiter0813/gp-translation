@@ -34,11 +34,11 @@ use Wporg\TranslationEvents\Stats\Stats_Row;
 Templates::header(
 	array(
 		/* translators: %s: Event title. */
-		'page_title'       => sprintf( __( 'Translation Events - %s' ), esc_html( $event->title() ) ),
-		'breadcrumbs'      => array( esc_html( $event->title() ) ),
-		'event_page_title' => $event->title(),
-		'event'            => $event,
-		'hosts'            => $hosts,
+		'html_title'  => sprintf( __( 'Translation Events - %s' ), esc_html( $event->title() ) ),
+		'page_title'  => $event->title(),
+		'breadcrumbs' => array( esc_html( $event->title() ) ),
+		'event'       => $event,
+		'hosts'       => $hosts,
 	),
 );
 ?>

@@ -14,9 +14,9 @@ use Wporg\TranslationEvents\Stats\Stats_Calculator;
 
 Templates::header(
 	array(
-		'page_title'       => esc_html__( 'Translation Events', 'gp-translation-events' ) . ' - ' . esc_html__( 'My Events', 'gp-translation-events' ),
-		'event_page_title' => __( 'My Events', 'gp-translation-events' ),
-		'breadcrumbs'      => array( esc_html__( 'My Events', 'gp-translation-events' ) ),
+		'html_title'  => esc_html__( 'Translation Events', 'gp-translation-events' ) . ' - ' . esc_html__( 'My Events', 'gp-translation-events' ),
+		'page_title'  => __( 'My Events', 'gp-translation-events' ),
+		'breadcrumbs' => array( esc_html__( 'My Events', 'gp-translation-events' ) ),
 	),
 );
 ?>
