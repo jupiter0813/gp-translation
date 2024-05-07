@@ -31,6 +31,7 @@ use Wporg\TranslationEvents\Event\Event_Capabilities;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
+use Wporg\TranslationEvents\Notifications\Notifications_Send;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Listener;
 
@@ -69,6 +70,7 @@ class Translation_Events {
 		add_action( 'wp_ajax_nopriv_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_translation_event_js' ) );
 		add_action( 'init', array( $this, 'register_event_post_type' ) );
+		add_action( 'init', array( $this, 'send_notifications' ) );
 		add_action( 'add_meta_boxes', array( $this, 'event_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_event_meta_boxes' ) );
 		add_action( 'transition_post_status', array( $this, 'event_status_transition' ), 10, 3 );
@@ -183,7 +185,6 @@ class Translation_Events {
 				return;
 			}
 		}
-
 		$fields = array( 'event_start', 'event_end' );
 		foreach ( $fields as $field ) {
 			if ( isset( $_POST[ $field ] ) ) {
@@ -196,7 +197,7 @@ class Translation_Events {
 	 * Handle the event form submission for the creation, editing, and deletion of events. This function is called via AJAX.
 	 */
 	public function submit_event_ajax() {
-		$form_handler = new Event_Form_Handler( self::get_event_repository() );
+		$form_handler = new Event_Form_Handler( self::get_event_repository(), self::get_attendee_repository() );
 		// Nonce verification is done by the form handler.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$form_handler->handle( $_POST );
@@ -339,6 +340,13 @@ class Translation_Events {
 				),
 			)
 		);
+	}
+
+	/**
+	 * Send notifications for the events.
+	 */
+	public function send_notifications() {
+		new Notifications_Send( self::get_event_repository(), self::get_attendee_repository() );
 	}
 
 	/**

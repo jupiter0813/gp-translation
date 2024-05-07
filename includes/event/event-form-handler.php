@@ -6,14 +6,20 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use WP_Error;
+use Wporg\TranslationEvents\Attendee\Attendee_Repository;
+use Wporg\TranslationEvents\Notifications\Notifications_Schedule;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Urls;
 
 class Event_Form_Handler {
 	private Event_Repository_Interface $event_repository;
+	private Attendee_Repository $attendee_repository;
+	private Notifications_Schedule $notifications_schedule;
 
-	public function __construct( Event_Repository_Interface $event_repository ) {
-		$this->event_repository = $event_repository;
+	public function __construct( Event_Repository_Interface $event_repository, Attendee_Repository $attendee_repository ) {
+		$this->event_repository       = $event_repository;
+		$this->attendee_repository    = $attendee_repository;
+		$this->notifications_schedule = new Notifications_Schedule( $this->event_repository );
 	}
 
 	public function handle( array $form_data ): void {
@@ -75,6 +81,7 @@ class Event_Form_Handler {
 			} else {
 				$response_message = esc_html__( 'Event deleted successfully.', 'gp-translation-events' );
 				$event_status     = 'deleted';
+				$this->notifications_schedule->delete_scheduled_emails( $event_id );
 			}
 		} else {
 			// Create or update event.
@@ -115,6 +122,7 @@ class Event_Form_Handler {
 					return;
 				}
 				$response_message = esc_html__( 'Event created successfully.', 'gp-translation-events' );
+				$this->notifications_schedule->schedule_emails( $result );
 			}
 			if ( 'edit_event' === $action ) {
 				$event = $this->event_repository->get_event( $new_event->id() );
@@ -139,6 +147,7 @@ class Event_Form_Handler {
 					return;
 				}
 				$response_message = esc_html__( 'Event updated successfully', 'gp-translation-events' );
+				$this->notifications_schedule->schedule_emails( $result );
 			}
 
 			$event_id     = $new_event->id();
