@@ -24,4 +24,8 @@ class Templates {
 	public static function header( array $data ) {
 		self::get_instance()->render( 'header', $data );
 	}
+
+	public static function footer( array $data = array() ) {
+		self::get_instance()->render( 'footer', $data );
+	}
 }

@@ -65,5 +65,4 @@ Templates::header(
 		<p><?php esc_html_e( 'No attendees found.', 'gp-translation-events' ); ?></p>
 	</div>
 <?php endif; ?>
-<?php
-gp_tmpl_footer();
+<?php Templates::footer(); ?>

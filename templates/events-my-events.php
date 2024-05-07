@@ -143,6 +143,4 @@ Templates::header(
 	endif;
 	?>
 </div>
-<?php
-	gp_tmpl_footer();
-?>
+<?php Templates::footer(); ?>
