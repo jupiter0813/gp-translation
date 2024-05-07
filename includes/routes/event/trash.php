@@ -39,6 +39,16 @@ class Trash_Route extends Route {
 			$this->die_with_error( esc_html__( 'You do not have permission to trash or restore this event.', 'gp-translation-events' ), 403 );
 		}
 
-		// TODO.
+		if ( ! $event->is_trashed() ) {
+			// Trash.
+			$this->event_repository->trash_event( $event );
+		} else {
+			// Restore.
+			$event->set_status( 'draft' );
+			$this->event_repository->update_event( $event );
+		}
+
+		wp_safe_redirect( Urls::event_edit( $event->id() ) );
+		exit;
 	}
 }
