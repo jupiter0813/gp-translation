@@ -16,6 +16,8 @@ use Wporg\TranslationEvents\Stats\Stats_Row;
 
 /** @var bool $user_is_attending */
 /** @var bool $user_is_contributor */
+/** @var Attendee $attendee */
+/** @var Attendee[] $hosts */
 /** @var Attendee[] $attendees_not_contributing */
 /** @var Attendee[] $contributors */
 /** @var array $new_contributor_ids */
@@ -29,12 +31,16 @@ use Wporg\TranslationEvents\Stats\Stats_Row;
 /** @var array $projects */
 /** @var WP_User $user */
 
-/* translators: %s: Event title. */
-gp_title( sprintf( __( 'Translation Events - %s' ), esc_html( $event_title ) ) );
-gp_breadcrumb_translation_events( array( esc_html( $event_title ) ) );
-gp_tmpl_header();
-$event_page_title = $event_title;
-gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
+Templates::header(
+	array(
+		/* translators: %s: Event title. */
+		'page_title'       => sprintf( __( 'Translation Events - %s' ), esc_html( $event->title() ) ),
+		'breadcrumbs'      => array( esc_html( $event->title() ) ),
+		'event_page_title' => $event->title(),
+		'event'            => $event,
+		'hosts'            => $hosts,
+	),
+);
 ?>
 
 <div class="event-page-wrapper">
