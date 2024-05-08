@@ -5,10 +5,10 @@ use Wporg\TranslationEvents\Urls;
 /** @var string $html_title */
 /** @var string|callable $page_title */
 /** @var ?callable $sub_head */
-/** @var string[] $breadcrumbs */
+/** @var ?string[] $breadcrumbs */
 
 gp_title( $html_title );
-gp_breadcrumb_translation_events( $breadcrumbs );
+gp_breadcrumb_translation_events( $breadcrumbs ?? array() );
 gp_tmpl_header();
 ?>
 
