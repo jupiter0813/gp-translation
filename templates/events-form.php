@@ -2,10 +2,12 @@
 /**
  * Template for event form.
  */
-
-namespace Wporg\TranslationEvents;
+namespace Wporg\TranslationEvents\Templates;
 
 use Wporg\TranslationEvents\Event\Event;
+use Wporg\TranslationEvents\Event_Text_Snippet;
+use Wporg\TranslationEvents\Templates;
+use Wporg\TranslationEvents\Urls;
 
 /** @var bool $is_create_form */
 /** @var Event $event */

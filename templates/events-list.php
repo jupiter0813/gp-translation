@@ -2,13 +2,14 @@
 /**
  * Events list page.
  */
-
-namespace Wporg\TranslationEvents;
+namespace Wporg\TranslationEvents\Templates;
 
 use DateTime;
 use WP_Query;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Events_Query_Result;
+use Wporg\TranslationEvents\Templates;
+use Wporg\TranslationEvents\Urls;
 
 /** @var Events_Query_Result $current_events_query */
 /** @var Events_Query_Result $upcoming_events_query */

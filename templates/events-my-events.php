@@ -2,11 +2,12 @@
 /**
  * Template for My Events.
  */
-
-namespace Wporg\TranslationEvents;
+namespace Wporg\TranslationEvents\Templates;
 
 use Wporg\TranslationEvents\Event\Events_Query_Result;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
+use Wporg\TranslationEvents\Templates;
+use Wporg\TranslationEvents\Urls;
 
 /** @var Events_Query_Result $events_i_created_query */
 /** @var Events_Query_Result $events_i_host_query */

@@ -1,8 +1,9 @@
 <?php
-
-namespace Wporg\TranslationEvents;
+namespace Wporg\TranslationEvents\Templates;
 
 use Wporg\TranslationEvents\Event\Events_Query_Result;
+use Wporg\TranslationEvents\Templates;
+use Wporg\TranslationEvents\Urls;
 
 /** @var Events_Query_Result $trashed_events_query */
 
