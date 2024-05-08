@@ -14,4 +14,8 @@ class Templates {
 	public static function footer( array $data = array() ) {
 		self::render( 'footer', $data );
 	}
+
+	public static function partial( string $template, array $data ) {
+		self::render( "partials/$template", $data );
+	}
 }
