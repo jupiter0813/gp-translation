@@ -5,7 +5,7 @@ use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Urls;
 
 /** @var string $html_title */
-/** @var string $page_title */
+/** @var string|callable $page_title */
 /** @var string[] $breadcrumbs */
 /** @var WP_User $user */
 
@@ -19,9 +19,10 @@ gp_tmpl_header();
 
 <div class="event-list-top-bar">
 	<h2 class="event-page-title">
-		<?php echo esc_html( $page_title ); ?>
-		<?php if ( isset( $event ) && 'draft' === $event->status() ) : ?>
-			<span class="event-label-draft"><?php echo esc_html( $event->status() ); ?></span>
+		<?php if ( is_callable( $page_title ) ) : ?>
+			<?php $page_title(); ?>
+		<?php else : ?>
+			<?php echo esc_html( $page_title ); ?>
 		<?php endif; ?>
 	</h2>
 

@@ -27,7 +27,13 @@ Templates::header(
 	array(
 		/* translators: %s: Event title. */
 		'html_title'  => sprintf( __( 'Translation Events - %s' ), esc_html( $event->title() ) ),
-		'page_title'  => $event->title(),
+		'page_title'  => function () use ( $event ) {
+			echo esc_html( $event->title() );
+			if ( 'draft' === $event->status() ) : ?>
+				<span class="event-label-draft"><?php echo esc_html( $event->status() ); ?></span>
+			<?php endif; ?>
+			<?php
+		},
 		'breadcrumbs' => array( esc_html( $event->title() ) ),
 		'event'       => $event,
 		'hosts'       => $hosts,
