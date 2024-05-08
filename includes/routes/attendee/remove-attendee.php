@@ -58,7 +58,7 @@ class Remove_Attendee_Route extends Route {
 			$this->attendee_repository->remove_attendee( $event->id(), $user_id );
 		}
 
-		wp_safe_redirect( Urls::event_attendees( $event->slug() ) );
+		wp_safe_redirect( Urls::event_attendees( $event->id() ) );
 		exit;
 	}
 }
