@@ -62,7 +62,7 @@ class Host_Event_Route extends Route {
 			$this->event_repository->update_event( $event );
 		}
 
-		wp_safe_redirect( Urls::event_attendees( $event->slug() ) );
+		wp_safe_redirect( Urls::event_attendees( $event->id() ) );
 		exit;
 	}
 }

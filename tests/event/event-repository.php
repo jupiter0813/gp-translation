@@ -95,6 +95,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( $status, $created_event->status() );
 		$this->assertEquals( $title, $created_event->title() );
 		$this->assertEquals( $description, $created_event->description() );
+		$this->assertEquals( '/events/' . $start->format( 'Y' ) . '/foo-title', wp_make_link_relative( get_the_permalink( $event->id() ) ) );
 	}
 
 	public function test_update_event() {
