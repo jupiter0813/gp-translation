@@ -28,11 +28,11 @@ class Remove_Attendee_Route extends Route {
 	/**
 	 * Handle the request to remove an attendee from an event.
 	 *
-	 * @param string $event_slug The event slug.
-	 * @param int    $user_id  The user ID.
+	 * @param int $event_id The event slug.
+	 * @param int $user_id  The user ID.
 	 * @return void
 	 */
-	public function handle( string $event_slug, int $user_id ): void {
+	public function handle( int $event_id, int $user_id ): void {
 		global $wp;
 		$user             = wp_get_current_user();
 		$is_active_filter = false;
@@ -41,11 +41,7 @@ class Remove_Attendee_Route extends Route {
 			exit;
 		}
 
-		$event = get_page_by_path( $event_slug, OBJECT, Translation_Events::CPT );
-		if ( ! $event ) {
-			$this->die_with_404();
-		}
-		$event = $this->event_repository->get_event( $event->ID );
+		$event = $this->event_repository->get_event( $event_id );
 		if ( ! $event ) {
 			$this->die_with_404();
 		}
