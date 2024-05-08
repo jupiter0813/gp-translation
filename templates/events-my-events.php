@@ -143,4 +143,5 @@ Templates::header(
 	endif;
 	?>
 </div>
+
 <?php Templates::footer(); ?>

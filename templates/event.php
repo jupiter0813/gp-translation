@@ -298,5 +298,5 @@ Templates::header(
 		<?php endif; ?>
 	</div>
 </div>
-<div class="clear"></div>
+
 <?php Templates::footer(); ?>

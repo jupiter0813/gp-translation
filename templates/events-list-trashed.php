@@ -56,5 +56,4 @@ Templates::header(
 	</div>
 </div>
 
-<div class="clear"></div>
 <?php Templates::footer(); ?>

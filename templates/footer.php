@@ -1,3 +1,2 @@
-<?php
-
-gp_tmpl_footer();
+<div class="clear"></div>
+<?php gp_tmpl_footer(); ?>

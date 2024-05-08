@@ -132,5 +132,5 @@ Templates::header(
 		<a class="manage-attendees-btn button is-primary" href="<?php echo esc_url( Urls::event_attendees( $event->id() ) ); ?>"><?php esc_html_e( 'Manage Attendees', 'gp-translation-events' ); ?></a>
 	</div>
 <?php endif; ?>
-<div class="clear"></div>
+
 <?php Templates::footer(); ?>
