@@ -6,7 +6,6 @@ namespace Wporg\TranslationEvents\Templates;
 
 use Wporg\TranslationEvents\Event\Events_Query_Result;
 use Wporg\TranslationEvents\Templates;
-use Wporg\TranslationEvents\Urls;
 
 /** @var Events_Query_Result $current_events_query */
 /** @var Events_Query_Result $upcoming_events_query */
@@ -78,28 +77,20 @@ endif;
 		<?php if ( empty( $user_attending_events_query->events ) ) : ?>
 			<p>You don't have any events to attend.</p>
 		<?php else : ?>
-			<ul class="event-attending-list">
-				<?php foreach ( $user_attending_events_query->events as $event ) : ?>
-					<li class="event-list-item">
-						<a href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>"><?php echo esc_html( $event->title() ); ?></a>
-						<span class="event-list-date events-i-am-attending"><?php $event->start()->print_time_html( 'F j, Y H:i T' ); ?> - <?php $event->end()->print_time_html( 'F j, Y H:i T' ); ?></span>
-					</li>
-				<?php endforeach; ?>
-			</ul>
 			<?php
-				echo wp_kses_post(
-					paginate_links(
-						array(
-							'total'     => $user_attending_events_query->page_count,
-							'current'   => $user_attending_events_query->current_page,
-							'format'    => '?user_attending_events_paged=%#%',
-							'prev_text' => '&laquo; Previous',
-							'next_text' => 'Next &raquo;',
-						)
-					) ?? ''
-				);
-
-				wp_reset_postdata();
+			Templates::partial(
+				'event-list',
+				array(
+					'query'                  => $user_attending_events_query,
+					'pagination_query_param' => 'user_attending_events_paged',
+					'show_start'             => true,
+					'show_end'               => true,
+					'show_excerpt'           => false,
+					'date_format'            => 'F j, Y H:i T',
+					'relative_time'          => false,
+					'classes'                => array( 'event-attending-list' ),
+				),
+			);
 		endif;
 		?>
 	</div>
