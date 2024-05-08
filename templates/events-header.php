@@ -23,7 +23,7 @@ use Wporg\TranslationEvents\Event\Event;
 	<ul class="event-list-nav">
 		<?php if ( is_user_logged_in() ) : ?>
 			<?php if ( current_user_can( 'manage_translation_events' ) ) : ?>
-				<li><a href="<?php echo esc_url( Urls::events_trashed() ); ?>">Trashed Events</a></li>
+				<li><a href="<?php echo esc_url( Urls::events_trashed() ); ?>">Deleted Events</a></li>
 			<?php endif; ?>
 			<li><a href="<?php echo esc_url( Urls::my_events() ); ?>">My Events</a></li>
 			<?php if ( current_user_can( 'create_translation_event' ) ) : ?>

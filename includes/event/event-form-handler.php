@@ -38,7 +38,7 @@ class Event_Form_Handler {
 			wp_send_json_error( esc_html__( 'You do not have permissions to edit this event.', 'gp-translation-events' ), 403 );
 		}
 		if ( 'trash_event' === $action && ( ! current_user_can( 'trash_translation_event', $event_id ) ) ) {
-			wp_send_json_error( esc_html__( 'You do not have permissions to trash this event.', 'gp-translation-events' ), 403 );
+			wp_send_json_error( esc_html__( 'You do not have permissions to delete this event.', 'gp-translation-events' ), 403 );
 		}
 
 		$is_nonce_valid = false;
@@ -69,14 +69,14 @@ class Event_Form_Handler {
 				wp_send_json_error( esc_html__( 'Failed to calculate event stats.', 'gp-translation-events' ), 500 );
 			}
 			if ( ! empty( $event_stats->rows() ) ) {
-				wp_send_json_error( esc_html__( 'Event has stats so it cannot be trashed.', 'gp-translation-events' ), 422 );
+				wp_send_json_error( esc_html__( 'Event has stats so it cannot be deleted.', 'gp-translation-events' ), 422 );
 			}
 
 			if ( false === $this->event_repository->trash_event( $event ) ) {
-				$response_message = esc_html__( 'Failed to trash event.', 'gp-translation-events' );
+				$response_message = esc_html__( 'Failed to delete event.', 'gp-translation-events' );
 				$event_status     = $event->status();
 			} else {
-				$response_message = esc_html__( 'Event trashed successfully.', 'gp-translation-events' );
+				$response_message = esc_html__( 'Event deleted successfully.', 'gp-translation-events' );
 				$event_status     = 'trashed';
 				$this->notifications_schedule->delete_scheduled_emails( $event_id );
 			}

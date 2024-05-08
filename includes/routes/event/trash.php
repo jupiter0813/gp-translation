@@ -36,7 +36,7 @@ class Trash_Route extends Route {
 		}
 
 		if ( ! current_user_can( 'trash_translation_event', $event->id() ) ) {
-			$this->die_with_error( esc_html__( 'You do not have permission to trash or restore this event.', 'gp-translation-events' ), 403 );
+			$this->die_with_error( esc_html__( 'You do not have permission to delete or restore this event.', 'gp-translation-events' ), 403 );
 		}
 
 		if ( ! $event->is_trashed() ) {

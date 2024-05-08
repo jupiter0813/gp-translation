@@ -176,7 +176,7 @@
 		}
 
 		function handleTrash() {
-			if ( ! confirm( 'Are you sure you want to trash this event?' ) ) {
+			if ( ! confirm( 'Are you sure you want to delete this event?' ) ) {
 				return;
 			}
 			const $form = $( '.translation-event-form' );
