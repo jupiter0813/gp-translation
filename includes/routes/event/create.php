@@ -2,6 +2,9 @@
 
 namespace Wporg\TranslationEvents\Routes\Event;
 
+use DateTimeImmutable;
+use DateTimeZone;
+use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Routes\Route;
@@ -21,20 +24,32 @@ class Create_Route extends Route {
 			$this->die_with_error( 'You do not have permission to create events.' );
 		}
 
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
+		$event = new Event(
+			get_current_user_id(),
+			new Event_Start_Date( $now->format( 'Y-m-d H:i:s' ) ),
+			new Event_End_Date( $now->modify( '+1 hour' )->format( 'Y-m-d H:i:s' ) ),
+			new DateTimeZone( 'UTC' ),
+			'draft',
+			'',
+			'',
+		);
+
 		$this->render(
 			'events-form',
 			array(
 				'is_create_form'          => true,
 				'page_title'              => 'Create Event',
-				'event_id'                => null,
-				'event_title'             => '',
-				'event_description'       => '',
+				'event_id'                => $event->id(),
+				'event_title'             => $event->title(),
+				'event_description'       => $event->description(),
 				'event_url'               => '',
 				'create_trash_button'     => true,
 				'visibility_trash_button' => 'none',
-				'event_timezone'          => null,
-				'event_start'             => new Event_Start_Date( date_i18n( 'Y - m - d H:i' ) ),
-				'event_end'               => new Event_End_Date( date_i18n( 'Y - m - d H:i' ) ),
+				'event_timezone'          => $event->timezone(),
+				'event_start'             => $event->start(),
+				'event_end'               => $event->end(),
 				'event_slug'              => '',
 			),
 		);
