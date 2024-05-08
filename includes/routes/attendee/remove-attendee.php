@@ -34,7 +34,6 @@ class Remove_Attendee_Route extends Route {
 	 */
 	public function handle( int $event_id, int $user_id ): void {
 		global $wp;
-		$user             = wp_get_current_user();
 		if ( ! is_user_logged_in() ) {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
 			exit;
@@ -44,14 +43,14 @@ class Remove_Attendee_Route extends Route {
 		if ( ! $event ) {
 			$this->die_with_404();
 		}
-		if ( ! current_user_can( 'edit_translation_event', $event->id() ) ) {
+		if ( ! current_user_can( 'edit_translation_event_attendees', $event->id() ) ) {
 			$this->die_with_error( esc_html__( 'You do not have permission to edit this event.', 'gp-translation-events' ), 403 );
 		}
 
 		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user_id );
 		// The user is attending to the event, so if I don't find the attendee, I won't create it.
 		if ( $attendee instanceof Attendee ) {
-			if ( $attendee->is_host() || $attendee->user_id() === $user->ID ) {
+			if ( ! current_user_can( 'edit_translation_event_attendees', $event->id() ) ) {
 				$this->die_with_error( esc_html__( 'You do not have permission to remove this attendee.', 'gp-translation-events' ), 400 );
 			}
 			$this->attendee_repository->remove_attendee( $event->id(), $user_id );
