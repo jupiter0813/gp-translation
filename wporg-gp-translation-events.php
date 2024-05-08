@@ -161,12 +161,47 @@ class Translation_Events {
 	 */
 	public function event_dates_meta_box( WP_Post $post ) {
 		wp_nonce_field( 'event_dates_nonce', 'event_dates_nonce' );
-		$event_start = get_post_meta( $post->ID, '_event_start', true );
-		$event_end   = get_post_meta( $post->ID, '_event_end', true );
-		echo '<label for="event_start">Start Date: </label>';
-		echo '<input type="date" id="event_start" name="event_start" value="' . esc_attr( $event_start ) . '" required>';
-		echo '<label for="event_end">End Date: </label>';
-		echo '<input type="date" id="event_end" name="event_end" value="' . esc_attr( $event_end ) . '" required>';
+		$event_start    = get_post_meta( $post->ID, '_event_start', true );
+		$event_end      = get_post_meta( $post->ID, '_event_end', true );
+		$event_timezone = get_post_meta( $post->ID, '_event_timezone', true );
+		$hosts          = explode( ',', get_post_meta( $post->ID, '_hosts', true ) );
+		if ( empty( $hosts ) ) {
+			$hosts = array( $post->post_author );
+		}
+		?>
+		<label for="event_start">Start Date: </label>
+		<input type="datetime-local" id="event_start" name="event_start" value="<?php echo esc_attr( $event_start ); ?>" required><br>
+		<label for="event_end">End Date: </label>
+		<input type="datetime-local" id="event_end" name="event_end" value="<?php echo esc_attr( $event_end ); ?>" required><br>
+		<label for="event-timezone">Timezone: </label>
+		<select id="event-timezone" name="event_timezone" required>
+			<?php
+			echo wp_kses(
+				wp_timezone_choice( $event_timezone, get_user_locale() ),
+				array(
+					'optgroup' => array( 'label' => array() ),
+					'option'   => array(
+						'value'    => array(),
+						'selected' => array(),
+					),
+				)
+			);
+			?>
+		</select><br>
+		<label for="event-hosts">Hosts: </label>
+		<?php
+		foreach ( $hosts as $host ) {
+			$user = get_user_by( 'ID', $host );
+			if ( $user ) {
+				?>
+				<a href="<?php echo esc_url( get_author_posts_url( $host ) ); ?>"><?php echo esc_html( $user->display_name ); ?></a>
+				<?php
+			} else {
+				?>
+				<i><?php echo esc_html( $host ); ?></i>
+				<?php
+			}
+		}
 	}
 
 	/**
@@ -186,7 +221,7 @@ class Translation_Events {
 				return;
 			}
 		}
-		$fields = array( 'event_start', 'event_end' );
+		$fields = array( 'event_start', 'event_end', 'event_timezone' );
 		foreach ( $fields as $field ) {
 			if ( isset( $_POST[ $field ] ) ) {
 				update_post_meta( $post_id, '_' . $field, sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) );
