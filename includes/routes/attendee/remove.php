@@ -48,7 +48,6 @@ class Remove_Attendee_Route extends Route {
 		}
 
 		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user_id );
-		// The user is attending to the event, so if I don't find the attendee, I won't create it.
 		if ( $attendee instanceof Attendee ) {
 			if ( ! current_user_can( 'edit_translation_event_attendees', $event->id() ) ) {
 				$this->die_with_error( esc_html__( 'You do not have permission to remove this attendee.', 'gp-translation-events' ), 400 );
