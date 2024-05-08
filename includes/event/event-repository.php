@@ -428,7 +428,6 @@ class Event_Repository implements Event_Repository_Interface {
 	/**
 	 * @throws InvalidStart
 	 * @throws InvalidEnd
-	 * @throws InvalidTitle
 	 * @throws InvalidStatus
 	 * @throws Exception
 	 */

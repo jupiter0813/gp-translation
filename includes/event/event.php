@@ -25,12 +25,6 @@ class InvalidEnd extends Exception {
 	}
 }
 
-class InvalidTitle extends Exception {
-	public function __construct( Throwable $previous = null ) {
-		parent::__construct( 'Event title is invalid', 0, $previous );
-	}
-}
-
 class InvalidStatus extends Exception {
 	public function __construct( Throwable $previous = null ) {
 		parent::__construct( 'Event status is invalid', 0, $previous );
@@ -52,7 +46,6 @@ class Event {
 	 * @throws InvalidStart
 	 * @throws InvalidEnd
 	 * @throws InvalidStatus
-	 * @throws InvalidTitle
 	 */
 	public function __construct(
 		int $author_id,
@@ -151,13 +144,7 @@ class Event {
 		$this->status = $status;
 	}
 
-	/**
-	 * @throws InvalidTitle
-	 */
 	public function set_title( string $title ): void {
-		if ( ! $title ) {
-			throw new InvalidTitle();
-		}
 		$this->title = $title;
 	}
 
