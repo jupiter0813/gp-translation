@@ -27,9 +27,9 @@ $extra_classes = isset( $extra_classes ) ? implode( $extra_classes, ' ' ) : '';
  */
 $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 	if ( $relative_time ) {
-		$time->print_time_html( $date_format );
-	} else {
 		$time->print_relative_time_html( $date_format );
+	} else {
+		$time->print_time_html( $date_format );
 	}
 };
 ?>
