@@ -42,7 +42,7 @@ class Urls {
 		return gp_url( '/events/my-events/' );
 	}
 
-	public static function event_attendees( string $event_slug ): string {
-		return gp_url( "/events/$event_slug/attendees" );
+	public static function event_attendees( int $event_id ): string {
+		return self::event_details( $event_id ) . 'attendees/';
 	}
 }
