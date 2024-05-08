@@ -5,7 +5,6 @@ namespace Wporg\TranslationEvents\Routes\Event;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
-use Wporg\TranslationEvents\Urls;
 
 /**
  * Displays the event edit page.
@@ -41,7 +40,6 @@ class Edit_Route extends Route {
 			array(
 				'is_create_form' => false,
 				'event'          => $event,
-				'event_url'      => Urls::event_details_absolute( $event_id ),
 			),
 		);
 	}

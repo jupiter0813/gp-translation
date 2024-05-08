@@ -41,7 +41,6 @@ class Create_Route extends Route {
 			array(
 				'is_create_form' => true,
 				'event'          => $event,
-				'event_url'      => '',
 			),
 		);
 	}

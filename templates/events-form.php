@@ -7,9 +7,8 @@ namespace Wporg\TranslationEvents;
 
 use Wporg\TranslationEvents\Event\Event;
 
-/** @var Event $event */
 /** @var bool $is_create_form */
-/** @var string $event_url */
+/** @var Event $event */
 
 $page_title = $is_create_form ? 'Create Event' : 'Edit Event';
 
@@ -38,6 +37,7 @@ Templates::header(
 		<input type="text" id="event-title" name="event_title" value="<?php echo esc_html( $event->title() ); ?>" required size="42">
 	</div>
 	<?php $event_url_class = $is_create_form ? 'hide-event-url' : ''; ?>
+	<?php $event_url = $is_create_form ? '' : Urls::event_details_absolute( $event->id() ); ?>
 	<div id="event-url" class="<?php echo esc_attr( $event_url_class ); ?>">
 		<label for="event-permalink"><?php esc_html_e( 'Event URL', 'gp-translation-events' ); ?></label>
 		<a id="event-permalink" class="event-permalink" href="<?php echo esc_url( $event_url ); ?>" target="_blank"><?php echo esc_url( $event_url ); ?></a>
