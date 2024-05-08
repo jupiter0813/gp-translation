@@ -33,7 +33,7 @@ gp_tmpl_header();
 		<?php endif; ?>
 	</ul>
 
-	<?php if ( is_callable( $sub_head ) ) : ?>
+	<?php if ( isset( $sub_head ) && is_callable( $sub_head ) ) : ?>
 		<p class="event-sub-head">
 			<?php $sub_head(); ?>
 		</p>
