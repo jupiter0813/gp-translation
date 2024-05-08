@@ -7,6 +7,10 @@ class Urls {
 		return gp_url( '/events' );
 	}
 
+	public static function events_trashed(): string {
+		return gp_url( '/events/trashed' );
+	}
+
 	public static function event_details( int $event_id ): string {
 		return gp_url( wp_make_link_relative( get_the_permalink( $event_id ) ) );
 	}
@@ -24,6 +28,14 @@ class Urls {
 
 	public static function event_edit( int $event_id ): string {
 		return gp_url( '/events/edit/' . $event_id );
+	}
+
+	public static function event_trash( int $event_id ): string {
+		return gp_url( '/events/trash/' . $event_id );
+	}
+
+	public static function event_delete( int $event_id ): string {
+		return gp_url( '/events/delete/' . $event_id );
 	}
 
 	public static function event_create(): string {

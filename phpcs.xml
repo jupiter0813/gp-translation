@@ -13,7 +13,7 @@
 
     <rule ref="WordPress">
         <properties>
-            <property name="custom_capabilities[]" value="create_translation_event,view_translation_event,edit_translation_event,delete_translation_event,edit_translation_event_attendees"/>
+            <property name="custom_capabilities[]" value="manage_translation_events,create_translation_event,view_translation_event,edit_translation_event,trash_translation_event,delete_translation_event,edit_translation_event_attendees"/>
         </properties>
         <exclude name="Squiz.Commenting.ClassComment.Missing"/>
         <exclude name="Squiz.Commenting.FileComment.Missing"/>

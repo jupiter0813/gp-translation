@@ -89,11 +89,37 @@ class Event_Repository implements Event_Repository_Interface {
 		return $event->id();
 	}
 
-	public function delete_event( Event $event ) {
+	public function trash_event( Event $event ) {
 		$result = wp_trash_post( $event->id() );
 		if ( ! $result ) {
 			return false;
 		}
+		return $event;
+	}
+
+	public function delete_event( Event $event ) {
+		$result = wp_delete_post( $event->id(), true );
+		if ( ! $result ) {
+			return false;
+		}
+
+		// Delete attendees.
+		$attendees = $this->attendee_repository->get_attendees( $event->id() );
+		foreach ( $attendees as $attendee ) {
+			$this->attendee_repository->remove_attendee( $event->id(), $attendee->user_id() );
+		}
+
+		// Delete stats.
+		global $wpdb, $gp_table_prefix;
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->delete(
+			"{$gp_table_prefix}event_actions",
+			array( 'event_id' => $event->id() ),
+			array( '%d' ),
+		);
+		// phpcs:enable
+
 		return $event;
 	}
 
@@ -182,6 +208,16 @@ class Event_Repository implements Event_Repository_Interface {
 			)
 		);
 		// phpcs:enable
+	}
+
+	public function get_trashed_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
+		return $this->execute_events_query(
+			$page,
+			$page_size,
+			array(
+				'post_status' => 'trash',
+			)
+		);
 	}
 
 	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {

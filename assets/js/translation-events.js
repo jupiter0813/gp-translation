@@ -21,11 +21,11 @@
 					}
 				);
 
-				$( '.delete-event' ).on(
+				$( '.trash-event' ).on(
 					'click',
 					function ( e ) {
 						e.preventDefault();
-						handleDelete()
+						handleTrash()
 					}
 				);
 
@@ -161,7 +161,7 @@
 							}
 							$( '#event-url' ).removeClass( 'hide-event-url' ).find( 'a' ).attr( 'href', response.data.eventUrl ).text( response.data.eventUrl );
 							if ( $is_creation ) {
-								$( '#delete-button' ).toggle();
+								$( '#trash-button' ).toggle();
 							}
 							$gp.notices.success( response.data.message );
 						}
@@ -175,20 +175,20 @@
 			);
 		}
 
-		function handleDelete() {
+		function handleTrash() {
 			if ( ! confirm( 'Are you sure you want to delete this event?' ) ) {
 				return;
 			}
 			const $form = $( '.translation-event-form' );
-			$( '#form-name' ).val( 'delete_event' );
-			$( '#event-form-action' ).val( 'delete' );
+			$( '#form-name' ).val( 'trash_event' );
+			$( '#event-form-action' ).val( 'trash' );
 			$.ajax(
 				{
 					type: 'POST',
 					url: $translation_event.url,
 					data:$form.serialize(),
 					success: function ( response ) {
-						window.location = response.data.eventDeleteUrl;
+						window.location = response.data.eventTrashUrl;
 					},
 					error: function ( error ) {
 						$gp.notices.error( response.data.message );

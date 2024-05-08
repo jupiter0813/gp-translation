@@ -6,19 +6,16 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use WP_Error;
-use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Notifications\Notifications_Schedule;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Urls;
 
 class Event_Form_Handler {
 	private Event_Repository_Interface $event_repository;
-	private Attendee_Repository $attendee_repository;
 	private Notifications_Schedule $notifications_schedule;
 
-	public function __construct( Event_Repository_Interface $event_repository, Attendee_Repository $attendee_repository ) {
+	public function __construct( Event_Repository_Interface $event_repository ) {
 		$this->event_repository       = $event_repository;
-		$this->attendee_repository    = $attendee_repository;
 		$this->notifications_schedule = new Notifications_Schedule( $this->event_repository );
 	}
 
@@ -28,7 +25,7 @@ class Event_Form_Handler {
 		}
 
 		$action = isset( $form_data['form_name'] ) ? sanitize_text_field( wp_unslash( $form_data['form_name'] ) ) : '';
-		if ( ! in_array( $action, array( 'create_event', 'edit_event', 'delete_event' ), true ) ) {
+		if ( ! in_array( $action, array( 'create_event', 'edit_event', 'trash_event' ), true ) ) {
 			wp_send_json_error( esc_html__( 'Invalid form name.', 'gp-translation-events' ), 403 );
 		}
 
@@ -40,7 +37,7 @@ class Event_Form_Handler {
 		if ( 'edit_event' === $action && ( ! current_user_can( 'edit_translation_event', $event_id ) ) ) {
 			wp_send_json_error( esc_html__( 'You do not have permissions to edit this event.', 'gp-translation-events' ), 403 );
 		}
-		if ( 'delete_event' === $action && ( ! current_user_can( 'delete_translation_event', $event_id ) ) ) {
+		if ( 'trash_event' === $action && ( ! current_user_can( 'trash_translation_event', $event_id ) ) ) {
 			wp_send_json_error( esc_html__( 'You do not have permissions to delete this event.', 'gp-translation-events' ), 403 );
 		}
 
@@ -57,8 +54,8 @@ class Event_Form_Handler {
 		}
 
 		$response_message = '';
-		if ( 'delete_event' === $action ) {
-			// Delete event.
+		if ( 'trash_event' === $action ) {
+			// Trash event.
 			$event_id = intval( sanitize_text_field( wp_unslash( $form_data['event_id'] ) ) );
 			$event    = $this->event_repository->get_event( $event_id );
 			if ( ! $event ) {
@@ -75,12 +72,12 @@ class Event_Form_Handler {
 				wp_send_json_error( esc_html__( 'Event has stats so it cannot be deleted.', 'gp-translation-events' ), 422 );
 			}
 
-			if ( false === $this->event_repository->delete_event( $event ) ) {
+			if ( false === $this->event_repository->trash_event( $event ) ) {
 				$response_message = esc_html__( 'Failed to delete event.', 'gp-translation-events' );
 				$event_status     = $event->status();
 			} else {
 				$response_message = esc_html__( 'Event deleted successfully.', 'gp-translation-events' );
-				$event_status     = 'deleted';
+				$event_status     = 'trashed';
 				$this->notifications_schedule->delete_scheduled_emails( $event_id );
 			}
 		} else {
@@ -156,12 +153,12 @@ class Event_Form_Handler {
 
 		wp_send_json_success(
 			array(
-				'message'        => $response_message,
-				'eventId'        => $event_id,
-				'eventStatus'    => $event_status,
-				'eventUrl'       => Urls::event_details_absolute( $event_id ),
-				'eventEditUrl'   => Urls::event_edit( $event_id ),
-				'eventDeleteUrl' => Urls::my_events(), // The URL the user is redirected to after deleting.
+				'message'       => $response_message,
+				'eventId'       => $event_id,
+				'eventStatus'   => $event_status,
+				'eventUrl'      => Urls::event_details_absolute( $event_id ),
+				'eventEditUrl'  => Urls::event_edit( $event_id ),
+				'eventTrashUrl' => Urls::my_events(), // The URL the user is redirected to after trashing.
 			)
 		);
 	}
@@ -188,7 +185,7 @@ class Event_Form_Handler {
 		$event_timezone = isset( $data['event_timezone'] ) ? sanitize_text_field( wp_unslash( $data['event_timezone'] ) ) : '';
 
 		$event_status = '';
-		if ( isset( $data['event_form_action'] ) && in_array( $data['event_form_action'], array( 'draft', 'publish', 'delete' ), true ) ) {
+		if ( isset( $data['event_form_action'] ) && in_array( $data['event_form_action'], array( 'draft', 'publish', 'trash' ), true ) ) {
 			$event_status = sanitize_text_field( wp_unslash( $data['event_form_action'] ) );
 		}
 
