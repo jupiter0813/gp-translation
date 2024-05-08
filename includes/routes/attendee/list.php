@@ -9,7 +9,7 @@ use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 
 
 /**
- * Displays the event list page.
+ * Displays the attendees list page.
  */
 class List_Route extends Route {
 	private Attendee_Repository $attendee_repository;
@@ -27,6 +27,7 @@ class List_Route extends Route {
 		global $wp;
 		$user             = wp_get_current_user();
 		$is_active_filter = false;
+		$hide_sub_head    = true;
 		if ( ! is_user_logged_in() ) {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
 			exit;
@@ -40,8 +41,8 @@ class List_Route extends Route {
 		if ( ! $event ) {
 			$this->die_with_404();
 		}
-		if ( ! current_user_can( 'edit_translation_event', $event->id() ) ) {
-			$this->die_with_error( esc_html__( 'You do not have permission to edit this event.', 'gp-translation-events' ), 403 );
+		if ( ! current_user_can( 'edit_translation_event_attendees', $event->id() ) ) {
+			$this->die_with_error( esc_html__( 'You do not have permission to edit this event\'s attendees.', 'gp-translation-events' ), 403 );
 		}
 		$attendees = array();
 		if ( gp_get( 'filter' ) && 'hosts' === gp_get( 'filter' ) ) {
