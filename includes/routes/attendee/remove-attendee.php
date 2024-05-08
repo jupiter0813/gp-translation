@@ -35,7 +35,6 @@ class Remove_Attendee_Route extends Route {
 	public function handle( int $event_id, int $user_id ): void {
 		global $wp;
 		$user             = wp_get_current_user();
-		$is_active_filter = false;
 		if ( ! is_user_logged_in() ) {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
 			exit;
