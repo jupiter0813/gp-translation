@@ -39,11 +39,9 @@ class Create_Route extends Route {
 		$this->render(
 			'events-form',
 			array(
-				'is_create_form'          => true,
-				'event'                   => $event,
-				'event_url'               => '',
-				'create_trash_button'     => true,
-				'visibility_trash_button' => 'none',
+				'is_create_form' => true,
+				'event'          => $event,
+				'event_url'      => '',
 			),
 		);
 	}

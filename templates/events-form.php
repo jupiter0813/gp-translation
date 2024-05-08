@@ -10,7 +10,6 @@ use Wporg\TranslationEvents\Event\Event;
 /** @var Event $event */
 /** @var bool $is_create_form */
 /** @var string $event_url */
-/** @var string $css_show_url */
 
 $page_title = $is_create_form ? 'Create Event' : 'Edit Event';
 
@@ -98,9 +97,8 @@ Templates::header(
 		<button class="button is-primary save-draft submit-event" type="submit" data-event-status="draft">Save Draft</button>
 		<button class="button is-primary submit-event" type="submit"  data-event-status="publish">Publish Event</button>
 	<?php endif; ?>
-	<?php if ( isset( $create_trash_button ) && $create_trash_button ) : ?>
-		<button id="trash-button" class="button is-destructive trash-event" type="submit" name="submit" value="Delete" style="display: <?php echo esc_attr( $visibility_trash_button ); ?>">Delete Event</button>
-	<?php endif; ?>
+	<?php $visibility_trash_button = current_user_can( 'trash_translation_event', $event->id() ) ? 'inline-flex' : 'none'; ?>
+	<button id="trash-button" class="button is-destructive trash-event" type="submit" name="submit" value="Delete" style="display: <?php echo esc_attr( $visibility_trash_button ); ?>">Delete Event</button>
 	</div>
 	<div class="clear"></div>
 	<div class="published-update-text">
