@@ -80,6 +80,14 @@ class Event {
 		return $this->end;
 	}
 
+	public function is_published(): bool {
+		return 'publish' === $this->status;
+	}
+
+	public function is_draft(): bool {
+		return 'draft' === $this->status;
+	}
+
 	public function is_trashed(): bool {
 		return 'trash' === $this->status;
 	}

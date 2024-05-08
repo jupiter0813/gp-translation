@@ -41,16 +41,10 @@ class Create_Route extends Route {
 			array(
 				'is_create_form'          => true,
 				'page_title'              => 'Create Event',
-				'event_id'                => $event->id(),
-				'event_title'             => $event->title(),
-				'event_description'       => $event->description(),
+				'event'                   => $event,
 				'event_url'               => '',
 				'create_trash_button'     => true,
 				'visibility_trash_button' => 'none',
-				'event_timezone'          => $event->timezone(),
-				'event_start'             => $event->start(),
-				'event_end'               => $event->end(),
-				'event_slug'              => '',
 			),
 		);
 	}
