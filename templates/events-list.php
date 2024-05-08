@@ -24,6 +24,10 @@ Templates::header(
 <div class="event-page-wrapper">
 <div class="event-left-col">
 <?php
+if ( empty( $current_events_query->events ) && empty( $upcoming_events_query->events ) && empty( $past_events_query->post_count ) ) :
+	esc_html_e( 'No events found.', 'gp-translation-events' );
+endif;
+
 if ( ! empty( $current_events_query->events ) ) :
 	?>
 	<h2><?php esc_html_e( 'Current events', 'gp-translation-events' ); ?></h2>
@@ -65,11 +69,8 @@ if ( ! empty( $past_events_query->events ) ) :
 		),
 	);
 endif;
-
-if ( empty( $current_events_query->events ) && empty( $upcoming_events_query->events ) && empty( $past_events_query->post_count ) ) :
-	esc_html_e( 'No events found.', 'gp-translation-events' );
-endif;
 ?>
+
 </div>
 <?php if ( is_user_logged_in() ) : ?>
 	<div class="event-right-col">
