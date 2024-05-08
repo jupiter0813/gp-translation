@@ -141,9 +141,8 @@ class Translation_Events {
 			'has_archive'  => true,
 			'hierarchical' => true,
 			'menu_icon'    => 'dashicons-calendar',
-			'supports'     => array( 'title', 'editor', 'thumbnail', 'revisions' ),
+			'supports'     => array( 'title', 'editor', 'thumbnail', 'revisions', 'page-attributes' ),
 			'rewrite'      => array( 'slug' => 'events' ),
-			'show_ui'      => false,
 		);
 
 		register_post_type( self::CPT, $args );
