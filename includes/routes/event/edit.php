@@ -41,6 +41,7 @@ class Edit_Route extends Route {
 		$this->render(
 			'events-form',
 			array(
+				'is_create_form'          => false,
 				'page_title'              => 'Edit Event',
 				'event_form_name'         => 'edit_event',
 				'event_id'                => $event->id(),
@@ -52,7 +53,6 @@ class Edit_Route extends Route {
 				'event_end'               => $event->end(),
 				'event_timezone'          => $event->timezone(),
 				'event_url'               => Urls::event_details_absolute( $event_id ),
-				'css_show_url'            => '',
 				'create_trash_button'     => current_user_can( 'trash_translation_event', $event->id() ),
 				'visibility_trash_button' => 'inline-flex',
 			),

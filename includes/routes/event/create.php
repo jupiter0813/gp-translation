@@ -24,8 +24,8 @@ class Create_Route extends Route {
 		$this->render(
 			'events-form',
 			array(
+				'is_create_form'          => true,
 				'page_title'              => 'Create Event',
-				'css_show_url'            => 'hide-event-url',
 				'event_id'                => null,
 				'event_title'             => '',
 				'event_description'       => '',

@@ -9,6 +9,7 @@ use DateTimeZone;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 
+/** @var bool $is_create_form */
 /** @var string $page_title */
 /** @var string $event_form_name */
 /** @var int    $event_id */
@@ -33,7 +34,7 @@ Templates::header(
 <div class="event-page-wrapper">
 <form class="translation-event-form" action="" method="post">
 	<?php wp_nonce_field( '_event_nonce', '_event_nonce' ); ?>
-	<?php if ( ! $event_id ) : ?>
+	<?php if ( $is_create_form ) : ?>
 		<details id="quick-add"><summary><?php esc_html_e( 'Upcoming WordCamps', 'gp-translation-events' ); ?></summary><div class="loading"></div></details>
 	<?php endif; ?>
 	<input type="hidden" name="action" value="submit_event_ajax">
@@ -44,7 +45,8 @@ Templates::header(
 		<label for="event-title"><?php esc_html_e( 'Event Title', 'gp-translation-events' ); ?></label>
 		<input type="text" id="event-title" name="event_title" value="<?php echo esc_html( $event_title ); ?>" required size="42">
 	</div>
-	<div id="event-url" class="<?php echo esc_attr( $css_show_url ); ?>">
+	<?php $event_url_class = $is_create_form ? 'hide-event-url' : ''; ?>
+	<div id="event-url" class="<?php echo esc_attr( $event_url_class ); ?>">
 		<label for="event-permalink"><?php esc_html_e( 'Event URL', 'gp-translation-events' ); ?></label>
 		<a id="event-permalink" class="event-permalink" href="<?php echo esc_url( $event_url ); ?>" target="_blank"><?php echo esc_url( $event_url ); ?></a>
 	</div>
@@ -78,7 +80,7 @@ Templates::header(
 		<select id="event-timezone" name="event_timezone" required>
 			<?php
 			echo wp_kses(
-				wp_timezone_choice( $event_timezone ? $event_timezone->getName() : null, get_user_locale() ),
+				wp_timezone_choice( $is_create_form ? null : $event_timezone->getName(), get_user_locale() ),
 				array(
 					'optgroup' => array( 'label' => array() ),
 					'option'   => array(
