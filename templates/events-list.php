@@ -82,11 +82,7 @@ endif;
 				<?php foreach ( $user_attending_events_query->events as $event ) : ?>
 					<li class="event-list-item">
 						<a href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>"><?php echo esc_html( $event->title() ); ?></a>
-						<?php if ( $event->start() === $event->end() ) : ?>
-							<span class="event-list-date events-i-am-attending"><?php $event->start()->print_time_html( 'F j, Y H:i T' ); ?></span>
-						<?php else : ?>
-							<span class="event-list-date events-i-am-attending"><?php $event->start()->print_time_html( 'F j, Y H:i T' ); ?> - <?php $event->end()->print_time_html( 'F j, Y H:i T' ); ?></span>
-						<?php endif; ?>
+						<span class="event-list-date events-i-am-attending"><?php $event->start()->print_time_html( 'F j, Y H:i T' ); ?> - <?php $event->end()->print_time_html( 'F j, Y H:i T' ); ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>
