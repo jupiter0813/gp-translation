@@ -9,10 +9,10 @@ use Wporg\TranslationEvents\Event\Event;
 
 /** @var Event $event */
 /** @var bool $is_create_form */
-/** @var string $page_title */
-/** @var string $event_form_name */
 /** @var string $event_url */
 /** @var string $css_show_url */
+
+$page_title = $is_create_form ? 'Create Event' : 'Edit Event';
 
 Templates::header(
 	array(
@@ -30,6 +30,7 @@ Templates::header(
 		<details id="quick-add"><summary><?php esc_html_e( 'Upcoming WordCamps', 'gp-translation-events' ); ?></summary><div class="loading"></div></details>
 	<?php endif; ?>
 	<input type="hidden" name="action" value="submit_event_ajax">
+	<?php $event_form_name = $is_create_form ? 'create_event' : 'edit_event'; ?>
 	<input type="hidden" id="form-name" name="form_name" value="<?php echo esc_attr( $event_form_name ); ?>">
 	<input type="hidden" id="event-id" name="event_id" value="<?php echo esc_attr( $event->id() ); ?>">
 	<input type="hidden" id="event-form-action" name="event_form_action">

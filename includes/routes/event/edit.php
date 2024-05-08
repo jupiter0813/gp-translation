@@ -40,8 +40,6 @@ class Edit_Route extends Route {
 			'events-form',
 			array(
 				'is_create_form'          => false,
-				'page_title'              => 'Edit Event',
-				'event_form_name'         => 'edit_event',
 				'event'                   => $event,
 				'event_url'               => Urls::event_details_absolute( $event_id ),
 				'create_trash_button'     => current_user_can( 'trash_translation_event', $event->id() ),

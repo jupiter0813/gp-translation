@@ -40,7 +40,6 @@ class Create_Route extends Route {
 			'events-form',
 			array(
 				'is_create_form'          => true,
-				'page_title'              => 'Create Event',
 				'event'                   => $event,
 				'event_url'               => '',
 				'create_trash_button'     => true,
