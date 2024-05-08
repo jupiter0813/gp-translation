@@ -95,7 +95,7 @@ class Translation_Events {
 
 	public function gp_init() {
 		$locale = '(' . implode( '|', wp_list_pluck( GP_Locales::locales(), 'slug' ) ) . ')';
-		$slug   = '(2[0-9]{3}/[a-z0-9_-]+)';
+		$slug   = '((?:2[0-9]{3}/)?[a-z0-9_-]+)';
 		$status = '(waiting)';
 		$id     = '(\d+)';
 
