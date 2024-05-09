@@ -57,7 +57,7 @@ class My_Events_Route extends Route {
 		}
 		// phpcs:enable
 
-		$events_i_am_or_will_attend_query = $this->event_repository->get_events_user_is_or_will_attend( get_current_user_id(), $_events_i_am_or_will_attend_paged, 10 );
+		$events_i_am_or_will_attend_query = $this->event_repository->get_current_and_upcoming_events_for_user( get_current_user_id(), $_events_i_am_or_will_attend_paged, 10 );
 		$events_i_created_query           = $this->event_repository->get_events_created_by_user( get_current_user_id(), $_events_i_created_paged, 10 );
 		$events_i_host_query              = $this->event_repository->get_events_hosted_by_user( get_current_user_id(), $_events_i_hosted_paged, 10 );
 		$events_i_attended_query          = $this->event_repository->get_past_events_for_user( get_current_user_id(), $_events_i_attended_paged, 10 );

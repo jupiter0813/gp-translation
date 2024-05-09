@@ -327,51 +327,6 @@ class Event_Repository implements Event_Repository_Interface {
 		// phpcs:enable
 	}
 
-	public function get_events_user_is_or_will_attend( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		global $wpdb, $gp_table_prefix;
-
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$events_user_is_or_will_attend_ids = $wpdb->get_col(
-			$wpdb->prepare(
-				"
-				select distinct event_id
-				from {$gp_table_prefix}event_attendees
-				where user_id = %d
-			",
-				array(
-					$user_id,
-				)
-			),
-		);
-		// phpcs:enable
-
-		if ( empty( $events_user_is_or_will_attend_ids ) ) {
-			return new Events_Query_Result( array(), 1, 1 );
-		}
-
-		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-
-		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-		$query_args = array(
-			'post_status' => array( 'publish' ),
-			'meta_key'    => '_event_start',
-			'orderby'     => 'meta_value',
-			'order'       => 'ASC',
-			'meta_query'  => array(
-				array(
-					'key'     => '_event_end',
-					'value'   => $now->format( 'Y-m-d H:i:s' ),
-					'compare' => '>',
-					'type'    => 'DATETIME',
-				),
-			),
-		);
-		// phpcs:enable
-		return $this->execute_events_query( $page, $page_size, $query_args, $events_user_is_or_will_attend_ids );
-	}
 	public function get_events_hosted_by_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		global $wpdb, $gp_table_prefix;
 
