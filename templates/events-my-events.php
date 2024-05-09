@@ -5,7 +5,6 @@
 namespace Wporg\TranslationEvents\Templates;
 
 use Wporg\TranslationEvents\Event\Events_Query_Result;
-use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Templates;
 use Wporg\TranslationEvents\Urls;
 
@@ -28,12 +27,10 @@ Templates::header(
 		<ul>
 		<?php
 		foreach ( $events_i_host_query->events as $event ) :
-			$stats_calculator = new Stats_Calculator();
-			$has_stats        = $stats_calculator->event_has_stats( $event->id() );
 			?>
 			<li class="event-list-item">
 				<a class="event-link-<?php echo esc_attr( $event->status() ); ?>" href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>"><?php echo esc_html( $event->title() ); ?></a>
-				<?php if ( ! $event->end()->is_in_the_past() && ! $has_stats ) : ?>
+				<?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
 					<a href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>" class="button is-small action edit">Edit</a>
 				<?php endif; ?>
 				<?php if ( 'draft' === $event->status() ) : ?>
@@ -71,12 +68,10 @@ Templates::header(
 		<ul>
 			<?php
 			foreach ( $events_i_created_query->events as $event ) :
-				$stats_calculator = new Stats_Calculator();
-				$has_stats        = $stats_calculator->event_has_stats( $event->id() );
 				?>
 				<li class="event-list-item">
 					<a class="event-link-<?php echo esc_attr( $event->status() ); ?>" href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>"><?php echo esc_html( $event->title() ); ?></a>
-					<?php if ( ! $event->end()->is_in_the_past() && ! $has_stats ) : ?>
+					<?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
 						<a href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>" class="button is-small action edit">Edit</a>
 					<?php endif; ?>
 					<?php if ( 'draft' === $event->status() ) : ?>
