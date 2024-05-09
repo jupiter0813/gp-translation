@@ -350,11 +350,13 @@ class Event_Repository implements Event_Repository_Interface {
 		if ( empty( $events_user_is_or_will_attend_ids ) ) {
 			return new Events_Query_Result( array(), 1, 1 );
 		}
+
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		$query_args = array(
-			'post_status' => array( 'publish', 'draft' ),
+			'post_status' => array( 'publish' ),
 			'meta_key'    => '_event_start',
 			'orderby'     => 'meta_value',
 			'order'       => 'ASC',
