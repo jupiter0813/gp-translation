@@ -37,7 +37,12 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 <ul class="event-list <?php echo esc_attr( $extra_classes ); ?>">
 	<?php foreach ( $query->events as $event ) : ?>
 		<li class="event-list-item">
-			<a href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>"><?php echo esc_html( $event->title() ); ?></a>
+			<?php // phpcs:ignore Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace ?>
+			<a <?php if ( $event->is_draft() ) : ?>class="event-link-draft" <?php endif; ?>
+				href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>"
+			>
+				<?php echo esc_html( $event->title() ); ?>
+			</a>
 			<?php if ( $show_start ) : ?>
 				<?php if ( $event->start()->is_in_the_past() ) : ?>
 					<span class="event-list-date">started <?php $print_time( $event->start() ); ?></span>
