@@ -190,7 +190,7 @@ h2.event_page_title {
 }
 
 .events-links-to-anchors li {
-	list-style-type: none;
+	list-style-type: square;
 }
 
 .event-left-col {

@@ -20,11 +20,19 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
 <div class="events-links-to-anchors">
 	<ul>
-		<li><a href="#events-i-am-or-will-attend"><?php esc_html_e( 'Events I am or will be attending', 'gp-translation-events' ); ?></a></li>
-		<li><a href="#events-i-host"><?php esc_html_e( 'Events I host', 'gp-translation-events' ); ?></a></li>
-		<li><a href="#events-i-created"><?php esc_html_e( 'Events I have created', 'gp-translation-events' ); ?></a></li>
-		<li><a href="#events-i-attended"><?php esc_html_e( 'Events I attended', 'gp-translation-events' ); ?></a></li>
-	</ul>
+		<?php if ( ! empty( $events_i_am_or_will_attend_query->events ) ) : ?>
+			<li><a href="#events-i-am-or-will-attend"><?php esc_html_e( 'Events I am or will be attending', 'gp-translation-events' ); ?></a></li>
+		<?php endif; ?>
+		<?php if ( ! empty( $events_i_host_query->events ) ) : ?>
+			<li><a href="#events-i-host"><?php esc_html_e( 'Events I host', 'gp-translation-events' ); ?></a></li>
+		<?php endif; ?>
+		<?php if ( ! empty( $events_i_created_query->events ) ) : ?>
+			<li><a href="#events-i-created"><?php esc_html_e( 'Events I have created', 'gp-translation-events' ); ?></a></li>
+		<?php endif; ?>
+		<?php if ( ! empty( $events_i_attended_query->events ) ) : ?>
+			<li><a href="#events-i-attended"><?php esc_html_e( 'Events I attended', 'gp-translation-events' ); ?></a></li>
+		<?php endif; ?>
+		</ul>
 </div>
 <div class="event-page-wrapper">
 	<?php if ( ! empty( $events_i_am_or_will_attend_query->events ) ) : ?>
