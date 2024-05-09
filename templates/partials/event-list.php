@@ -88,7 +88,7 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 </ul>
 
 <?php
-if ( ! empty( $pagination_parameter ) ) {
+if ( ! empty( $pagination_query_param ) ) {
 	echo wp_kses_post(
 		paginate_links(
 			array(
