@@ -37,6 +37,7 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 <ul class="event-list <?php echo esc_attr( $extra_classes ); ?>">
 	<?php foreach ( $query->events as $event ) : ?>
 		<li class="event-list-item">
+			<?php // Title. ?>
 			<?php // phpcs:ignore Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace ?>
 			<a <?php if ( $event->is_draft() ) : ?>class="event-link-draft" <?php endif; ?>
 				href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>"
@@ -46,6 +47,8 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 			<?php if ( $event->is_draft() ) : ?>
 				<span class="event-label-draft">Draft</span>
 			<?php endif; ?>
+
+			<?php // Buttons. ?>
 			<?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
 				<a href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>" class="button is-small action edit">Edit</a>
 			<?php endif; ?>
@@ -61,6 +64,8 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 					<a href="<?php echo esc_url( Urls::event_delete( $event->id() ) ); ?>" class="button is-small is-destructive">Delete Permanently</a>
 				<?php endif; ?>
 			<?php endif; ?>
+
+			<?php // Dates. ?>
 			<?php if ( $show_start ) : ?>
 				<?php if ( $event->start()->is_in_the_past() ) : ?>
 					<span class="event-list-date">started <?php $print_time( $event->start() ); ?></span>
@@ -75,6 +80,8 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 					<span class="event-list-date">ends <?php $print_time( $event->end() ); ?></time></span>
 				<?php endif; ?>
 			<?php endif; ?>
+
+			<?php // Excerpt. ?>
 			<?php if ( $show_excerpt ) : ?>
 				<?php echo esc_html( get_the_excerpt( $event->id() ) ); ?>
 			<?php endif; ?>
