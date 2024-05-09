@@ -18,10 +18,17 @@ gp_tmpl_header();
 $event_page_title = __( 'My Events', 'gp-translation-events' );
 gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 ?>
-
+<div class="events-links-to-anchors">
+	<ul>
+		<li><a href="#events-i-am-or-will-attend"><?php esc_html_e( 'Events I am or will be attending', 'gp-translation-events' ); ?></a></li>
+		<li><a href="#events-i-host"><?php esc_html_e( 'Events I host', 'gp-translation-events' ); ?></a></li>
+		<li><a href="#events-i-created"><?php esc_html_e( 'Events I have created', 'gp-translation-events' ); ?></a></li>
+		<li><a href="#events-i-attended"><?php esc_html_e( 'Events I attended', 'gp-translation-events' ); ?></a></li>
+	</ul>
+</div>
 <div class="event-page-wrapper">
 	<?php if ( ! empty( $events_i_am_or_will_attend_query->events ) ) : ?>
-		<h2><?php esc_html_e( 'Events I am or will be attending', 'gp-translation-events' ); ?> </h2>
+		<h2 id="events-i-am-or-will-attend"><?php esc_html_e( 'Events I am or will be attending', 'gp-translation-events' ); ?> </h2>
 		<ul>
 		<?php
 		foreach ( $events_i_am_or_will_attend_query->events as $event ) :
@@ -64,7 +71,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	?>
 
 	<?php if ( ! empty( $events_i_host_query->events ) ) : ?>
-		<h2><?php esc_html_e( 'Events I host', 'gp-translation-events' ); ?> </h2>
+		<h2 id="events-i-host"><?php esc_html_e( 'Events I host', 'gp-translation-events' ); ?> </h2>
 		<ul>
 		<?php
 		foreach ( $events_i_host_query->events as $event ) :
@@ -107,7 +114,7 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	?>
 
 	<?php if ( ! empty( $events_i_created_query->events ) ) : ?>
-		<h2><?php esc_html_e( 'Events I have created', 'gp-translation-events' ); ?> </h2>
+		<h2 id="events-i-created"><?php esc_html_e( 'Events I have created', 'gp-translation-events' ); ?> </h2>
 		<ul>
 			<?php
 			foreach ( $events_i_created_query->events as $event ) :
@@ -149,8 +156,8 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 	endif;
 	?>
 
-	<h2><?php esc_html_e( 'Events I attended', 'gp-translation-events' ); ?> </h2>
 	<?php if ( ! empty( $events_i_attended_query->events ) ) : ?>
+		<h2 id="events-i-attended"><?php esc_html_e( 'Events I attended', 'gp-translation-events' ); ?> </h2>
 		<ul>
 		<?php foreach ( $events_i_attended_query->events as $event ) : ?>
 			<li class="event-list-item">
