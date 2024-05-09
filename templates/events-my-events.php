@@ -77,11 +77,7 @@ Templates::header(
 					<?php if ( 'draft' === $event->status() ) : ?>
 						<span class="event-label-<?php echo esc_attr( $event->status() ); ?>"><?php echo esc_html( $event->status() ); ?></span>
 					<?php endif; ?>
-					<?php if ( $event->start()->format( 'Y-m-d' ) === $event->end()->format( 'Y-m-d' ) ) : ?>
-						<span class="event-list-date events-i-am-attending"><?php $event->start()->print_time_html(); ?></span>
-					<?php else : ?>
-						<span class="event-list-date events-i-am-attending"><?php $event->start()->print_time_html(); ?> - <?php $event->end()->print_time_html(); ?></span>
-					<?php endif; ?>
+					<span class="event-list-date events-i-am-attending"><?php $event->start()->print_time_html(); ?> - <?php $event->end()->print_time_html(); ?></span>
 					<p><?php echo esc_html( get_the_excerpt( $event->id() ) ); ?></p>
 				</li>
 			<?php endforeach; ?>
@@ -110,11 +106,7 @@ Templates::header(
 		<?php foreach ( $events_i_attended_query->events as $event ) : ?>
 			<li class="event-list-item">
 				<a class="event-link-<?php echo esc_attr( $event->status() ); ?>" href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>"><?php echo esc_html( $event->title() ); ?></a>
-				<?php if ( $event->start() === $event->end() ) : ?>
-					<span class="event-list-date events-i-am-attending"><?php $event->start()->print_time_html(); ?></span>
-				<?php else : ?>
-					<span class="event-list-date events-i-am-attending"><?php $event->start()->print_time_html(); ?> - <?php $event->end()->print_time_html(); ?></span>
-				<?php endif; ?>
+				<span class="event-list-date events-i-am-attending"><?php $event->start()->print_time_html(); ?> - <?php $event->end()->print_time_html(); ?></span>
 				<p><?php echo esc_html( get_the_excerpt( $event->id() ) ); ?></p>
 			</li>
 		<?php endforeach; ?>
