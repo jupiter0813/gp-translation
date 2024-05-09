@@ -8,11 +8,11 @@ class Templates {
 	}
 
 	public static function header( array $data ) {
-		self::render( 'header', $data );
+		self::partial( 'header', $data );
 	}
 
 	public static function footer( array $data = array() ) {
-		self::render( 'footer', $data );
+		self::partial( 'footer', $data );
 	}
 
 	public static function partial( string $template, array $data ) {
