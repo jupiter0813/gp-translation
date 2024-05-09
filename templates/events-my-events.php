@@ -6,7 +6,6 @@ namespace Wporg\TranslationEvents\Templates;
 
 use Wporg\TranslationEvents\Event\Events_Query_Result;
 use Wporg\TranslationEvents\Templates;
-use Wporg\TranslationEvents\Urls;
 
 /** @var Events_Query_Result $events_i_created_query */
 /** @var Events_Query_Result $events_i_host_query */
@@ -22,6 +21,12 @@ Templates::header(
 ?>
 
 <div class="event-page-wrapper">
+	<?php
+	if ( empty( $events_i_created_query->events ) && empty( $events_i_host_query->events ) && empty( $events_i_attended_query->post_count ) ) :
+		esc_html_e( 'No events found.', 'gp-translation-events' );
+	endif;
+	?>
+
 	<?php if ( ! empty( $events_i_host_query->events ) ) : ?>
 		<h2><?php esc_html_e( 'Events I host', 'gp-translation-events' ); ?> </h2>
 		<?php
@@ -54,8 +59,8 @@ Templates::header(
 	endif;
 	?>
 
-	<h2><?php esc_html_e( 'Events I attended', 'gp-translation-events' ); ?> </h2>
 	<?php if ( ! empty( $events_i_attended_query->events ) ) : ?>
+		<h2><?php esc_html_e( 'Events I attended', 'gp-translation-events' ); ?> </h2>
 		<?php
 		Templates::partial(
 			'event-list',
@@ -67,8 +72,6 @@ Templates::header(
 				'relative_time'          => false,
 			),
 		);
-	else :
-		echo 'No events found.';
 	endif;
 	?>
 </div>
