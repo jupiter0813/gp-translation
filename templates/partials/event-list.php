@@ -59,10 +59,8 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 					<a href="<?php echo esc_url( Urls::event_trash( $event->id() ) ); ?>" class="button is-small is-destructive">Delete</a>
 				<?php endif; ?>
 			<?php endif; ?>
-			<?php if ( current_user_can( 'manage_translation_events' ) ) : ?>
-				<?php if ( current_user_can( 'delete_translation_event', $event->id() ) ) : ?>
-					<a href="<?php echo esc_url( Urls::event_delete( $event->id() ) ); ?>" class="button is-small is-destructive">Delete Permanently</a>
-				<?php endif; ?>
+			<?php if ( current_user_can( 'delete_translation_event', $event->id() ) ) : ?>
+				<a href="<?php echo esc_url( Urls::event_delete( $event->id() ) ); ?>" class="button is-small is-destructive">Delete Permanently</a>
 			<?php endif; ?>
 
 			<?php // Dates. ?>
