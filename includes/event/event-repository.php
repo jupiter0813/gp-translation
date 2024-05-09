@@ -355,6 +355,9 @@ class Event_Repository implements Event_Repository_Interface {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		$query_args = array(
 			'post_status' => array( 'publish', 'draft' ),
+			'meta_key'    => '_event_start',
+			'orderby'     => 'meta_value',
+			'order'       => 'ASC',
 			'meta_query'  => array(
 				array(
 					'key'     => '_event_end',
@@ -363,10 +366,6 @@ class Event_Repository implements Event_Repository_Interface {
 					'type'    => 'DATETIME',
 				),
 			),
-			'meta_key'    => '_event_end',
-			'meta_type'   => 'DATETIME',
-			'orderby'     => array( 'meta_value' ),
-			'order'       => 'ASC',
 		);
 		// phpcs:enable
 		return $this->execute_events_query( $page, $page_size, $query_args, $events_user_is_or_will_attend_ids );
