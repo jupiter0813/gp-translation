@@ -43,6 +43,9 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 			>
 				<?php echo esc_html( $event->title() ); ?>
 			</a>
+			<?php if ( $event->is_draft() ) : ?>
+				<span class="event-label-draft">Draft</span>
+			<?php endif; ?>
 			<?php if ( $show_start ) : ?>
 				<?php if ( $event->start()->is_in_the_past() ) : ?>
 					<span class="event-list-date">started <?php $print_time( $event->start() ); ?></span>
