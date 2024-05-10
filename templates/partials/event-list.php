@@ -50,27 +50,31 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 			<?php // Buttons. ?>
 			<?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
 				<a href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>"
-					class="button is-small action edit">
-					Edit
+					class="button is-small action edit"
+					title="<?php echo esc_attr__( 'Edit', 'gp-translation-events' ); ?>">
+					<span class="dashicons dashicons-edit"></span>
 				</a>
 			<?php endif; ?>
 			<?php if ( current_user_can( 'trash_translation_event', $event->id() ) ) : ?>
 				<?php if ( $event->is_trashed() ) : ?>
 					<a href="<?php echo esc_url( Urls::event_trash( $event->id() ) ); ?>"
-						class="button is-small">
-						Restore
+						class="button is-small"
+						title="<?php echo esc_attr__( 'Restore', 'gp-translation-events' ); ?>">
+						<?php echo esc_attr__( 'Restore', 'gp-translation-events' ); ?>
 					</a>
 				<?php else : ?>
 					<a href="<?php echo esc_url( Urls::event_trash( $event->id() ) ); ?>"
-						class="button is-small is-destructive">
-						Delete
+						class="button is-small is-destructive"
+						title="<?php echo esc_attr__( 'Delete', 'gp-translation-events' ); ?>">
+						<span class="dashicons dashicons-trash"></span>
 					</a>
 				<?php endif; ?>
 			<?php endif; ?>
 			<?php if ( current_user_can( 'delete_translation_event', $event->id() ) ) : ?>
 				<a href="<?php echo esc_url( Urls::event_delete( $event->id() ) ); ?>"
-					class="button is-small is-destructive">
-					Delete Permanently
+					class="button is-small is-destructive"
+					title="<?php echo esc_attr__( 'Delete permanently', 'gp-translation-events' ); ?>">
+					<?php echo esc_attr__( 'Delete permanently', 'gp-translation-events' ); ?>
 				</a>
 			<?php endif; ?>
 
