@@ -130,7 +130,7 @@ class Event_Repository implements Event_Repository_Interface {
 		}
 
 		try {
-			$meta  = $this->get_event_meta( $id );
+			$meta = $this->get_event_meta( $id );
 			if ( ! $meta ) {
 				return null;
 			}
