@@ -17,6 +17,7 @@ class Event_Capabilities {
 	private const TRASH          = 'trash_translation_event';
 	private const DELETE         = 'delete_translation_event';
 	private const EDIT_ATTENDEES = 'edit_translation_event_attendees';
+	private const EDIT_FORM_FIELD = 'edit_translation_event_form_field';
 
 	/**
 	 * All the capabilities that concern Events.
@@ -29,6 +30,7 @@ class Event_Capabilities {
 		self::TRASH,
 		self::DELETE,
 		self::EDIT_ATTENDEES,
+		self::EDIT_FORM_FIELD,
 	);
 
 	private Event_Repository_Interface $event_repository;
@@ -86,6 +88,9 @@ class Event_Capabilities {
 				}
 				if ( self::EDIT_ATTENDEES === $cap ) {
 					return $this->has_edit_attendees( $user, $event );
+				}
+				if ( self::EDIT_FORM_FIELD === $cap ) {
+					return $this->has_edit_form_field( $user, $event );
 				}
 				break;
 		}
