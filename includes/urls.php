@@ -12,9 +12,9 @@ class Urls {
 	}
 
 	public static function event_details( int $event_id ): string {
-		$status = get_post_status( $event_id );
-		if ( 'draft' === $status ) {
+		if ( 'draft' === get_post_status( $event_id ) ) {
 			// Drafts don't yet have a slug, so we need to generate a sample permalink.
+			require_once ABSPATH . '/wp-admin/includes/post.php';
 			list( $permalink, $post_name ) = get_sample_permalink( $event_id );
 			$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
 		} else {
