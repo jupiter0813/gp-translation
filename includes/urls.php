@@ -12,14 +12,20 @@ class Urls {
 	}
 
 	public static function event_details( int $event_id ): string {
-		return gp_url( wp_make_link_relative( get_the_permalink( $event_id ) ) );
+		$status = get_post_status( $event_id );
+		if ( 'draft' === $status ) {
+			// Drafts don't yet have a slug, so we need to generate a sample permalink.
+			list( $permalink, $post_name ) = get_sample_permalink( $event_id );
+			$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
+		} else {
+			$permalink = get_permalink( $event_id );
+		}
+
+		return gp_url( wp_make_link_relative( $permalink ) );
 	}
 
 	public static function event_details_absolute( int $event_id ): string {
-		list( $permalink, $post_name ) = get_sample_permalink( $event_id );
-		$permalink                     = str_replace( '%pagename%', $post_name, $permalink );
-
-		return get_site_url() . gp_url( wp_make_link_relative( $permalink ) );
+		return site_url( self::event_details( $event_id ) );
 	}
 
 	public static function event_translations( int $event_id, string $locale, string $status = '' ): string {
