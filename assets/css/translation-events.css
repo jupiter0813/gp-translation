@@ -181,6 +181,15 @@ h2.event_page_title {
 	content: " | ";
 }
 
+.events-links-to-anchors {
+	width: 80%;
+	margin: 0 auto;
+}
+
+.events-links-to-anchors li {
+	list-style-type: square;
+}
+
 .event-left-col {
 	width: 75%;
 	float: left;
