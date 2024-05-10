@@ -57,6 +57,7 @@ class Details_Route extends Route {
 		$current_user_attendee = $attendees[ $user->ID ] ?? null;
 		$user_is_attending     = $current_user_attendee instanceof Attendee;
 		$user_is_contributor   = $user_is_attending && $current_user_attendee->is_contributor();
+		$show_sub_head         = true;
 
 		$hosts = array_filter(
 			$attendees,
