@@ -31,7 +31,7 @@ use Wporg\TranslationEvents\Event\Event;
 			<?php endif; ?>
 		<?php endif; ?>
 	</ul>
-	<?php if ( isset( $event ) && ! isset( $event_form_name ) && ! isset( $hide_sub_head ) ) : ?>
+	<?php if ( isset( $event ) && isset( $show_sub_head ) && true === $show_sub_head ) : ?>
 	<p class="event-sub-head">
 			<span class="event-host">
 				<?php
