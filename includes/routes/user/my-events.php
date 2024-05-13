@@ -65,9 +65,10 @@ class My_Events_Route extends Route {
 		$this->render(
 			'events-my-events',
 			array(
-				'events_i_created_query'  => $events_i_created_query,
-				'events_i_host_query'     => $events_i_host_query,
-				'events_i_attended_query' => $events_i_attended_query,
+				'events_i_am_or_will_attend_query' => $events_i_am_or_will_attend_query,
+				'events_i_created_query'           => $events_i_created_query,
+				'events_i_host_query'              => $events_i_host_query,
+				'events_i_attended_query'          => $events_i_attended_query,
 			),
 		);
 	}
