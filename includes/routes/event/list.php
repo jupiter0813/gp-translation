@@ -68,7 +68,7 @@ class List_Route extends Route {
 		$past_events_query           = $this->event_repository->get_past_events( $_past_events_paged, 10 );
 		$user_attending_events_query = $this->event_repository->get_current_and_upcoming_events_for_user( get_current_user_id(), $_user_attending_events_paged, 10 );
 
-		$this->render(
+		$this->tmpl(
 			'events-list',
 			array(
 				'current_events_query'        => $current_events_query,

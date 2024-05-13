@@ -36,7 +36,7 @@ class Create_Route extends Route {
 			'',
 		);
 
-		$this->render(
+		$this->tmpl(
 			'events-form',
 			array(
 				'is_create_form' => true,
