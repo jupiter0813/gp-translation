@@ -8,7 +8,6 @@ use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\InvalidStart;
 use Wporg\TranslationEvents\Event\InvalidEnd;
 use Wporg\TranslationEvents\Event\InvalidStatus;
-use Wporg\TranslationEvents\Event\InvalidTitle;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 
@@ -39,21 +38,6 @@ class Event_Test extends WP_UnitTestCase {
 			$timezone,
 			'publish',
 			'Foo title',
-			'',
-		);
-	}
-
-	public function test_validates_title() {
-		$timezone = new DateTimeZone( 'Europe/Lisbon' );
-
-		$this->expectException( InvalidTitle::class );
-		new Event(
-			0,
-			new Event_Start_Date( 'now' ),
-			( new Event_End_Date( 'now' ) )->modify( '+1 hour' ),
-			$timezone,
-			'publish',
-			'',
 			'',
 		);
 	}

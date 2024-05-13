@@ -10,13 +10,14 @@ use Wporg\TranslationEvents\Event\Event;
 /**  @var Event $event */
 /** @var bool $is_active_filter */
 
-gp_title( __( 'Translation Events', 'gp-translation-events' ) );
-gp_breadcrumb_translation_events();
-gp_tmpl_header();
-$event_page_title = __( 'Manage Attendees', 'gp-translation-events' );
-gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
-
+Templates::header(
+	array(
+		'html_title' => __( 'Translation Events', 'gp-translation-events' ),
+		'page_title' => __( 'Manage Attendees', 'gp-translation-events' ),
+	),
+);
 ?>
+
 <div class="event-page-wrapper">
 	<div class="event-details-stats">
 	<a href="<?php echo esc_url( Urls::event_details( $event->id() ) ); ?>" class="view-event-page">Go to event page</a>
@@ -65,5 +66,5 @@ gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
 		<p><?php esc_html_e( 'No attendees found.', 'gp-translation-events' ); ?></p>
 	</div>
 <?php endif; ?>
-<?php
-gp_tmpl_footer();
+
+<?php Templates::footer(); ?>

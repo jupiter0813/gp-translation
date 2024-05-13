@@ -62,6 +62,13 @@ class My_Events_Route extends Route {
 		$events_i_host_query              = $this->event_repository->get_events_hosted_by_user( get_current_user_id(), $_events_i_hosted_paged, 10 );
 		$events_i_attended_query          = $this->event_repository->get_past_events_for_user( get_current_user_id(), $_events_i_attended_paged, 10 );
 
-		$this->tmpl( 'events-my-events', get_defined_vars() );
+		$this->render(
+			'events-my-events',
+			array(
+				'events_i_created_query'  => $events_i_created_query,
+				'events_i_host_query'     => $events_i_host_query,
+				'events_i_attended_query' => $events_i_attended_query,
+			),
+		);
 	}
 }

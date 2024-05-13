@@ -15,11 +15,12 @@ use Wporg\TranslationEvents\Event\Events_Query_Result;
 /** @var Events_Query_Result $past_events_query */
 /** @var Events_Query_Result $user_attending_events_query */
 
-gp_title( __( 'Translation Events', 'gp-translation-events' ) );
-gp_breadcrumb_translation_events();
-gp_tmpl_header();
-$event_page_title = __( 'Translation Events', 'gp-translation-events' );
-gp_tmpl_load( 'events-header', get_defined_vars(), __DIR__ );
+Templates::header(
+	array(
+		'html_title' => __( 'Translation Events', 'gp-translation-events' ),
+		'page_title' => __( 'Translation Events', 'gp-translation-events' ),
+	),
+);
 ?>
 
 <div class="event-page-wrapper">
@@ -153,5 +154,5 @@ endif;
 	</div>
 <?php endif; ?>
 </div>
-<div class="clear"></div>
-<?php gp_tmpl_footer(); ?>
+
+<?php Templates::footer(); ?>
