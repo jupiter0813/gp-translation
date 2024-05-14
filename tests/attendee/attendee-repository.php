@@ -9,27 +9,21 @@ use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 use Wporg\TranslationEvents\Tests\Translation_Factory;
-use Wporg\TranslationEvents\Translation\Translation_Repository;
-use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 
 class Attendee_Repository_Test extends GP_UnitTestCase {
 	private Attendee_Repository $repository;
 	private Stats_Factory $stats_factory;
 	private Translation_Factory $translation_factory;
-	private Event_Repository $event_repository;
-	private Translation_Repository $translation_repository;
 	private Event_Factory $event_factory;
 
 	public function setUp(): void {
 		parent::setUp();
-		$this->repository             = new Attendee_Repository();
-		$this->stats_factory          = new Stats_Factory();
-		$this->translation_factory    = new Translation_Factory( $this->factory );
-		$this->event_repository       = new Event_Repository( $this->repository );
-		$this->translation_repository = new Translation_Repository();
-		$this->translation_factory    = new Translation_Factory( $this->factory );
-		$this->event_factory          = new Event_Factory();
+		$this->repository          = new Attendee_Repository();
+		$this->stats_factory       = new Stats_Factory();
+		$this->translation_factory = new Translation_Factory( $this->factory );
+		$this->translation_factory = new Translation_Factory( $this->factory );
+		$this->event_factory       = new Event_Factory();
 	}
 
 	public function test_add_attendee_invalid_event_id() {
