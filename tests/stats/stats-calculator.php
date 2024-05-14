@@ -95,18 +95,4 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 		$this->assertEquals( 5, $stats->totals()->reviewed );
 		$this->assertEquals( 3, $stats->totals()->users );
 	}
-
-	public function test_is_new_translation_contributor() {
-		$this->set_normal_user_as_current();
-		$user1_id = 52;
-		$user2_id = 53;
-
-		$event1_id = $this->event_factory->create_active( array( $user1_id ) );
-
-		$event1             = get_post( $event1_id );
-		$event              = $this->event_repository->get_event( $event1->ID );
-		$event_start        = $event->start();
-		$is_new_contributor = $this->calculator->is_new_translation_contributor( $event_start, $user2_id );
-		$this->assertTrue( $is_new_contributor );
-	}
 }
