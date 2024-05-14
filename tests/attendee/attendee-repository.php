@@ -245,20 +245,10 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->repository->insert_attendee( $attendee11 );
 		$this->repository->insert_attendee( $attendee12 );
 		$this->repository->insert_attendee( $attendee13 );
-		$event = $this->event_repository->get_event( $event1_id );
 
-		$contributor_ids     = array( $attendee11->user_id(), $attendee12->user_id(), $attendee13->user_id() );
-		$new_contributor_ids = array();
-		$translations_counts = $this->translation_repository->count_translations_before( $contributor_ids, $event->start() );
-		foreach ( $translations_counts as $user_id => $count ) {
-			if ( $count <= 10 ) {
-				$new_contributor_ids[ $user_id ] = true;
-			}
-		}
-
-		$this->assertCount( 2, $new_contributor_ids );
-		$this->assertTrue( $new_contributor_ids[ $user1_id ] );
-		$this->assertTrue( $new_contributor_ids[ $user2_id ] );
+		$this->assertTrue( $attendee11->is_new_contributor() );
+		$this->assertTrue( $attendee12->is_new_contributor() );
+		$this->assertFalse( $attendee13->is_new_contributor() );
 	}
 
 	private function all_table_rows(): array {
