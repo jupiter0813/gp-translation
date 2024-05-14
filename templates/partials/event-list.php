@@ -50,7 +50,7 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 			<?php // Buttons. ?>
 			<?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
 				<a href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>"
-					class="button is-small action edit"
+					class="event-list-item-button"
 					title="<?php echo esc_attr__( 'Edit', 'gp-translation-events' ); ?>">
 					<span class="dashicons dashicons-edit"></span>
 				</a>
@@ -64,7 +64,7 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 					</a>
 				<?php else : ?>
 					<a href="<?php echo esc_url( Urls::event_trash( $event->id() ) ); ?>"
-						class="button is-small is-destructive"
+						class="event-list-item-button is-destructive"
 						title="<?php echo esc_attr__( 'Delete', 'gp-translation-events' ); ?>">
 						<span class="dashicons dashicons-trash"></span>
 					</a>
