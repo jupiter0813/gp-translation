@@ -19,6 +19,7 @@ require_once __DIR__ . '/includes/routes/user/host-event.php';
 require_once __DIR__ . '/includes/routes/user/my-events.php';
 require_once __DIR__ . '/includes/attendee/attendee.php';
 require_once __DIR__ . '/includes/attendee/attendee-repository.php';
+require_once __DIR__ . '/includes/attendee/attendee-adder.php';
 require_once __DIR__ . '/includes/event/event-date.php';
 require_once __DIR__ . '/includes/event/event.php';
 require_once __DIR__ . '/includes/event/event-repository-interface.php';

@@ -18,14 +18,12 @@
 
 namespace Wporg\TranslationEvents;
 
-use DateTime;
-use DateTimeZone;
 use Exception;
 use GP;
 use GP_Locales;
 use WP_Post;
-use WP_Query;
 use Wporg\TranslationEvents\Attendee\Attendee;
+use Wporg\TranslationEvents\Attendee\Attendee_Adder;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Capabilities;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
@@ -33,6 +31,7 @@ use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Notifications\Notifications_Send;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
+use Wporg\TranslationEvents\Stats\Stats_Importer;
 use Wporg\TranslationEvents\Stats\Stats_Listener;
 
 class Translation_Events {
@@ -63,6 +62,14 @@ class Translation_Events {
 			$attendee_repository = new Attendee_Repository();
 		}
 		return $attendee_repository;
+	}
+
+	public static function get_attendee_adder(): Attendee_Adder {
+		static $attendee_adder = null;
+		if ( null === $attendee_adder ) {
+			$attendee_adder = new Attendee_Adder( self::get_attendee_repository(), new Stats_Importer() );
+		}
+		return $attendee_adder;
 	}
 
 	public function __construct() {
