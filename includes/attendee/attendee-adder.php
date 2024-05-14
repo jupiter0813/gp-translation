@@ -2,6 +2,7 @@
 
 namespace Wporg\TranslationEvents\Attendee;
 
+use Exception;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Stats\Stats_Importer;
 
@@ -19,8 +20,16 @@ class Attendee_Adder {
 	 *
 	 * @param Event    $event    Event to which to add the attendee.
 	 * @param Attendee $attendee Attendee to add to the event.
+	 *
+	 * @throws Exception
 	 */
 	public function add_to_event( Event $event, Attendee $attendee ): void {
-		// TODO.
+		$this->attendee_repository->insert_attendee( $attendee );
+
+		// If the event is active right now,
+		// import stats for translations the user created since the event started.
+		if ( $event->is_active() ) {
+			$this->stats_importer->import_for_user_and_event( $attendee->user_id(), $event );
+		}
 	}
 }
