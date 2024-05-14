@@ -164,8 +164,8 @@ class Translation_Events {
 		$event_start    = get_post_meta( $post->ID, '_event_start', true );
 		$event_end      = get_post_meta( $post->ID, '_event_end', true );
 		$event_timezone = get_post_meta( $post->ID, '_event_timezone', true );
-		$hosts          = explode( ',', get_post_meta( $post->ID, '_hosts', true ) );
-		if ( empty( $hosts ) ) {
+		$hosts          = explode( ',', get_post_meta( $post->ID, '_hosts' ) );
+		if ( empty( $hosts[0] ) ) {
 			$hosts = array( $post->post_author );
 		}
 		?>
