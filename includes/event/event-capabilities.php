@@ -100,7 +100,7 @@ class Event_Capabilities {
 	 * @return bool
 	 */
 	private function has_manage( WP_User $user ): bool {
-		return $this->is_gp_admin( $user );
+		return apply_filters( 'gp_translation_events_can_crud_event', GP::$permission->user_can( $user, 'admin' ) );
 	}
 
 	/**
@@ -110,7 +110,7 @@ class Event_Capabilities {
 	 * @return bool
 	 */
 	private function has_create( WP_User $user ): bool {
-		return $this->is_gp_admin( $user );
+		return $this->has_manage( $user );
 	}
 
 	/**
@@ -121,7 +121,7 @@ class Event_Capabilities {
 	 * @return bool
 	 */
 	private function has_view( WP_User $user, Event $event ): bool {
-		if ( $this->is_gp_admin( $user ) ) {
+		if ( $this->has_manage( $user ) ) {
 			return true;
 		}
 
@@ -157,7 +157,7 @@ class Event_Capabilities {
 			return true;
 		}
 
-		if ( $this->is_gp_admin( $user ) ) {
+		if ( $this->has_manage( $user ) ) {
 			return true;
 		}
 
@@ -183,7 +183,7 @@ class Event_Capabilities {
 			return true;
 		}
 
-		if ( $this->is_gp_admin( $user ) ) {
+		if ( $this->has_manage( $user ) ) {
 			return true;
 		}
 
@@ -205,7 +205,7 @@ class Event_Capabilities {
 			return false;
 		}
 
-		if ( $this->is_gp_admin( $user ) ) {
+		if ( $this->has_manage( $user ) ) {
 			return true;
 		}
 
@@ -220,7 +220,7 @@ class Event_Capabilities {
 	 * @return bool
 	 */
 	private function has_edit_attendees( WP_User $user, Event $event ): bool {
-		if ( $this->is_gp_admin( $user ) ) {
+		if ( $this->has_manage( $user ) ) {
 			return true;
 		}
 
@@ -234,16 +234,6 @@ class Event_Capabilities {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Evaluate whether a user is a GlotPress admin.
-	 *
-	 * @param WP_User $user User for which we're evaluating the capability.
-	 * @return bool
-	 */
-	private function is_gp_admin( WP_User $user ): bool {
-		return apply_filters( 'gp_translation_events_can_crud_event', GP::$permission->user_can( $user, 'admin' ) );
 	}
 
 	public function register_hooks(): void {

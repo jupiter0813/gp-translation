@@ -2,8 +2,7 @@
 /**
  * Template for event page.
  */
-
-namespace Wporg\TranslationEvents;
+namespace Wporg\TranslationEvents\Templates;
 
 use GP_Locales;
 use WP_User;
@@ -11,6 +10,8 @@ use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Stats\Event_Stats;
 use Wporg\TranslationEvents\Stats\Stats_Row;
+use Wporg\TranslationEvents\Templates;
+use Wporg\TranslationEvents\Urls;
 
 /** @var bool $user_is_attending */
 /** @var bool $user_is_contributor */

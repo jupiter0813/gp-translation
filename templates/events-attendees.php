@@ -2,10 +2,11 @@
 /**
  * Attendees list page.
  */
-
-namespace Wporg\TranslationEvents;
+namespace Wporg\TranslationEvents\Templates;
 
 use Wporg\TranslationEvents\Event\Event;
+use Wporg\TranslationEvents\Templates;
+use Wporg\TranslationEvents\Urls;
 
 /**  @var Event $event */
 /** @var bool $is_active_filter */

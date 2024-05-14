@@ -135,7 +135,8 @@ span.event-list-date.events-i-am-attending {
 	font-weight: normal;
 }
 
-.event-list-item a {
+/* Event title. */
+.event-list-item a:first-child {
 	font-weight: bold;
 	font-size: 1.2em;
 }
@@ -143,6 +144,17 @@ span.event-list-date.events-i-am-attending {
 li.event-list-item {
 	list-style-type: none;
 	margin-bottom: .5em;
+}
+
+.event-list-item-button {
+	text-decoration: none;
+	vertical-align: bottom;
+}
+.event-list-item-button:nth-child(2) { /* The first button. */
+	margin-left: .3em;
+}
+.event-list-item-button.is-destructive {
+	color: var(--gp-color-btn-danger-text);
 }
 
 li.event-list-item p {

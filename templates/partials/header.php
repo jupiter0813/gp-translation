@@ -1,6 +1,8 @@
 <?php
+namespace Wporg\TranslationEvents\Templates\Partials;
 
 use Wporg\TranslationEvents\Urls;
+use function Wporg\TranslationEvents\Templates\gp_breadcrumb_translation_events;
 
 /** @var string $html_title */
 /** @var string|callable $page_title */
