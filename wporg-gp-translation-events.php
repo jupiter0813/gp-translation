@@ -152,6 +152,7 @@ class Translation_Events {
 	 */
 	public function event_meta_boxes() {
 		add_meta_box( 'event_dates', 'Event Dates', array( $this, 'event_dates_meta_box' ), self::CPT, 'normal', 'high' );
+		add_meta_box( 'hosts', 'Hosts', array( $this, 'hosts_meta_box' ), self::CPT, 'normal', 'high' );
 	}
 
 	/**
@@ -164,10 +165,6 @@ class Translation_Events {
 		$event_start    = get_post_meta( $post->ID, '_event_start', true );
 		$event_end      = get_post_meta( $post->ID, '_event_end', true );
 		$event_timezone = get_post_meta( $post->ID, '_event_timezone', true );
-		$hosts          = explode( ',', get_post_meta( $post->ID, '_hosts' ) );
-		if ( empty( $hosts[0] ) ) {
-			$hosts = array( $post->post_author );
-		}
 		?>
 		<label for="event_start">Start Date (UTC): </label>
 		<input type="datetime-local" id="event_start" name="event_start" value="<?php echo esc_attr( $event_start ); ?>" required><br>
@@ -187,21 +184,34 @@ class Translation_Events {
 				)
 			);
 			?>
-		</select><br>
-		<label for="event-hosts">Hosts: </label>
+		</select>
 		<?php
-		foreach ( $hosts as $host ) {
-			$user = get_user_by( 'ID', $host );
-			if ( $user ) {
-				?>
-				<a href="<?php echo esc_url( get_author_posts_url( $host ) ); ?>"><?php echo esc_html( $user->display_name ); ?></a>
-				<?php
-			} else {
-				?>
-				<i><?php echo esc_html( $host ); ?></i>
-				<?php
-			}
+	}
+
+	/**
+	 * Output the event dates meta box.
+	 *
+	 * @param  WP_Post $post The current post object.
+	 */
+	public function hosts_meta_box( WP_Post $post ) {
+		$hosts          = explode( ',', get_post_meta( $post->ID, '_hosts', true ) );
+		if ( empty( $hosts ) ) {
+			$hosts = array( $post->post_author );
 		}
+		$hosts_list = array_map( function ( $user_id ) {
+			$user = get_user_by( 'ID', $user_id );
+			if ( ! $user ) {
+				return '<i>Unknown user id: ' . esc_html( $user_id ) . '</i>';
+			}
+			return '<a href="' . esc_attr( get_author_posts_url( $user_id ) ). '">' . esc_html( $user->display_name ). '</a>';
+		}, $hosts );
+		echo wp_kses(
+			implode( ', ', $hosts_list ),
+			array(
+				'a' => array( 'href' => array() ),
+			)
+		);
+
 	}
 
 	/**
