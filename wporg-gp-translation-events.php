@@ -169,9 +169,9 @@ class Translation_Events {
 			$hosts = array( $post->post_author );
 		}
 		?>
-		<label for="event_start">Start Date: </label>
+		<label for="event_start">Start Date (UTC): </label>
 		<input type="datetime-local" id="event_start" name="event_start" value="<?php echo esc_attr( $event_start ); ?>" required><br>
-		<label for="event_end">End Date: </label>
+		<label for="event_end">End Date (UTC): </label>
 		<input type="datetime-local" id="event_end" name="event_end" value="<?php echo esc_attr( $event_end ); ?>" required><br>
 		<label for="event-timezone">Timezone: </label>
 		<select id="event-timezone" name="event_timezone" required>
