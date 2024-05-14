@@ -247,14 +247,17 @@ class Translation_Events {
 			return;
 		}
 		if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
-			$event_id            = $post->ID;
+			$event = self::get_event_repository()->get_event( $post->ID );
+			if ( ! $event ) {
+				return;
+			}
+
 			$user_id             = $post->post_author;
 			$attendee_repository = self::get_attendee_repository();
-			$attendee            = $attendee_repository->get_attendee( $event_id, $user_id );
+			$attendee            = $attendee_repository->get_attendee( $event->id(), $user_id );
 
 			if ( null === $attendee ) {
-				$event    = self::get_event_repository()->get_event( $event_id );
-				$attendee = new Attendee( $event_id, $user_id, true );
+				$attendee = new Attendee( $event->id(), $user_id, true );
 				self::get_attendee_adder()->add_to_event( $event, $attendee );
 			}
 		}
