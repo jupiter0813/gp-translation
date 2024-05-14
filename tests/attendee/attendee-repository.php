@@ -71,7 +71,7 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$user2_id  = 43;
 
 		// Host contributor.
-		$attendee11 = new Attendee( $event1_id, $user1_id, true, array( 'aa' ) );
+		$attendee11 = new Attendee( $event1_id, $user1_id, true, false, array( 'aa' ) );
 		$this->stats_factory->create( $event1_id, $user1_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee11 );
 
@@ -135,7 +135,7 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$user2_id  = 43;
 
 		// Host, contributor.
-		$attendee11 = new Attendee( $event1_id, $user1_id, true, array( 'aa' ) );
+		$attendee11 = new Attendee( $event1_id, $user1_id, true, false, array( 'aa' ) );
 		$this->stats_factory->create( $event1_id, $user1_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee11 );
 
@@ -148,7 +148,7 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->repository->insert_attendee( $attendee21 );
 
 		// Non-host, contributor.
-		$attendee22 = new Attendee( $event2_id, $user2_id, false, array( 'aa' ) );
+		$attendee22 = new Attendee( $event2_id, $user2_id, false, false, array( 'aa' ) );
 		$this->stats_factory->create( $event2_id, $user2_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee22 );
 
@@ -239,9 +239,9 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->repository->insert_attendee( $attendee12 );
 		$this->repository->insert_attendee( $attendee13 );
 
-		$this->assertTrue( $attendee11->is_new_contributor() );
-		$this->assertTrue( $attendee12->is_new_contributor() );
-		$this->assertFalse( $attendee13->is_new_contributor() );
+		$this->assertTrue( $attendee11->is_new_contributor_legacy() );
+		$this->assertTrue( $attendee12->is_new_contributor_legacy() );
+		$this->assertFalse( $attendee13->is_new_contributor_legacy() );
 
 		$event2_id  = $this->event_factory->create_active( array(), $now->modify( '-1 day' ) );
 		$attendee21 = new Attendee( $event2_id, $user1_id );
@@ -250,9 +250,9 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->repository->insert_attendee( $attendee21 );
 		$this->repository->insert_attendee( $attendee22 );
 		$this->repository->insert_attendee( $attendee23 );
-		$this->assertTrue( $attendee21->is_new_contributor() );
-		$this->assertTrue( $attendee22->is_new_contributor() );
-		$this->assertTrue( $attendee23->is_new_contributor() );
+		$this->assertTrue( $attendee21->is_new_contributor_legacy() );
+		$this->assertTrue( $attendee22->is_new_contributor_legacy() );
+		$this->assertTrue( $attendee23->is_new_contributor_legacy() );
 	}
 
 	private function all_table_rows(): array {

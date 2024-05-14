@@ -11,6 +11,7 @@ class Attendee {
 	private int $event_id;
 	private int $user_id;
 	private bool $is_host;
+	private bool $is_new_contributor;
 
 	/**
 	 * @var string[]
@@ -22,7 +23,7 @@ class Attendee {
 	/**
 	 * @throws Exception
 	 */
-	public function __construct( int $event_id, int $user_id, bool $is_host = false, array $contributed_locales = array() ) {
+	public function __construct( int $event_id, int $user_id, bool $is_host = false, $is_new_contributor = false, array $contributed_locales = array() ) {
 		if ( $event_id < 1 ) {
 			throw new Exception( 'invalid event id' );
 		}
@@ -33,6 +34,7 @@ class Attendee {
 		$this->event_id               = $event_id;
 		$this->user_id                = $user_id;
 		$this->is_host                = $is_host;
+		$this->is_new_contributor     = $is_new_contributor;
 		$this->contributed_locales    = $contributed_locales;
 		$this->event_repository       = Translation_Events::get_event_repository();
 		$this->translation_repository = new Translation_Repository();
@@ -50,11 +52,15 @@ class Attendee {
 		return $this->is_host;
 	}
 
+	public function is_new_contributor(): bool {
+		return $this->is_new_contributor;
+	}
+
 	public function is_contributor(): bool {
 		return ! empty( $this->contributed_locales );
 	}
 
-	public function is_new_contributor(): bool {
+	public function is_new_contributor_legacy(): bool {
 		$event = $this->event_repository->get_event( $this->event_id );
 		return $this->translation_repository->count_translations_before( array( $this->user_id() ), $event->start() )[ $this->user_id() ] <= 10;
 	}

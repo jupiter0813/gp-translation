@@ -123,6 +123,7 @@ class Attendee_Repository {
 			$event_id,
 			$row->user_id,
 			'1' === $row->is_host,
+			false,
 			null === $row->locales ? array() : explode( ',', $row->locales ),
 		);
 	}
@@ -168,6 +169,7 @@ class Attendee_Repository {
 					$event_id,
 					$row->user_id,
 					'1' === $row->is_host,
+					false,
 					null === $row->locales ? array() : explode( ',', $row->locales ),
 				);
 			},
