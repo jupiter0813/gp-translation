@@ -22,7 +22,6 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->repository          = new Attendee_Repository();
 		$this->stats_factory       = new Stats_Factory();
 		$this->translation_factory = new Translation_Factory( $this->factory );
-		$this->translation_factory = new Translation_Factory( $this->factory );
 		$this->event_factory       = new Event_Factory();
 	}
 
