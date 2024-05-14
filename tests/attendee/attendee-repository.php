@@ -2,19 +2,34 @@
 
 namespace Wporg\Tests\Attendee;
 
-use WP_UnitTestCase;
+use GP_UnitTestCase;
+use DateTimeImmutable;
+use DateTimeZone;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
+use Wporg\TranslationEvents\Tests\Translation_Factory;
+use Wporg\TranslationEvents\Translation\Translation_Repository;
+use Wporg\TranslationEvents\Event\Event_Repository;
+use Wporg\TranslationEvents\Tests\Event_Factory;
 
-class Attendee_Repository_Test extends WP_UnitTestCase {
+class Attendee_Repository_Test extends GP_UnitTestCase {
 	private Attendee_Repository $repository;
 	private Stats_Factory $stats_factory;
+	private Translation_Factory $translation_factory;
+	private Event_Repository $event_repository;
+	private Translation_Repository $translation_repository;
+	private Event_Factory $event_factory;
 
-	protected function setUp(): void {
+	public function setUp(): void {
 		parent::setUp();
-		$this->repository    = new Attendee_Repository();
-		$this->stats_factory = new Stats_Factory();
+		$this->repository             = new Attendee_Repository();
+		$this->stats_factory          = new Stats_Factory();
+		$this->translation_factory    = new Translation_Factory( $this->factory );
+		$this->event_repository       = new Event_Repository( $this->repository );
+		$this->translation_repository = new Translation_Repository();
+		$this->translation_factory    = new Translation_Factory( $this->factory );
+		$this->event_factory          = new Event_Factory();
 	}
 
 	public function test_add_attendee_invalid_event_id() {
@@ -204,6 +219,46 @@ class Attendee_Repository_Test extends WP_UnitTestCase {
 		$this->assertEquals( array( $event1_id, $event2_id ), $this->repository->get_events_for_user( $user_id ) );
 		$this->assertEquals( array( $event3_id ), $this->repository->get_events_for_user( $another_user ) );
 		$this->assertEmpty( $this->repository->get_events_for_user( $another_user + 1 ) );
+	}
+
+	public function test_is_new_translation_contributor() {
+		$this->set_normal_user_as_current();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$user1_id = 52;
+		$user2_id = 53;
+		$user3_id = 54;
+
+		// create 10 translations  for $user2_id before event start.
+		for ( $i = 0; $i < 10; $i++ ) {
+			$this->translation_factory->create( $user2_id );
+
+		}
+		// create 11 translations  for $user3_id before event start.
+		for ( $i = 0; $i < 11; $i++ ) {
+			$this->translation_factory->create( $user3_id );
+		}
+
+		$event1_id  = $this->event_factory->create_active( array(), $now->modify( '+1 day' ) );
+		$attendee11 = new Attendee( $event1_id, $user1_id );
+		$attendee12 = new Attendee( $event1_id, $user2_id );
+		$attendee13 = new Attendee( $event1_id, $user3_id );
+		$this->repository->insert_attendee( $attendee11 );
+		$this->repository->insert_attendee( $attendee12 );
+		$this->repository->insert_attendee( $attendee13 );
+		$event = $this->event_repository->get_event( $event1_id );
+
+		$contributor_ids     = array( $attendee11->user_id(), $attendee12->user_id(), $attendee13->user_id() );
+		$new_contributor_ids = array();
+		$translations_counts = $this->translation_repository->count_translations_before( $contributor_ids, $event->start() );
+		foreach ( $translations_counts as $user_id => $count ) {
+			if ( $count <= 10 ) {
+				$new_contributor_ids[ $user_id ] = true;
+			}
+		}
+
+		$this->assertCount( 2, $new_contributor_ids );
+		$this->assertTrue( $new_contributor_ids[ $user1_id ] );
+		$this->assertTrue( $new_contributor_ids[ $user2_id ] );
 	}
 
 	private function all_table_rows(): array {
