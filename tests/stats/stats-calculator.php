@@ -12,7 +12,6 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 	private Stats_Factory $stats_factory;
 	private Stats_Calculator $calculator;
 
-
 	public function setUp(): void {
 		parent::setUp();
 		$this->event_factory = new Event_Factory();
