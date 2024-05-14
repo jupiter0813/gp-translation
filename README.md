@@ -42,3 +42,9 @@ You can run tests in `wp-env` with the following command:
 ```shell
 composer dev:test
 ```
+
+If you want to run only one test, you can use the following command:
+
+```shell
+wp-env run tests-cli --env-cwd=wp-content/plugins/wporg-gp-translation-events ./vendor/bin/phpunit --filter methods_name
+```
