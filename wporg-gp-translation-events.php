@@ -253,8 +253,9 @@ class Translation_Events {
 			$attendee            = $attendee_repository->get_attendee( $event_id, $user_id );
 
 			if ( null === $attendee ) {
+				$event    = self::get_event_repository()->get_event( $event_id );
 				$attendee = new Attendee( $event_id, $user_id, true );
-				$attendee_repository->insert_attendee( $attendee );
+				self::get_attendee_adder()->add_to_event( $event, $attendee );
 			}
 		}
 	}
