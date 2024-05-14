@@ -194,24 +194,26 @@ class Translation_Events {
 	 * @param  WP_Post $post The current post object.
 	 */
 	public function hosts_meta_box( WP_Post $post ) {
-		$hosts          = explode( ',', get_post_meta( $post->ID, '_hosts', true ) );
+		$hosts = explode( ',', get_post_meta( $post->ID, '_hosts', true ) );
 		if ( empty( $hosts ) ) {
 			$hosts = array( $post->post_author );
 		}
-		$hosts_list = array_map( function ( $user_id ) {
-			$user = get_user_by( 'ID', $user_id );
-			if ( ! $user ) {
-				return '<i>Unknown user id: ' . esc_html( $user_id ) . '</i>';
-			}
-			return '<a href="' . esc_attr( get_author_posts_url( $user_id ) ). '">' . esc_html( $user->display_name ). '</a>';
-		}, $hosts );
+		$hosts_list = array_map(
+			function ( $user_id ) {
+				$user = get_user_by( 'ID', $user_id );
+				if ( ! $user ) {
+						return '<i>Unknown user id: ' . esc_html( $user_id ) . '</i>';
+				}
+				return '<a href="' . esc_attr( get_author_posts_url( $user_id ) ) . '">' . esc_html( $user->display_name ) . '</a>';
+			},
+			$hosts
+		);
 		echo wp_kses(
 			implode( ', ', $hosts_list ),
 			array(
 				'a' => array( 'href' => array() ),
 			)
 		);
-
 	}
 
 	/**
