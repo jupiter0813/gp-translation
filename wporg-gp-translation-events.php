@@ -162,19 +162,17 @@ class Translation_Events {
 	 */
 	public function event_dates_meta_box( WP_Post $post ) {
 		wp_nonce_field( 'event_dates_nonce', 'event_dates_nonce' );
-		$event_start    = get_post_meta( $post->ID, '_event_start', true );
-		$event_end      = get_post_meta( $post->ID, '_event_end', true );
-		$event_timezone = get_post_meta( $post->ID, '_event_timezone', true );
+		$event = self::get_event_repository()->get_event( $post->ID );
 		?>
 		<label for="event_start">Start Date (UTC): </label>
-		<input type="datetime-local" id="event_start" name="event_start" value="<?php echo esc_attr( $event_start ); ?>" required><br>
+		<input type="datetime-local" id="event_start" name="event_start" value="<?php echo esc_attr( $event->start() ); ?>" required><br>
 		<label for="event_end">End Date (UTC): </label>
-		<input type="datetime-local" id="event_end" name="event_end" value="<?php echo esc_attr( $event_end ); ?>" required><br>
+		<input type="datetime-local" id="event_end" name="event_end" value="<?php echo esc_attr( $event->end() ); ?>" required><br>
 		<label for="event-timezone">Timezone: </label>
 		<select id="event-timezone" name="event_timezone" required>
 			<?php
 			echo wp_kses(
-				wp_timezone_choice( $event_timezone, get_user_locale() ),
+				wp_timezone_choice( $event->timezone()->getName(), get_user_locale() ),
 				array(
 					'optgroup' => array( 'label' => array() ),
 					'option'   => array(
@@ -194,17 +192,14 @@ class Translation_Events {
 	 * @param  WP_Post $post The current post object.
 	 */
 	public function hosts_meta_box( WP_Post $post ) {
-		$hosts = explode( ',', get_post_meta( $post->ID, '_hosts', true ) );
-		if ( empty( $hosts ) ) {
-			$hosts = array( $post->post_author );
-		}
+		$hosts = self::get_attendee_repository()->get_hosts( $post->ID );
 		$hosts_list = array_map(
-			function ( $user_id ) {
-				$user = get_user_by( 'ID', $user_id );
+			function ( Attendee $host ) {
+				$user = get_user_by( 'ID', $host->user_id() );
 				if ( ! $user ) {
-						return '<i>Unknown user id: ' . esc_html( $user_id ) . '</i>';
+						return '<i>Unknown user id: ' . esc_html( $host->user_id() ) . '</i>';
 				}
-				return '<a href="' . esc_attr( get_author_posts_url( $user_id ) ) . '">' . esc_html( $user->display_name ) . '</a>';
+				return '<a href="' . esc_attr( get_author_posts_url( $host->user_id() ) ) . '">' . esc_html( $user->display_name ) . '</a>';
 			},
 			$hosts
 		);
