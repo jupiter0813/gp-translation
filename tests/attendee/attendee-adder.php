@@ -53,7 +53,44 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 	}
 
 	public function test_sets_is_new_contributor() {
-		$this->markTestSkipped( 'TODO' );
+		$this->set_normal_user_as_current();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$user1_id = 52;
+		$user2_id = 53;
+		$user3_id = 54;
+
+		// Create 10 translations for $user2_id before event start.
+		for ( $i = 0; $i < 10; $i++ ) {
+			$this->translation_factory->create( $user2_id );
+
+		}
+		// Create 11 translations for $user3_id before event start.
+		for ( $i = 0; $i < 11; $i++ ) {
+			$this->translation_factory->create( $user3_id );
+		}
+
+		$event1_id  = $this->event_factory->create_active( array(), $now->modify( '+1 day' ) );
+		$attendee11 = new Attendee( $event1_id, $user1_id );
+		$attendee12 = new Attendee( $event1_id, $user2_id );
+		$attendee13 = new Attendee( $event1_id, $user3_id );
+		$this->attendee_repository->insert_attendee( $attendee11 );
+		$this->attendee_repository->insert_attendee( $attendee12 );
+		$this->attendee_repository->insert_attendee( $attendee13 );
+
+		$this->assertTrue( $attendee11->is_new_contributor_legacy() );
+		$this->assertTrue( $attendee12->is_new_contributor_legacy() );
+		$this->assertFalse( $attendee13->is_new_contributor_legacy() );
+
+		$event2_id  = $this->event_factory->create_active( array(), $now->modify( '-1 day' ) );
+		$attendee21 = new Attendee( $event2_id, $user1_id );
+		$attendee22 = new Attendee( $event2_id, $user2_id );
+		$attendee23 = new Attendee( $event2_id, $user3_id );
+		$this->attendee_repository->insert_attendee( $attendee21 );
+		$this->attendee_repository->insert_attendee( $attendee22 );
+		$this->attendee_repository->insert_attendee( $attendee23 );
+		$this->assertTrue( $attendee21->is_new_contributor_legacy() );
+		$this->assertTrue( $attendee22->is_new_contributor_legacy() );
+		$this->assertTrue( $attendee23->is_new_contributor_legacy() );
 	}
 
 	public function test_import_stats_if_active_event() {
