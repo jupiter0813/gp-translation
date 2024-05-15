@@ -174,16 +174,20 @@ class Event_Capabilities {
 	 * @throws Exception
 	 */
 	private function has_trash( WP_User $user, Event $event ): bool {
+		if ( $this->has_manage( $user ) ) {
+			return true;
+		}
+
+		if ( $this->stats_calculator->event_has_stats( $event->id() ) ) {
+			return false;
+		}
+
 		if ( $event->author_id() === $user->ID ) {
 			return true;
 		}
 
 		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
 		if ( ( $attendee instanceof Attendee ) && $attendee->is_host() ) {
-			return true;
-		}
-
-		if ( $this->has_manage( $user ) ) {
 			return true;
 		}
 

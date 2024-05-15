@@ -157,6 +157,42 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->assertFalse( current_user_can( 'edit_translation_event', $event_id ) );
 	}
 
+	public function test_cannot_trash_event_with_stats() {
+		$this->set_normal_user_as_current();
+		$author_user_id = get_current_user_id();
+
+		$event_id        = $this->event_factory->create_active();
+		$translation_set = $this->factory->translation_set->create_with_project_and_locale();
+		$original        = $this->factory->original->create( array( 'project_id' => $translation_set->project_id ) );
+		$this->factory->translation->create(
+			array(
+				'original_id'        => $original->id,
+				'translation_set_id' => $translation_set->id,
+				'status'             => 'current',
+			)
+		);
+		$this->stats_factory->create( $event_id, $author_user_id, $original->id, 'create', $translation_set->locale );
+		$this->assertFalse( current_user_can( 'trash_translation_event', $event_id ) );
+	}
+
+	public function test_admin_can_trash_event_with_stats() {
+		$this->set_admin_user_as_current();
+		$author_user_id = get_current_user_id();
+
+		$event_id        = $this->event_factory->create_active();
+		$translation_set = $this->factory->translation_set->create_with_project_and_locale();
+		$original        = $this->factory->original->create( array( 'project_id' => $translation_set->project_id ) );
+		$this->factory->translation->create(
+			array(
+				'original_id'        => $original->id,
+				'translation_set_id' => $translation_set->id,
+				'status'             => 'current',
+			)
+		);
+		$this->stats_factory->create( $event_id, $author_user_id, $original->id, 'create', $translation_set->locale );
+		$this->assertTrue( current_user_can( 'trash_translation_event', $event_id ) );
+	}
+
 	public function test_author_can_trash() {
 		$this->set_normal_user_as_current();
 		$event_id = $this->event_factory->create_active();
