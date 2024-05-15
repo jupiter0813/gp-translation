@@ -152,9 +152,8 @@ class Translation_Events {
 			'has_archive'  => true,
 			'hierarchical' => true,
 			'menu_icon'    => 'dashicons-calendar',
-			'supports'     => array( 'title', 'editor', 'thumbnail', 'revisions' ),
+			'supports'     => array( 'title', 'editor', 'thumbnail', 'revisions', 'page-attributes' ),
 			'rewrite'      => array( 'slug' => 'events' ),
-			'show_ui'      => false,
 		);
 
 		register_post_type( self::CPT, $args );
@@ -164,6 +163,7 @@ class Translation_Events {
 	 */
 	public function event_meta_boxes() {
 		add_meta_box( 'event_dates', 'Event Dates', array( $this, 'event_dates_meta_box' ), self::CPT, 'normal', 'high' );
+		add_meta_box( 'hosts', 'Hosts', array( $this, 'hosts_meta_box' ), self::CPT, 'normal', 'high' );
 	}
 
 	/**
@@ -173,12 +173,53 @@ class Translation_Events {
 	 */
 	public function event_dates_meta_box( WP_Post $post ) {
 		wp_nonce_field( 'event_dates_nonce', 'event_dates_nonce' );
-		$event_start = get_post_meta( $post->ID, '_event_start', true );
-		$event_end   = get_post_meta( $post->ID, '_event_end', true );
-		echo '<label for="event_start">Start Date: </label>';
-		echo '<input type="date" id="event_start" name="event_start" value="' . esc_attr( $event_start ) . '" required>';
-		echo '<label for="event_end">End Date: </label>';
-		echo '<input type="date" id="event_end" name="event_end" value="' . esc_attr( $event_end ) . '" required>';
+		$event = self::get_event_repository()->get_event( $post->ID );
+		?>
+		<label for="event_start">Start Date (UTC): </label>
+		<input type="datetime-local" id="event_start" name="event_start" value="<?php echo esc_attr( $event->start() ); ?>" required><br>
+		<label for="event_end">End Date (UTC): </label>
+		<input type="datetime-local" id="event_end" name="event_end" value="<?php echo esc_attr( $event->end() ); ?>" required><br>
+		<label for="event-timezone">Timezone: </label>
+		<select id="event-timezone" name="event_timezone" required>
+			<?php
+			echo wp_kses(
+				wp_timezone_choice( $event->timezone()->getName(), get_user_locale() ),
+				array(
+					'optgroup' => array( 'label' => array() ),
+					'option'   => array(
+						'value'    => array(),
+						'selected' => array(),
+					),
+				)
+			);
+			?>
+		</select>
+		<?php
+	}
+
+	/**
+	 * Output the event dates meta box.
+	 *
+	 * @param  WP_Post $post The current post object.
+	 */
+	public function hosts_meta_box( WP_Post $post ) {
+		$hosts      = self::get_attendee_repository()->get_hosts( $post->ID );
+		$hosts_list = array_map(
+			function ( Attendee $host ) {
+				$user = get_user_by( 'ID', $host->user_id() );
+				if ( ! $user ) {
+						return '<i>Unknown user id: ' . esc_html( $host->user_id() ) . '</i>';
+				}
+				return '<a href="' . esc_attr( get_author_posts_url( $host->user_id() ) ) . '">' . esc_html( $user->display_name ) . '</a>';
+			},
+			$hosts
+		);
+		echo wp_kses(
+			implode( ', ', $hosts_list ),
+			array(
+				'a' => array( 'href' => array() ),
+			)
+		);
 	}
 
 	/**
@@ -198,7 +239,7 @@ class Translation_Events {
 				return;
 			}
 		}
-		$fields = array( 'event_start', 'event_end' );
+		$fields = array( 'event_start', 'event_end', 'event_timezone' );
 		foreach ( $fields as $field ) {
 			if ( isset( $_POST[ $field ] ) ) {
 				update_post_meta( $post_id, '_' . $field, sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) );

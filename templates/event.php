@@ -40,27 +40,33 @@ Templates::header(
 			?>
 			<span class="event-host">
 				<?php
-				if ( isset( $hosts ) ) :
-					if ( count( $hosts ) > 0 ) :
-						if ( 1 === count( $hosts ) ) :
-							esc_html_e( 'Host:', 'gp-translation-events' );
-						else :
-							esc_html_e( 'Hosts:', 'gp-translation-events' );
-						endif;
-					else :
-						esc_html_e( 'Created by:', 'gp-translation-events' );
-						?>
-						&nbsp;<a href="<?php echo esc_attr( get_author_posts_url( $event->author_id() ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $event->author_id() ) ); ?></a>
-					<?php endif; ?>
-					<?php foreach ( $hosts as $host ) : ?>
-					&nbsp;<a href="<?php echo esc_attr( get_author_posts_url( $host->user_id() ) ); ?>"><?php echo esc_html( get_the_author_meta( 'display_name', $host->user_id() ) ); ?></a>
-						<?php if ( end( $hosts ) !== $host ) : ?>
-						,
-						<?php else : ?>
-						.
-						<?php endif; ?>
-					<?php endforeach; ?>
-				<?php endif; ?>
+				$has_hosts = count( $hosts ) > 0;
+
+				if ( ! $has_hosts ) {
+					$hosts = array( new Attendee( $event->id(), $event->author_id(), true ) );
+				}
+				$hosts_list = array_map(
+					function ( $host ) {
+						$url  = get_author_posts_url( $host->user_id() );
+						$name = get_the_author_meta( 'display_name', $host->user_id() );
+						return '<a href="' . esc_attr( $url ) . '">' . esc_html( $name ) . '</a>';
+					},
+					$hosts
+				);
+
+				if ( ! $has_hosts ) {
+					/* translators: %s: Display name of the user who created the event. */
+					$hosts_string = __( 'Created by: %s', 'gp-translation-events' );
+				} else {
+					/* translators: %s is a comma-separated list of event hosts (=usernames) */
+					$hosts_string = _n( 'Host: %s', 'Hosts: %s', count( $hosts ), 'gp-translation-events' );
+				}
+
+				echo wp_kses(
+					sprintf( $hosts_string, implode( ', ', $hosts_list ) ),
+					array( 'a' => array( 'href' => array() ) )
+				);
+				?>
 			</span>
 			<?php if ( current_user_can( 'edit_translation_event', $event->id() ) ) : ?>
 				<a class="event-page-edit-link" href="<?php echo esc_url( Urls::event_edit( $event->id() ) ); ?>"><span class="dashicons dashicons-edit"></span><?php esc_html_e( 'Edit event', 'gp-translation-events' ); ?></a>

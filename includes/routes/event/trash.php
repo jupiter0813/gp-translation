@@ -42,13 +42,14 @@ class Trash_Route extends Route {
 		if ( ! $event->is_trashed() ) {
 			// Trash.
 			$this->event_repository->trash_event( $event );
+			wp_safe_redirect( Urls::events_home() );
 		} else {
 			// Restore.
 			$event->set_status( 'draft' );
 			$this->event_repository->update_event( $event );
+			wp_safe_redirect( Urls::event_edit( $event->id() ) );
 		}
 
-		wp_safe_redirect( Urls::event_edit( $event->id() ) );
 		exit;
 	}
 }

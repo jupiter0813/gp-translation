@@ -81,13 +81,12 @@ class Details_Route extends Route {
 			$contributors
 		);
 
-		$new_contributor_ids = array();
-		$translations_counts = $this->translation_repository->count_translations_before( $contributor_ids, $event->start() );
-		foreach ( $translations_counts as $user_id => $count ) {
-			if ( $count <= 10 ) {
-				$new_contributor_ids[ $user_id ] = true;
+		$new_contributor_ids = array_filter(
+			$contributors,
+			function ( Attendee $contributor ) {
+				return $contributor->is_new_contributor();
 			}
-		}
+		);
 
 		try {
 			$event_stats = $this->stats_calculator->for_event( $event->id() );
@@ -97,7 +96,7 @@ class Details_Route extends Route {
 			$this->die_with_error( esc_html__( 'Failed to calculate event stats', 'gp-translation-events' ) );
 		}
 
-		$this->render(
+		$this->tmpl(
 			'event',
 			array(
 				'event'                      => $event,
