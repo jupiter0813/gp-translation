@@ -3,9 +3,6 @@
 namespace Wporg\TranslationEvents\Attendee;
 
 use Exception;
-use Wporg\TranslationEvents\Translation\Translation_Repository;
-use Wporg\TranslationEvents\Translation_Events;
-use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 
 class Attendee {
 	private int $event_id;
@@ -17,8 +14,6 @@ class Attendee {
 	 * @var string[]
 	 */
 	private array $contributed_locales;
-	private Translation_Repository $translation_repository;
-	private Event_Repository_Interface $event_repository;
 
 	/**
 	 * @throws Exception
@@ -31,13 +26,11 @@ class Attendee {
 			throw new Exception( 'invalid user id' );
 		}
 
-		$this->event_id               = $event_id;
-		$this->user_id                = $user_id;
-		$this->is_host                = $is_host;
-		$this->is_new_contributor     = $is_new_contributor;
-		$this->contributed_locales    = $contributed_locales;
-		$this->event_repository       = Translation_Events::get_event_repository();
-		$this->translation_repository = new Translation_Repository();
+		$this->event_id            = $event_id;
+		$this->user_id             = $user_id;
+		$this->is_host             = $is_host;
+		$this->is_new_contributor  = $is_new_contributor;
+		$this->contributed_locales = $contributed_locales;
 	}
 
 	public function event_id(): int {
@@ -58,11 +51,6 @@ class Attendee {
 
 	public function is_contributor(): bool {
 		return ! empty( $this->contributed_locales );
-	}
-
-	public function is_new_contributor_legacy(): bool {
-		$event = $this->event_repository->get_event( $this->event_id );
-		return $this->translation_repository->count_translations_before( array( $this->user_id() ), $event->start() )[ $this->user_id() ] <= 10;
 	}
 
 	public function mark_as_host(): void {
