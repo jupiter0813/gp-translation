@@ -192,7 +192,7 @@ class Translation_Events {
 	 * @param  WP_Post $post The current post object.
 	 */
 	public function hosts_meta_box( WP_Post $post ) {
-		$hosts = self::get_attendee_repository()->get_hosts( $post->ID );
+		$hosts      = self::get_attendee_repository()->get_hosts( $post->ID );
 		$hosts_list = array_map(
 			function ( Attendee $host ) {
 				$user = get_user_by( 'ID', $host->user_id() );
