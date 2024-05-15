@@ -5,15 +5,12 @@ namespace Wporg\TranslationEvents\Attendee;
 use Exception;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Stats\Stats_Listener;
-use Wporg\TranslationEvents\Translation\Translation_Repository;
 
 class Attendee_Adder {
 	private Attendee_Repository $attendee_repository;
-	private Translation_Repository $translation_repository;
 
-	public function __construct( Attendee_Repository $attendee_repository, Translation_Repository $translation_repository ) {
-		$this->attendee_repository    = $attendee_repository;
-		$this->translation_repository = $translation_repository;
+	public function __construct( Attendee_Repository $attendee_repository ) {
+		$this->attendee_repository = $attendee_repository;
 	}
 
 	/**

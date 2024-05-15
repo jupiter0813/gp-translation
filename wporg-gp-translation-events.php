@@ -32,7 +32,6 @@ use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Notifications\Notifications_Send;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Listener;
-use Wporg\TranslationEvents\Translation\Translation_Repository;
 
 class Translation_Events {
 	public const CPT = 'translation_event';
@@ -67,7 +66,7 @@ class Translation_Events {
 	public static function get_attendee_adder(): Attendee_Adder {
 		static $attendee_adder = null;
 		if ( null === $attendee_adder ) {
-			$attendee_adder = new Attendee_Adder( self::get_attendee_repository(), new Translation_Repository() );
+			$attendee_adder = new Attendee_Adder( self::get_attendee_repository() );
 		}
 		return $attendee_adder;
 	}

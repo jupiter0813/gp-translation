@@ -13,7 +13,6 @@ use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 use Wporg\TranslationEvents\Tests\Translation_Factory;
-use Wporg\TranslationEvents\Translation\Translation_Repository;
 
 class Attendee_Adder_Test extends GP_UnitTestCase {
 	/**
@@ -30,7 +29,7 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 		$this->attendee_repository = $this->createMock( Attendee_Repository::class );
-		$this->adder               = new Attendee_Adder( $this->attendee_repository, new Translation_Repository() );
+		$this->adder               = new Attendee_Adder( $this->attendee_repository );
 		$this->event_repository    = new Event_Repository( new Attendee_Repository() );
 		$this->event_factory       = new Event_Factory();
 		$this->translation_factory = new Translation_Factory( $this->factory );
