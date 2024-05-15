@@ -15,11 +15,12 @@ class Attendee_Repository {
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
 			$wpdb->prepare(
-				"insert ignore into {$gp_table_prefix}event_attendees (event_id, user_id, is_host) values (%d, %d, %d)",
+				"insert ignore into {$gp_table_prefix}event_attendees (event_id, user_id, is_host, is_new_contributor) values (%d, %d, %d, %d)",
 				array(
-					'event_id' => $attendee->event_id(),
-					'user_id'  => $attendee->user_id(),
-					'is_host'  => $attendee->is_host() ? 1 : 0,
+					'event_id'           => $attendee->event_id(),
+					'user_id'            => $attendee->user_id(),
+					'is_host'            => $attendee->is_host() ? 1 : 0,
+					'is_new_contributor' => $attendee->is_new_contributor() ? 1 : 0,
 				),
 			),
 		);

@@ -41,12 +41,20 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$user_id   = 42;
 
 		$this->repository->insert_attendee( new Attendee( $event1_id, $user_id ) );
-		$this->repository->insert_attendee( new Attendee( $event2_id, $user_id ) );
+		$this->repository->insert_attendee( new Attendee( $event2_id, $user_id, true, true ) );
 
 		$rows = $this->all_table_rows();
 		$this->assertCount( 2, $rows );
+
 		$this->assertEquals( $event1_id, $rows[0]->event_id );
+		$this->assertEquals( $user_id, $rows[0]->user_id );
+		$this->assertEquals( 0, $rows[0]->is_host );
+		$this->assertEquals( 0, $rows[0]->is_new_contributor );
+
 		$this->assertEquals( $event2_id, $rows[1]->event_id );
+		$this->assertEquals( $user_id, $rows[1]->user_id );
+		$this->assertEquals( 1, $rows[1]->is_host );
+		$this->assertEquals( 1, $rows[1]->is_new_contributor );
 	}
 
 	public function test_remove_attendee() {
