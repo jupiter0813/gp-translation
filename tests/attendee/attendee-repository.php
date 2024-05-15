@@ -79,7 +79,7 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$user2_id  = 43;
 
 		// Host contributor.
-		$attendee11 = new Attendee( $event1_id, $user1_id, true, false, array( 'aa' ) );
+		$attendee11 = new Attendee( $event1_id, $user1_id, true, true, array( 'aa' ) );
 		$this->stats_factory->create( $event1_id, $user1_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee11 );
 
@@ -95,11 +95,13 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$retrieved_attendee_11 = $this->repository->get_attendee( $event1_id, $user1_id );
 		$this->assertEquals( $attendee11, $retrieved_attendee_11 );
 		$this->assertTrue( $retrieved_attendee_11->is_host() );
+		$this->assertTrue( $retrieved_attendee_11->is_new_contributor() );
 		$this->assertTrue( $retrieved_attendee_11->is_contributor() );
 
 		$retrieved_attendee_12 = $this->repository->get_attendee( $event1_id, $user2_id );
 		$this->assertEquals( $attendee12, $retrieved_attendee_12 );
 		$this->assertFalse( $retrieved_attendee_12->is_host() );
+		$this->assertFalse( $retrieved_attendee_12->is_new_contributor() );
 		$this->assertFalse( $retrieved_attendee_12->is_contributor() );
 
 		$this->assertNull( $this->repository->get_attendee( $event2_id, $user2_id ) );
@@ -143,7 +145,7 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$user2_id  = 43;
 
 		// Host, contributor.
-		$attendee11 = new Attendee( $event1_id, $user1_id, true, false, array( 'aa' ) );
+		$attendee11 = new Attendee( $event1_id, $user1_id, true, true, array( 'aa' ) );
 		$this->stats_factory->create( $event1_id, $user1_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee11 );
 
@@ -156,7 +158,7 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->repository->insert_attendee( $attendee21 );
 
 		// Non-host, contributor.
-		$attendee22 = new Attendee( $event2_id, $user2_id, false, false, array( 'aa' ) );
+		$attendee22 = new Attendee( $event2_id, $user2_id, false, true, array( 'aa' ) );
 		$this->stats_factory->create( $event2_id, $user2_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee22 );
 
@@ -165,7 +167,9 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( $attendee11, $attendees[ $user1_id ] );
 		$this->assertEquals( $attendee12, $attendees[ $user2_id ] );
 		$this->assertTrue( $attendees[ $user1_id ]->is_host() );
+		$this->assertTrue( $attendees[ $user1_id ]->is_new_contributor() );
 		$this->assertFalse( $attendees[ $user2_id ]->is_host() );
+		$this->assertFalse( $attendees[ $user2_id ]->is_new_contributor() );
 		$this->assertTrue( $attendees[ $user1_id ]->is_contributor() );
 		$this->assertFalse( $attendees[ $user2_id ]->is_contributor() );
 
@@ -174,7 +178,9 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( $attendee21, $attendees[ $user1_id ] );
 		$this->assertEquals( $attendee22, $attendees[ $user2_id ] );
 		$this->assertTrue( $attendees[ $user1_id ]->is_host() );
+		$this->assertFalse( $attendees[ $user1_id ]->is_new_contributor() );
 		$this->assertFalse( $attendees[ $user2_id ]->is_host() );
+		$this->assertTrue( $attendees[ $user2_id ]->is_new_contributor() );
 		$this->assertFalse( $attendees[ $user1_id ]->is_contributor() );
 		$this->assertTrue( $attendees[ $user2_id ]->is_contributor() );
 	}

@@ -98,6 +98,7 @@ class Attendee_Repository {
 				select
 					user_id,
 					is_host,
+					is_new_contributor,
 					(
 						select group_concat( distinct locale )
 						from {$gp_table_prefix}event_actions
@@ -124,7 +125,7 @@ class Attendee_Repository {
 			$event_id,
 			$row->user_id,
 			'1' === $row->is_host,
-			false,
+			'1' === $row->is_new_contributor,
 			null === $row->locales ? array() : explode( ',', $row->locales ),
 		);
 	}
@@ -147,6 +148,7 @@ class Attendee_Repository {
 				select
 					user_id,
 					is_host,
+					is_new_contributor,
 					(
 						select group_concat( distinct locale )
 						from {$gp_table_prefix}event_actions
@@ -170,7 +172,7 @@ class Attendee_Repository {
 					$event_id,
 					$row->user_id,
 					'1' === $row->is_host,
-					false,
+					'1' === $row->is_new_contributor,
 					null === $row->locales ? array() : explode( ',', $row->locales ),
 				);
 			},
