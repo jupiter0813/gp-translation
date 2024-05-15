@@ -9,7 +9,6 @@ use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Project\Project_Repository;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
-use Wporg\TranslationEvents\Translation\Translation_Repository;
 use Wporg\TranslationEvents\Translation_Events;
 
 /**
@@ -18,17 +17,15 @@ use Wporg\TranslationEvents\Translation_Events;
 class Details_Route extends Route {
 	private Event_Repository_Interface $event_repository;
 	private Attendee_Repository $attendee_repository;
-	private Translation_Repository $translation_repository;
 	private Project_Repository $project_repository;
 	private Stats_Calculator $stats_calculator;
 
 	public function __construct() {
 		parent::__construct();
-		$this->event_repository       = Translation_Events::get_event_repository();
-		$this->attendee_repository    = Translation_Events::get_attendee_repository();
-		$this->translation_repository = new Translation_Repository();
-		$this->project_repository     = new Project_Repository();
-		$this->stats_calculator       = new Stats_Calculator();
+		$this->event_repository    = Translation_Events::get_event_repository();
+		$this->attendee_repository = Translation_Events::get_attendee_repository();
+		$this->project_repository  = new Project_Repository();
+		$this->stats_calculator    = new Stats_Calculator();
 	}
 
 	public function handle( string $event_slug ): void {
