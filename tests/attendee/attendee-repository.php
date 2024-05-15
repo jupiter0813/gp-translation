@@ -242,6 +242,17 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->assertTrue( $attendee11->is_new_contributor() );
 		$this->assertTrue( $attendee12->is_new_contributor() );
 		$this->assertFalse( $attendee13->is_new_contributor() );
+
+		$event2_id  = $this->event_factory->create_active( array(), $now->modify( '-1 day' ) );
+		$attendee21 = new Attendee( $event2_id, $user1_id );
+		$attendee22 = new Attendee( $event2_id, $user2_id );
+		$attendee23 = new Attendee( $event2_id, $user3_id );
+		$this->repository->insert_attendee( $attendee21 );
+		$this->repository->insert_attendee( $attendee22 );
+		$this->repository->insert_attendee( $attendee23 );
+		$this->assertTrue( $attendee21->is_new_contributor() );
+		$this->assertTrue( $attendee22->is_new_contributor() );
+		$this->assertTrue( $attendee23->is_new_contributor() );
 	}
 
 	private function all_table_rows(): array {
