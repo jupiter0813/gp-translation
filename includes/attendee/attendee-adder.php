@@ -69,7 +69,6 @@ class Attendee_Adder {
 	}
 
 	private function check_is_new_contributor( Event $event, int $user_id ): bool {
-		// TODO.
-		return false;
+		return $this->translation_repository->count_translations_before( array( $user_id ), $event->start() )[ $user_id ] <= 10;
 	}
 }

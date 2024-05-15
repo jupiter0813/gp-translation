@@ -79,9 +79,9 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 		$this->adder->add_to_event( $event1, $attendee12 );
 		$this->adder->add_to_event( $event1, $attendee13 );
 
-		$this->assertTrue( $attendee11->is_new_contributor_legacy() );
-		$this->assertTrue( $attendee12->is_new_contributor_legacy() );
-		$this->assertFalse( $attendee13->is_new_contributor_legacy() );
+		$this->assertTrue( $attendee11->is_new_contributor() );
+		$this->assertTrue( $attendee12->is_new_contributor() );
+		$this->assertFalse( $attendee13->is_new_contributor() );
 
 		$event2_id  = $this->event_factory->create_active( array(), $now->modify( '-1 day' ) );
 		$event2     = $this->event_repository->get_event( $event2_id );
@@ -91,9 +91,9 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 		$this->adder->add_to_event( $event2, $attendee21 );
 		$this->adder->add_to_event( $event2, $attendee22 );
 		$this->adder->add_to_event( $event2, $attendee23 );
-		$this->assertTrue( $attendee21->is_new_contributor_legacy() );
-		$this->assertTrue( $attendee22->is_new_contributor_legacy() );
-		$this->assertTrue( $attendee23->is_new_contributor_legacy() );
+		$this->assertTrue( $attendee21->is_new_contributor() );
+		$this->assertTrue( $attendee22->is_new_contributor() );
+		$this->assertTrue( $attendee23->is_new_contributor() );
 	}
 
 	public function test_import_stats_if_active_event() {
