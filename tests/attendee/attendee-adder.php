@@ -70,24 +70,26 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 		}
 
 		$event1_id  = $this->event_factory->create_active( array(), $now->modify( '+1 day' ) );
+		$event1     = $this->event_repository->get_event( $event1_id );
 		$attendee11 = new Attendee( $event1_id, $user1_id );
 		$attendee12 = new Attendee( $event1_id, $user2_id );
 		$attendee13 = new Attendee( $event1_id, $user3_id );
-		$this->attendee_repository->insert_attendee( $attendee11 );
-		$this->attendee_repository->insert_attendee( $attendee12 );
-		$this->attendee_repository->insert_attendee( $attendee13 );
+		$this->adder->add_to_event( $event1, $attendee11 );
+		$this->adder->add_to_event( $event1, $attendee12 );
+		$this->adder->add_to_event( $event1, $attendee13 );
 
 		$this->assertTrue( $attendee11->is_new_contributor_legacy() );
 		$this->assertTrue( $attendee12->is_new_contributor_legacy() );
 		$this->assertFalse( $attendee13->is_new_contributor_legacy() );
 
 		$event2_id  = $this->event_factory->create_active( array(), $now->modify( '-1 day' ) );
+		$event2     = $this->event_repository->get_event( $event2_id );
 		$attendee21 = new Attendee( $event2_id, $user1_id );
 		$attendee22 = new Attendee( $event2_id, $user2_id );
 		$attendee23 = new Attendee( $event2_id, $user3_id );
-		$this->attendee_repository->insert_attendee( $attendee21 );
-		$this->attendee_repository->insert_attendee( $attendee22 );
-		$this->attendee_repository->insert_attendee( $attendee23 );
+		$this->adder->add_to_event( $event2, $attendee21 );
+		$this->adder->add_to_event( $event2, $attendee22 );
+		$this->adder->add_to_event( $event2, $attendee23 );
 		$this->assertTrue( $attendee21->is_new_contributor_legacy() );
 		$this->assertTrue( $attendee22->is_new_contributor_legacy() );
 		$this->assertTrue( $attendee23->is_new_contributor_legacy() );
