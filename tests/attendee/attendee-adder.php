@@ -52,6 +52,10 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 		$this->adder->add_to_event( $event, $attendee );
 	}
 
+	public function test_sets_is_new_contributor() {
+		$this->markTestSkipped( 'TODO' );
+	}
+
 	public function test_import_stats_if_active_event() {
 		$this->set_normal_user_as_current();
 		$user_id = get_current_user_id();

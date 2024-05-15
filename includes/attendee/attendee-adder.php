@@ -22,6 +22,10 @@ class Attendee_Adder {
 	 * @throws Exception
 	 */
 	public function add_to_event( Event $event, Attendee $attendee ): void {
+		if ( $this->check_is_new_contributor( $event, $attendee->user_id() ) ) {
+			$attendee->mark_as_new_contributor();
+		}
+
 		$this->attendee_repository->insert_attendee( $attendee );
 
 		// If the event is active right now,
@@ -33,7 +37,6 @@ class Attendee_Adder {
 
 	private function import_stats( Event $event, Attendee $attendee ): void {
 		global $wpdb, $gp_table_prefix;
-
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -60,5 +63,10 @@ class Attendee_Adder {
 			),
 		);
 		// phpcs:enable
+	}
+
+	private function check_is_new_contributor( Event $event, int $user_id ): bool {
+		// TODO.
+		return false;
 	}
 }

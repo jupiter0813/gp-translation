@@ -73,6 +73,10 @@ class Attendee {
 		$this->is_host = false;
 	}
 
+	public function mark_as_new_contributor(): void {
+		$this->is_new_contributor = true;
+	}
+
 	/**
 	 * @return string[]
 	 */
