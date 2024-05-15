@@ -58,7 +58,7 @@ Templates::header(
 					/* translators: %s: Display name of the user who created the event. */
 					$hosts_string = __( 'Created by: %s', 'gp-translation-events' );
 				} else {
-					/* translators: %s: Host(s) */
+					/* translators: %s is a comma-separated list of event hosts (=usernames) */
 					$hosts_string = _n( 'Host: %s', 'Hosts: %s', count( $hosts ), 'gp-translation-events' );
 				}
 
