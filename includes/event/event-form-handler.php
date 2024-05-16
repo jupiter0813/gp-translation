@@ -104,11 +104,6 @@ class Event_Form_Handler {
 				return;
 			}
 
-			if ( $new_event->end() < new DateTime( 'now', new DateTimeZone( 'UTC' ) ) ) {
-				wp_send_json_error( esc_html__( 'Past events cannot be created or edited.', 'gp-translation-events' ), 422 );
-				return;
-			}
-
 			// This is a list of slugs that are not allowed, as they conflict with the event URLs.
 			$invalid_slugs = array( 'new', 'edit', 'attend', 'my-events' );
 			if ( in_array( sanitize_title( $new_event->title() ), $invalid_slugs, true ) ) {
