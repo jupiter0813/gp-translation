@@ -10,13 +10,13 @@ use function Wporg\TranslationEvents\Templates\gp_breadcrumb_translation_events;
 /** @var string $html_description */
 /** @var ?callable $sub_head */
 /** @var ?string[] $breadcrumbs */
-add_filter(
+add_action(
 	'gp_head',
 	function () use ( $html_title, $url, $html_description ) {
 		echo '<meta name="twitter:card" content="summary" />' . "\n";
 		echo '<meta name="twitter:site" content="@WordPress" />' . "\n";
 		echo '<meta name="twitter:title" content="' . esc_attr( $html_title ) . '" />' . "\n";
-		echo '<meta name="twitter:description" content="' . esc_html( $html_description ) . '" />' . "\n";
+		echo '<meta name="twitter:description" content="WordPress Translation Events" />' . "\n";
 		echo '<meta name="twitter:creator" content="@WordPress" />' . "\n";
 		echo '<meta name="twitter:image" content="https://live.staticflickr.com/2512/3967155269_f3246224c8_b.jpg" />' . "\n";
 
