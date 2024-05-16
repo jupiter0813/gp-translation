@@ -298,7 +298,7 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event_id = $this->event_factory->create_event(
 			$now->modify( '-3 hours' ),
-			$now->modify( '-1 hours +1 minutes' ),
+			$now->modify( '-1 hours  -1 minutes' ),
 			$timezone,
 			array(),
 		);
