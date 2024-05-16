@@ -156,14 +156,6 @@ class Event_Capabilities {
 	 * @return bool
 	 */
 	private function has_edit( WP_User $user, Event $event ): bool {
-		if ( $event->end()->is_in_the_past() ) {
-			return false;
-		}
-
-		if ( $this->stats_calculator->event_has_stats( $event->id() ) ) {
-			return false;
-		}
-
 		if ( $event->author_id() === $user->ID ) {
 			return true;
 		}
