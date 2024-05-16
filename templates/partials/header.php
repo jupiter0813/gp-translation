@@ -21,8 +21,8 @@ add_action(
 		echo '<meta name="twitter:image" content="https://live.staticflickr.com/2512/3967155269_f3246224c8_b.jpg" />' . "\n";
 
 		echo '<meta property="og:url" content="' . esc_url( $url ) . '" />' . "\n";
-		echo '<meta property="og:title" content="' . esc_html( $html_title ) . '" />' . "\n";
-		echo '<meta property="og:description" content="' . esc_html( $html_description ) . '" />' . "\n";
+		echo '<meta property="og:title" content="' . esc_attr( $html_title ) . '" />' . "\n";
+		echo '<meta property="og:description" content="' . esc_attr( $html_description ) . '" />' . "\n";
 		echo '<meta property="og:image" content="https://live.staticflickr.com/2512/3967155269_f3246224c8_b.jpg" />' . "\n";
 	}
 );
