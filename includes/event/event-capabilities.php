@@ -297,7 +297,6 @@ class Event_Capabilities {
 		}
 
 		return false;
-
 	}
 
 	public function register_hooks(): void {
