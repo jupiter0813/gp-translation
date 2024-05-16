@@ -105,7 +105,7 @@ class Event_Capabilities {
 					return $this->has_edit_attendees( $user, $event );
 				}
 				if ( self::EDIT_TITLE === $cap || self::EDIT_DESCRIPTION === $cap || self::EDIT_START === $cap || self::EDIT_END === $cap || self::EDIT_TIMEZONE === $cap ) {
-					return $this->has_edit_form_field( $user, $event );
+					return $this->has_edit_form_field( $user, $event, $cap );
 				}
 				break;
 		}
@@ -267,14 +267,35 @@ class Event_Capabilities {
 	 * @param Event   $event Event for which we're evaluating the capability.
 	 * @return bool
 	 */
-	private function has_edit_form_field( WP_User $user, Event $event ): bool {
-		$now          = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$one_hour_ago = $now->modify( '-1 hour' );
+	private function has_edit_form_field( WP_User $user, Event $event, $cap ): bool {
+		$event_start         = $event->start();
+		$happening_now       = $event->start()->is_in_the_past() && ! $event->end()->is_in_the_past();
+		$now                 = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event_end_plus_1_hr = $event->end()->modify( '+1 hour' );
 
-		// Check if event ended at least 1 hour ago.
-		if ( $event->end()->is_in_the_past() && $event->end() < $one_hour_ago ) {
-			return false;
+		if ( self::EDIT_DESCRIPTION === $cap ) {
+			return true;
 		}
+
+		if ( $event_start > $now ) {
+			return true;
+		}
+
+		if ( $happening_now && ! $this->stats_calculator->event_has_stats( $event->id() ) ) {
+			return true;
+		}
+
+		if ( $happening_now && $this->stats_calculator->event_has_stats( $event->id() ) ) {
+			return ( self::EDIT_TITLE === $cap || self::EDIT_END === $cap );
+		}
+
+		if ( $event->end()->is_in_the_past() && $now < $event_end_plus_1_hr ) {
+			return ( self::EDIT_TITLE === $cap || self::EDIT_END === $cap );
+		}
+		if ( $event->end()->is_in_the_past() && $now > $event_end_plus_1_hr ) {
+			return ( self::EDIT_DESCRIPTION === $cap );
+		}
+
 		return false;
 
 	}
