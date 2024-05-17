@@ -123,6 +123,11 @@ span.event-not-attending {
 	display: inline-block;
 }
 
+/* Event list */
+li.event-list-item {
+	list-style-type: none;
+	margin-bottom: .5em;
+}
 span.event-list-date {
 	display: block;
 	color: #939393;
@@ -141,11 +146,7 @@ span.event-list-date.events-i-am-attending {
 	font-size: 1.2em;
 }
 
-li.event-list-item {
-	list-style-type: none;
-	margin-bottom: .5em;
-}
-
+/* Event list: Event buttons. */
 .event-list-item-button {
 	text-decoration: none;
 	vertical-align: bottom;
