@@ -97,7 +97,7 @@ Templates::header(
 						<li class="event-contributor" title="<?php echo esc_html( implode( ', ', $contributor->contributed_locales() ) ); ?>">
 							<a href="<?php echo esc_url( get_author_posts_url( $contributor->user_id() ) ); ?>" class="avatar"><?php echo get_avatar( $contributor->user_id(), 48 ); ?></a>
 							<a href="<?php echo esc_url( get_author_posts_url( $contributor->user_id() ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $contributor->user_id() ) ); ?></a>
-							<?php if ( isset( $new_contributor_ids[ $contributor->user_id() ] ) ) : ?>
+							<?php if ( $contributor->is_new_contributor() ) : ?>
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
 						</li>
@@ -118,7 +118,7 @@ Templates::header(
 						<li class="event-attendee">
 							<a href="<?php echo esc_url( get_author_posts_url( $_attendee->user_id() ) ); ?>" class="avatar"><?php echo get_avatar( $_attendee->user_id(), 48 ); ?></a>
 							<a href="<?php echo esc_url( get_author_posts_url( $_attendee->user_id() ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $_attendee->user_id() ) ); ?></a>
-							<?php if ( isset( $new_contributor_ids[ $_attendee->user_id() ] ) ) : ?>
+							<?php if ( $_attendee->is_new_contributor() ) : ?>
 								<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 							<?php endif; ?>
 						</li>
@@ -238,7 +238,7 @@ Templates::header(
 							array_map(
 								function ( $contributor ) {
 									$append_tada = '';
-									if ( isset( $new_contributor_ids[ $contributor->user_id() ] ) ) {
+									if ( $contributor->is_new_contributor() ) {
 											$append_tada = ' <span class="new-contributor" title="' . esc_html__( 'New Translation Contributor', 'gp-translation-events' ) . '">🎉</span>';
 									}
 									return '@' . ( new WP_User( $contributor->user_id() ) )->user_login . $append_tada;

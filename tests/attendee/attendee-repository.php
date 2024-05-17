@@ -3,26 +3,18 @@
 namespace Wporg\Tests\Attendee;
 
 use GP_UnitTestCase;
-use DateTimeImmutable;
-use DateTimeZone;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
-use Wporg\TranslationEvents\Tests\Translation_Factory;
-use Wporg\TranslationEvents\Tests\Event_Factory;
 
 class Attendee_Repository_Test extends GP_UnitTestCase {
 	private Attendee_Repository $repository;
 	private Stats_Factory $stats_factory;
-	private Translation_Factory $translation_factory;
-	private Event_Factory $event_factory;
 
 	public function setUp(): void {
 		parent::setUp();
-		$this->repository          = new Attendee_Repository();
-		$this->stats_factory       = new Stats_Factory();
-		$this->translation_factory = new Translation_Factory( $this->factory );
-		$this->event_factory       = new Event_Factory();
+		$this->repository    = new Attendee_Repository();
+		$this->stats_factory = new Stats_Factory();
 	}
 
 	public function test_add_attendee_invalid_event_id() {
@@ -41,12 +33,20 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$user_id   = 42;
 
 		$this->repository->insert_attendee( new Attendee( $event1_id, $user_id ) );
-		$this->repository->insert_attendee( new Attendee( $event2_id, $user_id ) );
+		$this->repository->insert_attendee( new Attendee( $event2_id, $user_id, true, true ) );
 
 		$rows = $this->all_table_rows();
 		$this->assertCount( 2, $rows );
+
 		$this->assertEquals( $event1_id, $rows[0]->event_id );
+		$this->assertEquals( $user_id, $rows[0]->user_id );
+		$this->assertEquals( 0, $rows[0]->is_host );
+		$this->assertEquals( 0, $rows[0]->is_new_contributor );
+
 		$this->assertEquals( $event2_id, $rows[1]->event_id );
+		$this->assertEquals( $user_id, $rows[1]->user_id );
+		$this->assertEquals( 1, $rows[1]->is_host );
+		$this->assertEquals( 1, $rows[1]->is_new_contributor );
 	}
 
 	public function test_remove_attendee() {
@@ -71,7 +71,7 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$user2_id  = 43;
 
 		// Host contributor.
-		$attendee11 = new Attendee( $event1_id, $user1_id, true, array( 'aa' ) );
+		$attendee11 = new Attendee( $event1_id, $user1_id, true, true, array( 'aa' ) );
 		$this->stats_factory->create( $event1_id, $user1_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee11 );
 
@@ -87,11 +87,13 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$retrieved_attendee_11 = $this->repository->get_attendee( $event1_id, $user1_id );
 		$this->assertEquals( $attendee11, $retrieved_attendee_11 );
 		$this->assertTrue( $retrieved_attendee_11->is_host() );
+		$this->assertTrue( $retrieved_attendee_11->is_new_contributor() );
 		$this->assertTrue( $retrieved_attendee_11->is_contributor() );
 
 		$retrieved_attendee_12 = $this->repository->get_attendee( $event1_id, $user2_id );
 		$this->assertEquals( $attendee12, $retrieved_attendee_12 );
 		$this->assertFalse( $retrieved_attendee_12->is_host() );
+		$this->assertFalse( $retrieved_attendee_12->is_new_contributor() );
 		$this->assertFalse( $retrieved_attendee_12->is_contributor() );
 
 		$this->assertNull( $this->repository->get_attendee( $event2_id, $user2_id ) );
@@ -135,7 +137,7 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$user2_id  = 43;
 
 		// Host, contributor.
-		$attendee11 = new Attendee( $event1_id, $user1_id, true, array( 'aa' ) );
+		$attendee11 = new Attendee( $event1_id, $user1_id, true, true, array( 'aa' ) );
 		$this->stats_factory->create( $event1_id, $user1_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee11 );
 
@@ -148,7 +150,7 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->repository->insert_attendee( $attendee21 );
 
 		// Non-host, contributor.
-		$attendee22 = new Attendee( $event2_id, $user2_id, false, array( 'aa' ) );
+		$attendee22 = new Attendee( $event2_id, $user2_id, false, true, array( 'aa' ) );
 		$this->stats_factory->create( $event2_id, $user2_id, 1, 'create' );
 		$this->repository->insert_attendee( $attendee22 );
 
@@ -157,7 +159,9 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( $attendee11, $attendees[ $user1_id ] );
 		$this->assertEquals( $attendee12, $attendees[ $user2_id ] );
 		$this->assertTrue( $attendees[ $user1_id ]->is_host() );
+		$this->assertTrue( $attendees[ $user1_id ]->is_new_contributor() );
 		$this->assertFalse( $attendees[ $user2_id ]->is_host() );
+		$this->assertFalse( $attendees[ $user2_id ]->is_new_contributor() );
 		$this->assertTrue( $attendees[ $user1_id ]->is_contributor() );
 		$this->assertFalse( $attendees[ $user2_id ]->is_contributor() );
 
@@ -166,7 +170,9 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( $attendee21, $attendees[ $user1_id ] );
 		$this->assertEquals( $attendee22, $attendees[ $user2_id ] );
 		$this->assertTrue( $attendees[ $user1_id ]->is_host() );
+		$this->assertFalse( $attendees[ $user1_id ]->is_new_contributor() );
 		$this->assertFalse( $attendees[ $user2_id ]->is_host() );
+		$this->assertTrue( $attendees[ $user2_id ]->is_new_contributor() );
 		$this->assertFalse( $attendees[ $user1_id ]->is_contributor() );
 		$this->assertTrue( $attendees[ $user2_id ]->is_contributor() );
 	}
@@ -212,47 +218,6 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( array( $event1_id, $event2_id ), $this->repository->get_events_for_user( $user_id ) );
 		$this->assertEquals( array( $event3_id ), $this->repository->get_events_for_user( $another_user ) );
 		$this->assertEmpty( $this->repository->get_events_for_user( $another_user + 1 ) );
-	}
-
-	public function test_is_new_translation_contributor() {
-		$this->set_normal_user_as_current();
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$user1_id = 52;
-		$user2_id = 53;
-		$user3_id = 54;
-
-		// create 10 translations  for $user2_id before event start.
-		for ( $i = 0; $i < 10; $i++ ) {
-			$this->translation_factory->create( $user2_id );
-
-		}
-		// create 11 translations  for $user3_id before event start.
-		for ( $i = 0; $i < 11; $i++ ) {
-			$this->translation_factory->create( $user3_id );
-		}
-
-		$event1_id  = $this->event_factory->create_active( array(), $now->modify( '+1 day' ) );
-		$attendee11 = new Attendee( $event1_id, $user1_id );
-		$attendee12 = new Attendee( $event1_id, $user2_id );
-		$attendee13 = new Attendee( $event1_id, $user3_id );
-		$this->repository->insert_attendee( $attendee11 );
-		$this->repository->insert_attendee( $attendee12 );
-		$this->repository->insert_attendee( $attendee13 );
-
-		$this->assertTrue( $attendee11->is_new_contributor() );
-		$this->assertTrue( $attendee12->is_new_contributor() );
-		$this->assertFalse( $attendee13->is_new_contributor() );
-
-		$event2_id  = $this->event_factory->create_active( array(), $now->modify( '-1 day' ) );
-		$attendee21 = new Attendee( $event2_id, $user1_id );
-		$attendee22 = new Attendee( $event2_id, $user2_id );
-		$attendee23 = new Attendee( $event2_id, $user3_id );
-		$this->repository->insert_attendee( $attendee21 );
-		$this->repository->insert_attendee( $attendee22 );
-		$this->repository->insert_attendee( $attendee23 );
-		$this->assertTrue( $attendee21->is_new_contributor() );
-		$this->assertTrue( $attendee22->is_new_contributor() );
-		$this->assertTrue( $attendee23->is_new_contributor() );
 	}
 
 	private function all_table_rows(): array {

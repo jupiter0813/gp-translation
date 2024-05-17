@@ -52,6 +52,49 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 		$this->adder->add_to_event( $event, $attendee );
 	}
 
+	public function test_sets_is_new_contributor() {
+		$this->set_normal_user_as_current();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$user1_id = 52;
+		$user2_id = 53;
+		$user3_id = 54;
+
+		// Create 10 translations for $user2_id before event start.
+		for ( $i = 0; $i < 10; $i++ ) {
+			$this->translation_factory->create( $user2_id );
+
+		}
+		// Create 11 translations for $user3_id before event start.
+		for ( $i = 0; $i < 11; $i++ ) {
+			$this->translation_factory->create( $user3_id );
+		}
+
+		$event1_id  = $this->event_factory->create_active( array(), $now->modify( '+1 day' ) );
+		$event1     = $this->event_repository->get_event( $event1_id );
+		$attendee11 = new Attendee( $event1_id, $user1_id );
+		$attendee12 = new Attendee( $event1_id, $user2_id );
+		$attendee13 = new Attendee( $event1_id, $user3_id );
+		$this->adder->add_to_event( $event1, $attendee11 );
+		$this->adder->add_to_event( $event1, $attendee12 );
+		$this->adder->add_to_event( $event1, $attendee13 );
+
+		$this->assertTrue( $attendee11->is_new_contributor() );
+		$this->assertTrue( $attendee12->is_new_contributor() );
+		$this->assertFalse( $attendee13->is_new_contributor() );
+
+		$event2_id  = $this->event_factory->create_active( array(), $now->modify( '-1 day' ) );
+		$event2     = $this->event_repository->get_event( $event2_id );
+		$attendee21 = new Attendee( $event2_id, $user1_id );
+		$attendee22 = new Attendee( $event2_id, $user2_id );
+		$attendee23 = new Attendee( $event2_id, $user3_id );
+		$this->adder->add_to_event( $event2, $attendee21 );
+		$this->adder->add_to_event( $event2, $attendee22 );
+		$this->adder->add_to_event( $event2, $attendee23 );
+		$this->assertTrue( $attendee21->is_new_contributor() );
+		$this->assertTrue( $attendee22->is_new_contributor() );
+		$this->assertTrue( $attendee23->is_new_contributor() );
+	}
+
 	public function test_import_stats_if_active_event() {
 		$this->set_normal_user_as_current();
 		$user_id = get_current_user_id();
