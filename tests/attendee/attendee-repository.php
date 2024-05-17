@@ -64,7 +64,7 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->assertEquals( $event2_id, $rows[0]->event_id );
 	}
 
-	public function test_get_attendee() {
+	public function test_get_attendee_for_event_for_user() {
 		$event1_id = 1;
 		$event2_id = 2;
 		$user1_id  = 42;
@@ -84,19 +84,19 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->repository->insert_attendee( new Attendee( $event2_id, 84 ) );
 		$this->repository->insert_attendee( new Attendee( $event2_id, $user1_id ) );
 
-		$retrieved_attendee_11 = $this->repository->get_attendee( $event1_id, $user1_id );
+		$retrieved_attendee_11 = $this->repository->get_attendee_for_event_for_user( $event1_id, $user1_id );
 		$this->assertEquals( $attendee11, $retrieved_attendee_11 );
 		$this->assertTrue( $retrieved_attendee_11->is_host() );
 		$this->assertTrue( $retrieved_attendee_11->is_new_contributor() );
 		$this->assertTrue( $retrieved_attendee_11->is_contributor() );
 
-		$retrieved_attendee_12 = $this->repository->get_attendee( $event1_id, $user2_id );
+		$retrieved_attendee_12 = $this->repository->get_attendee_for_event_for_user( $event1_id, $user2_id );
 		$this->assertEquals( $attendee12, $retrieved_attendee_12 );
 		$this->assertFalse( $retrieved_attendee_12->is_host() );
 		$this->assertFalse( $retrieved_attendee_12->is_new_contributor() );
 		$this->assertFalse( $retrieved_attendee_12->is_contributor() );
 
-		$this->assertNull( $this->repository->get_attendee( $event2_id, $user2_id ) );
+		$this->assertNull( $this->repository->get_attendee_for_event_for_user( $event2_id, $user2_id ) );
 	}
 
 	public function test_get_hosts() {

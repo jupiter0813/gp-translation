@@ -294,7 +294,7 @@ class Translation_Events {
 
 			$user_id             = $post->post_author;
 			$attendee_repository = self::get_attendee_repository();
-			$attendee            = $attendee_repository->get_attendee( $event->id(), $user_id );
+			$attendee            = $attendee_repository->get_attendee_for_event_for_user( $event->id(), $user_id );
 
 			if ( null === $attendee ) {
 				$attendee = new Attendee( $event->id(), $user_id, true );

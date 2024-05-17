@@ -86,7 +86,7 @@ class Attendee_Repository {
 	/**
 	 * @throws Exception
 	 */
-	public function get_attendee( int $event_id, int $user_id ): ?Attendee {
+	public function get_attendee_for_event_for_user( int $event_id, int $user_id ): ?Attendee {
 		global $wpdb, $gp_table_prefix;
 
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared

@@ -152,7 +152,7 @@ class Event_Capabilities {
 			return true;
 		}
 
-		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		$attendee = $this->attendee_repository->get_attendee_for_event_for_user( $event->id(), $user->ID );
 		if ( ( $attendee instanceof Attendee ) && $attendee->is_host() ) {
 			return true;
 		}
@@ -186,7 +186,7 @@ class Event_Capabilities {
 			return true;
 		}
 
-		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		$attendee = $this->attendee_repository->get_attendee_for_event_for_user( $event->id(), $user->ID );
 		if ( ( $attendee instanceof Attendee ) && $attendee->is_host() ) {
 			return true;
 		}
@@ -232,7 +232,7 @@ class Event_Capabilities {
 			return true;
 		}
 
-		$attendee = $this->attendee_repository->get_attendee( $event->id(), $user->ID );
+		$attendee = $this->attendee_repository->get_attendee_for_event_for_user( $event->id(), $user->ID );
 		if ( ( $attendee instanceof Attendee ) && $attendee->is_host() ) {
 			return true;
 		}
