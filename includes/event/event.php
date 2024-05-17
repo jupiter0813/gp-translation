@@ -57,6 +57,7 @@ class Event {
 		string $description
 	) {
 		$this->author_id = $author_id;
+		$this->validate_times( $start, $end );
 		$this->set_start( $start );
 		$this->set_end( $end );
 		$this->set_timezone( $timezone );
