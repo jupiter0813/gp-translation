@@ -71,7 +71,7 @@ Templates::header(
 	</div>
 	<div>
 		<label for="event-timezone"><?php esc_html_e( 'Event Timezone', 'gp-translation-events' ); ?></label>
-		<select id="event-timezone" name="event_timezone" required <?php echo esc_html( $is_create_form || current_user_can( 'edit_translation_event_timezone', $event->id() ) ?: 'readonly' ); ?> >
+		<select id="event-timezone" name="event_timezone" required <?php echo esc_html( $is_create_form || current_user_can( 'edit_translation_event_timezone', $event->id() ) ?: 'disabled' ); ?> >
 			<?php
 			echo wp_kses(
 				wp_timezone_choice( $is_create_form ? null : $event->timezone()->getName(), get_user_locale() ),
