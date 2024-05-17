@@ -141,13 +141,27 @@ span.event-list-date {
 	font-size: 1.2em;
 }
 
+/* Event list: Event labels. */
+.event-list-item-labels {
+	margin-right: .3em;
+}
+.event-list-item-labels > span {
+	font-weight: 500;
+	color: var(--gp-color-bubble-inactive-project-text);
+	border: 1px solid var(--gp-color-bubble-inactive-project-text);
+	font-size: .7em;
+	margin-right: 0.3em;
+	width: 6em;
+	text-align: center;
+	padding: 0.2em 0.5em;
+	border-radius: 1em;
+	text-transform: capitalize;
+}
+
 /* Event list: Event buttons. */
 .event-list-item-button {
 	text-decoration: none;
 	vertical-align: bottom;
-}
-.event-list-item-button:nth-child(2) { /* The first button. */
-	margin-left: .3em;
 }
 .event-list-item-button.is-destructive {
 	color: var(--gp-color-btn-danger-text);
@@ -228,7 +242,6 @@ a.event-link-draft {
 	color: #80807f;
 }
 
-span.event-label-draft,
 span.active-events-before-translation-table {
 	font-weight: 500;
 	color: var(--gp-color-bubble-inactive-project-text);
