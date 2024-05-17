@@ -95,10 +95,6 @@ class Upgrade {
 			$attendees = $attendee_repository->get_attendees( $event->id() );
 
 			foreach ( $attendees as $attendee ) {
-				if ( ! $attendee->is_contributor() ) {
-					continue;
-				}
-
 				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 				// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
