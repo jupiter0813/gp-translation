@@ -135,12 +135,7 @@ span.event-list-date {
 	font-weight: normal;
 }
 
-span.event-list-date.events-i-am-attending {
-	font-size: .8em;
-	font-weight: normal;
-}
-
-/* Event title. */
+/* Event list: Event title. */
 .event-list-item a:first-child {
 	font-weight: bold;
 	font-size: 1.2em;
