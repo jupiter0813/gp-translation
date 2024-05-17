@@ -87,47 +87,11 @@ class Attendee_Repository {
 	 * @throws Exception
 	 */
 	public function get_attendee_for_event_for_user( int $event_id, int $user_id ): ?Attendee {
-		global $wpdb, $gp_table_prefix;
-
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$row = $wpdb->get_row(
-			$wpdb->prepare(
-				"
-				select
-					user_id,
-					is_host,
-					is_new_contributor,
-					(
-						select group_concat( distinct locale )
-						from {$gp_table_prefix}event_actions
-						where event_id = attendees.event_id
-						  and user_id = attendees.user_id
-					) as locales
-				from {$gp_table_prefix}event_attendees attendees
-				where event_id = %d
-				  and user_id = %d
-			",
-				array(
-					$event_id,
-					$user_id,
-				),
-			)
-		);
-		// phpcs:enable
-
-		if ( ! $row ) {
+		$attendees = $this->get_attendees_for_events_for_user( array( $event_id ), $user_id );
+		if ( empty( $attendees ) ) {
 			return null;
 		}
-
-		return new Attendee(
-			$event_id,
-			$row->user_id,
-			'1' === $row->is_host,
-			'1' === $row->is_new_contributor,
-			null === $row->locales ? array() : explode( ',', $row->locales ),
-		);
+		return $attendees[0];
 	}
 
 	/**
