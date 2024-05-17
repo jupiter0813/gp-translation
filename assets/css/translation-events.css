@@ -233,7 +233,6 @@ a.event-link-draft {
 }
 
 span.event-label-draft,
-span.event-details-join-expired,
 span.active-events-before-translation-table {
 	font-weight: 500;
 	color: var(--gp-color-bubble-inactive-project-text);
