@@ -1,14 +1,37 @@
 <?php
 
-namespace Wporg\TranslationEvents\Stats;
+namespace Wporg\TranslationEvents\Attendee;
 
+use Exception;
 use Wporg\TranslationEvents\Event\Event;
+use Wporg\TranslationEvents\Stats\Stats_Listener;
 
-class Stats_Importer {
+class Attendee_Adder {
+	private Attendee_Repository $attendee_repository;
+
+	public function __construct( Attendee_Repository $attendee_repository ) {
+		$this->attendee_repository = $attendee_repository;
+	}
+
 	/**
-	 * Imports the contributions a user made while a given event was active.
+	 * Add an attendee to an event.
+	 *
+	 * @param Event    $event    Event to which to add the attendee.
+	 * @param Attendee $attendee Attendee to add to the event.
+	 *
+	 * @throws Exception
 	 */
-	public function import_for_user_and_event( int $user_id, Event $event ): void {
+	public function add_to_event( Event $event, Attendee $attendee ): void {
+		$this->attendee_repository->insert_attendee( $attendee );
+
+		// If the event is active right now,
+		// import stats for translations the user created since the event started.
+		if ( $event->is_active() ) {
+			$this->import_stats( $event, $attendee );
+		}
+	}
+
+	private function import_stats( Event $event, Attendee $attendee ): void {
 		global $wpdb, $gp_table_prefix;
 
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -30,7 +53,7 @@ class Stats_Importer {
 				array(
 					'event_id'          => $event->id(),
 					'action'            => Stats_Listener::ACTION_CREATE,
-					'user_id'           => $user_id,
+					'user_id'           => $attendee->user_id(),
 					'date_added_after'  => $event->start()->utc()->format( 'Y-m-d H:i:s' ),
 					'date_added_before' => $event->end()->utc()->format( 'Y-m-d H:i:s' ),
 				),

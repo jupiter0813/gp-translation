@@ -18,14 +18,12 @@
 
 namespace Wporg\TranslationEvents;
 
-use DateTime;
-use DateTimeZone;
 use Exception;
 use GP;
 use GP_Locales;
 use WP_Post;
-use WP_Query;
 use Wporg\TranslationEvents\Attendee\Attendee;
+use Wporg\TranslationEvents\Attendee\Attendee_Adder;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Capabilities;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
@@ -63,6 +61,14 @@ class Translation_Events {
 			$attendee_repository = new Attendee_Repository();
 		}
 		return $attendee_repository;
+	}
+
+	public static function get_attendee_adder(): Attendee_Adder {
+		static $attendee_adder = null;
+		if ( null === $attendee_adder ) {
+			$attendee_adder = new Attendee_Adder( self::get_attendee_repository() );
+		}
+		return $attendee_adder;
 	}
 
 	public function __construct() {
@@ -281,14 +287,18 @@ class Translation_Events {
 			return;
 		}
 		if ( 'publish' === $new_status && ( 'new' === $old_status || 'draft' === $old_status ) ) {
-			$event_id            = $post->ID;
+			$event = self::get_event_repository()->get_event( $post->ID );
+			if ( ! $event ) {
+				return;
+			}
+
 			$user_id             = $post->post_author;
 			$attendee_repository = self::get_attendee_repository();
-			$attendee            = $attendee_repository->get_attendee( $event_id, $user_id );
+			$attendee            = $attendee_repository->get_attendee( $event->id(), $user_id );
 
 			if ( null === $attendee ) {
-				$attendee = new Attendee( $event_id, $user_id, true );
-				$attendee_repository->insert_attendee( $attendee );
+				$attendee = new Attendee( $event->id(), $user_id, true );
+				self::get_attendee_adder()->add_to_event( $event, $attendee );
 			}
 		}
 	}
