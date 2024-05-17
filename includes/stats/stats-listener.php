@@ -7,6 +7,7 @@ use DateTimeZone;
 use Exception;
 use GP_Translation;
 use GP_Translation_Set;
+use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
@@ -124,7 +125,20 @@ class Stats_Listener {
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.Found
 	private function select_events_user_is_registered_for( array $events, int $user_id ): array {
-		$attending_event_ids = $this->attendee_repository->get_events_for_user( $user_id );
+		$event_ids = array_map(
+			function ( $event ) {
+				return $event->id();
+			},
+			$events,
+		);
+
+		$attending_event_ids = array_map(
+			function ( Attendee $attendee ) {
+				return $attendee->event_id();
+			},
+			$this->attendee_repository->get_attendees_for_events_for_user( $event_ids, $user_id )
+		);
+
 		return array_filter(
 			$events,
 			function ( Event $event ) use ( $attending_event_ids ) {
