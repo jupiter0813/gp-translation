@@ -250,7 +250,8 @@ class Event_Repository implements Event_Repository_Interface {
 				'orderby'    => 'meta_value',
 				'order'      => 'ASC',
 			),
-			$this->attendee_repository->get_events_for_user( $user_id ),
+			array(),
+			$user_id,
 		);
 		// phpcs:enable
 	}
@@ -276,18 +277,14 @@ class Event_Repository implements Event_Repository_Interface {
 				'orderby'    => 'meta_value',
 				'order'      => 'ASC',
 			),
-			$this->attendee_repository->get_events_for_user( $user_id ),
+			array(),
+			$user_id,
 		);
 		// phpcs:enable
 	}
 
 	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-
-		$user_events = $this->attendee_repository->get_events_for_user( $user_id );
-		if ( empty( $user_events ) ) {
-			return new Events_Query_Result( array(), 1, 1 );
-		}
 
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
@@ -308,7 +305,8 @@ class Event_Repository implements Event_Repository_Interface {
 				'orderby'    => 'meta_value',
 				'order'      => 'DESC',
 			),
-			$user_events
+			array(),
+			$user_id,
 		);
 		// phpcs:enable
 	}

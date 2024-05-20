@@ -291,7 +291,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$this->event_factory->create_active( array( $user_id ), $now );
-		$this->event_factory->create_active( array( $user_id ), $now );
+		$this->event_factory->create_active( array( $user_id ), $now->modify( '+1 minute' ) );
 
 		$events = $this->repository->get_past_events_for_user( $user_id )->events;
 		$this->assertCount( 2, $events );
