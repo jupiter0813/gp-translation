@@ -49,6 +49,10 @@ class Urls {
 		return gp_url( '/events/new/' );
 	}
 
+	public static function event_image( int $event_id ): string {
+		return gp_url( "/events/image/$event_id" );
+	}
+
 	public static function event_toggle_attendee( int $event_id ): string {
 		return gp_url( "/events/attend/$event_id" );
 	}
