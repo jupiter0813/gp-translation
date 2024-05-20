@@ -77,9 +77,8 @@ class Stats_Listener {
 
 	private function handle_action( GP_Translation $translation, int $user_id, string $action, DateTimeImmutable $happened_at ): void {
 		try {
-			// Get events that are active when the action happened, for which the user is registered for.
-			$active_events = $this->event_repository->get_current_events_for_user( $user_id );
-			$events        = $this->select_events_user_is_registered_for( $active_events->events, $user_id );
+			// Get events that are active now, for which the user is registered for.
+			$events = $this->event_repository->get_current_events_for_user( $user_id )->events;
 
 			// phpcs:ignore Generic.Commenting.DocComment.MissingShort
 			/** @var GP_Translation_Set $translation_set Translation set */
@@ -114,37 +113,4 @@ class Stats_Listener {
 			error_log( $exception );
 		}
 	}
-
-	/**
-	 * Filter an array of events so that it only includes events the given user is attending.
-	 *
-	 * @param Event[] $events Events.
-	 *
-	 * @return Event[]
-	 */
-	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.Found
-	private function select_events_user_is_registered_for( array $events, int $user_id ): array {
-		$event_ids = array_map(
-			function ( $event ) {
-				return $event->id();
-			},
-			$events,
-		);
-
-		$attending_event_ids = array_map(
-			function ( Attendee $attendee ) {
-				return $attendee->event_id();
-			},
-			$this->attendee_repository->get_attendees_for_events_for_user( $event_ids, $user_id )
-		);
-
-		return array_filter(
-			$events,
-			function ( Event $event ) use ( $attending_event_ids ) {
-				return in_array( $event->id(), $attending_event_ids, true );
-			}
-		);
-	}
-	// phpcs:enable
 }
