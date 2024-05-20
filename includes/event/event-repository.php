@@ -223,6 +223,22 @@ class Event_Repository implements Event_Repository_Interface {
 		);
 	}
 
+	public function get_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		return $this->execute_events_query(
+			$page,
+			$page_size,
+			array(
+				'meta_key' => '_event_start',
+				'orderby'  => 'meta_value',
+				'order'    => 'DESC',
+			),
+			array(),
+			$user_id,
+		);
+		// phpcs:enable
+	}
+
 	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
