@@ -434,7 +434,7 @@ class Event_Repository implements Event_Repository_Interface {
 	 * @throws InvalidStatus
 	 * @throws Exception
 	 */
-	private function execute_events_query( int $page, int $page_size, array $args, array $filter_by_ids = array() ): Events_Query_Result {
+	private function execute_events_query( int $page, int $page_size, array $args, array $filter_by_ids = array(), int $user_id = null ): Events_Query_Result {
 		$this->assert_pagination_arguments( $page, $page_size );
 
 		$args = array_replace_recursive(
@@ -452,6 +452,14 @@ class Event_Repository implements Event_Repository_Interface {
 
 		if ( ! empty( $filter_by_ids ) ) {
 			$args['post__in'] = $filter_by_ids;
+		}
+
+		if ( null !== $user_id ) {
+			// Only return events for which this user is an attendee.
+			// We use a custom filter to modify the where clause of the query.
+			// The filter removes itself, so it will only apply to the next query.
+			add_filter( 'posts_where', 'Wporg\TranslationEvents\Event\add_attendee_where_clause_to_events_query', 10, 2 );
+			$args['translation_events_user_id'] = $user_id;
 		}
 
 		$query  = new WP_Query( $args );
@@ -532,4 +540,21 @@ class Event_Repository implements Event_Repository_Interface {
 		update_post_meta( $event->id(), '_event_timezone', $event->timezone()->getName() );
 		update_post_meta( $event->id(), '_hosts', $hosts_ids );
 	}
+}
+
+// phpcs:ignore Universal.Files.SeparateFunctionsFromOO.Mixed
+function add_attendee_where_clause_to_events_query( string $where, WP_Query $query ): string {
+	// Remove the filter, so it only applies to a single query.
+	remove_filter( 'posts_where', 'add_attendee_where_clause_to_events_query' );
+
+	$user_id = $query->get( 'translation_events_user_id' );
+	if ( ! $user_id || ! is_int( $user_id ) ) {
+		return $where;
+	}
+
+	global $wpdb, $gp_table_prefix;
+	$posts_table     = "{$wpdb->prefix}posts";
+	$attendees_table = "{$gp_table_prefix}event_attendees";
+
+	return $where . " and exists(select * from $attendees_table where user_id = $user_id and event_id = $posts_table.ID)";
 }
