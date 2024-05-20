@@ -37,6 +37,7 @@ Templates::header(
 		},
 		'html_description' => $event->description(),
 		'url'              => Urls::event_details_absolute( $event->id() ),
+		'image_url'        => Urls::event_image( $event->id() ),
 		'breadcrumbs'      => array( esc_html( $event->title() ) ),
 		'sub_head'         => function () use ( $event, $user, $hosts ) {
 			?>
