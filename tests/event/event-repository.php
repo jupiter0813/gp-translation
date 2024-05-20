@@ -230,7 +230,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	public function test_get_events_for_user() {
 		$user_id   = $this->set_normal_user_as_current();
 		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event1_id = $this->event_factory->create_inactive_past( array( $user_id ) );
+		$event1_id = $this->event_factory->create_inactive_past();
 		$event2_id = $this->event_factory->create_active( array( $user_id ), $now );
 		$event3_id = $this->event_factory->create_inactive_future( array( $user_id ) );
 

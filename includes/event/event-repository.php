@@ -235,6 +235,7 @@ class Event_Repository implements Event_Repository_Interface {
 			),
 			array(),
 			$user_id,
+			true,
 		);
 		// phpcs:enable
 	}
@@ -448,7 +449,14 @@ class Event_Repository implements Event_Repository_Interface {
 	 * @throws InvalidStatus
 	 * @throws Exception
 	 */
-	private function execute_events_query( int $page, int $page_size, array $args, array $filter_by_ids = array(), int $user_id = null ): Events_Query_Result {
+	private function execute_events_query(
+		int $page,
+		int $page_size,
+		array $args,
+		array $filter_by_ids = array(),
+		int $user_id = null,
+		bool $include_created_by_user = false
+	): Events_Query_Result {
 		$this->assert_pagination_arguments( $page, $page_size );
 
 		$args = array_replace_recursive(
@@ -469,11 +477,12 @@ class Event_Repository implements Event_Repository_Interface {
 		}
 
 		if ( null !== $user_id ) {
-			// Only return events for which this user is an attendee.
-			// We use a custom filter to modify the where clause of the query.
+			// Only return events for which this user is an attendee, or (optionally) the event author.
+			// We use a filter to modify the where clause of the query.
 			// The filter removes itself, so it will only apply to the next query.
-			add_filter( 'posts_where', 'Wporg\TranslationEvents\Event\add_attendee_where_clause_to_events_query', 10, 2 );
-			$args['translation_events_user_id'] = $user_id;
+			add_filter( 'posts_where', 'Wporg\TranslationEvents\Event\add_user_id_where_clause_to_events_query', 10, 2 );
+			$args['translation_events_user_id']                 = $user_id;
+			$args['translation_events_include_created_by_user'] = $include_created_by_user;
 		}
 
 		$query  = new WP_Query( $args );
@@ -557,18 +566,25 @@ class Event_Repository implements Event_Repository_Interface {
 }
 
 // phpcs:ignore Universal.Files.SeparateFunctionsFromOO.Mixed
-function add_attendee_where_clause_to_events_query( string $where, WP_Query $query ): string {
+function add_user_id_where_clause_to_events_query( string $where, WP_Query $query ): string {
 	// Remove the filter, so it only applies to a single query.
-	remove_filter( 'posts_where', 'add_attendee_where_clause_to_events_query' );
+	remove_filter( 'posts_where', 'add_user_id_where_clause_to_events_query' );
 
 	$user_id = $query->get( 'translation_events_user_id' );
 	if ( ! $user_id || ! is_int( $user_id ) ) {
 		return $where;
 	}
 
+	$include_created_by_user = $query->get( 'translation_events_include_created_by_user' ) ?? false;
+
 	global $wpdb, $gp_table_prefix;
 	$posts_table     = "{$wpdb->prefix}posts";
 	$attendees_table = "{$gp_table_prefix}event_attendees";
 
-	return $where . " and exists(select * from $attendees_table where user_id = $user_id and event_id = $posts_table.ID)";
+	$where_creator = '1 = 0';
+	if ( $include_created_by_user ) {
+		$where_creator = "$posts_table.post_author = $user_id";
+	}
+
+	return $where . " and ( $where_creator or exists( select * from $attendees_table where user_id = $user_id and event_id = $posts_table.ID ) )";
 }

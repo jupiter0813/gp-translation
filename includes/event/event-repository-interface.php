@@ -100,7 +100,7 @@ interface Event_Repository_Interface {
 	public function get_trashed_events( int $page = -1, int $page_size = -1 ): Events_Query_Result;
 
 	/**
-	 * Get events for a given user.
+	 * Get events for a given user. Includes events created by the user.
 	 *
 	 * @param int $user_id   Id of the user.
 	 * @param int $page      Index of the page to return.
