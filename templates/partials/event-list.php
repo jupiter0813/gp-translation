@@ -53,10 +53,20 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 			<?php // Labels. ?>
 			<span class="event-list-item-labels">
 				<?php if ( $event->is_draft() ) : ?>
-					<span><?php echo esc_html__( 'Draft', 'gp-translation-events' ); ?></span>
+					<span class="event-list-item-label-draft"><?php echo esc_html__( 'Draft', 'gp-translation-events' ); ?></span>
 				<?php endif; ?>
-				<?php if ( $current_user_attendee ) : ?>
-					<?php // TODO. ?>
+				<?php if ( $event->is_past() ) : ?>
+					<?php if ( $current_user_attendee && $current_user_attendee->is_host() ) : ?>
+						<span class="event-list-item-label-hosted"><?php echo esc_html__( 'Hosted', 'gp-translation-events' ); ?></span>
+					<?php elseif ( $current_user_attendee ) : ?>
+						<span class="event-list-item-label-attended"><?php echo esc_html__( 'Attended', 'gp-translation-events' ); ?></span>
+					<?php endif; ?>
+				<?php else : ?>
+					<?php if ( $current_user_attendee && $current_user_attendee->is_host() ) : ?>
+						<span class="event-list-item-label-hosting"><?php echo esc_html__( 'Hosting', 'gp-translation-events' ); ?></span>
+					<?php elseif ( $current_user_attendee ) : ?>
+						<span class="event-list-item-label-attending"><?php echo esc_html__( 'Attending', 'gp-translation-events' ); ?></span>
+					<?php endif; ?>
 				<?php endif; ?>
 			</span>
 
