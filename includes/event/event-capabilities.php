@@ -261,7 +261,7 @@ class Event_Capabilities {
 	 */
 	private function has_edit_form_field( WP_User $user, Event $event, $cap ): bool {
 		$event_start         = $event->start();
-		$happening_now       = $event->start()->is_in_the_past() && ! $event->end()->is_in_the_past();
+		$happening_now       = $event->is_active();
 		$now                 = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event_end_plus_1_hr = $event->end()->modify( '+1 hour' );
 
