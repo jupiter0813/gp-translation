@@ -14,13 +14,15 @@ use Wporg\TranslationEvents\Urls;
 /** @var ?string $date_format */
 /** @var ?bool $relative_time */
 /** @var ?string[] $extra_classes */
+/** @var ?array $user_is_attending Associative array with event id as key, and boolean as value. */
 
-$show_start    = $show_start ?? false;
-$show_end      = $show_end ?? false;
-$show_excerpt  = $show_excerpt ?? true;
-$date_format   = $date_format ?? '';
-$relative_time = $relative_time ?? true;
-$extra_classes = isset( $extra_classes ) ? implode( $extra_classes, ' ' ) : '';
+$show_start        = $show_start ?? false;
+$show_end          = $show_end ?? false;
+$show_excerpt      = $show_excerpt ?? true;
+$date_format       = $date_format ?? '';
+$relative_time     = $relative_time ?? true;
+$extra_classes     = isset( $extra_classes ) ? implode( $extra_classes, ' ' ) : '';
+$user_is_attending = $user_is_attending ?? array();
 
 /**
  * @param Event_Start_Date|Event_End_Date $time
@@ -36,6 +38,9 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 
 <ul class="event-list <?php echo esc_attr( $extra_classes ); ?>">
 	<?php foreach ( $query->events as $event ) : ?>
+		<?php
+		$is_attending = isset( $user_is_attending[ $event->id() ] ) && $user_is_attending[ $event->id() ];
+		?>
 		<li class="event-list-item">
 			<?php // Title. ?>
 			<?php // phpcs:ignore Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace ?>
@@ -48,6 +53,9 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 			<span class="event-list-item-labels">
 				<?php if ( $event->is_draft() ) : ?>
 					<span><?php echo esc_html__( 'Draft', 'gp-translation-events' ); ?></span>
+				<?php endif; ?>
+				<?php if ( $is_attending ) : ?>
+					<?php // TODO. ?>
 				<?php endif; ?>
 			</span>
 
