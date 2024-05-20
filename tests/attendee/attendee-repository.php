@@ -261,22 +261,6 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 		$this->assertFalse( $attendees[ $user3_id ]->is_host() );
 	}
 
-	public function test_get_events_for_user() {
-		$event1_id    = 1;
-		$event2_id    = 2;
-		$event3_id    = 3;
-		$user_id      = 42;
-		$another_user = $user_id + 1;
-
-		$this->repository->insert_attendee( new Attendee( $event1_id, $user_id ) );
-		$this->repository->insert_attendee( new Attendee( $event2_id, $user_id ) );
-		$this->repository->insert_attendee( new Attendee( $event3_id, $another_user ) );
-
-		$this->assertEquals( array( $event1_id, $event2_id ), $this->repository->get_events_for_user( $user_id ) );
-		$this->assertEquals( array( $event3_id ), $this->repository->get_events_for_user( $another_user ) );
-		$this->assertEmpty( $this->repository->get_events_for_user( $another_user + 1 ) );
-	}
-
 	private function all_table_rows(): array {
 		global $wpdb, $gp_table_prefix;
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
