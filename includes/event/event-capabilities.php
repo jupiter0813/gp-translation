@@ -105,7 +105,7 @@ class Event_Capabilities {
 					return $this->has_edit_attendees( $user, $event );
 				}
 				if ( self::EDIT_TITLE === $cap || self::EDIT_DESCRIPTION === $cap || self::EDIT_START === $cap || self::EDIT_END === $cap || self::EDIT_TIMEZONE === $cap ) {
-					return $this->has_edit_form_field( $user, $event, $cap );
+					return $this->has_edit_field( $user, $event, $cap );
 				}
 				break;
 		}
@@ -259,7 +259,7 @@ class Event_Capabilities {
 	 * @param Event   $event Event for which we're evaluating the capability.
 	 * @return bool
 	 */
-	private function has_edit_form_field( WP_User $user, Event $event, $cap ): bool {
+	private function has_edit_field( WP_User $user, Event $event, $cap ): bool {
 		$event_start         = $event->start();
 		$happening_now       = $event->is_active();
 		$now                 = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
