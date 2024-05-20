@@ -1,6 +1,7 @@
 <?php
 namespace Wporg\TranslationEvents\Templates\Partials;
 
+use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Event\Events_Query_Result;
@@ -14,15 +15,15 @@ use Wporg\TranslationEvents\Urls;
 /** @var ?string $date_format */
 /** @var ?bool $relative_time */
 /** @var ?string[] $extra_classes */
-/** @var ?array $user_is_attending Associative array with event id as key, and boolean as value. */
+/** @var ?Attendee[] $current_user_attendee_per_event Associative array with event id as key, and Attendee as value. */
 
-$show_start        = $show_start ?? false;
-$show_end          = $show_end ?? false;
-$show_excerpt      = $show_excerpt ?? true;
-$date_format       = $date_format ?? '';
-$relative_time     = $relative_time ?? true;
-$extra_classes     = isset( $extra_classes ) ? implode( $extra_classes, ' ' ) : '';
-$user_is_attending = $user_is_attending ?? array();
+$show_start                      = $show_start ?? false;
+$show_end                        = $show_end ?? false;
+$show_excerpt                    = $show_excerpt ?? true;
+$date_format                     = $date_format ?? '';
+$relative_time                   = $relative_time ?? true;
+$extra_classes                   = isset( $extra_classes ) ? implode( $extra_classes, ' ' ) : '';
+$current_user_attendee_per_event = $current_user_attendee_per_event ?? array();
 
 /**
  * @param Event_Start_Date|Event_End_Date $time
@@ -39,7 +40,7 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 <ul class="event-list <?php echo esc_attr( $extra_classes ); ?>">
 	<?php foreach ( $query->events as $event ) : ?>
 		<?php
-		$is_attending = isset( $user_is_attending[ $event->id() ] ) && $user_is_attending[ $event->id() ];
+		$current_user_attendee = $current_user_attendee_per_event[ $event->id() ] ?? null;
 		?>
 		<li class="event-list-item">
 			<?php // Title. ?>
@@ -54,7 +55,7 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 				<?php if ( $event->is_draft() ) : ?>
 					<span><?php echo esc_html__( 'Draft', 'gp-translation-events' ); ?></span>
 				<?php endif; ?>
-				<?php if ( $is_attending ) : ?>
+				<?php if ( $current_user_attendee ) : ?>
 					<?php // TODO. ?>
 				<?php endif; ?>
 			</span>
