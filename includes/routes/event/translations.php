@@ -174,6 +174,5 @@ class Translations_Route extends Route {
 		}
 
 		gp_tmpl_load( 'event-translations-footer', get_defined_vars(), $this->template_path );
-		gp_tmpl_footer();
 	}
 }
