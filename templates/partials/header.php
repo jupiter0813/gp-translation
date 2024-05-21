@@ -11,6 +11,12 @@ use function Wporg\TranslationEvents\Templates\gp_breadcrumb_translation_events;
 /** @var string $html_description */
 /** @var ?callable $sub_head */
 /** @var ?string[] $breadcrumbs */
+
+$html_title       = $html_title ?? esc_html__( 'Translation Events', 'gp-translation-events' );
+$url              = $url ?? URLS::events_home();
+$html_description = $html_description ?? esc_html__( 'WordPress Translation Events', 'gp-translation-events' );
+$image_url        = $image_url ?? URLs::event_default_image();
+
 add_action(
 	'gp_head',
 	function () use ( $html_title, $url, $html_description, $image_url ) {
@@ -24,7 +30,7 @@ add_action(
 		echo '<meta property="og:url" content="' . esc_url( $url ) . '" />' . "\n";
 		echo '<meta property="og:title" content="' . esc_attr( $html_title ) . '" />' . "\n";
 		echo '<meta property="og:description" content="' . esc_attr( $html_description ) . '" />' . "\n";
-		echo '<meta property="og:image" content=" ' . esc_url( $image_url ) . '" />' . "\n";
+		echo '<meta property="og:image" content="' . esc_url( $image_url ) . '" />' . "\n";
 	}
 );
 gp_title( $html_title );
