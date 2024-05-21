@@ -31,8 +31,12 @@ add_action(
 		echo '<meta property="og:url" content="' . esc_url( $url ) . '" />' . "\n";
 		echo '<meta property="og:title" content="' . esc_attr( $html_title ) . '" />' . "\n";
 		echo '<meta property="og:description" content="' . esc_attr( $html_description ) . '" />' . "\n";
-		echo ' <meta property="og:site_name" content="' . esc_attr( get_bloginfo() ) . '" />' . "\n";
-		echo '<meta property="og:image" content="' . esc_url( $image_url ) . '" />' . "\n";
+		echo '<meta property="og:site_name" content="' . esc_attr( get_bloginfo() ) . '" />' . "\n";
+		echo '<meta property="og:image:url" content="' . esc_url( $image_url ) . '" />' . "\n";
+		echo '<meta property="og:image:secure_url" content="' . esc_url( $image_url ) . '" />' . "\n";
+		echo '<meta property="og:image:type" content="image/png" />' . "\n";
+		echo '<meta property="og:image:width" content="1200" />' . "\n";
+		echo '<meta property="og:image:height" content="675" />' . "\n";
 		echo '<meta property="og:image:alt" content="' . esc_attr( $html_title ) . '" />' . "\n";
 	}
 );
