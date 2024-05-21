@@ -23,7 +23,7 @@ add_action(
 		echo '<meta name="twitter:card" content="summary" />' . "\n";
 		echo '<meta name="twitter:site" content="@WordPress" />' . "\n";
 		echo '<meta name="twitter:title" content="' . esc_attr( $html_title ) . '" />' . "\n";
-		echo '<meta name="twitter:description" content="WordPress Translation Events" />' . "\n";
+		echo '<meta name="twitter:description" content="' . esc_attr( $html_description ) . '" />' . "\n";
 		echo '<meta name="twitter:creator" content="@WordPress" />' . "\n";
 		echo '<meta name="twitter:image" content=" ' . esc_url( $image_url ) . '" />' . "\n";
 		echo '<meta name="twitter:image:alt" content="' . esc_attr( $html_title ) . '" />' . "\n";
