@@ -260,7 +260,6 @@ class Event_Capabilities {
 	 * @return bool
 	 */
 	private function has_edit_field( WP_User $user, Event $event, $cap ): bool {
-		$happening_now       = $event->is_active();
 		$now                 = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event_end_plus_1_hr = $event->end()->modify( '+1 hour' );
 
@@ -272,11 +271,11 @@ class Event_Capabilities {
 			return true;
 		}
 
-		if ( $happening_now && ! $this->stats_calculator->event_has_stats( $event->id() ) ) {
+		if ( $event->is_active() && ! $this->stats_calculator->event_has_stats( $event->id() ) ) {
 			return true;
 		}
 
-		if ( $happening_now && $this->stats_calculator->event_has_stats( $event->id() ) ) {
+		if ( $event->is_active() && $this->stats_calculator->event_has_stats( $event->id() ) ) {
 			return ( self::EDIT_TITLE === $cap || self::EDIT_END === $cap );
 		}
 
