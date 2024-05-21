@@ -35,7 +35,9 @@ class Image_Route extends Route {
 	 * @param int $event_id The event ID.
 	 */
 	public function handle( int $event_id ): void {
-		// todo: check if the server has GD installed.
+		if ( ! extension_loaded( 'gd' ) ) {
+			$this->die_with_error( esc_html__( 'The image cannot be generated because GD extension is not installed.', 'gp-translation-events' ) );
+		}
 		$event = $this->event_repository->get_event( $event_id );
 		if ( ! $event ) {
 			$this->die_with_404();
