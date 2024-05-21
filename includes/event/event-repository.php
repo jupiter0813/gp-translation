@@ -586,5 +586,5 @@ function add_user_id_where_clause_to_events_query( string $where, WP_Query $quer
 		$where_creator = "$posts_table.post_author = $user_id";
 	}
 
-	return $where . " and ( $where_creator or exists( select * from $attendees_table where user_id = $user_id and event_id = $posts_table.ID ) )";
+	return $where . " and ( $where_creator or exists( select * from $attendees_table where event_id = $posts_table.ID and user_id = $user_id ) )";
 }
