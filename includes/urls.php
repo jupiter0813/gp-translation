@@ -53,6 +53,16 @@ class Urls {
 		return gp_url( "/events/image/$event_id" );
 	}
 
+	/**
+	 * Returns the URL to the default event image.
+	 *
+	 * @return string
+	 */
+	public static function event_default_image(): string {
+		$plugin_url = plugin_dir_url( __DIR__ );
+		return $plugin_url . 'assets/images/translation-events.png';
+	}
+
 	public static function event_toggle_attendee( int $event_id ): string {
 		return gp_url( "/events/attend/$event_id" );
 	}
