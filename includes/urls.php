@@ -59,8 +59,7 @@ class Urls {
 	 * @return string
 	 */
 	public static function event_default_image(): string {
-		$plugin_url = plugin_dir_url( __DIR__ );
-		return $plugin_url . 'assets/images/translation-events.png';
+		return plugin_dir_url( __DIR__ ) . 'assets/images/translation-events.png';
 	}
 
 	public static function event_toggle_attendee( int $event_id ): string {
