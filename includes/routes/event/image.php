@@ -32,6 +32,8 @@ class Image_Route extends Route {
 	/**
 	 * Handles the request.
 	 *
+	 * Generates an image with the event title.
+	 *
 	 * @param int $event_id The event ID.
 	 */
 	public function handle( int $event_id ): void {
