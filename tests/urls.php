@@ -118,4 +118,15 @@ class Urls_Test extends GP_UnitTestCase {
 		$expected = '/events';
 		$this->assertEquals( $expected, Urls::events_home() );
 	}
+
+	public function test_event_image() {
+		$event_id = $this->event_factory->create_active();
+		$expected = "/events/image/$event_id";
+		$this->assertEquals( $expected, Urls::event_image( $event_id ) );
+	}
+
+	public function test_event_default_image() {
+		$expected = '/events/image/0';
+		$this->assertEquals( $expected, Urls::event_default_image() );
+	}
 }
