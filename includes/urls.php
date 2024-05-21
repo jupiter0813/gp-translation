@@ -49,6 +49,13 @@ class Urls {
 		return gp_url( '/events/new/' );
 	}
 
+	/**
+	 * Returns the URL to the image for the event.
+	 *
+	 * @param int $event_id The event ID.
+	 *
+	 * @return string
+	 */
 	public static function event_image( int $event_id ): string {
 		return gp_url( "/events/image/$event_id" );
 	}
