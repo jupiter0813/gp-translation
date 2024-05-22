@@ -2,11 +2,6 @@
 
 namespace Wporg\TranslationEvents\Routes\Event;
 
-use DateTimeImmutable;
-use DateTimeZone;
-use Wporg\TranslationEvents\Event\Event;
-use Wporg\TranslationEvents\Event\Event_End_Date;
-use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Translation_Events;
