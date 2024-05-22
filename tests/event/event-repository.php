@@ -258,8 +258,8 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event1_id = $this->event_factory->create_active( array( $user_id ), $now );
 		$event2_id = $this->event_factory->create_active( array( $user_id ), $now );
-		$this->event_factory->create_active( array( $user_id ), $now->modify( '+2 hours' ) );
-		$this->event_factory->create_active( array( $user_id ), $now->modify( '+2 months' ) );
+		$this->event_factory->create_inactive_future( array( $user_id ) );
+		$this->event_factory->create_inactive_future( array( $user_id ) );
 		$this->event_factory->create_active( array(), $now );
 		$this->event_factory->create_inactive_past( array( $user_id ) );
 
