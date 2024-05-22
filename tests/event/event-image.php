@@ -16,9 +16,9 @@ class Event_Image_Test extends GP_UnitTestCase {
 	 */
 	public function test_gp_head_metadata() {
 		$html_title       = 'Test HTML Title';
-		$url              = URLS::events_home();
+		$url              = Urls::events_home();
 		$html_description = 'This is a test description of the page.';
-		$image_url        = URLs::event_default_image();
+		$image_url        = Urls::event_default_image();
 		$page_title       = 'Test Page Title';
 		Templates::header(
 			array(

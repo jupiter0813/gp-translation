@@ -13,9 +13,9 @@ use function Wporg\TranslationEvents\Templates\gp_breadcrumb_translation_events;
 /** @var ?string[] $breadcrumbs */
 
 $html_title       = $html_title ?? esc_html__( 'Translation Events', 'gp-translation-events' );
-$url              = $url ?? URLS::events_home();
+$url              = $url ?? Urls::events_home();
 $html_description = $html_description ?? esc_html__( 'WordPress Translation Events', 'gp-translation-events' );
-$image_url        = $image_url ?? URLs::event_default_image();
+$image_url        = $image_url ?? Urls::event_default_image();
 
 add_action(
 	'gp_head',
