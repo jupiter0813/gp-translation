@@ -478,10 +478,11 @@ class Event_Repository implements Event_Repository_Interface {
 
 		if ( null !== $user_id ) {
 			$user_id_filter_callback = 'Wporg\TranslationEvents\Event\add_user_id_where_clause_to_events_query';
+			$user_id_filter_priority = 10;
 			// Only return events for which this user is an attendee, or (optionally) the event author.
 			// We use a filter to modify the where clause of the query.
 			// The filter removes itself, so it will only apply to the next query.
-			add_filter( 'posts_where', $user_id_filter_callback, 10, 2 );
+			add_filter( 'posts_where', $user_id_filter_callback, $user_id_filter_priority, 2 );
 			$args['translation_events_user_id']                 = $user_id;
 			$args['translation_events_include_created_by_user'] = $include_created_by_user;
 		}
@@ -491,7 +492,7 @@ class Event_Repository implements Event_Repository_Interface {
 
 		if ( isset( $user_id_filter_callback ) ) {
 			// Remove the filter, so it only applies to this query.
-			remove_filter( 'posts_where', $user_id_filter_callback );
+			remove_filter( 'posts_where', $user_id_filter_callback, $user_id_filter_priority );
 		}
 
 		$events = array();
