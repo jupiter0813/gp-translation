@@ -91,12 +91,12 @@ class Attendee_Repository {
 		if ( 1 !== count( $attendees ) ) {
 			return null;
 		}
-		return $attendees[0];
+		return $attendees[ $event_id ];
 	}
 
 	/**
 	 * @var int[] $event_ids
-	 * @return Attendee[]
+	 * @return Attendee[] Associative array with event id as key.
 	 * @throws Exception
 	 */
 	public function get_attendees_for_events_for_user( array $event_ids, int $user_id ): array {
@@ -141,8 +141,9 @@ class Attendee_Repository {
 				array_merge(
 					$event_ids,
 					array( $user_id ),
-				),
+				)
 			),
+			OBJECT_K
 		);
 		// phpcs:enable
 
