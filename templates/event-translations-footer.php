@@ -40,4 +40,3 @@ foreach ( $editor_options as $translation_set_id => $options ) {
 <?php
 gp_enqueue_script( 'wporg-translate-editor' );
 Templates::footer();
-?>
