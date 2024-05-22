@@ -477,18 +477,24 @@ class Event_Repository implements Event_Repository_Interface {
 		}
 
 		if ( null !== $user_id ) {
+			$user_id_filter_callback = 'Wporg\TranslationEvents\Event\add_user_id_where_clause_to_events_query';
 			// Only return events for which this user is an attendee, or (optionally) the event author.
 			// We use a filter to modify the where clause of the query.
 			// The filter removes itself, so it will only apply to the next query.
-			add_filter( 'posts_where', 'Wporg\TranslationEvents\Event\add_user_id_where_clause_to_events_query', 10, 2 );
+			add_filter( 'posts_where', $user_id_filter_callback, 10, 2 );
 			$args['translation_events_user_id']                 = $user_id;
 			$args['translation_events_include_created_by_user'] = $include_created_by_user;
 		}
 
-		$query  = new WP_Query( $args );
-		$posts  = $query->get_posts();
-		$events = array();
+		$query = new WP_Query( $args );
+		$posts = $query->get_posts();
 
+		if ( isset( $user_id_filter_callback ) ) {
+			// Remove the filter, so it only applies to this query.
+			remove_filter( 'posts_where', $user_id_filter_callback );
+		}
+
+		$events = array();
 		foreach ( $posts as $post ) {
 			$meta = $this->get_event_meta( $post->ID );
 
@@ -567,9 +573,6 @@ class Event_Repository implements Event_Repository_Interface {
 
 // phpcs:ignore Universal.Files.SeparateFunctionsFromOO.Mixed
 function add_user_id_where_clause_to_events_query( string $where, WP_Query $query ): string {
-	// Remove the filter, so it only applies to a single query.
-	remove_filter( 'posts_where', 'add_user_id_where_clause_to_events_query' );
-
 	$user_id = $query->get( 'translation_events_user_id' );
 	if ( ! $user_id || ! is_int( $user_id ) ) {
 		return $where;
