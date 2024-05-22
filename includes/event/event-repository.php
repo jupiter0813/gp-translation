@@ -223,6 +223,23 @@ class Event_Repository implements Event_Repository_Interface {
 		);
 	}
 
+	public function get_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		return $this->execute_events_query(
+			$page,
+			$page_size,
+			array(
+				'meta_key' => '_event_start',
+				'orderby'  => 'meta_value',
+				'order'    => 'DESC',
+			),
+			array(),
+			$user_id,
+			true,
+		);
+		// phpcs:enable
+	}
+
 	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
@@ -250,7 +267,8 @@ class Event_Repository implements Event_Repository_Interface {
 				'orderby'    => 'meta_value',
 				'order'      => 'ASC',
 			),
-			$this->attendee_repository->get_events_for_user( $user_id ),
+			array(),
+			$user_id,
 		);
 		// phpcs:enable
 	}
@@ -276,18 +294,14 @@ class Event_Repository implements Event_Repository_Interface {
 				'orderby'    => 'meta_value',
 				'order'      => 'ASC',
 			),
-			$this->attendee_repository->get_events_for_user( $user_id ),
+			array(),
+			$user_id,
 		);
 		// phpcs:enable
 	}
 
 	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-
-		$user_events = $this->attendee_repository->get_events_for_user( $user_id );
-		if ( empty( $user_events ) ) {
-			return new Events_Query_Result( array(), 1, 1 );
-		}
 
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
@@ -308,7 +322,8 @@ class Event_Repository implements Event_Repository_Interface {
 				'orderby'    => 'meta_value',
 				'order'      => 'DESC',
 			),
-			$user_events
+			array(),
+			$user_id,
 		);
 		// phpcs:enable
 	}
@@ -434,7 +449,14 @@ class Event_Repository implements Event_Repository_Interface {
 	 * @throws InvalidStatus
 	 * @throws Exception
 	 */
-	private function execute_events_query( int $page, int $page_size, array $args, array $filter_by_ids = array() ): Events_Query_Result {
+	private function execute_events_query(
+		int $page,
+		int $page_size,
+		array $args,
+		array $filter_by_ids = array(),
+		int $user_id = null,
+		bool $include_created_by_user = false
+	): Events_Query_Result {
 		$this->assert_pagination_arguments( $page, $page_size );
 
 		$args = array_replace_recursive(
@@ -454,10 +476,26 @@ class Event_Repository implements Event_Repository_Interface {
 			$args['post__in'] = $filter_by_ids;
 		}
 
-		$query  = new WP_Query( $args );
-		$posts  = $query->get_posts();
-		$events = array();
+		if ( null !== $user_id ) {
+			$user_id_filter_callback = 'Wporg\TranslationEvents\Event\add_user_id_where_clause_to_events_query';
+			$user_id_filter_priority = 10;
+			// Only return events for which this user is an attendee, or (optionally) the event author.
+			// We use a filter to modify the where clause of the query.
+			// The filter removes itself, so it will only apply to the next query.
+			add_filter( 'posts_where', $user_id_filter_callback, $user_id_filter_priority, 2 );
+			$args['translation_events_user_id']                 = $user_id;
+			$args['translation_events_include_created_by_user'] = $include_created_by_user;
+		}
 
+		$query = new WP_Query( $args );
+		$posts = $query->get_posts();
+
+		if ( isset( $user_id_filter_callback ) ) {
+			// Remove the filter, so it only applies to this query.
+			remove_filter( 'posts_where', $user_id_filter_callback, $user_id_filter_priority );
+		}
+
+		$events = array();
 		foreach ( $posts as $post ) {
 			$meta = $this->get_event_meta( $post->ID );
 
@@ -532,4 +570,25 @@ class Event_Repository implements Event_Repository_Interface {
 		update_post_meta( $event->id(), '_event_timezone', $event->timezone()->getName() );
 		update_post_meta( $event->id(), '_hosts', $hosts_ids );
 	}
+}
+
+// phpcs:ignore Universal.Files.SeparateFunctionsFromOO.Mixed
+function add_user_id_where_clause_to_events_query( string $where, WP_Query $query ): string {
+	$user_id = $query->get( 'translation_events_user_id' );
+	if ( ! $user_id || ! is_int( $user_id ) ) {
+		return $where;
+	}
+
+	$include_created_by_user = $query->get( 'translation_events_include_created_by_user' ) ?? false;
+
+	global $wpdb, $gp_table_prefix;
+	$posts_table     = "{$wpdb->prefix}posts";
+	$attendees_table = "{$gp_table_prefix}event_attendees";
+
+	$where_creator = '1 = 0';
+	if ( $include_created_by_user ) {
+		$where_creator = "$posts_table.post_author = $user_id";
+	}
+
+	return $where . " and ( $where_creator or exists( select * from $attendees_table where event_id = $posts_table.ID and user_id = $user_id ) )";
 }
