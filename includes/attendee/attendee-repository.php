@@ -88,7 +88,7 @@ class Attendee_Repository {
 	 */
 	public function get_attendee_for_event_for_user( int $event_id, int $user_id ): ?Attendee {
 		$attendees = $this->get_attendees_for_events_for_user( array( $event_id ), $user_id );
-		if ( empty( $attendees ) ) {
+		if ( 1 !== count( $attendees ) ) {
 			return null;
 		}
 		return $attendees[0];
