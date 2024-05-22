@@ -229,9 +229,10 @@ class Event_Repository implements Event_Repository_Interface {
 			$page,
 			$page_size,
 			array(
-				'meta_key' => '_event_start',
-				'orderby'  => 'meta_value',
-				'order'    => 'DESC',
+				'post_status' => array( 'publish', 'draft' ),
+				'meta_key'    => '_event_start',
+				'orderby'     => 'meta_value',
+				'order'       => 'DESC',
 			),
 			array(),
 			$user_id,
