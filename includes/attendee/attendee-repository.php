@@ -88,15 +88,15 @@ class Attendee_Repository {
 	 */
 	public function get_attendee_for_event_for_user( int $event_id, int $user_id ): ?Attendee {
 		$attendees = $this->get_attendees_for_events_for_user( array( $event_id ), $user_id );
-		if ( empty( $attendees ) ) {
+		if ( 1 !== count( $attendees ) ) {
 			return null;
 		}
-		return $attendees[0];
+		return $attendees[ $event_id ];
 	}
 
 	/**
 	 * @var int[] $event_ids
-	 * @return Attendee[]
+	 * @return Attendee[] Associative array with event id as key.
 	 * @throws Exception
 	 */
 	public function get_attendees_for_events_for_user( array $event_ids, int $user_id ): array {
@@ -124,7 +124,7 @@ class Attendee_Repository {
 			$wpdb->prepare(
 				"
 					select
-					    event_id,
+						event_id,
 						user_id,
 						is_host,
 						is_new_contributor,
@@ -141,8 +141,9 @@ class Attendee_Repository {
 				array_merge(
 					$event_ids,
 					array( $user_id ),
-				),
+				)
 			),
+			OBJECT_K
 		);
 		// phpcs:enable
 

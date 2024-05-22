@@ -131,27 +131,27 @@ class Attendee_Repository_Test extends GP_UnitTestCase {
 
 		$retrieved_attendees_1 = $this->repository->get_attendees_for_events_for_user( array( $event1_id, $event2_id ), $user1_id );
 		$this->assertCount( 2, $retrieved_attendees_1 );
-		$this->assertEquals( $attendee11, $retrieved_attendees_1[0] );
-		$this->assertTrue( $retrieved_attendees_1[0]->is_host() );
-		$this->assertTrue( $retrieved_attendees_1[0]->is_new_contributor() );
-		$this->assertTrue( $retrieved_attendees_1[0]->is_contributor() );
+		$this->assertEquals( $attendee11, $retrieved_attendees_1[ $event1_id ] );
+		$this->assertTrue( $retrieved_attendees_1[ $event1_id ]->is_host() );
+		$this->assertTrue( $retrieved_attendees_1[ $event1_id ]->is_new_contributor() );
+		$this->assertTrue( $retrieved_attendees_1[ $event1_id ]->is_contributor() );
 
-		$this->assertEquals( $attendee21, $retrieved_attendees_1[1] );
-		$this->assertTrue( $retrieved_attendees_1[1]->is_host() );
-		$this->assertFalse( $retrieved_attendees_1[1]->is_new_contributor() );
-		$this->assertFalse( $retrieved_attendees_1[1]->is_contributor() );
+		$this->assertEquals( $attendee21, $retrieved_attendees_1[ $event2_id ] );
+		$this->assertTrue( $retrieved_attendees_1[ $event2_id ]->is_host() );
+		$this->assertFalse( $retrieved_attendees_1[ $event2_id ]->is_new_contributor() );
+		$this->assertFalse( $retrieved_attendees_1[ $event2_id ]->is_contributor() );
 
 		$retrieved_attendees_2 = $this->repository->get_attendees_for_events_for_user( array( $event1_id, $event2_id ), $user2_id );
 		$this->assertCount( 2, $retrieved_attendees_2 );
-		$this->assertEquals( $attendee12, $retrieved_attendees_2[0] );
-		$this->assertFalse( $retrieved_attendees_2[0]->is_host() );
-		$this->assertFalse( $retrieved_attendees_2[0]->is_new_contributor() );
-		$this->assertFalse( $retrieved_attendees_2[0]->is_contributor() );
+		$this->assertEquals( $attendee12, $retrieved_attendees_2[ $event1_id ] );
+		$this->assertFalse( $retrieved_attendees_2[ $event1_id ]->is_host() );
+		$this->assertFalse( $retrieved_attendees_2[ $event1_id ]->is_new_contributor() );
+		$this->assertFalse( $retrieved_attendees_2[ $event1_id ]->is_contributor() );
 
-		$this->assertEquals( $attendee22, $retrieved_attendees_2[1] );
-		$this->assertFalse( $retrieved_attendees_2[1]->is_host() );
-		$this->assertFalse( $retrieved_attendees_2[1]->is_new_contributor() );
-		$this->assertTrue( $retrieved_attendees_2[1]->is_contributor() );
+		$this->assertEquals( $attendee22, $retrieved_attendees_2[ $event2_id ] );
+		$this->assertFalse( $retrieved_attendees_2[ $event2_id ]->is_host() );
+		$this->assertFalse( $retrieved_attendees_2[ $event2_id ]->is_new_contributor() );
+		$this->assertTrue( $retrieved_attendees_2[ $event2_id ]->is_contributor() );
 
 		$this->assertEmpty( $this->repository->get_attendees_for_events_for_user( array( $event3_id ), $user2_id ) );
 	}
