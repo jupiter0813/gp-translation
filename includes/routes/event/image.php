@@ -41,7 +41,7 @@ class Image_Route extends Route {
 		$text  = '' === $text ? esc_html__( 'Translation events', 'gp-translation-events' ) : $text;
 		$text  = substr( $text, 0, 44 ); // Limit the text to 44 characters.
 
-		$lines = $this->splitText( $text, 22 ); // Limit each line to 22 characters.
+		$lines = $this->split_text( $text, 22 ); // Limit each line to 22 characters.
 		$text1 = $lines[0];
 		$text2 = $lines[1] ?? '';
 
@@ -84,7 +84,7 @@ class Image_Route extends Route {
 	 *
 	 * @return string[]
 	 */
-	private function splitText( string $text, int $max_length ): array {
+	private function split_text( string $text, int $max_length ): array {
 		if ( strlen( $text ) <= $max_length ) {
 			return array( $text );
 		}
