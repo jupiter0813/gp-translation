@@ -124,7 +124,7 @@ class Attendee_Repository {
 			$wpdb->prepare(
 				"
 					select
-					    event_id,
+						event_id,
 						user_id,
 						is_host,
 						is_new_contributor,
