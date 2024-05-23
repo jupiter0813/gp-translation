@@ -22,9 +22,8 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		);
 	}
 
-	public function create_draft(): int {
+	public function create_draft( DateTimeImmutable $now ): int {
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		$event_id = $this->create_event(
 			$now->modify( '-1 hours' ),
@@ -40,11 +39,8 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		return $event_id;
 	}
 
-	public function create_active( array $attendee_ids = array(), $now = null ): int {
+	public function create_active( DateTimeImmutable $now, array $attendee_ids = array() ): int {
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
-		if ( null === $now ) {
-			$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		}
 
 		return $this->create_event(
 			$now->modify( '-1 second' ),
@@ -54,9 +50,8 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		);
 	}
 
-	public function create_inactive_past( array $attendee_ids = array() ): int {
+	public function create_inactive_past( DateTimeImmutable $now, array $attendee_ids = array() ): int {
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		return $this->create_event(
 			$now->modify( '-2 month' ),
@@ -66,9 +61,8 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		);
 	}
 
-	public function create_inactive_future( array $attendee_ids = array() ): int {
+	public function create_inactive_future( DateTimeImmutable $now, array $attendee_ids = array() ): int {
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		return $this->create_event(
 			$now->modify( '+1 month' ),

@@ -15,6 +15,7 @@ use Wporg\TranslationEvents\Tests\Event_Factory;
 class Event_Repository_Cached_Test extends GP_UnitTestCase {
 	private Event_Repository_Cached $repository;
 	private Event_Factory $event_factory;
+	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
@@ -23,6 +24,7 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 
 		wp_cache_delete( 'translation-events-active-events' );
 		$this->set_normal_user_as_current();
+		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_get_current_events_when_no_current_events_exist() {
@@ -40,12 +42,11 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_current_events() {
-		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event1_id = $this->event_factory->create_active( array(), $now );
-		$event2_id = $this->event_factory->create_active( array(), $now );
-		$this->event_factory->create_active( array(), $now->modify( '+2 hours' ) );
-		$this->event_factory->create_inactive_future();
-		$this->event_factory->create_inactive_past();
+		$event1_id = $this->event_factory->create_active( $this->now );
+		$event2_id = $this->event_factory->create_active( $this->now );
+		$this->event_factory->create_active( $this->now->modify( '+2 hours' ) );
+		$this->event_factory->create_inactive_future( $this->now );
+		$this->event_factory->create_inactive_past( $this->now );
 
 		$result = $this->repository->get_current_events();
 		$events = $result->events;
@@ -84,7 +85,7 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 	}
 
 	public function test_invalidates_cache_when_events_are_updated() {
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $this->now );
 		$event    = $this->repository->get_event( $event_id );
 
 		wp_cache_set( 'translation-events-active-events', 'foo' );
@@ -93,7 +94,7 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 	}
 
 	public function test_invalidates_cache_when_events_are_trashed() {
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $this->now );
 		$event    = $this->repository->get_event( $event_id );
 
 		wp_cache_set( 'translation-events-active-events', 'foo' );
@@ -102,7 +103,7 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 	}
 
 	public function test_invalidates_cache_when_events_are_deleted() {
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $this->now );
 		$event    = $this->repository->get_event( $event_id );
 
 		wp_cache_set( 'translation-events-active-events', 'foo' );
