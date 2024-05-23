@@ -121,12 +121,24 @@ class Urls_Test extends GP_UnitTestCase {
 
 	public function test_event_image() {
 		$event_id = $this->event_factory->create_active();
-		$expected = "/events/image/$event_id";
+		$expected = trailingslashit( gp_url_public_root() ) . "events/image/$event_id";
 		$this->assertEquals( $expected, Urls::event_image( $event_id ) );
 	}
 
 	public function test_event_default_image() {
-		$expected = '/events/image/0';
+		$expected = trailingslashit( gp_url_public_root() ) . 'events/image/0';
 		$this->assertEquals( $expected, Urls::event_default_image() );
+		$this->assertTrue( $this->starts_with_http_or_https( Urls::event_default_image() ), 'URL does not start with http:// or https://' );
+	}
+
+	/**
+	 * Check if a string starts with http:// or https://
+	 *
+	 * @param string $url The string to check.
+	 *
+	 * @return bool
+	 */
+	private function starts_with_http_or_https( string $url ): bool {
+		return 1 === preg_match( '/^https?:\/\//', strtolower( $url ) );
 	}
 }

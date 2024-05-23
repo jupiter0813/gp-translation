@@ -50,18 +50,18 @@ class Urls {
 	}
 
 	/**
-	 * Returns the URL to the image for the event.
+	 * Returns the absolute URL to the image for the event.
 	 *
 	 * @param int $event_id The event ID.
 	 *
 	 * @return string
 	 */
 	public static function event_image( int $event_id ): string {
-		return gp_url( "/events/image/$event_id" );
+		return trailingslashit( gp_url_public_root() ) . "events/image/$event_id";
 	}
 
 	/**
-	 * Returns the URL to the default event image.
+	 * Returns the absolute URL to the default event image.
 	 *
 	 * @return string
 	 */
