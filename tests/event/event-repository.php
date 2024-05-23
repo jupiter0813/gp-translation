@@ -18,6 +18,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	private Stats_Factory $stats_factory;
 	private Attendee_Repository $attendee_repository;
 	private Event_Repository $repository;
+	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
@@ -27,6 +28,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$this->repository          = new Event_Repository( new Attendee_Repository() );
 
 		$this->set_normal_user_as_current();
+		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_get_event_returns_null_when_post_does_not_not_have_correct_type() {
@@ -48,9 +50,8 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_event() {
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$start    = $now->modify( '-1 hours' );
-		$end      = $now->modify( '+1 hours' );
+		$start    = $this->now->modify( '-1 hours' );
+		$end      = $this->now->modify( '+1 hours' );
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
 
 		$event_id = $this->event_factory->create_event( $start, $end, $timezone, array() );
@@ -99,8 +100,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_update_event() {
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id = $this->event_factory->create_active( $now );
+		$event_id = $this->event_factory->create_active( $this->now );
 		$event    = $this->repository->get_event( $event_id );
 
 		// phpcs:disable Squiz.PHP.DisallowMultipleAssignments.Found
@@ -123,8 +123,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_trash_event() {
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id = $this->event_factory->create_active( $now );
+		$event_id = $this->event_factory->create_active( $this->now );
 
 		$event = $this->repository->get_event( $event_id );
 		$this->repository->trash_event( $event );
@@ -135,14 +134,13 @@ class Event_Repository_Test extends GP_UnitTestCase {
 
 	public function test_delete_event() {
 		$user_id = get_current_user_id();
-		$now     = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		// The event to be deleted.
-		$event_id = $this->event_factory->create_active( $now, array( $user_id ) );
+		$event_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$this->stats_factory->create( $event_id, $user_id, 0, 'create' );
 
 		// An event that should not be deleted.
-		$another_event_id = $this->event_factory->create_active( $now, array( $user_id ) );
+		$another_event_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$this->stats_factory->create( $another_event_id, $user_id, 0, 'create' );
 
 		$event = $this->repository->get_event( $event_id );
@@ -161,12 +159,11 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_active_events() {
-		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event1_id = $this->event_factory->create_active( $now );
-		$event2_id = $this->event_factory->create_active( $now );
-		$this->event_factory->create_active( $now->modify( '+2 hours' ) );
-		$this->event_factory->create_inactive_future( $now );
-		$this->event_factory->create_inactive_past( $now );
+		$event1_id = $this->event_factory->create_active( $this->now );
+		$event2_id = $this->event_factory->create_active( $this->now );
+		$this->event_factory->create_active( $this->now->modify( '+2 hours' ) );
+		$this->event_factory->create_inactive_future( $this->now );
+		$this->event_factory->create_inactive_past( $this->now );
 
 		$events = $this->repository->get_current_events()->events;
 		$this->assertCount( 2, $events );
@@ -187,11 +184,10 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_upcoming_events() {
-		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event1_id = $this->event_factory->create_active( $now->modify( '+1 month' ) );
-		$event2_id = $this->event_factory->create_active( $now->modify( '+2 months' ) );
-		$this->event_factory->create_active( $now->modify( '-2 hours' ) );
-		$this->event_factory->create_inactive_past( $now );
+		$event1_id = $this->event_factory->create_active( $this->now->modify( '+1 month' ) );
+		$event2_id = $this->event_factory->create_active( $this->now->modify( '+2 months' ) );
+		$this->event_factory->create_active( $this->now->modify( '-2 hours' ) );
+		$this->event_factory->create_inactive_past( $this->now );
 
 		$events = $this->repository->get_upcoming_events()->events;
 		$this->assertCount( 2, $events );
@@ -200,11 +196,10 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_past_events() {
-		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event1_id = $this->event_factory->create_inactive_past( $now );
-		$event2_id = $this->event_factory->create_inactive_past( $now );
-		$this->event_factory->create_active( $now->modify( '+2 hours' ) );
-		$this->event_factory->create_inactive_future( $now );
+		$event1_id = $this->event_factory->create_inactive_past( $this->now );
+		$event2_id = $this->event_factory->create_inactive_past( $this->now );
+		$this->event_factory->create_active( $this->now->modify( '+2 hours' ) );
+		$this->event_factory->create_inactive_future( $this->now );
 
 		$events = $this->repository->get_past_events()->events;
 		$this->assertCount( 2, $events );
@@ -213,11 +208,10 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_trashed_events() {
-		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event1_id = $this->event_factory->create_active( $now );
-		$event2_id = $this->event_factory->create_inactive_past( $now );
-		$this->event_factory->create_active( $now );
-		$this->event_factory->create_inactive_future( $now );
+		$event1_id = $this->event_factory->create_active( $this->now );
+		$event2_id = $this->event_factory->create_inactive_past( $this->now );
+		$this->event_factory->create_active( $this->now );
+		$this->event_factory->create_inactive_future( $this->now );
 
 		$event1 = $this->repository->get_event( $event1_id );
 		$event2 = $this->repository->get_event( $event2_id );
@@ -233,10 +227,9 @@ class Event_Repository_Test extends GP_UnitTestCase {
 
 	public function test_get_events_for_user() {
 		$user_id   = $this->set_normal_user_as_current();
-		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event1_id = $this->event_factory->create_inactive_past( $now );
-		$event2_id = $this->event_factory->create_active( $now, array( $user_id ) );
-		$event3_id = $this->event_factory->create_inactive_future( $now, array( $user_id ) );
+		$event1_id = $this->event_factory->create_inactive_past( $this->now );
+		$event2_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
+		$event3_id = $this->event_factory->create_inactive_future( $this->now, array( $user_id ) );
 
 		$events = $this->repository->get_events_for_user( $user_id )->events;
 		$this->assertCount( 3, $events );
@@ -259,13 +252,12 @@ class Event_Repository_Test extends GP_UnitTestCase {
 
 	public function test_get_current_events_for_user() {
 		$user_id   = $this->set_normal_user_as_current();
-		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event1_id = $this->event_factory->create_active( $now, array( $user_id ) );
-		$event2_id = $this->event_factory->create_active( $now, array( $user_id ) );
-		$this->event_factory->create_inactive_future( $now, array( $user_id ) );
-		$this->event_factory->create_inactive_future( $now, array( $user_id ) );
-		$this->event_factory->create_active( $now );
-		$this->event_factory->create_inactive_past( $now, array( $user_id ) );
+		$event1_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
+		$event2_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
+		$this->event_factory->create_inactive_future( $this->now, array( $user_id ) );
+		$this->event_factory->create_inactive_future( $this->now, array( $user_id ) );
+		$this->event_factory->create_active( $this->now );
+		$this->event_factory->create_inactive_past( $this->now, array( $user_id ) );
 
 		$events = $this->repository->get_current_events_for_user( $user_id )->events;
 		$this->assertCount( 2, $events );
@@ -287,12 +279,11 @@ class Event_Repository_Test extends GP_UnitTestCase {
 
 	public function test_get_current_and_upcoming_events_for_user() {
 		$user_id   = $this->set_normal_user_as_current();
-		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event1_id = $this->event_factory->create_active( $now, array( $user_id ) );
-		$event2_id = $this->event_factory->create_active( $now, array( $user_id ) );
-		$event3_id = $this->event_factory->create_active( $now, array( $user_id ) );
-		$this->event_factory->create_active( $now );
-		$this->event_factory->create_inactive_past( $now, array( $user_id ) );
+		$event1_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
+		$event2_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
+		$event3_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
+		$this->event_factory->create_active( $this->now );
+		$this->event_factory->create_inactive_past( $this->now, array( $user_id ) );
 
 		$events = $this->repository->get_current_and_upcoming_events_for_user( $user_id )->events;
 		$this->assertCount( 3, $events );
@@ -314,15 +305,12 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_past_events_for_user() {
-		$user_id = $this->set_normal_user_as_current();
-		$now     = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$user_id   = $this->set_normal_user_as_current();
+		$event1_id = $this->event_factory->create_inactive_past( $this->now, array( $user_id ) );
+		$event2_id = $this->event_factory->create_inactive_past( $this->now, array( $user_id ) );
 
-		$event1_id = $this->event_factory->create_inactive_past( $now, array( $user_id ) );
-		$event2_id = $this->event_factory->create_inactive_past( $now, array( $user_id ) );
-
-		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$this->event_factory->create_active( $now, array( $user_id ) );
-		$this->event_factory->create_active( $now->modify( '+1 minute' ), array( $user_id ) );
+		$this->event_factory->create_active( $this->now, array( $user_id ) );
+		$this->event_factory->create_active( $this->now->modify( '+1 minute' ), array( $user_id ) );
 
 		$events = $this->repository->get_past_events_for_user( $user_id )->events;
 		$this->assertCount( 2, $events );
@@ -344,16 +332,15 @@ class Event_Repository_Test extends GP_UnitTestCase {
 
 	public function test_get_events_created_by_user() {
 		$user_id   = $this->set_normal_user_as_current();
-		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event1_id = $this->event_factory->create_inactive_past( $now );
-		$event2_id = $this->event_factory->create_active( $now );
-		$event3_id = $this->event_factory->create_active( $now->modify( '+5 seconds' ) );
-		$event4_id = $this->event_factory->create_inactive_future( $now );
+		$event1_id = $this->event_factory->create_inactive_past( $this->now );
+		$event2_id = $this->event_factory->create_active( $this->now );
+		$event3_id = $this->event_factory->create_active( $this->now->modify( '+5 seconds' ) );
+		$event4_id = $this->event_factory->create_inactive_future( $this->now );
 
 		$this->set_admin_user_as_current();
-		$this->event_factory->create_inactive_past( $now );
-		$this->event_factory->create_active( $now );
-		$this->event_factory->create_inactive_future( $now );
+		$this->event_factory->create_inactive_past( $this->now );
+		$this->event_factory->create_active( $this->now );
+		$this->event_factory->create_inactive_future( $this->now );
 
 		$events = $this->repository->get_events_created_by_user( $user_id )->events;
 

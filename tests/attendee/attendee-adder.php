@@ -25,6 +25,7 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 	private Event_Factory $event_factory;
 	private Translation_Factory $translation_factory;
 	private Stats_Factory $stats_factory;
+	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
@@ -35,13 +36,13 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 		$this->translation_factory = new Translation_Factory( $this->factory );
 		$this->stats_factory       = new Stats_Factory();
 
+		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$this->set_normal_user_as_current();
 	}
 
 	public function test_add() {
 		$user_id  = get_current_user_id();
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id = $this->event_factory->create_active( $now );
+		$event_id = $this->event_factory->create_active( $this->now );
 		$event    = $this->event_repository->get_event( $event_id );
 		$attendee = new Attendee( $event_id, $user_id );
 
@@ -55,7 +56,6 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 
 	public function test_sets_is_new_contributor() {
 		$this->set_normal_user_as_current();
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$user1_id = 52;
 		$user2_id = 53;
 		$user3_id = 54;
@@ -70,7 +70,7 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 			$this->translation_factory->create( $user3_id );
 		}
 
-		$event1_id  = $this->event_factory->create_active( $now->modify( '+1 day' ) );
+		$event1_id  = $this->event_factory->create_active( $this->now->modify( '+1 day' ) );
 		$event1     = $this->event_repository->get_event( $event1_id );
 		$attendee11 = new Attendee( $event1_id, $user1_id );
 		$attendee12 = new Attendee( $event1_id, $user2_id );
@@ -83,7 +83,7 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 		$this->assertTrue( $attendee12->is_new_contributor() );
 		$this->assertFalse( $attendee13->is_new_contributor() );
 
-		$event2_id  = $this->event_factory->create_active( $now->modify( '-1 day' ) );
+		$event2_id  = $this->event_factory->create_active( $this->now->modify( '-1 day' ) );
 		$event2     = $this->event_repository->get_event( $event2_id );
 		$attendee21 = new Attendee( $event2_id, $user1_id );
 		$attendee22 = new Attendee( $event2_id, $user2_id );
@@ -99,12 +99,11 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 	public function test_import_stats_if_active_event() {
 		$this->set_normal_user_as_current();
 		$user_id = get_current_user_id();
-		$now     = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
 		// Create a translation before the event starts, which should not be imported.
-		$this->translation_factory->create( $user_id, new DateTimeImmutable( '1 day ago', new DateTimeZone( 'UTC' ) ) );
+		$this->translation_factory->create( $user_id, $this->now->modify( '1 day ago' ) );
 
-		$event_id = $this->event_factory->create_active( $now->modify( '-5 minutes' ) );
+		$event_id = $this->event_factory->create_active( $this->now->modify( '-5 minutes' ) );
 		$event    = $this->event_repository->get_event( $event_id );
 		$attendee = new Attendee( $event_id, $user_id );
 
@@ -147,8 +146,7 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 
 	public function test_does_not_import_stats_if_inactive_event() {
 		$user_id  = get_current_user_id();
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id = $this->event_factory->create_inactive_future( $now );
+		$event_id = $this->event_factory->create_inactive_future( $this->now );
 		$event    = $this->event_repository->get_event( $event_id );
 		$attendee = new Attendee( $event_id, $user_id );
 

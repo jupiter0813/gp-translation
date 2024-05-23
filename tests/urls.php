@@ -13,12 +13,15 @@ use Wporg\TranslationEvents\Urls;
 class Urls_Test extends GP_UnitTestCase {
 	private Event_Factory $event_factory;
 	private Event_Repository $event_repository;
+	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
 		$this->event_factory    = new Event_Factory();
 		$this->event_repository = new Event_Repository( new Attendee_Repository() );
+
 		$this->set_normal_user_as_current();
+		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_events_home() {
@@ -27,8 +30,7 @@ class Urls_Test extends GP_UnitTestCase {
 	}
 
 	public function test_event_details() {
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id = $this->event_factory->create_active( $now );
+		$event_id = $this->event_factory->create_active( $this->now );
 		$event    = $this->event_repository->get_event( $event_id );
 
 		$expected = "/glotpress/events/{$event->slug()}";
@@ -36,8 +38,7 @@ class Urls_Test extends GP_UnitTestCase {
 	}
 
 	public function test_event_details_draft() {
-		$now               = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id          = $this->event_factory->create_active( $now );
+		$event_id          = $this->event_factory->create_active( $this->now );
 		$post              = get_post( $event_id );
 		$post->post_status = 'draft';
 		wp_update_post( $post );
@@ -49,8 +50,7 @@ class Urls_Test extends GP_UnitTestCase {
 	}
 
 	public function test_event_details_absolute() {
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id = $this->event_factory->create_active( $now );
+		$event_id = $this->event_factory->create_active( $this->now );
 		$event    = $this->event_repository->get_event( $event_id );
 
 		$expected = site_url() . "/glotpress/events/{$event->slug()}";
@@ -58,8 +58,7 @@ class Urls_Test extends GP_UnitTestCase {
 	}
 
 	public function test_event_translations() {
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id = $this->event_factory->create_active( $now );
+		$event_id = $this->event_factory->create_active( $this->now );
 		$event    = $this->event_repository->get_event( $event_id );
 
 		$expected = "/glotpress/events/{$event->slug()}/translations/pt";
