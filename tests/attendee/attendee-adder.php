@@ -55,7 +55,6 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 	}
 
 	public function test_sets_is_new_contributor() {
-		$this->set_normal_user_as_current();
 		$user1_id = 52;
 		$user2_id = 53;
 		$user3_id = 54;
@@ -97,7 +96,6 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 	}
 
 	public function test_import_stats_if_active_event() {
-		$this->set_normal_user_as_current();
 		$user_id = get_current_user_id();
 
 		// Create a translation before the event starts, which should not be imported.

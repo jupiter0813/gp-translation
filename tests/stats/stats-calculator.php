@@ -21,20 +21,18 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 		$this->stats_factory = new Stats_Factory();
 		$this->calculator    = new Stats_Calculator();
 
+		$this->set_normal_user_as_current();
 		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_tells_that_event_has_no_stats() {
-		$this->set_normal_user_as_current();
-		$user_id = wp_get_current_user()->ID;
-
+		$user_id  = get_current_user_id();
 		$event_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$this->assertFalse( $this->calculator->event_has_stats( $event_id ) );
 	}
 
 	public function test_tells_that_event_has_stats() {
-		$this->set_normal_user_as_current();
-		$user_id = wp_get_current_user()->ID;
+		$user_id = get_current_user_id();
 
 		$event_id        = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$translation_set = $this->factory->translation_set->create_with_project_and_locale();
@@ -45,7 +43,6 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 	}
 
 	public function test_calculates_stats_for_event() {
-		$this->set_normal_user_as_current();
 		$user1_id = 42;
 		$user2_id = 43;
 		$user3_id = 44;

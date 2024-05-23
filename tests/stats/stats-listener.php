@@ -22,13 +22,12 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$this->event_factory       = new Event_Factory();
 		$this->stats_factory       = new Stats_Factory();
 
+		$this->set_normal_user_as_current();
 		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_does_not_store_action_for_draft_events() {
-		$this->set_normal_user_as_current();
-		$user_id = wp_get_current_user()->ID;
-
+		$user_id = get_current_user_id();
 		$this->event_factory->create_draft( $this->now );
 		$this->event_factory->create_draft( $this->now );
 
@@ -40,8 +39,7 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 	}
 
 	public function test_does_not_store_action_for_inactive_events() {
-		$this->set_normal_user_as_current();
-		$user_id = wp_get_current_user()->ID;
+		$user_id = get_current_user_id();
 
 		$this->event_factory->create_inactive_past( $this->now, array( $user_id ) );
 		$this->event_factory->create_inactive_future( $this->now, array( $user_id ) );
@@ -54,8 +52,7 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 	}
 
 	public function test_does_not_store_action_if_user_not_attending() {
-		$this->set_normal_user_as_current();
-		$user_id = wp_get_current_user()->ID;
+		$user_id = get_current_user_id();
 
 		$this->event_factory->create_active( $this->now );
 		$this->event_factory->create_active( $this->now );
@@ -76,8 +73,7 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 	}
 
 	public function test_stores_action_create() {
-		$this->set_normal_user_as_current();
-		$user_id = wp_get_current_user()->ID;
+		$user_id = get_current_user_id();
 
 		$event1_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$event2_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
@@ -104,8 +100,7 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 	}
 
 	public function test_stores_action_approve() {
-		$this->set_normal_user_as_current();
-		$user_id = wp_get_current_user()->ID;
+		$user_id = get_current_user_id();
 
 		$event1_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$event2_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
@@ -138,8 +133,7 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 	}
 
 	public function test_stores_action_reject() {
-		$this->set_normal_user_as_current();
-		$user_id = wp_get_current_user()->ID;
+		$user_id = get_current_user_id();
 
 		$event1_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$event2_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
@@ -172,8 +166,7 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 	}
 
 	public function test_stores_action_request_changes() {
-		$this->set_normal_user_as_current();
-		$user_id = wp_get_current_user()->ID;
+		$user_id = get_current_user_id();
 
 		$event1_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$event2_id = $this->event_factory->create_active( $this->now, array( $user_id ) );

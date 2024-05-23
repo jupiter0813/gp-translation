@@ -226,7 +226,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_events_for_user() {
-		$user_id   = $this->set_normal_user_as_current();
+		$user_id   = get_current_user_id();
 		$event1_id = $this->event_factory->create_inactive_past( $this->now );
 		$event2_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$event3_id = $this->event_factory->create_inactive_future( $this->now, array( $user_id ) );
@@ -251,7 +251,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_current_events_for_user() {
-		$user_id   = $this->set_normal_user_as_current();
+		$user_id   = get_current_user_id();
 		$event1_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$event2_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$this->event_factory->create_inactive_future( $this->now, array( $user_id ) );
@@ -278,7 +278,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_current_and_upcoming_events_for_user() {
-		$user_id   = $this->set_normal_user_as_current();
+		$user_id   = get_current_user_id();
 		$event1_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$event2_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$event3_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
@@ -305,7 +305,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_past_events_for_user() {
-		$user_id   = $this->set_normal_user_as_current();
+		$user_id   = get_current_user_id();
 		$event1_id = $this->event_factory->create_inactive_past( $this->now, array( $user_id ) );
 		$event2_id = $this->event_factory->create_inactive_past( $this->now, array( $user_id ) );
 
@@ -331,7 +331,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_events_created_by_user() {
-		$user_id   = $this->set_normal_user_as_current();
+		$user_id   = get_current_user_id();
 		$event1_id = $this->event_factory->create_inactive_past( $this->now );
 		$event2_id = $this->event_factory->create_active( $this->now );
 		$event3_id = $this->event_factory->create_active( $this->now->modify( '+5 seconds' ) );
