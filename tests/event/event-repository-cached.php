@@ -41,11 +41,11 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 
 	public function test_get_current_events() {
 		$now       = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event1_id = $this->event_factory->create_active( array(), $now );
-		$event2_id = $this->event_factory->create_active( array(), $now );
-		$this->event_factory->create_active( array(), $now->modify( '+2 hours' ) );
-		$this->event_factory->create_inactive_future();
-		$this->event_factory->create_inactive_past();
+		$event1_id = $this->event_factory->create_active( $now );
+		$event2_id = $this->event_factory->create_active( $now );
+		$this->event_factory->create_active( $now->modify( '+2 hours' ) );
+		$this->event_factory->create_inactive_future( $now );
+		$this->event_factory->create_inactive_past( $now );
 
 		$result = $this->repository->get_current_events();
 		$events = $result->events;
@@ -84,7 +84,8 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 	}
 
 	public function test_invalidates_cache_when_events_are_updated() {
-		$event_id = $this->event_factory->create_active();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event_id = $this->event_factory->create_active( $now );
 		$event    = $this->repository->get_event( $event_id );
 
 		wp_cache_set( 'translation-events-active-events', 'foo' );
@@ -93,7 +94,8 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 	}
 
 	public function test_invalidates_cache_when_events_are_trashed() {
-		$event_id = $this->event_factory->create_active();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event_id = $this->event_factory->create_active( $now );
 		$event    = $this->repository->get_event( $event_id );
 
 		wp_cache_set( 'translation-events-active-events', 'foo' );
@@ -102,7 +104,8 @@ class Event_Repository_Cached_Test extends GP_UnitTestCase {
 	}
 
 	public function test_invalidates_cache_when_events_are_deleted() {
-		$event_id = $this->event_factory->create_active();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event_id = $this->event_factory->create_active( $now );
 		$event    = $this->repository->get_event( $event_id );
 
 		wp_cache_set( 'translation-events-active-events', 'foo' );

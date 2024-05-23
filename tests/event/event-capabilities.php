@@ -2,6 +2,8 @@
 
 namespace Wporg\Tests\Event;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use GP_UnitTestCase;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
@@ -59,8 +61,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 
 	public function test_cannot_view_non_published_events() {
 		$this->set_normal_user_as_current();
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $now );
 		$event    = $this->event_repository->get_event( $event_id );
 		$event->set_status( 'draft' );
 		$this->event_repository->update_event( $event );
@@ -70,8 +73,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 
 	public function test_gp_admin_can_view_non_published_events() {
 		$this->set_normal_user_as_current();
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $now );
 		$event    = $this->event_repository->get_event( $event_id );
 		$event->set_status( 'draft' );
 		$this->event_repository->update_event( $event );
@@ -83,16 +87,17 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 
 	public function test_event_id_as_string() {
 		$this->set_normal_user_as_current();
-
-		$event_id = $this->event_factory->create_active();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event_id = $this->event_factory->create_active( $now );
 
 		$this->assertTrue( current_user_can( 'edit_translation_event', (string) $event_id ) );
 	}
 
 	public function test_author_can_edit() {
 		$this->set_normal_user_as_current();
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $now );
 
 		$this->assertTrue( current_user_can( 'edit_translation_event', $event_id ) );
 	}
@@ -101,8 +106,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 		$non_author_user_id = get_current_user_id();
 		$this->set_normal_user_as_current(); // This user is the author.
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $now );
 
 		$this->assertFalse( user_can( $non_author_user_id, 'edit_translation_event', $event_id ) );
 	}
@@ -111,8 +117,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 		$non_author_user_id = get_current_user_id();
 		$this->set_normal_user_as_current(); // This user is the author.
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $now );
 
 		$attendee = new Attendee( $event_id, $non_author_user_id, true );
 		$this->attendee_repository->insert_attendee( $attendee );
@@ -124,8 +131,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 		$non_author_user_id = get_current_user_id();
 		$this->set_normal_user_as_current(); // This user is the author.
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $now );
 		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
 
 		$this->assertTrue( user_can( $non_author_user_id, 'edit_translation_event', $event_id ) );
@@ -133,8 +141,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 
 	public function test_cannot_edit_past_event() {
 		$this->set_normal_user_as_current();
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		$event_id = $this->event_factory->create_inactive_past();
+		$event_id = $this->event_factory->create_inactive_past( $now );
 
 		$this->assertFalse( current_user_can( 'edit_translation_event', $event_id ) );
 	}
@@ -142,8 +151,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 	public function test_cannot_edit_event_with_stats() {
 		$this->set_normal_user_as_current();
 		$author_user_id = get_current_user_id();
+		$now            = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		$event_id        = $this->event_factory->create_active();
+		$event_id        = $this->event_factory->create_active( $now );
 		$translation_set = $this->factory->translation_set->create_with_project_and_locale();
 		$original        = $this->factory->original->create( array( 'project_id' => $translation_set->project_id ) );
 		$this->factory->translation->create(
@@ -160,8 +170,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 	public function test_cannot_trash_event_with_stats() {
 		$this->set_normal_user_as_current();
 		$author_user_id = get_current_user_id();
+		$now            = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		$event_id        = $this->event_factory->create_active();
+		$event_id        = $this->event_factory->create_active( $now );
 		$translation_set = $this->factory->translation_set->create_with_project_and_locale();
 		$original        = $this->factory->original->create( array( 'project_id' => $translation_set->project_id ) );
 		$this->factory->translation->create(
@@ -178,8 +189,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 	public function test_admin_can_trash_event_with_stats() {
 		$this->set_admin_user_as_current();
 		$author_user_id = get_current_user_id();
+		$now            = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		$event_id        = $this->event_factory->create_active();
+		$event_id        = $this->event_factory->create_active( $now );
 		$translation_set = $this->factory->translation_set->create_with_project_and_locale();
 		$original        = $this->factory->original->create( array( 'project_id' => $translation_set->project_id ) );
 		$this->factory->translation->create(
@@ -195,7 +207,8 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 
 	public function test_author_can_trash() {
 		$this->set_normal_user_as_current();
-		$event_id = $this->event_factory->create_active();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event_id = $this->event_factory->create_active( $now );
 		$this->assertTrue( current_user_can( 'trash_translation_event', $event_id ) );
 	}
 
@@ -203,8 +216,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 		$non_author_user_id = get_current_user_id();
 		$this->set_normal_user_as_current(); // This user is the author.
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $now );
 		$this->assertFalse( user_can( $non_author_user_id, 'trash_translation_event', $event_id ) );
 	}
 
@@ -212,8 +226,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 		$non_author_user_id = get_current_user_id();
 		$this->set_normal_user_as_current(); // This user is the author.
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $now );
 
 		$attendee = new Attendee( $event_id, $non_author_user_id, true );
 		$this->attendee_repository->insert_attendee( $attendee );
@@ -223,14 +238,16 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 
 	public function test_gp_admin_can_trash() {
 		$this->set_normal_user_as_current();
-		$event_id = $this->event_factory->create_active();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event_id = $this->event_factory->create_active( $now );
 		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
 		$this->assertTrue( current_user_can( 'trash_translation_event', $event_id ) );
 	}
 
 	public function test_cannot_delete_if_not_trashed() {
 		$this->set_normal_user_as_current();
-		$event_id = $this->event_factory->create_active();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event_id = $this->event_factory->create_active( $now );
 
 		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
 		$this->assertFalse( current_user_can( 'delete_translation_event', $event_id ) );
@@ -238,7 +255,8 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 
 	public function test_non_gp_admin_cannot_delete() {
 		$this->set_normal_user_as_current();
-		$event_id = $this->event_factory->create_active();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event_id = $this->event_factory->create_active( $now );
 		$event    = $this->event_repository->get_event( $event_id );
 
 		$event->set_status( 'trash' );
@@ -250,7 +268,8 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 
 	public function test_gp_admin_can_delete() {
 		$this->set_normal_user_as_current();
-		$event_id = $this->event_factory->create_active();
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event_id = $this->event_factory->create_active( $now );
 		$event    = $this->event_repository->get_event( $event_id );
 
 		$event->set_status( 'trash' );
