@@ -2,7 +2,6 @@
 
 namespace Wporg\Tests;
 
-use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use GP_UnitTestCase;
@@ -71,42 +70,32 @@ class Urls_Test extends GP_UnitTestCase {
 	}
 
 	public function test_event_edit() {
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id = $this->event_factory->create_active( $now );
-
+		$event_id = 42;
 		$expected = "/glotpress/events/edit/$event_id";
 		$this->assertEquals( $expected, Urls::event_edit( $event_id ) );
 	}
 
 	public function test_event_trash() {
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id = $this->event_factory->create_active( $now );
-
+		$event_id = 42;
 		$expected = "/glotpress/events/trash/$event_id";
 		$this->assertEquals( $expected, Urls::event_trash( $event_id ) );
 	}
 
 	public function test_event_delete() {
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id = $this->event_factory->create_active( $now );
-
+		$event_id = 42;
 		$expected = "/glotpress/events/delete/$event_id";
 		$this->assertEquals( $expected, Urls::event_delete( $event_id ) );
 	}
 
 	public function test_event_toggle_attendee() {
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id = $this->event_factory->create_active( $now );
-
+		$event_id = 42;
 		$expected = "/glotpress/events/attend/$event_id";
 		$this->assertEquals( $expected, Urls::event_toggle_attendee( $event_id ) );
 	}
 
 	public function test_event_toggle_host() {
 		$user_id  = get_current_user_id();
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		$event_id = $this->event_factory->create_active( $now );
-
+		$event_id = 42;
 		$expected = "/glotpress/events/host/$event_id/$user_id";
 		$this->assertEquals( $expected, Urls::event_toggle_host( $event_id, $user_id ) );
 	}
