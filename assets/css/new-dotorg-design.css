@@ -1,3 +1,7 @@
+.wp-block-group.global-header {
+	background-color: rgb(30, 40, 45) !important;
+}
+
 header#masthead.site-header {
 	height: 60px;
 	gap: 80px;
