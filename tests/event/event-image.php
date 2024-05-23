@@ -20,6 +20,7 @@ class Event_Image_Test extends GP_UnitTestCase {
 		$html_description = 'This is a test description of the page.';
 		$image_url        = Urls::event_default_image();
 		$page_title       = 'Test Page Title';
+		ob_start();
 		Templates::header(
 			array(
 				'html_title'       => $html_title,
@@ -29,9 +30,6 @@ class Event_Image_Test extends GP_UnitTestCase {
 				'page_title'       => $page_title,
 			),
 		);
-
-		ob_start();
-		do_action( 'gp_head' );
 		$output = ob_get_clean();
 
 		$this->assertStringContainsString( '<meta name="twitter:card" content="summary" />', $output );
