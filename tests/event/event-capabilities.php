@@ -112,7 +112,7 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 	public function test_can_edit_past_event() {
 		$this->set_normal_user_as_current();
 
-		$event_id = $this->event_factory->create_inactive_past();
+		$event_id = $this->event_factory->create_inactive_past( $this->now );
 
 		$this->assertTrue( current_user_can( 'edit_translation_event', $event_id ) );
 	}
@@ -121,7 +121,7 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 		$author_user_id = get_current_user_id();
 
-		$event_id        = $this->event_factory->create_active();
+		$event_id        = $this->event_factory->create_active( $this->now );
 		$translation_set = $this->factory->translation_set->create_with_project_and_locale();
 		$original        = $this->factory->original->create( array( 'project_id' => $translation_set->project_id ) );
 		$this->factory->translation->create(
@@ -231,7 +231,7 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 	public function test_editable_fields_before_event_start() {
 		$this->set_normal_user_as_current();
 
-		$event_id = $this->event_factory->create_inactive_future();
+		$event_id = $this->event_factory->create_inactive_future( $this->now );
 
 		$this->assertTrue( current_user_can( 'edit_translation_event_title', $event_id ) );
 		$this->assertTrue( current_user_can( 'edit_translation_event_description', $event_id ) );
@@ -243,7 +243,7 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 	public function test_editable_fields_after_event_start_no_stats() {
 		$this->set_normal_user_as_current();
 
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $this->now );
 
 		$this->assertTrue( current_user_can( 'edit_translation_event_title', $event_id ) );
 		$this->assertTrue( current_user_can( 'edit_translation_event_description', $event_id ) );
@@ -256,7 +256,7 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 		$author_user_id = get_current_user_id();
 
-		$event_id        = $this->event_factory->create_active();
+		$event_id        = $this->event_factory->create_active( $this->now );
 		$translation_set = $this->factory->translation_set->create_with_project_and_locale();
 		$original        = $this->factory->original->create( array( 'project_id' => $translation_set->project_id ) );
 		$this->factory->translation->create(
