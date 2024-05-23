@@ -57,7 +57,7 @@ class Urls {
 	 * @return string
 	 */
 	public static function event_image( int $event_id ): string {
-		return trailingslashit( gp_url_public_root() ) . "events/image/$event_id";
+		return home_url( gp_url( "events/image/$event_id" ) );
 	}
 
 	/**
