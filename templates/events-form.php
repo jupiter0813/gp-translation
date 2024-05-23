@@ -46,7 +46,7 @@ Templates::header(
 	</div>
 	<div>
 		<label for="event-description"><?php esc_html_e( 'Event Description', 'gp-translation-events' ); ?></label>
-		<textarea id="event-description" name="event_description" rows="4" cols="40" required <?php echo esc_html( $is_create_form || current_user_can( 'edit_translation_event_description', $event->id() ) ?: 'readonly' ); ?> ><?php echo esc_html( $event->description() ); ?></textarea>
+		<textarea id="event-description" name="event_description" rows="4" cols="40" required <?php echo esc_html( $is_create_form || current_user_can( 'edit_translation_event_description', $event->id() ) ?: 'readonly' ); ?>><?php echo esc_html( $event->description() ); ?></textarea>
 		<?php
 		echo wp_kses(
 			Event_Text_Snippet::get_snippet_links(),
