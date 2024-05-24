@@ -255,8 +255,11 @@ class Translation_Events {
 
 	public function register_translation_event_js() {
 		wp_register_style( 'translation-events-css', plugins_url( 'assets/css/translation-events.css', __FILE__ ), array( 'dashicons' ), filemtime( __DIR__ . '/assets/css/translation-events.css' ) );
-		wp_register_style( 'new-dotorg-design-css', plugins_url( 'assets/css/new-dotorg-design.css', __FILE__ ), array( 'dashicons' ), filemtime( __DIR__ . '/assets/css/new-dotorg-design.css' ) );
-		gp_enqueue_styles( array( 'translation-events-css', 'new-dotorg-design-css' ) );
+		gp_enqueue_styles( 'translation-events-css' );
+		if ( $this->is_dot_org_or_dev_tld() ) {
+			wp_register_style( 'new-dotorg-design-css', plugins_url( 'assets/css/new-dotorg-design.css', __FILE__ ), array( 'dashicons' ), filemtime( __DIR__ . '/assets/css/new-dotorg-design.css' ) );
+			gp_enqueue_styles( 'new-dotorg-design-css' );
+		}
 		wp_register_script( 'translation-events-js', plugins_url( 'assets/js/translation-events.js', __FILE__ ), array( 'jquery', 'gp-common' ), filemtime( __DIR__ . '/assets/js/translation-events.js' ), false );
 		gp_enqueue_script( 'translation-events-js' );
 		wp_localize_script(
@@ -428,6 +431,26 @@ class Translation_Events {
 			return $slug;
 		}
 		return $override_slug;
+	}
+
+	/**
+	 * Check if the current site is a translate.wordpress.org or a development TLD.
+	 *
+	 * @return bool
+	 */
+	private function is_dot_org_or_dev_tld(): bool {
+		// Allowed TLDs for development and testing.
+		$allowed_tlds = array( 'test', 'example', 'invalid', 'localhost' );
+		$site_url     = get_site_url();
+		$parsed_url   = wp_parse_url( $site_url );
+		$host         = $parsed_url['host'];
+
+		$domain_parts = explode( '.', $host );
+		$tld          = end( $domain_parts );
+		if ( 'translate.wordpress.org' === $host || in_array( $tld, $allowed_tlds, true ) ) {
+			return true;
+		}
+		return false;
 	}
 }
 Translation_Events::get_instance();
