@@ -2,6 +2,8 @@
 
 namespace Wporg\Tests\Stats;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use GP_UnitTestCase;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Tests\Event_Factory;
@@ -11,29 +13,28 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 	private Event_Factory $event_factory;
 	private Stats_Factory $stats_factory;
 	private Stats_Calculator $calculator;
+	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
 		$this->event_factory = new Event_Factory();
 		$this->stats_factory = new Stats_Factory();
 		$this->calculator    = new Stats_Calculator();
+
+		$this->set_normal_user_as_current();
+		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_tells_that_event_has_no_stats() {
-		$this->set_normal_user_as_current();
-		$user_id = wp_get_current_user()->ID;
-
-		$event_id = $this->event_factory->create_active( array( $user_id ) );
-		$event    = get_post( $event_id );
-
+		$user_id  = get_current_user_id();
+		$event_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$this->assertFalse( $this->calculator->event_has_stats( $event_id ) );
 	}
 
 	public function test_tells_that_event_has_stats() {
-		$this->set_normal_user_as_current();
-		$user_id = wp_get_current_user()->ID;
+		$user_id = get_current_user_id();
 
-		$event_id        = $this->event_factory->create_active( array( $user_id ) );
+		$event_id        = $this->event_factory->create_active( $this->now, array( $user_id ) );
 		$translation_set = $this->factory->translation_set->create_with_project_and_locale();
 		$original        = $this->create_original_and_translation( $translation_set );
 		$this->stats_factory->create( $event_id, $user_id, $original->id, 'create', $translation_set->locale );
@@ -42,13 +43,12 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 	}
 
 	public function test_calculates_stats_for_event() {
-		$this->set_normal_user_as_current();
 		$user1_id = 42;
 		$user2_id = 43;
 		$user3_id = 44;
 
-		$event1_id = $this->event_factory->create_active( array( $user1_id ) );
-		$event2_id = $this->event_factory->create_active( array( $user1_id ) );
+		$event1_id = $this->event_factory->create_active( $this->now, array( $user1_id ) );
+		$event2_id = $this->event_factory->create_active( $this->now, array( $user1_id ) );
 
 		// For event1, aa locale, multiple users.
 		$translation_set_1 = $this->factory->translation_set->create_with_project_and_locale();
