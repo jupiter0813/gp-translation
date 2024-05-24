@@ -439,19 +439,9 @@ class Translation_Events {
 	 *
 	 * @return bool
 	 */
-	private function is_dot_org_or_dev_tld(): bool {
-		// Allowed TLDs for development and testing.
-		$allowed_tlds = array( 'test', 'example', 'invalid', 'localhost' );
-		$site_url     = get_site_url();
-		$parsed_url   = wp_parse_url( $site_url );
-		$host         = $parsed_url['host'];
-
-		$domain_parts = explode( '.', $host );
-		$tld          = end( $domain_parts );
-		if ( 'translate.wordpress.org' === $host || in_array( $tld, $allowed_tlds, true ) ) {
-			return true;
-		}
-		return false;
+	private function should_load_new_design(): bool {
+		return 'translate.wordpress.org' === $host || (defined( 'TRANSLATION_EVENTS_NEW_DESIGN' ) && TRANSLATION_EVENTS_NEW_DESIGN );
 	}
+	
 }
 Translation_Events::get_instance();
