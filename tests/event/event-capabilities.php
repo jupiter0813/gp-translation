@@ -109,13 +109,18 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->assertTrue( user_can( $non_author_user_id, 'edit_translation_event', $event_id ) );
 	}
 
-	public function test_cannot_edit_past_event() {
+	public function test_can_edit_past_event() {
+		$this->set_normal_user_as_current();
+
 		$event_id = $this->event_factory->create_inactive_past( $this->now );
-		$this->assertFalse( current_user_can( 'edit_translation_event', $event_id ) );
+
+		$this->assertTrue( current_user_can( 'edit_translation_event', $event_id ) );
 	}
 
-	public function test_cannot_edit_event_with_stats() {
-		$author_user_id  = get_current_user_id();
+	public function test_can_edit_event_with_stats() {
+		$this->set_normal_user_as_current();
+		$author_user_id = get_current_user_id();
+
 		$event_id        = $this->event_factory->create_active( $this->now );
 		$translation_set = $this->factory->translation_set->create_with_project_and_locale();
 		$original        = $this->factory->original->create( array( 'project_id' => $translation_set->project_id ) );
@@ -127,7 +132,7 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 			)
 		);
 		$this->stats_factory->create( $event_id, $author_user_id, $original->id, 'create', $translation_set->locale );
-		$this->assertFalse( current_user_can( 'edit_translation_event', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event', $event_id ) );
 	}
 
 	public function test_cannot_trash_event_with_stats() {
@@ -221,5 +226,90 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 
 		add_filter( 'gp_translation_events_can_crud_event', '__return_true' );
 		$this->assertTrue( current_user_can( 'delete_translation_event', $event_id ) );
+	}
+
+	public function test_editable_fields_before_event_start() {
+		$this->set_normal_user_as_current();
+
+		$event_id = $this->event_factory->create_inactive_future( $this->now );
+
+		$this->assertTrue( current_user_can( 'edit_translation_event_title', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_description', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_start', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_end', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_timezone', $event_id ) );
+	}
+
+	public function test_editable_fields_after_event_start_no_stats() {
+		$this->set_normal_user_as_current();
+
+		$event_id = $this->event_factory->create_active( $this->now );
+
+		$this->assertTrue( current_user_can( 'edit_translation_event_title', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_description', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_start', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_end', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_timezone', $event_id ) );
+	}
+
+	public function test_editable_fields_after_event_start_with_stats() {
+		$this->set_normal_user_as_current();
+		$author_user_id = get_current_user_id();
+
+		$event_id        = $this->event_factory->create_active( $this->now );
+		$translation_set = $this->factory->translation_set->create_with_project_and_locale();
+		$original        = $this->factory->original->create( array( 'project_id' => $translation_set->project_id ) );
+		$this->factory->translation->create(
+			array(
+				'original_id'        => $original->id,
+				'translation_set_id' => $translation_set->id,
+				'status'             => 'current',
+			)
+		);
+		$this->stats_factory->create( $event_id, $author_user_id, $original->id, 'create', $translation_set->locale );
+
+		$this->assertTrue( current_user_can( 'edit_translation_event_title', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_description', $event_id ) );
+		$this->assertFalse( current_user_can( 'edit_translation_event_start', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_end', $event_id ) );
+		$this->assertFalse( current_user_can( 'edit_translation_event_timezone', $event_id ) );
+	}
+
+	public function test_editable_fields_within_one_hour_after_event_ends() {
+		$this->set_normal_user_as_current();
+
+		$timezone = new DateTimeZone( 'Europe/Lisbon' );
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event_id = $this->event_factory->create_event(
+			$now->modify( '-2 hours' ),
+			$now->modify( '-59 minutes' ),
+			$timezone,
+			array(),
+		);
+
+		$this->assertTrue( current_user_can( 'edit_translation_event_title', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_description', $event_id ) );
+		$this->assertFalse( current_user_can( 'edit_translation_event_start', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_end', $event_id ) );
+		$this->assertFalse( current_user_can( 'edit_translation_event_timezone', $event_id ) );
+	}
+
+	public function test_editable_fields_more_than_one_hour_after_event_ends() {
+		$this->set_normal_user_as_current();
+
+		$timezone = new DateTimeZone( 'Europe/Lisbon' );
+		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$event_id = $this->event_factory->create_event(
+			$now->modify( '-3 hours' ),
+			$now->modify( '-1 hours  -1 minutes' ),
+			$timezone,
+			array(),
+		);
+
+		$this->assertFalse( current_user_can( 'edit_translation_event_title', $event_id ) );
+		$this->assertTrue( current_user_can( 'edit_translation_event_description', $event_id ) );
+		$this->assertFalse( current_user_can( 'edit_translation_event_start', $event_id ) );
+		$this->assertFalse( current_user_can( 'edit_translation_event_end', $event_id ) );
+		$this->assertFalse( current_user_can( 'edit_translation_event_timezone', $event_id ) );
 	}
 }

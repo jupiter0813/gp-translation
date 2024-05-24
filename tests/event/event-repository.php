@@ -104,7 +104,8 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$event    = $this->repository->get_event( $event_id );
 
 		// phpcs:disable Squiz.PHP.DisallowMultipleAssignments.Found
-		$event->set_times( $updated_start = ( new Event_Start_Date( 'now' ) )->modify( '+1 days' ), $updated_end = ( new Event_End_Date( 'now' ) )->modify( '+2 days' ) );
+		$event->set_start( $updated_start = ( new Event_Start_Date( 'now' ) )->modify( '+1 days' ) );
+		$event->set_end( $updated_end = ( new Event_End_Date( 'now' ) )->modify( '+2 days' ) );
 		$event->set_timezone( $updated_timezone = new DateTimeZone( 'Europe/Madrid' ) );
 		$event->set_status( $updated_status = 'draft' );
 		$event->set_title( $updated_title = 'Updated title' );
