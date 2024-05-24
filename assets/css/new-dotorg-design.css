@@ -1,3 +1,6 @@
+/* This style is copied from
+https://github.com/WordPress/wporg-mu-plugins/blob/4ab57d37d930c8b8526458fc510568d0fb0050f8/mu-plugins/blocks/global-header-footer/postcss/_common.pcss
+ */
 body {
 	--wp--preset--color--charcoal-2: #23282d;
 	--wp-global-header--background-color: var(--wp--preset--color--charcoal-2);
