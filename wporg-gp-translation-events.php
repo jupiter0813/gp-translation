@@ -440,9 +440,7 @@ class Translation_Events {
 	 * @return bool
 	 */
 	private function should_load_new_design(): bool {
-		$site_url   = get_site_url();
-		$parsed_url = wp_parse_url( $site_url );
-		$host       = $parsed_url['host'];
+		$host = wp_parse_url( get_site_url(), PHP_URL_HOST );
 		return 'translate.wordpress.org' === $host || ( defined( 'TRANSLATION_EVENTS_NEW_DESIGN' ) && TRANSLATION_EVENTS_NEW_DESIGN );
 	}
 }
