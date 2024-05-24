@@ -120,7 +120,7 @@ class Urls_Test extends GP_UnitTestCase {
 	}
 
 	public function test_event_image() {
-		$event_id = $this->event_factory->create_active();
+		$event_id = $this->event_factory->create_active( $this->now );
 		$expected = trailingslashit( gp_url_public_root() ) . "events/image/$event_id";
 		$this->assertEquals( $expected, Urls::event_image( $event_id ) );
 	}
