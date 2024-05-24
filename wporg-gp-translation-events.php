@@ -257,7 +257,7 @@ class Translation_Events {
 	public function register_translation_event_js() {
 		wp_register_style( 'translation-events-css', plugins_url( 'assets/css/translation-events.css', __FILE__ ), array( 'dashicons' ), filemtime( __DIR__ . '/assets/css/translation-events.css' ) );
 		gp_enqueue_styles( 'translation-events-css' );
-		if ( $this->is_dot_org_or_dev_tld() ) {
+		if ( $this->should_load_new_design() ) {
 			wp_register_style( 'new-dotorg-design-css', plugins_url( 'assets/css/new-dotorg-design.css', __FILE__ ), array( 'dashicons' ), filemtime( __DIR__ . '/assets/css/new-dotorg-design.css' ) );
 			gp_enqueue_styles( 'new-dotorg-design-css' );
 		}
