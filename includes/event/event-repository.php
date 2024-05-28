@@ -586,10 +586,20 @@ function add_user_id_where_clause_to_events_query( string $where, WP_Query $quer
 	$posts_table     = "{$wpdb->prefix}posts";
 	$attendees_table = "{$gp_table_prefix}event_attendees";
 
-	$where_creator = '1 = 0';
+	$posts_where = array();
 	if ( $include_created_by_user ) {
-		$where_creator = "$posts_table.post_author = $user_id";
+		$posts_where[] = "$posts_table.post_author = $user_id";
 	}
 
-	return $where . " and ( $where_creator or exists( select * from $attendees_table where event_id = $posts_table.ID and user_id = $user_id ) )";
+	$event_ids = $wpdb->get_col( $wpdb->prepare( "SELECT event_id FROM $attendees_table WHERE user_id = %d", $user_id ) );
+
+	if ( ! empty( $event_ids ) ) {
+		$posts_where[] = "$posts_table.ID IN ( " . implode( ', ', array_map( 'intval', $event_ids ) ) . ' )';
+	}
+	if ( empty( $posts_where ) ) {
+		// If there are no events for this user, we want to return an empty result set.
+		return $where . ' AND 0 = 1';
+	}
+
+	return $where . ' AND ( ' . implode( ' OR ', $posts_where ) . ' )';
 }
