@@ -22,7 +22,7 @@ $show_end                        = $show_end ?? false;
 $show_excerpt                    = $show_excerpt ?? true;
 $date_format                     = $date_format ?? '';
 $relative_time                   = $relative_time ?? true;
-$allow_permanent_delete          = $allow_permanent_delete ?? false;
+$show_permanent_delete           = $show_permanent_delete ?? false;
 $extra_classes                   = isset( $extra_classes ) ? implode( $extra_classes, ' ' ) : '';
 $current_user_attendee_per_event = $current_user_attendee_per_event ?? array();
 
@@ -94,7 +94,7 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 					</a>
 				<?php endif; ?>
 			<?php endif; ?>
-			<?php if ( $allow_permanent_delete && current_user_can( 'delete_translation_event', $event->id() ) ) : ?>
+			<?php if ( $show_permanent_delete && current_user_can( 'delete_translation_event', $event->id() ) ) : ?>
 				<a href="<?php echo esc_url( Urls::event_delete( $event->id() ) ); ?>"
 					class="button is-small is-destructive"
 					title="<?php echo esc_attr__( 'Delete permanently', 'gp-translation-events' ); ?>">
