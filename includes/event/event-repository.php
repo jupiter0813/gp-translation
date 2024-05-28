@@ -591,7 +591,13 @@ function add_user_id_where_clause_to_events_query( string $where, WP_Query $quer
 		$posts_where[] = "$posts_table.post_author = $user_id";
 	}
 
-	$event_ids = $wpdb->get_col( $wpdb->prepare( "SELECT event_id FROM $attendees_table WHERE user_id = %d", $user_id ) );
+	$event_ids = wp_cache_get( 'events_for_user_' . $user_id );
+	if ( false === $event_ids ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$event_ids = $wpdb->get_col( $wpdb->prepare( "SELECT event_id FROM $attendees_table WHERE user_id = %d", $user_id ) );
+		wp_cache_set( 'events_for_user_' . $user_id, $event_ids );
+	}
 
 	if ( ! empty( $event_ids ) ) {
 		$posts_where[] = "$posts_table.ID IN ( " . implode( ', ', array_map( 'intval', $event_ids ) ) . ' )';
