@@ -25,6 +25,8 @@ class Attendee_Repository {
 			),
 		);
 		// phpcs:enable
+
+		wp_cache_delete( 'events_for_user_' . $attendee->user_id() );
 	}
 
 	/**
@@ -81,6 +83,7 @@ class Attendee_Repository {
 		);
 
 		// phpcs:enable
+		wp_cache_delete( 'events_for_user_' . $user_id );
 	}
 
 	/**

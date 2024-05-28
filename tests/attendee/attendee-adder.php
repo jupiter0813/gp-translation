@@ -142,6 +142,30 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 		$this->assertEquals( $translation2->date_added, $stats1['happened_at'] );
 	}
 
+	public function test_stats_for_inactive_then_active_event() {
+		$user_id = get_current_user_id();
+
+		$event_id = $this->event_factory->create_active( $this->now->modify( '-5 minutes' ) );
+		$event    = $this->event_repository->get_event( $event_id );
+		$attendee = new Attendee( $event_id, $user_id );
+
+		$this->assertEquals( 0, $this->stats_factory->get_count() );
+
+		$this->translation_factory->create( $user_id );
+		// Should not be counted as the user is not an attendee.
+		$this->assertEquals( 0, $this->stats_factory->get_count() );
+
+		// We need the adder to talk to a real Attendee_Repository, so not using the mock here.
+		$adder = new Attendee_Adder( new Attendee_Repository() );
+		$adder->add_to_event( $event, $attendee );
+		// import stats.
+		$this->assertEquals( 1, $this->stats_factory->get_count() );
+
+		$this->translation_factory->create( $user_id );
+		// Now the next translation should be counted immediately.
+		$this->assertEquals( 2, $this->stats_factory->get_count() );
+	}
+
 	public function test_does_not_import_stats_if_inactive_event() {
 		$user_id  = get_current_user_id();
 		$event_id = $this->event_factory->create_inactive_future( $this->now );
