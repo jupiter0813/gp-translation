@@ -155,6 +155,7 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 		// Should not be counted as the user is not an attendee.
 		$this->assertEquals( 0, $this->stats_factory->get_count() );
 
+		// We need the adder to talk to a real Attendee_Repository, so not using the mock here.
 		$adder = new Attendee_Adder( new Attendee_Repository() );
 		$adder->add_to_event( $event, $attendee );
 		// import stats.
