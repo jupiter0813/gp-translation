@@ -89,7 +89,7 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 				<?php else : ?>
 					<a href="<?php echo esc_url( Urls::event_trash( $event->id() ) ); ?>"
 						class="event-list-item-button is-destructive"
-						title="<?php echo esc_attr__( 'Trash', 'gp-translation-events' ); ?>">
+						title="<?php echo esc_attr__( 'Move to trash', 'gp-translation-events' ); ?>">
 						<span class="dashicons dashicons-trash"></span>
 					</a>
 				<?php endif; ?>
