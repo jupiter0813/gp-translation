@@ -28,6 +28,7 @@ Templates::header(
 					'show_start'             => true,
 					'show_end'               => true,
 					'relative_time'          => false,
+					'show_permanent_delete'  => true,
 				),
 			);
 			?>
