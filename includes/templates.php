@@ -16,12 +16,12 @@ class Templates {
 
 		if ( self::$use_new_design ) {
 			wp_register_style(
-				'new-dotorg-design-css',
-				plugins_url( 'assets/css/new-dotorg-design.css', __DIR__ ),
+				'translation-events-new-design-css',
+				plugins_url( 'assets/css/new-design.css', __DIR__ ),
 				array( 'dashicons' ),
-				filemtime( __DIR__ . '/assets/css/new-dotorg-design.css' )
+				filemtime( __DIR__ . '/../assets/css/new-design.css' )
 			);
-			gp_enqueue_styles( 'new-dotorg-design-css' );
+			gp_enqueue_styles( 'translation-events-new-design-css' );
 		}
 	}
 
