@@ -34,7 +34,7 @@ class Templates {
 		gp_tmpl_load( $template, $data, $template_path );
 	}
 
-	public static function header( array $data ) {
+	public static function header( array $data = array() ) {
 		self::part( 'header', $data );
 	}
 
