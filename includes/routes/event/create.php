@@ -37,10 +37,9 @@ class Create_Route extends Route {
 		);
 
 		$this->tmpl(
-			'events-form',
+			'event-create',
 			array(
-				'is_create_form' => true,
-				'event'          => $event,
+				'event' => $event,
 			),
 		);
 	}

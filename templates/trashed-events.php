@@ -20,7 +20,7 @@ Templates::header(
 			<?php esc_html_e( 'No deleted events found.', 'gp-translation-events' ); ?>
 		<?php else : ?>
 			<?php
-			Templates::partial(
+			Templates::part(
 				'event-list',
 				array(
 					'query'                  => $trashed_events_query,

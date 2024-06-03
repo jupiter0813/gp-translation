@@ -31,7 +31,7 @@ if ( ! empty( $current_events_query->events ) ) :
 	?>
 	<h2><?php esc_html_e( 'Current events', 'gp-translation-events' ); ?></h2>
 	<?php
-	Templates::partial(
+	Templates::part(
 		'event-list',
 		array(
 			'query'                  => $current_events_query,
@@ -45,7 +45,7 @@ if ( ! empty( $upcoming_events_query->events ) ) :
 	?>
 	<h2><?php esc_html_e( 'Upcoming events', 'gp-translation-events' ); ?></h2>
 	<?php
-	Templates::partial(
+	Templates::part(
 		'event-list',
 		array(
 			'query'                  => $upcoming_events_query,
@@ -59,7 +59,7 @@ if ( ! empty( $past_events_query->events ) ) :
 	?>
 	<h2><?php esc_html_e( 'Past events', 'gp-translation-events' ); ?></h2>
 	<?php
-	Templates::partial(
+	Templates::part(
 		'event-list',
 		array(
 			'query'                  => $past_events_query,
@@ -78,7 +78,7 @@ endif;
 			<p>You don't have any events to attend.</p>
 		<?php else : ?>
 			<?php
-			Templates::partial(
+			Templates::part(
 				'event-list',
 				array(
 					'query'                  => $user_attending_events_query,

@@ -51,7 +51,7 @@ class My_Events_Route extends Route {
 		$current_user_attendee_per_event = $this->attendee_repository->get_attendees_for_events_for_user( $event_ids, $user_id );
 
 		$this->tmpl(
-			'events-my-events',
+			'my-events',
 			compact(
 				'events',
 				'current_user_attendee_per_event'

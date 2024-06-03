@@ -1,8 +1,8 @@
 <?php
-namespace Wporg\TranslationEvents\Templates\Partials;
+namespace Wporg\TranslationEvents\Templates\Parts;
 
+use Wporg\TranslationEvents\Templates;
 use Wporg\TranslationEvents\Urls;
-use function Wporg\TranslationEvents\Templates\gp_breadcrumb_translation_events;
 
 /** @var string $html_title */
 /** @var string|callable $page_title */
@@ -41,7 +41,7 @@ add_action(
 	}
 );
 gp_title( $html_title );
-gp_breadcrumb_translation_events( $breadcrumbs ?? array() );
+Templates::part( 'breadcrumbs', array( 'extra_items' => $breadcrumbs ?? array() ) );
 gp_tmpl_header();
 ?>
 
