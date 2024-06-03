@@ -1,8 +1,9 @@
 <?php
-namespace Wporg\TranslationEvents\Templates;
+namespace Wporg\TranslationEvents\Templates\Translations;
 
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Urls;
+use function Wporg\TranslationEvents\Templates\gp_breadcrumb_translation_events;
 
 /** @var Event  $event */
 
