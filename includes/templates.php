@@ -20,7 +20,12 @@ class Templates {
 	}
 
 	public static function render( string $template, array $data = array() ) {
-		gp_tmpl_load( $template, $data, __DIR__ . '/../templates/' );
+		$template_path = __DIR__ . '/../templates/';
+		if ( self::$use_new_design ) {
+			$template_path = $template_path . 'new-design/';
+		}
+
+		gp_tmpl_load( $template, $data, $template_path );
 	}
 
 	public static function header( array $data ) {
