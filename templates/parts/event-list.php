@@ -1,5 +1,5 @@
 <?php
-namespace Wporg\TranslationEvents\Templates\Partials;
+namespace Wporg\TranslationEvents\Templates\Parts;
 
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Event\Event_End_Date;

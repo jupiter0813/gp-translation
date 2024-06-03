@@ -1,5 +1,5 @@
 <?php
-namespace Wporg\TranslationEvents\Templates\Partials;
+namespace Wporg\TranslationEvents\Templates\Parts;
 
 use Wporg\TranslationEvents\Urls;
 use function Wporg\TranslationEvents\Templates\gp_breadcrumb_translation_events;
