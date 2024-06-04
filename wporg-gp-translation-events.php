@@ -439,7 +439,7 @@ class Translation_Events {
 	 *
 	 * @return bool
 	 */
-	private function should_load_new_design(): bool {
+	public function should_load_new_design(): bool {
 		return defined( 'TRANSLATION_EVENTS_NEW_DESIGN' ) && TRANSLATION_EVENTS_NEW_DESIGN;
 	}
 }
