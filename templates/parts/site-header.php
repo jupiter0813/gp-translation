@@ -111,23 +111,49 @@ function add_css() {
 	echo $inline_css;
 }
 
-function add_social_tags( $html_title, $url, $html_description, $image_url ) {
-		echo '<meta name="twitter:card" content="summary" />' . "\n";
-		echo '<meta name="twitter:site" content="@WordPress" />' . "\n";
-		echo '<meta name="twitter:title" content="' . esc_attr( $html_title ) . '" />' . "\n";
-		echo '<meta name="twitter:description" content="' . esc_attr( $html_description ) . '" />' . "\n";
-		echo '<meta name="twitter:creator" content="@WordPress" />' . "\n";
-		echo '<meta name="twitter:image" content="' . esc_url( $image_url ) . '" />' . "\n";
-		echo '<meta name="twitter:image:alt" content="' . esc_attr( $html_title ) . '" />' . "\n";
+/**
+ * Add social tags to the head of the page.
+ *
+ * @param string $html_title       The title of the page.
+ * @param string $url              The URL of the page.
+ * @param string $html_description The description of the page.
+ * @param string $image_url        The URL of the image to use.
+ *
+ * @return void
+ */
+function add_social_tags( string $html_title, string $url, string $html_description, string $image_url ) {
+	$meta_tags = array(
+		'meta'     => array(
+			'name' => array(
+				'twitter:card'        => 'summary',
+				'twitter:site'        => '@WordPress',
+				'twitter:title'       => esc_attr( $html_title ),
+				'twitter:description' => esc_attr( $html_description ),
+				'twitter:creator'     => '@WordPress',
+				'twitter:image'       => esc_url( $image_url ),
+				'twitter:image:alt'   => esc_attr( $html_title ),
+			),
+		),
+		'property' => array(
+			'og:url'              => esc_url( $url ),
+			'og:title'            => esc_attr( $html_title ),
+			'og:description'      => esc_attr( $html_description ),
+			'og:site_name'        => esc_attr( get_bloginfo() ),
+			'og:image:url'        => esc_url( $image_url ),
+			'og:image:secure_url' => esc_url( $image_url ),
+			'og:image:type'       => 'image/png',
+			'og:image:width'      => '1200',
+			'og:image:height'     => '675',
+			'og:image:alt'        => esc_attr( $html_title ),
+		),
+	);
 
-		echo '<meta property="og:url" content="' . esc_url( $url ) . '" />' . "\n";
-		echo '<meta property="og:title" content="' . esc_attr( $html_title ) . '" />' . "\n";
-		echo '<meta property="og:description" content="' . esc_attr( $html_description ) . '" />' . "\n";
-		echo '<meta property="og:site_name" content="' . esc_attr( get_bloginfo() ) . '" />' . "\n";
-		echo '<meta property="og:image:url" content="' . esc_url( $image_url ) . '" />' . "\n";
-		echo '<meta property="og:image:secure_url" content="' . esc_url( $image_url ) . '" />' . "\n";
-		echo '<meta property="og:image:type" content="image/png" />' . "\n";
-		echo '<meta property="og:image:width" content="1200" />' . "\n";
-		echo '<meta property="og:image:height" content="675" />' . "\n";
-		echo '<meta property="og:image:alt" content="' . esc_attr( $html_title ) . '" />' . "\n";
+	foreach ( $meta_tags as $type => $tags ) {
+		foreach ( $tags as $name => $content ) {
+			foreach ( $content as $key => $value ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<' . $type . ' ' . $name . '="' . $key . '" content="' . $value . '" />' . "\n";
+			}
+		}
+	}
 }
