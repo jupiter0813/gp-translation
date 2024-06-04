@@ -17,6 +17,7 @@ $url              = $url ?? Urls::events_home();
 $html_description = $html_description ?? esc_html__( 'WordPress Translation Events', 'gp-translation-events' );
 $image_url        = $image_url ?? Urls::event_default_image();
 
+// to-do: this action should be deleted when the new design is implemented, because it is in the "site-header" template.
 add_action(
 	'gp_head',
 	function () use ( $html_title, $url, $html_description, $image_url ) {
@@ -41,7 +42,7 @@ add_action(
 	}
 );
 gp_title( $html_title );
-Templates::part( 'site-header', array() );
+Templates::part( 'site-header', get_defined_vars() );
 Templates::part( 'breadcrumbs', array( 'extra_items' => $breadcrumbs ?? array() ) );
 ?>
 
