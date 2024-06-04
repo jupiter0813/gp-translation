@@ -2,6 +2,7 @@
 namespace Wporg\TranslationEvents\Templates\Parts;
 
 use Wporg\TranslationEvents\Templates;
+use Wporg\TranslationEvents\Translation_Events;
 use Wporg\TranslationEvents\Urls;
 
 /** @var string $html_title */
@@ -42,8 +43,12 @@ add_action(
 	}
 );
 gp_title( $html_title );
-Templates::part( 'site-header', get_defined_vars() );
 Templates::part( 'breadcrumbs', array( 'extra_items' => $breadcrumbs ?? array() ) );
+if ( Translation_Events::get_instance()->should_load_new_design() ) {
+	Templates::part( 'site-header', get_defined_vars() );
+} else {
+	gp_tmpl_header();
+}
 ?>
 
 <div class="event-list-top-bar">
