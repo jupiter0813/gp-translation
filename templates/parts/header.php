@@ -41,8 +41,8 @@ add_action(
 	}
 );
 gp_title( $html_title );
+Templates::part( 'site-header', array() );
 Templates::part( 'breadcrumbs', array( 'extra_items' => $breadcrumbs ?? array() ) );
-gp_tmpl_header();
 ?>
 
 <div class="event-list-top-bar">
