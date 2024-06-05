@@ -44,11 +44,7 @@ add_action(
 );
 gp_title( $html_title );
 Templates::part( 'breadcrumbs', array( 'extra_items' => $breadcrumbs ?? array() ) );
-if ( Translation_Events::get_instance()->should_load_new_design() ) {
-	Templates::part( 'site-header', get_defined_vars() );
-} else {
-	gp_tmpl_header();
-}
+gp_tmpl_header();
 ?>
 
 <div class="event-list-top-bar">
