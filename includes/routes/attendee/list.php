@@ -40,7 +40,7 @@ class List_Route extends Route {
 		if ( ! $event ) {
 			$this->die_with_404();
 		}
-		if ( ! current_user_can( 'edit_translation_event', $event->id() ) ) {
+		if ( ! current_user_can( 'edit_translation_event_attendees', $event->id() ) ) {
 			$this->die_with_error( esc_html__( 'You do not have permission to edit this event\'s attendees.', 'gp-translation-events' ), 403 );
 		}
 		if ( gp_get( 'filter' ) && 'hosts' === gp_get( 'filter' ) ) {
