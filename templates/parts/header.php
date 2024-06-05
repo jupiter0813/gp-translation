@@ -2,7 +2,6 @@
 namespace Wporg\TranslationEvents\Templates\Parts;
 
 use Wporg\TranslationEvents\Templates;
-use Wporg\TranslationEvents\Translation_Events;
 use Wporg\TranslationEvents\Urls;
 
 /** @var string $html_title */
