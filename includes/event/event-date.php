@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
+use Wporg\TranslationEvents\Translation_Events;
 
 /**
  * Event_Date
@@ -21,11 +22,15 @@ abstract class Event_Date extends DateTimeImmutable {
 			$timezone = new DateTimeZone( 'UTC' );
 		}
 
-		try {
-			$utc_date = new DateTime( $date, new DateTimeZone( 'UTC' ) );
-			$utc_date->setTimezone( $timezone );
-		} catch ( Exception $e ) {
-			$utc_date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		if ( 'now' === $date ) {
+			$utc_date = Translation_Events::now();
+		} else {
+			try {
+				$utc_date = new DateTime( $date, new DateTimeZone( 'UTC' ) );
+				$utc_date->setTimezone( $timezone );
+			} catch ( Exception $e ) {
+				$utc_date = Translation_Events::now();
+			}
 		}
 
 		parent::__construct( $utc_date->format( 'Y-m-d H:i:s' ), $timezone );
@@ -54,8 +59,7 @@ abstract class Event_Date extends DateTimeImmutable {
 	}
 
 	public function is_in_the_past() {
-		$current_date_time = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
-		return $this->utc() < $current_date_time;
+		return $this->utc() < Translation_Events::now();
 	}
 
 	public function print_relative_time_html( $format = false ) {
@@ -98,7 +102,7 @@ abstract class Event_Date extends DateTimeImmutable {
 
 class Event_Start_Date extends Event_Date {
 	public function get_variable_text(): string {
-		$interval       = $this->diff( new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) ) );
+		$interval       = $this->diff( Translation_Events::now() );
 		$hours_left     = ( $interval->d * 24 ) + $interval->h;
 		$hours_in_a_day = 24;
 
@@ -146,7 +150,7 @@ class Event_End_Date extends Event_Date {
 			return sprintf( 'ended %s', $this->format( 'l, F j, Y' ) );
 		}
 
-		$interval       = $this->diff( new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) ) );
+		$interval       = $this->diff( Translation_Events::now() );
 		$hours_left     = ( $interval->d * 24 ) + $interval->h;
 		$hours_in_a_day = 24;
 
