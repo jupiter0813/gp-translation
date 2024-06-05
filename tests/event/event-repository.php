@@ -194,7 +194,7 @@ class Event_Repository_Test extends Base_Test {
 	}
 
 	public function test_get_past_events() {
-		$event1_id = $this->event_factory->create_inactive_past( $this->now );
+		$event1_id = $this->event_factory->create_inactive_past( $this->now->modify( '-1 minute' ) );
 		$event2_id = $this->event_factory->create_inactive_past( $this->now );
 		$this->event_factory->create_active( $this->now->modify( '+2 hours' ) );
 		$this->event_factory->create_inactive_future( $this->now );
