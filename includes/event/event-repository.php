@@ -14,9 +14,11 @@ use Wporg\TranslationEvents\Translation_Events;
 class Event_Repository implements Event_Repository_Interface {
 	private const POST_TYPE = Translation_Events::CPT;
 
+	private DateTimeImmutable $now;
 	private Attendee_Repository $attendee_repository;
 
-	public function __construct( Attendee_Repository $attendee_repository ) {
+	public function __construct( DateTimeImmutable $now, Attendee_Repository $attendee_repository ) {
+		$this->now                 = $now;
 		$this->attendee_repository = $attendee_repository;
 	}
 

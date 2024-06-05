@@ -10,23 +10,24 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
+use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Capabilities_Test extends GP_UnitTestCase {
+	private DateTimeImmutable $now;
 	private Event_Factory $event_factory;
 	private Stats_Factory $stats_factory;
 	private Attendee_Repository $attendee_repository;
 	private Event_Repository $event_repository;
-	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
+		$this->now                 = Translation_Events::now();
 		$this->event_factory       = new Event_Factory();
 		$this->stats_factory       = new Stats_Factory();
 		$this->attendee_repository = new Attendee_Repository();
-		$this->event_repository    = new Event_Repository( $this->attendee_repository );
+		$this->event_repository    = new Event_Repository( $this->now, $this->attendee_repository );
 
 		$this->set_normal_user_as_current();
-		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_cannot_manage_if_no_crud_permission() {

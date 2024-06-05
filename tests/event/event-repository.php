@@ -12,23 +12,24 @@ use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
+use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Repository_Test extends GP_UnitTestCase {
+	private DateTimeImmutable $now;
 	private Event_Factory $event_factory;
 	private Stats_Factory $stats_factory;
 	private Attendee_Repository $attendee_repository;
 	private Event_Repository $repository;
-	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
+		$this->now                 = Translation_Events::now();
 		$this->event_factory       = new Event_Factory();
 		$this->stats_factory       = new Stats_Factory();
 		$this->attendee_repository = new Attendee_Repository();
-		$this->repository          = new Event_Repository( new Attendee_Repository() );
+		$this->repository          = new Event_Repository( $this->now, $this->attendee_repository );
 
 		$this->set_normal_user_as_current();
-		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_get_event_returns_null_when_post_does_not_not_have_correct_type() {

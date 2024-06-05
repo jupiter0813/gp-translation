@@ -8,6 +8,7 @@ use GP_UnitTestCase;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
+use Wporg\TranslationEvents\Translation_Events;
 use Wporg\TranslationEvents\Urls;
 
 class Urls_Test extends GP_UnitTestCase {
@@ -17,11 +18,11 @@ class Urls_Test extends GP_UnitTestCase {
 
 	public function setUp(): void {
 		parent::setUp();
+		$this->now              = Translation_Events::now();
 		$this->event_factory    = new Event_Factory();
-		$this->event_repository = new Event_Repository( new Attendee_Repository() );
+		$this->event_repository = new Event_Repository( $this->now, new Attendee_Repository() );
 
 		$this->set_normal_user_as_current();
-		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_events_home() {

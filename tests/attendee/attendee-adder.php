@@ -13,6 +13,7 @@ use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 use Wporg\TranslationEvents\Tests\Translation_Factory;
+use Wporg\TranslationEvents\Translation_Events;
 
 class Attendee_Adder_Test extends GP_UnitTestCase {
 	/**
@@ -20,23 +21,23 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 	 */
 	private $attendee_repository;
 
+	private DateTimeImmutable $now;
 	private Attendee_Adder $adder;
 	private Event_Repository $event_repository;
 	private Event_Factory $event_factory;
 	private Translation_Factory $translation_factory;
 	private Stats_Factory $stats_factory;
-	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
+		$this->now                 = Translation_Events::now();
 		$this->attendee_repository = $this->createMock( Attendee_Repository::class );
 		$this->adder               = new Attendee_Adder( $this->attendee_repository );
-		$this->event_repository    = new Event_Repository( new Attendee_Repository() );
+		$this->event_repository    = new Event_Repository( $this->now, $this->attendee_repository );
 		$this->event_factory       = new Event_Factory();
 		$this->translation_factory = new Translation_Factory( $this->factory );
 		$this->stats_factory       = new Stats_Factory();
 
-		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$this->set_normal_user_as_current();
 	}
 
