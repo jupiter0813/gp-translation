@@ -62,8 +62,9 @@ abstract class Event_Date extends DateTimeImmutable {
 		echo wp_kses(
 			'<time
 				class="event-utc-time relative' . ( $this->is_in_the_past() ? '' : ' future' ) . '"
-				datetime="' . esc_attr( $this ) . '">' . esc_html( $this->get_relative_time() ) . '</time>',
+				datetime="' . esc_attr( $this ) . '">' . $this->get_relative_time() . '</time>',
 			array(
+				'span' => array(),
 				'time' => array(
 					'class'    => array(),
 					'datetime' => array(),
@@ -76,22 +77,27 @@ abstract class Event_Date extends DateTimeImmutable {
 		$relative = human_time_diff( $this->format( 'U' ) );
 		if ( $this->is_in_the_past() ) {
 			if ( '1 ' === substr( $relative, 0, 2 ) ) {
-				return sprintf( __( 'last %s' ), substr( $relative, 2) );
+				// translators: %s: A timeframe like week or month.
+				return sprintf( __( 'last %s', 'gp-translation-events' ), substr( $relative, 2 ) );
 			}
-			return sprintf( __( '%s ago' ), $relative );
+			// translators: %s: A relative time like 3 weeks.
+			return sprintf( __( '%s ago', 'gp-translation-events' ), $relative );
 		}
 		if ( '1 ' === substr( $relative, 0, 2 ) ) {
-			return sprintf( __( 'next %s' ), substr( $relative, 2) );
+			// translators: %s: A timeframe like week or month.
+			return sprintf( __( 'next %s', 'gp-translation-events' ), substr( $relative, 2 ) );
 		}
-		return sprintf( __( 'in %s' ), $relative );
+			// translators: %s: A relative time like 3 weeks.
+		return sprintf( __( 'in %s', 'gp-translation-events' ), $relative );
 	}
 
 	public function print_absolute_and_relative_time_html( $format = 'D, F j, Y H:i T' ) {
 		echo wp_kses(
 			'<time
 				class="event-utc-time absolute relative' . ( $this->is_in_the_past() ? '' : ' future' ) . '"
-				datetime="' . esc_attr( $this ) . '">' . esc_html( $this->get_prefixed_date( $format ) ) . ' (' . esc_html( $this->get_relative_time() ) . ')</time>',
+				datetime="' . esc_attr( $this ) . '">' . $this->get_prefixed_date( $this->format( $format ) . ' (' . $this->get_relative_time() . ')' ) . '</time>',
 			array(
+				'span' => array(),
 				'time' => array(
 					'class'    => array(),
 					'datetime' => array(),
@@ -105,8 +111,9 @@ abstract class Event_Date extends DateTimeImmutable {
 			'<time
 				class="event-utc-time absolute full-time"
 				data-format="' . esc_attr( $format ) . '"
-				datetime="' . esc_attr( $this ) . '">' . esc_html( $this->format( $format ) ) . '</time>',
+				datetime="' . esc_attr( $this ) . '">' . $this->format( $format ) . '</time>',
 			array(
+				'span' => array(),
 				'time' => array(
 					'class'       => array(),
 					'datetime'    => array(),
@@ -119,9 +126,11 @@ abstract class Event_Date extends DateTimeImmutable {
 	/**
 	 * Generate a date prefixed with a word.
 	 *
+	 * @param string $date The date to prefix.
+	 *
 	 * @return string The date text.
 	 */
-	abstract public function get_prefixed_date(): string;
+	abstract public function get_prefixed_date( $date ): string;
 
 	/**
 	 * Generate variable text depending on when the event starts or ends.
@@ -132,13 +141,13 @@ abstract class Event_Date extends DateTimeImmutable {
 }
 
 class Event_Start_Date extends Event_Date {
-	public function get_prefixed_date( $format = 'D, F j, Y H:i T' ): string {
+	public function get_prefixed_date( $date ): string {
 		if ( $this->is_in_the_past() ) {
 			// translators: %s: A date.
-			return sprintf( __( 'started %s', 'gp-translation-events' ), $this->format( $format ) );
+			return sprintf( __( 'started %s', 'gp-translation-events' ), '<span>' . $date . '</span>' );
 		}
 		// translators: %s: A date.
-		return sprintf( __( 'starts %s', 'gp-translation-events' ), $this->format( $format ) );
+		return sprintf( __( 'starts %s', 'gp-translation-events' ), '<span>' . $date . '</span>' );
 	}
 
 	public function get_variable_text(): string {
@@ -149,15 +158,16 @@ class Event_Start_Date extends Event_Date {
 		if ( $this->is_in_the_past() ) {
 			if ( 0 === $hours_left ) {
 				/* translators: %s: Number of minutes left. */
-				return sprintf( _n( 'started %s minute ago', 'started %s minutes ago', $interval->i ), '<span>' . $interval->i . '</span>' );
+				return sprintf( _n( 'started %s minute ago', 'started %s minutes ago', $interval->i ), $interval->i );
 			}
 
 			if ( $hours_left >= $hours_in_a_day ) {
 				/* translators: %s: Number of hours left. */
-				return sprintf( _n( 'started %s hour ago', 'started %s hours ago', $hours_left ), '<span>' . $hours_left . '</span>' );
+				return sprintf( _n( 'started %s hour ago', 'started %s hours ago', $hours_left ), $hours_left );
 			}
 
-			return $this->get_prefixed_date();
+			return $this->get_prefixed_date( $this->format( 'D, F j, Y H:i T' ) );
+
 		}
 
 		if ( 0 === $hours_left ) {
@@ -165,36 +175,36 @@ class Event_Start_Date extends Event_Date {
 				return __( 'starts in less than a minute', 'gp-translation-events' );
 			}
 			/* translators: %s: Number of minutes left. */
-			return sprintf( _n( 'starts in %s minute', 'starts in %s minutes', $interval->i, 'gp-translation-events' ), '<span>' . $interval->i . '</span>' );
+			return sprintf( _n( 'starts in %s minute', 'starts in %s minutes', $interval->i, 'gp-translation-events' ), $interval->i );
 		}
 
 		if ( $hours_left <= $hours_in_a_day ) {
 			/* translators: %s: Number of hours left. */
-			$out = sprintf( _n( 'starts in %s hour', 'starts in %s hours', $hours_left, 'gp-translation-events' ), '<span>' . $hours_left . '</span>' );
+			$out = sprintf( _n( 'starts in %s hour', 'starts in %s hours', $hours_left, 'gp-translation-events' ), $hours_left );
 			if ( $interval->i ) {
 				/* translators: %s: Number of minutes left. */
-				$out .= sprintf( _n( ' and %s minute', ' and %s minutes', $interval->i, 'gp-translation-events' ), '<span>' . $interval->i . '</span>' );
+				$out .= sprintf( _n( ' and %s minute', ' and %s minutes', $interval->i, 'gp-translation-events' ), $interval->i );
 			}
 			return $out;
 		}
 
-		return $this->get_prefixed_date();
+			return $this->get_prefixed_date( $this->format( 'D, F j, Y H:i T' ) );
 	}
 }
 
 class Event_End_Date extends Event_Date {
-	public function get_prefixed_date( $format = 'D, F j, Y H:i T' ): string {
+	public function get_prefixed_date( $date ): string {
 		if ( $this->is_in_the_past() ) {
 			// translators: %s: A date.
-			return sprintf( __( 'ended %s', 'gp-translation-events' ), $this->format( $format ) );
+			return sprintf( __( 'ended %s', 'gp-translation-events' ), '<span>' . $date . '</span>' );
 		}
 		// translators: %s: A date.
-		return sprintf( __( 'until %s', 'gp-translation-events' ), $this->format( $format ) );
+		return sprintf( __( 'until %s', 'gp-translation-events' ), '<span>' . $date . '</span>' );
 	}
 
 	public function get_variable_text(): string {
 		if ( $this->is_in_the_past() ) {
-			return $this->get_prefixed_date();
+			return $this->get_prefixed_date( $this->format( 'D, F j, Y H:i T' ) );
 		}
 
 		$interval       = $this->diff( new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) ) );
@@ -206,19 +216,19 @@ class Event_End_Date extends Event_Date {
 				return __( 'ends in less than a minute', 'gp-translation-events' );
 			}
 			/* translators: %s: Number of minutes left. */
-			return sprintf( _n( 'ends in %s minute', 'ends in %s minutes', $interval->i, 'gp-translation-events' ), '<span>' . $interval->i . '</span>' );
+			return sprintf( _n( 'ends in %s minute', 'ends in %s minutes', $interval->i, 'gp-translation-events' ), $interval->i );
 		}
 
 		if ( $hours_left <= $hours_in_a_day ) {
 			/* translators: %s: Number of hours left. */
-			$out = sprintf( _n( 'ends in %s hour', 'ends in %s hours', $hours_left, 'gp-translation-events' ), '<span>' . $hours_left . '</span>' );
+			$out = sprintf( _n( 'ends in %s hour', 'ends in %s hours', $hours_left, 'gp-translation-events' ), $hours_left );
 			if ( $interval->i ) {
 				/* translators: %s: Number of minutes left. */
-				$out .= sprintf( _n( ' and %s minute', ' and %s minutes', $interval->i, 'gp-translation-events' ), '<span>' . $interval->i . '</span>' );
+				$out .= sprintf( _n( ' and %s minute', ' and %s minutes', $interval->i, 'gp-translation-events' ), $interval->i );
 			}
 			return $out;
 		}
 
-		return $this->get_prefixed_date();
+			return $this->get_prefixed_date( $this->format( 'D, F j, Y H:i T' ) );
 	}
 }

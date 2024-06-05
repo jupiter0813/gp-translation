@@ -234,8 +234,8 @@
 						return;
 					}
 					const eventDateObj = new Date( datetime );
-					timeEl = timeEl.closest( 'span' );
 					timeEl.title       = eventDateObj.toUTCString();
+					const timeContent  = timeEl.querySelector( 'span' ) ? timeEl.querySelector( 'span' ) : timeEl;
 
 					const userTimezoneOffset   = new Date().getTimezoneOffset();
 					const userTimezoneOffsetMs = userTimezoneOffset * 60 * 1000;
@@ -263,7 +263,7 @@
 								options.month = 'numeric';
 							}
 						}
-						timeEl.textContent = userLocalDateTime.toLocaleTimeString( navigator.language, options );
+						timeContent.textContent = userLocalDateTime.toLocaleTimeString( navigator.language, options );
 					}
 
 					if ( timeEl.classList.contains( 'relative' ) ) {
@@ -285,7 +285,7 @@
 						const seconds    = Math.floor( diff / 1000 );
 						const minutes    = Math.floor( seconds / 60 );
 						const hours      = Math.floor( minutes / 60 );
-						const days       = Math.floor( hours / 24 );
+						let days       = Math.floor( hours / 24 );
 						const weeks      = Math.floor( days / 7 );
 						const months     = Math.floor( days / 30 );
 						const years      = Math.floor( days / 365.25 );
@@ -299,12 +299,15 @@
 						} else if ( weeks === 1 ) {
 							if ( diff < 0 ) {
 								relativeTime = 'last week';
-								ago_text = '';
+								ago_text     = '';
 							} else {
 								relativeTime = 'next week';
-								in_text = '';
+								in_text      = '';
 							}
 						} else if ( days > 0 ) {
+							if ( hours > 12 ) {
+								days += 1;
+							}
 							relativeTime = days + ' day' + ( days > 1 ? 's' : '' );
 						} else if ( hours > 0 ) {
 							relativeTime = hours + ' hour' + ( hours > 1 ? 's' : '' );
@@ -314,14 +317,15 @@
 							relativeTime = 'less than a minute';
 						}
 						if ( timeEl.classList.contains( 'absolute' ) ) {
-							timeEl.textContent += ' (' + in_text + relativeTime + ago_text + ')';
+							timeContent.textContent += ' (' + in_text + relativeTime + ago_text + ')';
 						} else {
-							timeEl.textContent = in_text + relativeTime + ago_text;
+							timeContent.textContent = in_text + relativeTime + ago_text;
 						}
 					}
 
 				}
 			);
 		}
-	}( jQuery, $gp )
+	}( jQuery,
+	$gp )
 );

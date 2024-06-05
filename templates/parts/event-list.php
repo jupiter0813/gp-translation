@@ -25,7 +25,7 @@ $current_user_attendee_per_event = $current_user_attendee_per_event ?? array();
 /**
  * @param Event_Start_Date|Event_End_Date $time
  */
-$print_time = function ( $time ) : void {
+$print_time = function ( $time ): void {
 	$time->print_absolute_and_relative_time_html();
 };
 ?>
