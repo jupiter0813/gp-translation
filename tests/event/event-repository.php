@@ -182,8 +182,8 @@ class Event_Repository_Test extends Base_Test {
 	}
 
 	public function test_get_upcoming_events() {
-		$event1_id = $this->event_factory->create_active( $this->now->modify( '+1 month' ) );
-		$event2_id = $this->event_factory->create_active( $this->now->modify( '+2 months' ) );
+		$event1_id = $this->event_factory->create_inactive_future( $this->now );
+		$event2_id = $this->event_factory->create_inactive_future( $this->now->modify( '+1 minute' ) );
 		$this->event_factory->create_active( $this->now->modify( '-2 hours' ) );
 		$this->event_factory->create_inactive_past( $this->now );
 
