@@ -234,11 +234,37 @@
 						return;
 					}
 					const eventDateObj = new Date( datetime );
+					timeEl = timeEl.closest( 'span' );
 					timeEl.title       = eventDateObj.toUTCString();
 
 					const userTimezoneOffset   = new Date().getTimezoneOffset();
 					const userTimezoneOffsetMs = userTimezoneOffset * 60 * 1000;
 					const userLocalDateTime    = new Date( eventDateObj.getTime() - userTimezoneOffsetMs );
+
+					const options = {
+						weekday: 'short',
+						year: 'numeric',
+						month: 'short',
+						day: 'numeric',
+						hour: 'numeric',
+						minute: 'numeric',
+						timeZoneName: 'short'
+					};
+					if ( timeEl.classList.contains( 'absolute' ) ) {
+						if ( timeEl.dataset.format ) {
+							if ( timeEl.dataset.format.includes( 'l' ) ) {
+								options.weekday = 'long';
+							} else if ( ! timeEl.dataset.format.includes( 'D' ) ) {
+								delete options.weekday;
+							}
+							if ( timeEl.dataset.format.includes( 'F' ) ) {
+								options.month = 'long';
+							} else if ( timeEl.dataset.format.includes( 'm' ) || timeEl.dataset.format.includes( 'n' ) ) {
+								options.month = 'numeric';
+							}
+						}
+						timeEl.textContent = userLocalDateTime.toLocaleTimeString( navigator.language, options );
+					}
 
 					if ( timeEl.classList.contains( 'relative' ) ) {
 						// Display the relative time.
@@ -265,21 +291,17 @@
 						const years      = Math.floor( days / 365.25 );
 						let relativeTime = '';
 						if ( years > 1 ) {
-							if ( ! timeEl.classList.contains( 'hide-if-too-far' ) ) {
-								relativeTime = years + ' year' + ( years > 1 ? 's' : '' );
-							} else {
-								in_text = '';
-							}
+							relativeTime = years + ' year' + ( years > 1 ? 's' : '' );
 						} else if ( months > 1 ) {
-							if ( ! timeEl.classList.contains( 'hide-if-too-far' ) ) {
-								relativeTime = months + ' month' + ( months > 1 ? 's' : '' );
+							relativeTime = months + ' month' + ( months > 1 ? 's' : '' );
+						} else if ( weeks > 2 ) {
+							relativeTime = weeks + ' week' + ( weeks > 1 ? 's' : '' );
+						} else if ( weeks === 1 ) {
+							if ( diff < 0 ) {
+								relativeTime = 'last week';
+								ago_text = '';
 							} else {
-								in_text = '';
-							}
-						} else if ( weeks > 1 ) {
-							if ( ! timeEl.classList.contains( 'hide-if-too-far' ) || weeks < 3 ) {
-								relativeTime = weeks + ' week' + ( weeks > 1 ? 's' : '' );
-							} else {
+								relativeTime = 'next week';
 								in_text = '';
 							}
 						} else if ( days > 0 ) {
@@ -291,32 +313,13 @@
 						} else {
 							relativeTime = 'less than a minute';
 						}
-						timeEl.textContent = in_text + relativeTime + ago_text;
-						return;
+						if ( timeEl.classList.contains( 'absolute' ) ) {
+							timeEl.textContent += ' (' + in_text + relativeTime + ago_text + ')';
+						} else {
+							timeEl.textContent = in_text + relativeTime + ago_text;
+						}
 					}
 
-					const options = {
-						weekday: 'short',
-						year: 'numeric',
-						month: 'short',
-						day: 'numeric',
-						hour: 'numeric',
-						minute: 'numeric',
-						timeZoneName: 'short'
-					};
-					if ( timeEl.dataset.format ) {
-						if ( timeEl.dataset.format.includes( 'l' ) ) {
-							options.weekday = 'long';
-						} else if ( ! timeEl.dataset.format.includes( 'D' ) ) {
-							delete options.weekday;
-						}
-						if ( timeEl.dataset.format.includes( 'F' ) ) {
-							options.month = 'long';
-						} else if ( timeEl.dataset.format.includes( 'm' ) || timeEl.dataset.format.includes( 'n' ) ) {
-							options.month = 'numeric';
-						}
-					}
-					timeEl.textContent = userLocalDateTime.toLocaleTimeString( navigator.language, options );
 				}
 			);
 		}
