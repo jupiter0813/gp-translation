@@ -28,7 +28,9 @@ Templates::header(
 </div>
 
 <div class="event-edit-right">
-	<a class="manage-attendees-btn button is-primary" href="<?php echo esc_url( Urls::event_attendees( $event->id() ) ); ?>"><?php esc_html_e( 'Manage Attendees', 'gp-translation-events' ); ?></a>
+	<?php if ( current_user_can( 'edit_translation_event_attendees', $event->id() ) ) : ?>
+		<a class="manage-attendees-btn button is-primary" href="<?php echo esc_url( Urls::event_attendees( $event->id() ) ); ?>"><?php esc_html_e( 'Manage Attendees', 'gp-translation-events' ); ?></a>
+	<?php endif; ?>
 </div>
 
 <?php Templates::footer(); ?>
