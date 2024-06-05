@@ -332,7 +332,7 @@ class Event_Repository_Test extends Base_Test {
 		$user_id   = get_current_user_id();
 		$event1_id = $this->event_factory->create_inactive_past( $this->now );
 		$event2_id = $this->event_factory->create_active( $this->now );
-		$event3_id = $this->event_factory->create_active( $this->now->modify( '+5 seconds' ) );
+		$event3_id = $this->event_factory->create_active( $this->now->modify( '+1 minute' ) );
 		$event4_id = $this->event_factory->create_inactive_future( $this->now );
 
 		$this->set_admin_user_as_current();
