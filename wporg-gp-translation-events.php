@@ -18,6 +18,8 @@
 
 namespace Wporg\TranslationEvents;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Exception;
 use GP;
 use GP_Locales;
@@ -45,6 +47,14 @@ class Translation_Events {
 			$instance = new self();
 		}
 		return $instance;
+	}
+
+	public static function now(): DateTimeImmutable {
+		static $now = null;
+		if ( null === $now ) {
+			$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		}
+		return $now;
 	}
 
 	public static function get_event_repository(): Event_Repository_Interface {
