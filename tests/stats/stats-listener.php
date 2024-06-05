@@ -2,19 +2,16 @@
 
 namespace Wporg\Tests\Stats;
 
-use DateTimeImmutable;
 use GP_Translation;
 use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 use Wporg\TranslationEvents\Tests\Translation_Factory;
-use Wporg\TranslationEvents\Translation_Events;
 
 class Stats_Listener_Test extends Base_Test {
 	private Translation_Factory $translation_factory;
 	private Event_Factory $event_factory;
 	private Stats_Factory $stats_factory;
-	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
@@ -23,7 +20,6 @@ class Stats_Listener_Test extends Base_Test {
 		$this->stats_factory       = new Stats_Factory();
 
 		$this->set_normal_user_as_current();
-		$this->now = Translation_Events::now();
 	}
 
 	public function test_does_not_store_action_for_draft_events() {

@@ -1,7 +1,6 @@
 <?php
 namespace Wporg\Tests\Attendee;
 
-use DateTimeImmutable;
 use GP_Translation;
 use PHPUnit\Framework\MockObject\MockObject;
 use Wporg\Tests\Base_Test;
@@ -12,7 +11,6 @@ use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 use Wporg\TranslationEvents\Tests\Translation_Factory;
-use Wporg\TranslationEvents\Translation_Events;
 
 class Attendee_Adder_Test extends Base_Test {
 	/**
@@ -20,7 +18,6 @@ class Attendee_Adder_Test extends Base_Test {
 	 */
 	private $attendee_repository;
 
-	private DateTimeImmutable $now;
 	private Attendee_Adder $adder;
 	private Event_Repository $event_repository;
 	private Event_Factory $event_factory;
@@ -29,7 +26,6 @@ class Attendee_Adder_Test extends Base_Test {
 
 	public function setUp(): void {
 		parent::setUp();
-		$this->now                 = Translation_Events::now();
 		$this->attendee_repository = $this->createMock( Attendee_Repository::class );
 		$this->adder               = new Attendee_Adder( $this->attendee_repository );
 		$this->event_repository    = new Event_Repository( $this->now, $this->attendee_repository );

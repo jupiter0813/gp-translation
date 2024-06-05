@@ -2,7 +2,6 @@
 
 namespace Wporg\Tests\Event;
 
-use DateTimeImmutable;
 use DateTimeZone;
 use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
@@ -11,16 +10,13 @@ use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Tests\Event_Factory;
-use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Repository_Cached_Test extends Base_Test {
-	private DateTimeImmutable $now;
 	private Event_Repository_Cached $repository;
 	private Event_Factory $event_factory;
 
 	public function setUp(): void {
 		parent::setUp();
-		$this->now           = Translation_Events::now();
 		$this->event_factory = new Event_Factory();
 		$this->repository    = new Event_Repository_Cached( $this->now, new Attendee_Repository() );
 
