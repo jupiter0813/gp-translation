@@ -208,7 +208,7 @@ class Event_Repository_Test extends Base_Test {
 	public function test_get_trashed_events() {
 		$event1_id = $this->event_factory->create_active( $this->now );
 		$event2_id = $this->event_factory->create_inactive_past( $this->now );
-		$this->event_factory->create_active( $this->now );
+		$this->event_factory->create_active( $this->now->modify( '+1 minute' ) );
 		$this->event_factory->create_inactive_future( $this->now );
 
 		$event1 = $this->repository->get_event( $event1_id );
