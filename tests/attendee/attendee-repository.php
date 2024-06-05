@@ -2,12 +2,12 @@
 
 namespace Wporg\Tests\Attendee;
 
-use GP_UnitTestCase;
+use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 
-class Attendee_Repository_Test extends GP_UnitTestCase {
+class Attendee_Repository_Test extends Base_Test {
 	private Attendee_Repository $repository;
 	private Stats_Factory $stats_factory;
 

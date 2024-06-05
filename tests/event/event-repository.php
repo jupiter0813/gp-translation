@@ -4,7 +4,7 @@ namespace Wporg\Tests\Event;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use GP_UnitTestCase;
+use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository;
@@ -14,7 +14,7 @@ use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 use Wporg\TranslationEvents\Translation_Events;
 
-class Event_Repository_Test extends GP_UnitTestCase {
+class Event_Repository_Test extends Base_Test {
 	private DateTimeImmutable $now;
 	private Event_Factory $event_factory;
 	private Stats_Factory $stats_factory;

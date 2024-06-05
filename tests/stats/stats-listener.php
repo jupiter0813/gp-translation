@@ -3,15 +3,14 @@
 namespace Wporg\Tests\Stats;
 
 use DateTimeImmutable;
-use DateTimeZone;
 use GP_Translation;
-use GP_UnitTestCase;
+use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 use Wporg\TranslationEvents\Tests\Translation_Factory;
 use Wporg\TranslationEvents\Translation_Events;
 
-class Stats_Listener_Test extends GP_UnitTestCase {
+class Stats_Listener_Test extends Base_Test {
 	private Translation_Factory $translation_factory;
 	private Event_Factory $event_factory;
 	private Stats_Factory $stats_factory;

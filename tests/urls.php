@@ -3,15 +3,13 @@
 namespace Wporg\Tests;
 
 use DateTimeImmutable;
-use DateTimeZone;
-use GP_UnitTestCase;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Translation_Events;
 use Wporg\TranslationEvents\Urls;
 
-class Urls_Test extends GP_UnitTestCase {
+class Urls_Test extends Base_Test {
 	private Event_Factory $event_factory;
 	private Event_Repository $event_repository;
 	private DateTimeImmutable $now;

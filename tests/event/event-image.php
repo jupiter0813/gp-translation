@@ -3,15 +3,14 @@
 namespace Wporg\Tests\Event;
 
 use DateTimeImmutable;
-use DateTimeZone;
-use GP_UnitTestCase;
+use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Routes\Event\Image_Route;
 use Wporg\TranslationEvents\Templates;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Translation_Events;
 use Wporg\TranslationEvents\Urls;
 
-class Event_Image_Test extends GP_UnitTestCase {
+class Event_Image_Test extends Base_Test {
 
 	private DateTimeImmutable $now;
 

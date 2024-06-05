@@ -2,10 +2,9 @@
 namespace Wporg\Tests\Attendee;
 
 use DateTimeImmutable;
-use DateTimeZone;
 use GP_Translation;
-use GP_UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Adder;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
@@ -15,7 +14,7 @@ use Wporg\TranslationEvents\Tests\Stats_Factory;
 use Wporg\TranslationEvents\Tests\Translation_Factory;
 use Wporg\TranslationEvents\Translation_Events;
 
-class Attendee_Adder_Test extends GP_UnitTestCase {
+class Attendee_Adder_Test extends Base_Test {
 	/**
 	 * @var MockObject|Attendee_Repository
 	 */
