@@ -102,6 +102,7 @@ class Translation_Events {
 		}
 
 		$this->event_capabilities = new Event_Capabilities(
+			self::now(),
 			self::get_event_repository(),
 			self::get_attendee_repository(),
 			new Stats_Calculator()
