@@ -8,6 +8,7 @@ use GP_UnitTestCase;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
+use Wporg\TranslationEvents\Translation_Events;
 
 class Stats_Calculator_Test extends GP_UnitTestCase {
 	private Event_Factory $event_factory;
@@ -22,7 +23,7 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 		$this->calculator    = new Stats_Calculator();
 
 		$this->set_normal_user_as_current();
-		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$this->now = Translation_Events::now();
 	}
 
 	public function test_tells_that_event_has_no_stats() {

@@ -280,10 +280,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event_id = $this->event_factory->create_event(
-			$now->modify( '-2 hours' ),
-			$now->modify( '-59 minutes' ),
+			$this->now->modify( '-2 hours' ),
+			$this->now->modify( '-59 minutes' ),
 			$timezone,
 			array(),
 		);
@@ -299,10 +298,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event_id = $this->event_factory->create_event(
-			$now->modify( '-3 hours' ),
-			$now->modify( '-1 hours  -1 minutes' ),
+			$this->now->modify( '-3 hours' ),
+			$this->now->modify( '-1 hours  -1 minutes' ),
 			$timezone,
 			array(),
 		);

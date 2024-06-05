@@ -9,6 +9,7 @@ use GP_UnitTestCase;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 use Wporg\TranslationEvents\Tests\Translation_Factory;
+use Wporg\TranslationEvents\Translation_Events;
 
 class Stats_Listener_Test extends GP_UnitTestCase {
 	private Translation_Factory $translation_factory;
@@ -23,7 +24,7 @@ class Stats_Listener_Test extends GP_UnitTestCase {
 		$this->stats_factory       = new Stats_Factory();
 
 		$this->set_normal_user_as_current();
-		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$this->now = Translation_Events::now();
 	}
 
 	public function test_does_not_store_action_for_draft_events() {

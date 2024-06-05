@@ -8,6 +8,7 @@ use GP_UnitTestCase;
 use Wporg\TranslationEvents\Routes\Event\Image_Route;
 use Wporg\TranslationEvents\Templates;
 use Wporg\TranslationEvents\Tests\Event_Factory;
+use Wporg\TranslationEvents\Translation_Events;
 use Wporg\TranslationEvents\Urls;
 
 class Event_Image_Test extends GP_UnitTestCase {
@@ -16,7 +17,7 @@ class Event_Image_Test extends GP_UnitTestCase {
 
 	public function setUp(): void {
 		parent::setUp();
-		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$this->now = Translation_Events::now();
 	}
 
 	/**
