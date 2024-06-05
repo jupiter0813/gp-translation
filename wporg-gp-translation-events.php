@@ -257,10 +257,6 @@ class Translation_Events {
 	public function register_translation_event_js() {
 		wp_register_style( 'translation-events-css', plugins_url( 'assets/css/translation-events.css', __FILE__ ), array( 'dashicons' ), filemtime( __DIR__ . '/assets/css/translation-events.css' ) );
 		gp_enqueue_styles( 'translation-events-css' );
-		if ( $this->should_load_new_design() ) {
-			wp_register_style( 'new-dotorg-design-css', plugins_url( 'assets/css/new-dotorg-design.css', __FILE__ ), array( 'dashicons' ), filemtime( __DIR__ . '/assets/css/new-dotorg-design.css' ) );
-			gp_enqueue_styles( 'new-dotorg-design-css' );
-		}
 		wp_register_script( 'translation-events-js', plugins_url( 'assets/js/translation-events.js', __FILE__ ), array( 'jquery', 'gp-common' ), filemtime( __DIR__ . '/assets/js/translation-events.js' ), false );
 		gp_enqueue_script( 'translation-events-js' );
 		wp_localize_script(
@@ -432,15 +428,6 @@ class Translation_Events {
 			return $slug;
 		}
 		return $override_slug;
-	}
-
-	/**
-	 * Check if the current site is a translate.wordpress.org or a development TLD.
-	 *
-	 * @return bool
-	 */
-	public function should_load_new_design(): bool {
-		return defined( 'TRANSLATION_EVENTS_NEW_DESIGN' ) && TRANSLATION_EVENTS_NEW_DESIGN;
 	}
 }
 Translation_Events::get_instance();
