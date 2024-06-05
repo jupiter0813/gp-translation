@@ -415,7 +415,7 @@ class Translation_Events {
 	 * Send notifications for the events.
 	 */
 	public function send_notifications() {
-		new Notifications_Send( self::get_event_repository(), self::get_attendee_repository() );
+		new Notifications_Send( self::now(), self::get_event_repository(), self::get_attendee_repository() );
 	}
 
 	/**
