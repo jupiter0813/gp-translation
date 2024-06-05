@@ -8,9 +8,6 @@ use Wporg\TranslationEvents\Translation_Events;
 /** @var string $html_description */
 /** @var string $image_url */
 
-if ( ! Translation_Events::get_instance()->should_load_new_design() ) {
-	return;
-}
 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 echo do_blocks( '<!-- wp:wporg/global-header /-->' );
 
@@ -123,16 +120,14 @@ function add_css() {
  */
 function add_social_tags( string $html_title, string $url, string $html_description, string $image_url ) {
 	$meta_tags = array(
-		'meta'     => array(
-			'name' => array(
-				'twitter:card'        => 'summary',
-				'twitter:site'        => '@WordPress',
-				'twitter:title'       => esc_attr( $html_title ),
-				'twitter:description' => esc_attr( $html_description ),
-				'twitter:creator'     => '@WordPress',
-				'twitter:image'       => esc_url( $image_url ),
-				'twitter:image:alt'   => esc_attr( $html_title ),
-			),
+		'name'     => array(
+			'twitter:card'        => 'summary',
+			'twitter:site'        => '@WordPress',
+			'twitter:title'       => esc_attr( $html_title ),
+			'twitter:description' => esc_attr( $html_description ),
+			'twitter:creator'     => '@WordPress',
+			'twitter:image'       => esc_url( $image_url ),
+			'twitter:image:alt'   => esc_attr( $html_title ),
 		),
 		'property' => array(
 			'og:url'              => esc_url( $url ),
@@ -148,12 +143,10 @@ function add_social_tags( string $html_title, string $url, string $html_descript
 		),
 	);
 
-	foreach ( $meta_tags as $type => $tags ) {
-		foreach ( $tags as $name => $content ) {
-			foreach ( $content as $key => $value ) {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo '<' . $type . ' ' . $name . '="' . $key . '" content="' . $value . '" />' . "\n";
-			}
+	foreach ( $meta_tags as $name => $content ) {
+		foreach ( $content as $key => $value ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<meta ' . esc_attr( $name ) . '="' . esc_attr( $key ) . '" content="' . esc_attr( $value ) . '" />' . "\n";
 		}
 	}
 }
