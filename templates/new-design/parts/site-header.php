@@ -1,7 +1,5 @@
 <?php
-namespace Wporg\TranslationEvents\Templates\Parts;
-
-use Wporg\TranslationEvents\Translation_Events;
+namespace Wporg\TranslationEvents\Templates\NewDesign\Parts;
 
 /** @var string $html_title */
 /** @var string $url */

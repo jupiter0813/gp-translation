@@ -1,5 +1,5 @@
 <?php
-namespace Wporg\TranslationEvents\Templates\Parts;
+namespace Wporg\TranslationEvents\Templates\NewDesign\Parts;
 
 ?>
 
