@@ -1,4 +1,7 @@
 <?php
+namespace Wporg\TranslationEvents\Templates\Parts;
 
-echo 'footer<br>';
-// TODO.
+?>
+
+<div class="clear"></div>
+<?php gp_tmpl_footer(); ?>
