@@ -43,8 +43,8 @@ class Event_Factory extends WP_UnitTest_Factory_For_Post {
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
 
 		return $this->create_event(
-			$now->modify( '-1 second' ),
-			$now->modify( '+1 hours' ),
+			$now,
+			$now->modify( '+1 hour' ),
 			$timezone,
 			$attendee_ids,
 		);

@@ -397,7 +397,7 @@ class Event_Repository implements Event_Repository_Interface {
 				array(
 					'key'     => '_event_start',
 					'value'   => $boundary_end->format( 'Y-m-d H:i:s' ),
-					'compare' => '<',
+					'compare' => '<=',
 					'type'    => 'DATETIME',
 				),
 				array(
