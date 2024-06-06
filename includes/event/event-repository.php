@@ -181,6 +181,7 @@ class Event_Repository implements Event_Repository_Interface {
 						'type'    => 'DATETIME',
 					),
 				),
+				'meta_key'   => '_event_start',
 				'orderby'    => array(
 					'meta_value' => 'ASC',
 					'ID'         => 'ASC',
@@ -206,6 +207,7 @@ class Event_Repository implements Event_Repository_Interface {
 						'type'    => 'DATETIME',
 					),
 				),
+				'meta_key'   => '_event_end',
 				'orderby'    => array(
 					'meta_value' => 'DESC',
 					'ID'         => 'DESC',
