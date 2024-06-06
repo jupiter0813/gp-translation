@@ -229,14 +229,16 @@ class Event_Repository implements Event_Repository_Interface {
 
 	public function get_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		return $this->execute_events_query(
 			$page,
 			$page_size,
 			array(
 				'post_status' => array( 'publish', 'draft' ),
 				'meta_key'    => '_event_start',
-				'orderby'     => 'meta_value',
-				'order'       => 'DESC',
+				'orderby'     => array(
+					'meta_value' => 'DESC',
+				),
 			),
 			array(),
 			$user_id,
@@ -248,6 +250,7 @@ class Event_Repository implements Event_Repository_Interface {
 	public function get_current_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		return $this->execute_events_query(
 			$page,
 			$page_size,
@@ -267,8 +270,9 @@ class Event_Repository implements Event_Repository_Interface {
 					),
 				),
 				'meta_key'   => '_event_start',
-				'orderby'    => 'meta_value',
-				'order'      => 'ASC',
+				'orderby'    => array(
+					'meta_value' => 'ASC',
+				),
 			),
 			array(),
 			$user_id,
@@ -279,6 +283,7 @@ class Event_Repository implements Event_Repository_Interface {
 	public function get_current_and_upcoming_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		return $this->execute_events_query(
 			$page,
 			$page_size,
@@ -292,8 +297,9 @@ class Event_Repository implements Event_Repository_Interface {
 					),
 				),
 				'meta_key'   => '_event_start',
-				'orderby'    => 'meta_value',
-				'order'      => 'ASC',
+				'orderby'    => array(
+					'meta_value' => 'ASC',
+				),
 			),
 			array(),
 			$user_id,
@@ -304,6 +310,7 @@ class Event_Repository implements Event_Repository_Interface {
 	public function get_past_events_for_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		return $this->execute_events_query(
 			$page,
 			$page_size,
@@ -318,8 +325,9 @@ class Event_Repository implements Event_Repository_Interface {
 				),
 				'meta_key'   => '_event_start',
 				'meta_type'  => 'DATETIME',
-				'orderby'    => 'meta_value',
-				'order'      => 'DESC',
+				'orderby'    => array(
+					'meta_value' => 'DESC',
+				),
 			),
 			array(),
 			$user_id,
@@ -330,6 +338,7 @@ class Event_Repository implements Event_Repository_Interface {
 	public function get_events_created_by_user( int $user_id, int $page = -1, int $page_size = -1 ): Events_Query_Result {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		return $this->execute_events_query(
 			$page,
 			$page_size,
@@ -337,8 +346,9 @@ class Event_Repository implements Event_Repository_Interface {
 				'post_status' => array( 'publish', 'draft' ),
 				'author'      => $user_id,
 				'meta_key'    => '_event_start',
-				'orderby'     => 'meta_value',
-				'order'       => 'DESC',
+				'orderby'     => array(
+					'meta_value' => 'DESC',
+				),
 			)
 		);
 		// phpcs:enable
@@ -370,14 +380,16 @@ class Event_Repository implements Event_Repository_Interface {
 
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		return $this->execute_events_query(
 			$page,
 			$page_size,
 			array(
 				'post_status' => array( 'publish', 'draft' ),
 				'meta_key'    => '_event_start',
-				'orderby'     => 'meta_value',
-				'order'       => 'DESC',
+				'orderby'     => array(
+					'meta_value' => 'DESC',
+				),
 			),
 			$events_user_is_hosting_ids
 		);
