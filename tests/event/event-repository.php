@@ -201,8 +201,8 @@ class Event_Repository_Test extends Base_Test {
 
 		$events = $this->repository->get_past_events()->events;
 		$this->assertCount( 2, $events );
-		$this->assertEquals( $event1_id, $events[0]->id() );
-		$this->assertEquals( $event2_id, $events[1]->id() );
+		$this->assertEquals( $event2_id, $events[0]->id() );
+		$this->assertEquals( $event1_id, $events[1]->id() );
 	}
 
 	public function test_get_trashed_events() {
