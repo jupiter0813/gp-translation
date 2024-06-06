@@ -238,6 +238,7 @@ class Event_Repository implements Event_Repository_Interface {
 				'meta_key'    => '_event_start',
 				'orderby'     => array(
 					'meta_value' => 'DESC',
+					'ID'         => 'DESC',
 				),
 			),
 			array(),
@@ -272,6 +273,7 @@ class Event_Repository implements Event_Repository_Interface {
 				'meta_key'   => '_event_start',
 				'orderby'    => array(
 					'meta_value' => 'ASC',
+					'ID'         => 'ASC',
 				),
 			),
 			array(),
@@ -299,6 +301,7 @@ class Event_Repository implements Event_Repository_Interface {
 				'meta_key'   => '_event_start',
 				'orderby'    => array(
 					'meta_value' => 'ASC',
+					'ID'         => 'ASC',
 				),
 			),
 			array(),
@@ -327,6 +330,7 @@ class Event_Repository implements Event_Repository_Interface {
 				'meta_type'  => 'DATETIME',
 				'orderby'    => array(
 					'meta_value' => 'DESC',
+					'ID'         => 'DESC',
 				),
 			),
 			array(),
@@ -348,6 +352,7 @@ class Event_Repository implements Event_Repository_Interface {
 				'meta_key'    => '_event_start',
 				'orderby'     => array(
 					'meta_value' => 'DESC',
+					'ID'         => 'DESC',
 				),
 			)
 		);
@@ -389,6 +394,7 @@ class Event_Repository implements Event_Repository_Interface {
 				'meta_key'    => '_event_start',
 				'orderby'     => array(
 					'meta_value' => 'DESC',
+					'ID'         => 'DESC',
 				),
 			),
 			$events_user_is_hosting_ids
