@@ -168,6 +168,7 @@ class Event_Repository implements Event_Repository_Interface {
 	public function get_upcoming_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		return $this->execute_events_query(
 			$page,
 			$page_size,
@@ -180,8 +181,10 @@ class Event_Repository implements Event_Repository_Interface {
 						'type'    => 'DATETIME',
 					),
 				),
-				'orderby'    => array( 'meta_value', 'ID' ),
-				'order'      => 'ASC',
+				'orderby'    => array(
+					'meta_value' => 'ASC',
+					'ID'         => 'ASC',
+				),
 			)
 		);
 		// phpcs:enable
@@ -190,6 +193,7 @@ class Event_Repository implements Event_Repository_Interface {
 	public function get_past_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		return $this->execute_events_query(
 			$page,
 			$page_size,
@@ -202,8 +206,10 @@ class Event_Repository implements Event_Repository_Interface {
 						'type'    => 'DATETIME',
 					),
 				),
-				'orderby'    => array( 'meta_value', 'ID' ),
-				'order'      => 'DESC',
+				'orderby'    => array(
+					'meta_value' => 'DESC',
+					'ID'         => 'DESC',
+				),
 			)
 		);
 		// phpcs:enable
@@ -392,6 +398,7 @@ class Event_Repository implements Event_Repository_Interface {
 
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		$query_args = array(
 			'meta_query' => array(
 				array(
@@ -409,7 +416,10 @@ class Event_Repository implements Event_Repository_Interface {
 			),
 			'meta_key'   => '_event_start',
 			'meta_type'  => 'DATETIME',
-			'orderby'    => array( 'meta_value', 'ID' ),
+			'orderby'    => array(
+				'meta_value' => 'ASC',
+				'ID'         => 'ASC',
+			),
 		);
 		// phpcs:enable
 
