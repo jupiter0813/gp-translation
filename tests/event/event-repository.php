@@ -2,9 +2,8 @@
 
 namespace Wporg\Tests\Event;
 
-use DateTimeImmutable;
 use DateTimeZone;
-use GP_UnitTestCase;
+use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository;
@@ -13,22 +12,20 @@ use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 
-class Event_Repository_Test extends GP_UnitTestCase {
+class Event_Repository_Test extends Base_Test {
 	private Event_Factory $event_factory;
 	private Stats_Factory $stats_factory;
 	private Attendee_Repository $attendee_repository;
 	private Event_Repository $repository;
-	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
 		$this->event_factory       = new Event_Factory();
 		$this->stats_factory       = new Stats_Factory();
 		$this->attendee_repository = new Attendee_Repository();
-		$this->repository          = new Event_Repository( new Attendee_Repository() );
+		$this->repository          = new Event_Repository( $this->now, $this->attendee_repository );
 
 		$this->set_normal_user_as_current();
-		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_get_event_returns_null_when_post_does_not_not_have_correct_type() {
@@ -160,7 +157,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_active_events() {
-		$event1_id = $this->event_factory->create_active( $this->now );
+		$event1_id = $this->event_factory->create_active( $this->now->modify( '-1 minute' ) );
 		$event2_id = $this->event_factory->create_active( $this->now );
 		$this->event_factory->create_active( $this->now->modify( '+2 hours' ) );
 		$this->event_factory->create_inactive_future( $this->now );
@@ -185,8 +182,8 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_upcoming_events() {
-		$event1_id = $this->event_factory->create_active( $this->now->modify( '+1 month' ) );
-		$event2_id = $this->event_factory->create_active( $this->now->modify( '+2 months' ) );
+		$event1_id = $this->event_factory->create_inactive_future( $this->now );
+		$event2_id = $this->event_factory->create_inactive_future( $this->now->modify( '+1 minute' ) );
 		$this->event_factory->create_active( $this->now->modify( '-2 hours' ) );
 		$this->event_factory->create_inactive_past( $this->now );
 
@@ -197,21 +194,21 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	}
 
 	public function test_get_past_events() {
-		$event1_id = $this->event_factory->create_inactive_past( $this->now );
+		$event1_id = $this->event_factory->create_inactive_past( $this->now->modify( '-1 minute' ) );
 		$event2_id = $this->event_factory->create_inactive_past( $this->now );
 		$this->event_factory->create_active( $this->now->modify( '+2 hours' ) );
 		$this->event_factory->create_inactive_future( $this->now );
 
 		$events = $this->repository->get_past_events()->events;
 		$this->assertCount( 2, $events );
-		$this->assertEquals( $event1_id, $events[0]->id() );
-		$this->assertEquals( $event2_id, $events[1]->id() );
+		$this->assertEquals( $event2_id, $events[0]->id() );
+		$this->assertEquals( $event1_id, $events[1]->id() );
 	}
 
 	public function test_get_trashed_events() {
 		$event1_id = $this->event_factory->create_active( $this->now );
 		$event2_id = $this->event_factory->create_inactive_past( $this->now );
-		$this->event_factory->create_active( $this->now );
+		$this->event_factory->create_active( $this->now->modify( '+1 minute' ) );
 		$this->event_factory->create_inactive_future( $this->now );
 
 		$event1 = $this->repository->get_event( $event1_id );
@@ -280,9 +277,9 @@ class Event_Repository_Test extends GP_UnitTestCase {
 
 	public function test_get_current_and_upcoming_events_for_user() {
 		$user_id   = get_current_user_id();
-		$event1_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
+		$event1_id = $this->event_factory->create_active( $this->now->modify( '-1 minute' ), array( $user_id ) );
 		$event2_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
-		$event3_id = $this->event_factory->create_active( $this->now, array( $user_id ) );
+		$event3_id = $this->event_factory->create_active( $this->now->modify( '+1 minute' ), array( $user_id ) );
 		$this->event_factory->create_active( $this->now );
 		$this->event_factory->create_inactive_past( $this->now, array( $user_id ) );
 
@@ -308,7 +305,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 	public function test_get_past_events_for_user() {
 		$user_id   = get_current_user_id();
 		$event1_id = $this->event_factory->create_inactive_past( $this->now, array( $user_id ) );
-		$event2_id = $this->event_factory->create_inactive_past( $this->now, array( $user_id ) );
+		$event2_id = $this->event_factory->create_inactive_past( $this->now->modify( '-1 minute' ), array( $user_id ) );
 
 		$this->event_factory->create_active( $this->now, array( $user_id ) );
 		$this->event_factory->create_active( $this->now->modify( '+1 minute' ), array( $user_id ) );
@@ -335,7 +332,7 @@ class Event_Repository_Test extends GP_UnitTestCase {
 		$user_id   = get_current_user_id();
 		$event1_id = $this->event_factory->create_inactive_past( $this->now );
 		$event2_id = $this->event_factory->create_active( $this->now );
-		$event3_id = $this->event_factory->create_active( $this->now->modify( '+5 seconds' ) );
+		$event3_id = $this->event_factory->create_active( $this->now->modify( '+1 minute' ) );
 		$event4_id = $this->event_factory->create_inactive_future( $this->now );
 
 		$this->set_admin_user_as_current();

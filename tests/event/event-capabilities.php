@@ -2,31 +2,28 @@
 
 namespace Wporg\Tests\Event;
 
-use DateTimeImmutable;
 use DateTimeZone;
-use GP_UnitTestCase;
+use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 
-class Event_Capabilities_Test extends GP_UnitTestCase {
+class Event_Capabilities_Test extends Base_Test {
 	private Event_Factory $event_factory;
 	private Stats_Factory $stats_factory;
 	private Attendee_Repository $attendee_repository;
 	private Event_Repository $event_repository;
-	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
 		$this->event_factory       = new Event_Factory();
 		$this->stats_factory       = new Stats_Factory();
 		$this->attendee_repository = new Attendee_Repository();
-		$this->event_repository    = new Event_Repository( $this->attendee_repository );
+		$this->event_repository    = new Event_Repository( $this->now, $this->attendee_repository );
 
 		$this->set_normal_user_as_current();
-		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_cannot_manage_if_no_crud_permission() {
@@ -279,10 +276,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event_id = $this->event_factory->create_event(
-			$now->modify( '-2 hours' ),
-			$now->modify( '-59 minutes' ),
+			$this->now->modify( '-2 hours' ),
+			$this->now->modify( '-59 minutes' ),
 			$timezone,
 			array(),
 		);
@@ -298,10 +294,9 @@ class Event_Capabilities_Test extends GP_UnitTestCase {
 		$this->set_normal_user_as_current();
 
 		$timezone = new DateTimeZone( 'Europe/Lisbon' );
-		$now      = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$event_id = $this->event_factory->create_event(
-			$now->modify( '-3 hours' ),
-			$now->modify( '-1 hours  -1 minutes' ),
+			$this->now->modify( '-3 hours' ),
+			$this->now->modify( '-1 hours  -1 minutes' ),
 			$timezone,
 			array(),
 		);

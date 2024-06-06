@@ -2,18 +2,15 @@
 
 namespace Wporg\Tests\Stats;
 
-use DateTimeImmutable;
-use DateTimeZone;
-use GP_UnitTestCase;
+use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 
-class Stats_Calculator_Test extends GP_UnitTestCase {
+class Stats_Calculator_Test extends Base_Test {
 	private Event_Factory $event_factory;
 	private Stats_Factory $stats_factory;
 	private Stats_Calculator $calculator;
-	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
@@ -22,7 +19,6 @@ class Stats_Calculator_Test extends GP_UnitTestCase {
 		$this->calculator    = new Stats_Calculator();
 
 		$this->set_normal_user_as_current();
-		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_tells_that_event_has_no_stats() {

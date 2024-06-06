@@ -2,10 +2,10 @@
 
 namespace Wporg\Tests\Event;
 
-use GP_UnitTestCase;
+use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 
-class Event_Date_Test extends GP_UnitTestCase {
+class Event_Date_Test extends Base_Test {
 	public function test_timezone() {
 		$start = new Event_Start_Date( '2024-03-07 12:00:00', new \DateTimeZone( 'UTC' ) );
 		$this->assertEquals( 'UTC', $start->timezone()->getName() );

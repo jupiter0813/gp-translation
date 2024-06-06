@@ -2,9 +2,8 @@
 
 namespace Wporg\Tests\Event;
 
-use DateTimeImmutable;
 use DateTimeZone;
-use GP_UnitTestCase;
+use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Repository_Cached;
 use Wporg\TranslationEvents\Event\Event;
@@ -12,19 +11,17 @@ use Wporg\TranslationEvents\Event\Event_End_Date;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 use Wporg\TranslationEvents\Tests\Event_Factory;
 
-class Event_Repository_Cached_Test extends GP_UnitTestCase {
+class Event_Repository_Cached_Test extends Base_Test {
 	private Event_Repository_Cached $repository;
 	private Event_Factory $event_factory;
-	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
 		$this->event_factory = new Event_Factory();
-		$this->repository    = new Event_Repository_Cached( new Attendee_Repository() );
+		$this->repository    = new Event_Repository_Cached( $this->now, new Attendee_Repository() );
 
 		wp_cache_delete( 'translation-events-active-events' );
 		$this->set_normal_user_as_current();
-		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 	}
 
 	public function test_get_current_events_when_no_current_events_exist() {

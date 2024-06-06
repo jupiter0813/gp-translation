@@ -50,3 +50,6 @@ require "$_tests_dir/includes/bootstrap.php";
 require_once _glotpress_path( '/tests/phpunit/lib/testcase.php' );
 require_once _glotpress_path( '/tests/phpunit/lib/testcase-route.php' );
 require_once _glotpress_path( '/tests/phpunit/lib/testcase-request.php' );
+
+// Require our own test code.
+require_once __DIR__ . '/base-test.php';

@@ -1,11 +1,9 @@
 <?php
 namespace Wporg\Tests\Attendee;
 
-use DateTimeImmutable;
-use DateTimeZone;
 use GP_Translation;
-use GP_UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Wporg\Tests\Base_Test;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Adder;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
@@ -14,7 +12,7 @@ use Wporg\TranslationEvents\Tests\Event_Factory;
 use Wporg\TranslationEvents\Tests\Stats_Factory;
 use Wporg\TranslationEvents\Tests\Translation_Factory;
 
-class Attendee_Adder_Test extends GP_UnitTestCase {
+class Attendee_Adder_Test extends Base_Test {
 	/**
 	 * @var MockObject|Attendee_Repository
 	 */
@@ -25,18 +23,16 @@ class Attendee_Adder_Test extends GP_UnitTestCase {
 	private Event_Factory $event_factory;
 	private Translation_Factory $translation_factory;
 	private Stats_Factory $stats_factory;
-	private DateTimeImmutable $now;
 
 	public function setUp(): void {
 		parent::setUp();
 		$this->attendee_repository = $this->createMock( Attendee_Repository::class );
 		$this->adder               = new Attendee_Adder( $this->attendee_repository );
-		$this->event_repository    = new Event_Repository( new Attendee_Repository() );
+		$this->event_repository    = new Event_Repository( $this->now, $this->attendee_repository );
 		$this->event_factory       = new Event_Factory();
 		$this->translation_factory = new Translation_Factory( $this->factory );
 		$this->stats_factory       = new Stats_Factory();
 
-		$this->now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$this->set_normal_user_as_current();
 	}
 

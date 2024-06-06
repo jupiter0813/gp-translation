@@ -18,6 +18,8 @@
 
 namespace Wporg\TranslationEvents;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Exception;
 use GP;
 use GP_Locales;
@@ -47,10 +49,18 @@ class Translation_Events {
 		return $instance;
 	}
 
+	public static function now(): DateTimeImmutable {
+		static $now = null;
+		if ( null === $now ) {
+			$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		}
+		return $now;
+	}
+
 	public static function get_event_repository(): Event_Repository_Interface {
 		static $event_repository = null;
 		if ( null === $event_repository ) {
-			$event_repository = new Event_Repository_Cached( self::get_attendee_repository() );
+			$event_repository = new Event_Repository_Cached( self::now(), self::get_attendee_repository() );
 		}
 		return $event_repository;
 	}
@@ -92,6 +102,7 @@ class Translation_Events {
 		}
 
 		$this->event_capabilities = new Event_Capabilities(
+			self::now(),
 			self::get_event_repository(),
 			self::get_attendee_repository(),
 			new Stats_Calculator()
@@ -404,7 +415,7 @@ class Translation_Events {
 	 * Send notifications for the events.
 	 */
 	public function send_notifications() {
-		new Notifications_Send( self::get_event_repository(), self::get_attendee_repository() );
+		new Notifications_Send( self::now(), self::get_event_repository(), self::get_attendee_repository() );
 	}
 
 	/**
