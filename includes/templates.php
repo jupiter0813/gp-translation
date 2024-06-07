@@ -17,6 +17,7 @@ class Templates {
 		}
 
 		if ( self::$use_new_design ) {
+			self::register_patterns();
 			self::register_styles();
 		}
 	}
@@ -36,6 +37,10 @@ class Templates {
 
 	public static function part( string $template, array $data ) {
 		self::render( "parts/$template", $data );
+	}
+
+	private static function register_patterns(): void {
+		include_once self::NEW_DESIGN_PATH . '/patterns/local-nav.php';
 	}
 
 	private static function register_styles(): void {
