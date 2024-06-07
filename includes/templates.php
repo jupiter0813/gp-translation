@@ -39,6 +39,14 @@ class Templates {
 		self::render( "parts/$template", $data );
 	}
 
+	public static function pattern( string $name, array $data = array() ): void {
+		$data['slug'] = $name;
+		$json         = wp_json_encode( $data );
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo do_blocks( "<!-- wp:pattern $json /-->" );
+	}
+
 	private static function register_patterns(): void {
 		include_once self::NEW_DESIGN_PATH . '/patterns/local-nav.php';
 	}
