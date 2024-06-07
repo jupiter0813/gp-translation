@@ -367,6 +367,10 @@ class Translation_Events {
 	 * @throws Exception
 	 */
 	public function add_active_events_current_user(): void {
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
 		$event_repository            = self::get_event_repository();
 		$user_attending_events_query = $event_repository->get_current_events_for_user( get_current_user_id() );
 		$events                      = $user_attending_events_query->events;
