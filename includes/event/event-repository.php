@@ -480,6 +480,11 @@ class Event_Repository implements Event_Repository_Interface {
 	): Events_Query_Result {
 		$this->assert_pagination_arguments( $page, $page_size );
 
+		// A user who is not logged-in, does not have any events.
+		if ( 0 === $user_id ) {
+			return new Events_Query_Result( array(), $page, 0 );
+		}
+
 		$args = array_replace_recursive(
 			$args,
 			array(
