@@ -47,6 +47,13 @@ class Templates {
 		echo do_blocks( "<!-- wp:pattern $json /-->" );
 	}
 
+	public static function block( string $name, array $data = array() ): void {
+		$json = empty( $data ) ? '{}' : wp_json_encode( $data );
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo do_blocks( "<!-- $name $json /-->" );
+	}
+
 	private static function register_patterns(): void {
 		include_once self::NEW_DESIGN_PATH . '/patterns/local-nav.php';
 	}
