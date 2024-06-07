@@ -3,6 +3,8 @@
 namespace Wporg\TranslationEvents;
 
 class Templates {
+	private const NEW_DESIGN_PATH = __DIR__ . '/../templates/new-design';
+
 	private static bool $use_new_design = false;
 
 	public static function use_new_design( bool $also_in_production = false ): void {
@@ -20,12 +22,8 @@ class Templates {
 	}
 
 	public static function render( string $template, array $data = array() ) {
-		$template_path = __DIR__ . '/../templates/';
-		if ( self::$use_new_design ) {
-			$template_path = $template_path . 'new-design/';
-		}
-
-		gp_tmpl_load( $template, $data, $template_path );
+		$template_path = self::$use_new_design ? self::NEW_DESIGN_PATH : __DIR__ . '/../templates';
+		gp_tmpl_load( $template, $data, "$template_path/" );
 	}
 
 	public static function header( array $data = array() ) {
