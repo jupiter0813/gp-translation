@@ -1,6 +1,8 @@
 <?php
 namespace Wporg\TranslationEvents\Templates\NewDesign\Parts;
 
+use Wporg\TranslationEvents\Templates;
+
 /** @var string $html_title */
 /** @var string $url */
 /** @var string $html_description */
@@ -15,14 +17,7 @@ add_css();
 add_social_tags( $html_title, $url, $html_description, $image_url );
 add_filter( 'wporg_block_navigation_menus', __NAMESPACE__ . '\add_site_navigation_menus' );
 
-$local_navigaton_bar = '
-	<!-- wp:wporg/local-navigation-bar {"backgroundColor":"charcoal-2","style":{"border":{"top":{"color":"var:preset|color|white-opacity-15","style":"solid","width":"1px"}},"elements":{"link":{"color":{"text":"var:preset|color|white"},":hover":{"color":{"text":"var:preset|color|white"}}}}},"textColor":"white","fontSize":"small"} -->
-		<!-- wp:site-title {"level":0,"fontSize":"small","className":"wporg-local-navigation-bar"} /-->
-		<!-- wp:navigation {"menuSlug":"site-header-menu", "icon":"menu","backgroundColor": "charcoal-2", "overlayBackgroundColor":"charcoal-2","overlayTextColor":"white","layout":{"type":"flex","orientation":"horizontal"},"fontSize":"small"} /-->
-	<!-- /wp:wporg/local-navigation-bar -->
-';
-// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-echo do_blocks( $local_navigaton_bar );
+Templates::pattern( 'wp:wporg-translate-events/local-nav' );
 
 /**
  * Provide a list with a navigation menu.
