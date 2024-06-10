@@ -12,16 +12,12 @@ use Wporg\TranslationEvents\Urls;
 /** @var ?bool $show_start */
 /** @var ?bool $show_end */
 /** @var ?bool $show_excerpt */
-/** @var ?string $date_format */
-/** @var ?bool $relative_time */
 /** @var ?string[] $extra_classes */
 /** @var ?Attendee[] $current_user_attendee_per_event Associative array with event id as key, and Attendee as value. */
 
 $show_start                      = $show_start ?? false;
 $show_end                        = $show_end ?? false;
 $show_excerpt                    = $show_excerpt ?? true;
-$date_format                     = $date_format ?? '';
-$relative_time                   = $relative_time ?? true;
 $show_permanent_delete           = $show_permanent_delete ?? false;
 $extra_classes                   = isset( $extra_classes ) ? implode( $extra_classes, ' ' ) : '';
 $current_user_attendee_per_event = $current_user_attendee_per_event ?? array();
@@ -29,12 +25,8 @@ $current_user_attendee_per_event = $current_user_attendee_per_event ?? array();
 /**
  * @param Event_Start_Date|Event_End_Date $time
  */
-$print_time = function ( $time ) use ( $date_format, $relative_time ): void {
-	if ( $relative_time ) {
-		$time->print_relative_time_html( $date_format );
-	} else {
-		$time->print_time_html( $date_format );
-	}
+$print_time = function ( $time ): void {
+	$time->print_absolute_and_relative_time_html();
 };
 ?>
 
@@ -105,16 +97,16 @@ $print_time = function ( $time ) use ( $date_format, $relative_time ): void {
 			<?php // Dates. ?>
 			<?php if ( $show_start ) : ?>
 				<?php if ( $event->start()->is_in_the_past() ) : ?>
-					<span class="event-list-date">started <?php $print_time( $event->start() ); ?></span>
+					<span class="event-list-date"><?php $print_time( $event->start() ); ?></span>
 				<?php else : ?>
-					<span class="event-list-date">starts <?php $print_time( $event->start() ); ?></span>
+					<span class="event-list-date"><?php $print_time( $event->start() ); ?></span>
 				<?php endif; ?>
 			<?php endif; ?>
 			<?php if ( $show_end ) : ?>
 				<?php if ( $event->end()->is_in_the_past() ) : ?>
-					<span class="event-list-date">ended <?php $print_time( $event->end() ); ?></span>
+					<span class="event-list-date"><?php $print_time( $event->end() ); ?></span>
 				<?php else : ?>
-					<span class="event-list-date">ends <?php $print_time( $event->end() ); ?></time></span>
+					<span class="event-list-date"><?php $print_time( $event->end() ); ?></time></span>
 				<?php endif; ?>
 			<?php endif; ?>
 
