@@ -16,7 +16,7 @@ add_css();
 add_social_tags( $html_title, $url, $html_description, $image_url );
 add_filter( 'wporg_block_navigation_menus', __NAMESPACE__ . '\add_site_navigation_menus' );
 
-Templates::pattern( 'wp:wporg-translate-events/local-nav' );
+Templates::pattern( 'wporg-translate-events/local-nav' );
 
 /**
  * Provide a list with a navigation menu.
