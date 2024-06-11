@@ -19,4 +19,4 @@ $image_url        = $image_url ?? Urls::event_default_image();
 
 gp_title( $html_title );
 Templates::part( 'site-header', get_defined_vars() );
-Templates::part( 'breadcrumbs', array( 'extra_items' => $breadcrumbs ?? array() ) );
+Templates::block( 'wporg/site-breadcrumbs' );
