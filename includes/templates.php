@@ -19,6 +19,10 @@ class Templates {
 		}
 
 		if ( self::$use_new_design ) {
+			// Remove GlotPress styles and scripts.
+			wp_styles()->remove( 'gp-base' );
+			wp_scripts()->remove( array( 'gp-common', 'gp-editor', 'gp-glossary', 'gp-translations-page', 'gp-mass-create-sets-page' ) );
+
 			self::register_blocks();
 			self::register_patterns();
 			self::register_styles();
