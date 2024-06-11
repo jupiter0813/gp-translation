@@ -10,8 +10,6 @@ use Wporg\TranslationEvents\Templates;
 
 Templates::block( 'wporg/global-header' );
 
-gp_enqueue_styles( array( 'gp-jquery-webui-popover', 'driver-js' ) );
-gp_enqueue_scripts( array( 'gp-tour' ) );
 add_css();
 add_social_tags( $html_title, $url, $html_description, $image_url );
 add_filter( 'wporg_block_navigation_menus', __NAMESPACE__ . '\add_site_navigation_menus' );
