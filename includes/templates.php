@@ -48,7 +48,14 @@ class Templates {
 	}
 
 	private static function register_patterns(): void {
-		include_once self::NEW_DESIGN_PATH . '/patterns/local-nav.php';
+		$paths = glob( self::NEW_DESIGN_PATH . '/patterns/*.php' );
+		if ( ! is_array( $paths ) ) {
+			return;
+		}
+
+		foreach ( $paths as $path ) {
+			include_once $path;
+		}
 	}
 
 	private static function register_blocks(): void {
