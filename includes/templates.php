@@ -28,14 +28,6 @@ class Templates {
 		gp_tmpl_load( $template, $data, "$template_path/" );
 	}
 
-	public static function header( array $data = array() ) {
-		self::part( 'header', $data );
-	}
-
-	public static function footer( array $data = array() ) {
-		self::part( 'footer', $data );
-	}
-
 	public static function part( string $template, array $data ) {
 		self::render( "parts/$template", $data );
 	}
@@ -71,5 +63,19 @@ class Templates {
 			filemtime( __DIR__ . '/../assets/css/new-design.css' )
 		);
 		gp_enqueue_styles( 'translation-events-new-design-css' );
+	}
+
+	/**
+	 * @deprecated Not for use in new design. Instead, the header template should be used.
+	 */
+	public static function header( array $data = array() ) {
+		self::part( 'header', $data );
+	}
+
+	/**
+	 * @deprecated Not for use in new design. Instead, the footer template should be used.
+	 */
+	public static function footer( array $data = array() ) {
+		self::part( 'footer', $data );
 	}
 }
