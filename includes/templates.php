@@ -46,7 +46,7 @@ class Templates {
 		$json = empty( $data ) ? '{}' : wp_json_encode( $data );
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo do_blocks( "<!-- $name $json /-->" );
+		echo do_blocks( "<!-- wp:$name $json /-->" );
 	}
 
 	private static function register_patterns(): void {

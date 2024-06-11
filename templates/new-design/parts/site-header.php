@@ -8,7 +8,7 @@ use Wporg\TranslationEvents\Templates;
 /** @var string $html_description */
 /** @var string $image_url */
 
-Templates::block( 'wp:wporg/global-header' );
+Templates::block( 'wporg/global-header' );
 
 gp_enqueue_styles( array( 'gp-jquery-webui-popover', 'driver-js' ) );
 gp_enqueue_scripts( array( 'gp-tour' ) );
