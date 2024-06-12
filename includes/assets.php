@@ -37,7 +37,7 @@ class Assets {
 			array(),
 			filemtime( $this->base_dir . '/css/new-design.css' )
 		);
-		gp_enqueue_styles( 'translation-events-new-design-css' );
+		wp_enqueue_style( 'translation-events-new-design-css' );
 	}
 
 	private function register_legacy_styles(): void {
@@ -47,7 +47,7 @@ class Assets {
 			array( 'dashicons' ),
 			filemtime( $this->base_dir . '/css/translation-events.css' )
 		);
-		gp_enqueue_styles( 'translation-events-css' );
+		wp_enqueue_style( 'translation-events-css' );
 	}
 
 	private function register_scripts(): void {
@@ -58,7 +58,7 @@ class Assets {
 			filemtime( $this->base_dir . '/js/translation-events.js' ),
 			false
 		);
-		gp_enqueue_script( 'translation-events-js' );
+		wp_enqueue_script( 'translation-events-js' );
 		wp_localize_script(
 			'translation-events-js',
 			'$translation_event',
