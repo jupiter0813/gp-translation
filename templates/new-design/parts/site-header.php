@@ -10,7 +10,6 @@ use Wporg\TranslationEvents\Templates;
 
 Templates::block( 'wporg/global-header' );
 
-add_css();
 add_social_tags( $html_title, $url, $html_description, $image_url );
 add_filter( 'wporg_block_navigation_menus', __NAMESPACE__ . '\add_site_navigation_menus' );
 
@@ -50,14 +49,6 @@ function add_site_navigation_menus(): array {
 			),
 		),
 	);
-}
-/**
- * Add inline CSS to the page, needed for the new design.
- *
- * This should be replaced with a proper enqueueing of styles or a call to a proper method.
- */
-function add_css() {
-	echo '<script type="text/javascript">document.body.className = document.body.className.replace("no-js","js");</script>';
 }
 
 /**
