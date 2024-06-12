@@ -3,9 +3,11 @@
 namespace Wporg\TranslationEvents;
 
 class Assets {
+	private string $base_dir;
 	private bool $use_new_design;
 
 	public function __construct( bool $use_new_design = false ) {
+		$this->base_dir       = __DIR__ . '/../assets';
 		$this->use_new_design = $use_new_design;
 	}
 
@@ -25,7 +27,7 @@ class Assets {
 			'translation-events-new-design-css',
 			plugins_url( 'assets/css/new-design.css', __DIR__ ),
 			array( 'dashicons' ),
-			filemtime( __DIR__ . '/../assets/css/new-design.css' )
+			filemtime( $this->base_dir . '/css/new-design.css' )
 		);
 		gp_enqueue_styles( 'translation-events-new-design-css' );
 	}
@@ -35,7 +37,7 @@ class Assets {
 			'translation-events-css',
 			plugins_url( 'assets/css/translation-events.css', __FILE__ ),
 			array( 'dashicons' ),
-			filemtime( __DIR__ . '/../assets/css/translation-events.css' )
+			filemtime( $this->base_dir . '/css/translation-events.css' )
 		);
 		gp_enqueue_styles( 'translation-events-css' );
 	}
@@ -45,7 +47,7 @@ class Assets {
 			'translation-events-js',
 			plugins_url( 'assets/js/translation-events.js', __FILE__ ),
 			array( 'jquery', 'gp-common' ),
-			filemtime( __DIR__ . '/../assets/js/translation-events.js' ),
+			filemtime( $this->base_dir . '/js/translation-events.js' ),
 			false
 		);
 		gp_enqueue_script( 'translation-events-js' );
