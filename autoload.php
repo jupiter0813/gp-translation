@@ -3,6 +3,7 @@
 require_once __DIR__ . '/includes/upgrade.php';
 require_once __DIR__ . '/includes/urls.php';
 require_once __DIR__ . '/includes/templates.php';
+require_once __DIR__ . '/includes/styles.php';
 require_once __DIR__ . '/includes/routes/route.php';
 require_once __DIR__ . '/includes/routes/attendee/list.php';
 require_once __DIR__ . '/includes/routes/event/create.php';

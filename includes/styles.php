@@ -29,6 +29,12 @@ class Styles {
 	}
 
 	private function legacy_init(): void {
-		// TODO.
+		wp_register_style(
+			'translation-events-css',
+			plugins_url( 'assets/css/translation-events.css', __FILE__ ),
+			array( 'dashicons' ),
+			filemtime( __DIR__ . '/../assets/css/translation-events.css' )
+		);
+		gp_enqueue_styles( 'translation-events-css' );
 	}
 }
