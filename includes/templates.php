@@ -19,13 +19,9 @@ class Templates {
 		}
 
 		if ( self::$use_new_design ) {
-			// Remove GlotPress styles and scripts.
-			wp_styles()->remove( 'gp-base' );
-			wp_scripts()->remove( array( 'gp-common', 'gp-editor', 'gp-glossary', 'gp-translations-page', 'gp-mass-create-sets-page' ) );
-
 			self::register_blocks();
 			self::register_patterns();
-			self::register_styles();
+			( new Styles( self::$use_new_design ) )->init();
 		}
 	}
 
@@ -142,16 +138,6 @@ class Templates {
 
 	private static function register_blocks(): void {
 		include_once self::NEW_DESIGN_PATH . '/blocks/breadcrumbs.php';
-	}
-
-	private static function register_styles(): void {
-		wp_register_style(
-			'translation-events-new-design-css',
-			plugins_url( 'assets/css/new-design.css', __DIR__ ),
-			array( 'dashicons' ),
-			filemtime( __DIR__ . '/../assets/css/new-design.css' )
-		);
-		gp_enqueue_styles( 'translation-events-new-design-css' );
 	}
 
 	/**
