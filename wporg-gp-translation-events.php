@@ -81,6 +81,14 @@ class Translation_Events {
 		return $attendee_adder;
 	}
 
+	public static function get_assets(): Assets {
+		static $assets = null;
+		if ( null === $assets ) {
+			$assets = new Assets();
+		}
+		return $assets;
+	}
+
 	public function __construct() {
 		add_action( 'wp_ajax_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
 		add_action( 'wp_ajax_nopriv_submit_event_ajax', array( $this, 'submit_event_ajax' ) );

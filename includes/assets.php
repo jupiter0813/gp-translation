@@ -6,12 +6,16 @@ class Assets {
 	private string $base_dir;
 	private bool $use_new_design;
 
-	public function __construct( bool $use_new_design = false ) {
-		$this->base_dir       = __DIR__ . '/../assets';
-		$this->use_new_design = $use_new_design;
+	public function __construct() {
+		$this->base_dir       = realpath( __DIR__ . '/../assets' );
+		$this->use_new_design = false;
 	}
 
-	public function init(): void {
+	public function use_new_design(): void {
+		$this->use_new_design = true;
+	}
+
+	public function register(): void {
 		$this->register_scripts();
 
 		if ( ! $this->use_new_design ) {
@@ -29,7 +33,7 @@ class Assets {
 
 		wp_register_style(
 			'translation-events-new-design-css',
-			plugins_url( 'assets/css/new-design.css', __DIR__ ),
+			plugins_url( 'assets/css/new-design.css', $this->base_dir ),
 			array( 'dashicons' ),
 			filemtime( $this->base_dir . '/css/new-design.css' )
 		);
@@ -39,7 +43,7 @@ class Assets {
 	private function register_legacy_styles(): void {
 		wp_register_style(
 			'translation-events-css',
-			plugins_url( 'assets/css/translation-events.css', __FILE__ ),
+			plugins_url( 'assets/css/translation-events.css', $this->base_dir ),
 			array( 'dashicons' ),
 			filemtime( $this->base_dir . '/css/translation-events.css' )
 		);
@@ -49,7 +53,7 @@ class Assets {
 	private function register_scripts(): void {
 		wp_register_script(
 			'translation-events-js',
-			plugins_url( 'assets/js/translation-events.js', __FILE__ ),
+			plugins_url( 'assets/js/translation-events.js', $this->base_dir ),
 			array( 'jquery', 'gp-common' ),
 			filemtime( $this->base_dir . '/js/translation-events.js' ),
 			false

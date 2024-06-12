@@ -21,7 +21,7 @@ class Templates {
 		if ( self::$use_new_design ) {
 			self::register_blocks();
 			self::register_patterns();
-			( new Assets( self::$use_new_design ) )->init();
+			Translation_Events::get_assets()->use_new_design();
 		}
 	}
 
