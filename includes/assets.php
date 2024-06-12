@@ -10,6 +10,8 @@ class Assets {
 	}
 
 	public function init(): void {
+		$this->register_scripts();
+
 		if ( ! $this->use_new_design ) {
 			$this->legacy_init();
 			return;
@@ -36,5 +38,24 @@ class Assets {
 			filemtime( __DIR__ . '/../assets/css/translation-events.css' )
 		);
 		gp_enqueue_styles( 'translation-events-css' );
+	}
+
+	private function register_scripts(): void {
+		wp_register_script(
+			'translation-events-js',
+			plugins_url( 'assets/js/translation-events.js', __FILE__ ),
+			array( 'jquery', 'gp-common' ),
+			filemtime( __DIR__ . '/../assets/js/translation-events.js' ),
+			false
+		);
+		gp_enqueue_script( 'translation-events-js' );
+		wp_localize_script(
+			'translation-events-js',
+			'$translation_event',
+			array(
+				'url'          => admin_url( 'admin-ajax.php' ),
+				'_event_nonce' => wp_create_nonce( Translation_Events::CPT ),
+			)
+		);
 	}
 }
