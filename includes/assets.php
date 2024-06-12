@@ -2,7 +2,7 @@
 
 namespace Wporg\TranslationEvents;
 
-class Styles {
+class Assets {
 	private bool $use_new_design;
 
 	public function __construct( bool $use_new_design = false ) {
