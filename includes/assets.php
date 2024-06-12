@@ -34,7 +34,7 @@ class Assets {
 		wp_register_style(
 			'translation-events-new-design-css',
 			plugins_url( 'assets/css/new-design.css', $this->base_dir ),
-			array( 'dashicons' ),
+			array(),
 			filemtime( $this->base_dir . '/css/new-design.css' )
 		);
 		gp_enqueue_styles( 'translation-events-new-design-css' );
