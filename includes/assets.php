@@ -15,10 +15,14 @@ class Assets {
 		$this->register_scripts();
 
 		if ( ! $this->use_new_design ) {
-			$this->legacy_init();
+			$this->register_legacy_styles();
 			return;
 		}
 
+		$this->register_styles();
+	}
+
+	private function register_styles(): void {
 		// Remove GlotPress styles and scripts.
 		wp_styles()->remove( 'gp-base' );
 		wp_scripts()->remove( array( 'gp-common', 'gp-editor', 'gp-glossary', 'gp-translations-page', 'gp-mass-create-sets-page' ) );
@@ -32,7 +36,7 @@ class Assets {
 		gp_enqueue_styles( 'translation-events-new-design-css' );
 	}
 
-	private function legacy_init(): void {
+	private function register_legacy_styles(): void {
 		wp_register_style(
 			'translation-events-css',
 			plugins_url( 'assets/css/translation-events.css', __FILE__ ),
