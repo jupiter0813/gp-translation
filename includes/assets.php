@@ -24,27 +24,31 @@ class Assets {
 		}
 
 		$this->register_styles();
+		$this->dequeue_unwanted_assets();
+	}
 
-		// Dequeue styles we don't want.
+	private function dequeue_unwanted_assets(): void {
+		// Dequeue styles and scripts from glotpress and from the pub/wporg theme.
 		// The WordPress.org theme enqueues styles in wp_enqueue_scripts so we need to dequeue in both styles and scripts.
 		foreach ( array( 'wp_enqueue_styles', 'wp_enqueue_scripts' ) as $action ) {
 			add_action(
 				$action,
 				function (): void {
-					$this->dequeue_unwanted_styles();
-					$this->dequeue_unwanted_scripts();
+					wp_styles()->remove(
+						array(
+							'wporg-style',
+						)
+					);
+					wp_scripts()->remove(
+						array(
+							'gp-common',
+							'wporg-plugins-skip-link-focus-fix',
+						)
+					);
 				},
 				9999 // Run as late as possible to make sure the styles/scripts are not enqueued after we dequeue them.
 			);
 		}
-	}
-
-	private function dequeue_unwanted_styles(): void {
-		wp_dequeue_style( 'wporg-style' );
-	}
-
-	private function dequeue_unwanted_scripts(): void {
-		wp_scripts()->remove( array( 'gp-common', 'gp-editor', 'gp-glossary', 'gp-translations-page', 'gp-mass-create-sets-page' ) );
 	}
 
 	private function register_styles(): void {
