@@ -24,13 +24,30 @@ class Assets {
 		}
 
 		$this->register_styles();
+
+		// Dequeue styles we don't want.
+		// The WordPress.org theme enqueues styles in wp_enqueue_scripts so we need to dequeue in both styles and scripts.
+		foreach ( array( 'wp_enqueue_styles', 'wp_enqueue_scripts' ) as $action ) {
+			add_action(
+				$action,
+				function (): void {
+					$this->dequeue_unwanted_styles();
+					$this->dequeue_unwanted_scripts();
+				},
+				9999 // Run as late as possible to make sure the styles/scripts are not enqueued after we dequeue them.
+			);
+		}
+	}
+
+	private function dequeue_unwanted_styles(): void {
+		wp_dequeue_style( 'wporg-style' );
+	}
+
+	private function dequeue_unwanted_scripts(): void {
+		wp_scripts()->remove( array( 'gp-common', 'gp-editor', 'gp-glossary', 'gp-translations-page', 'gp-mass-create-sets-page' ) );
 	}
 
 	private function register_styles(): void {
-		// Remove GlotPress styles and scripts.
-		wp_styles()->remove( 'gp-base' );
-		wp_scripts()->remove( array( 'gp-common', 'gp-editor', 'gp-glossary', 'gp-translations-page', 'gp-mass-create-sets-page' ) );
-
 		wp_register_style(
 			'translation-events-new-design-css',
 			plugins_url( 'assets/css/new-design.css', $this->base_dir ),
