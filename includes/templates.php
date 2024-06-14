@@ -27,7 +27,13 @@ class Templates {
 
 	public static function render( string $template, array $data = array() ) {
 		$template_path = self::$use_new_design ? self::NEW_DESIGN_PATH : __DIR__ . '/../templates';
-		gp_tmpl_load( $template, $data, "$template_path/" );
+		if ( self::$use_new_design ) {
+			// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+			extract( $data, EXTR_SKIP );
+			include "$template_path/$template.php";
+		} else {
+			gp_tmpl_load( $template, $data, "$template_path/" );
+		}
 	}
 
 	public static function part( string $template, array $data ) {
