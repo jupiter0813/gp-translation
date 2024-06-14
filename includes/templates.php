@@ -33,6 +33,10 @@ class Templates {
 		self::part( 'footer', $data );
 	}
 
+	public static function part( string $template, array $data ) {
+		self::render( "parts/$template", $data );
+	}
+
 	public static function render( string $template, array $data = array() ) {
 		$template_path = self::$use_new_design ? self::NEW_DESIGN_PATH : __DIR__ . '/../templates';
 		if ( self::$use_new_design ) {
@@ -42,10 +46,6 @@ class Templates {
 		} else {
 			gp_tmpl_load( $template, $data, "$template_path/" );
 		}
-	}
-
-	public static function part( string $template, array $data ) {
-		self::render( "parts/$template", $data );
 	}
 
 	public static function pattern( string $name, array $data = array() ): void {
