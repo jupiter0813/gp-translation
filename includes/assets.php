@@ -23,6 +23,17 @@ class Assets {
 			return;
 		}
 
+		// Make it so that it appears that the active theme is wporg-parent-2021,
+		// and call the functions.php of that theme.
+		add_filter(
+			'template',
+			function (): string {
+				return 'wporg-parent-2021';
+			}
+		);
+		$parent_theme_path = get_template_directory();
+		include $parent_theme_path . '/functions.php';
+
 		$this->enqueue_styles();
 		$this->dequeue_unwanted_assets();
 	}
