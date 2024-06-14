@@ -52,13 +52,18 @@ class Assets {
 	}
 
 	private function register_styles(): void {
-		wp_register_style(
-			'translation-events-new-design-css',
-			plugins_url( 'assets/css/new-design.css', $this->base_dir ),
-			array(),
-			filemtime( $this->base_dir . '/css/new-design.css' )
+		add_action(
+			'wp_head',
+			function (): void {
+				wp_register_style(
+					'translation-events-new-design-css',
+					plugins_url( 'assets/css/new-design.css', $this->base_dir ),
+					array(),
+					filemtime( $this->base_dir . '/css/new-design.css' )
+				);
+				wp_enqueue_style( 'translation-events-new-design-css' );
+			}
 		);
-		wp_enqueue_style( 'translation-events-new-design-css' );
 	}
 
 	private function register_legacy_styles(): void {
