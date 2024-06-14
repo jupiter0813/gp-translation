@@ -25,6 +25,14 @@ class Templates {
 		}
 	}
 
+	public static function header( array $data = array() ) {
+		self::part( 'header', $data );
+	}
+
+	public static function footer( array $data = array() ) {
+		self::part( 'footer', $data );
+	}
+
 	public static function render( string $template, array $data = array() ) {
 		$template_path = self::$use_new_design ? self::NEW_DESIGN_PATH : __DIR__ . '/../templates';
 		if ( self::$use_new_design ) {
@@ -144,19 +152,5 @@ class Templates {
 
 	private static function register_blocks(): void {
 		include_once self::NEW_DESIGN_PATH . '/blocks/breadcrumbs.php';
-	}
-
-	/**
-	 * @deprecated Not for use in new design. Instead, the header template should be used.
-	 */
-	public static function header( array $data = array() ) {
-		self::part( 'header', $data );
-	}
-
-	/**
-	 * @deprecated Not for use in new design. Instead, the footer template should be used.
-	 */
-	public static function footer( array $data = array() ) {
-		self::part( 'footer', $data );
 	}
 }
