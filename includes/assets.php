@@ -15,15 +15,15 @@ class Assets {
 		$this->use_new_design = true;
 	}
 
-	public function register(): void {
-		$this->register_scripts();
+	public function enqueue(): void {
+		$this->enqueue_scripts();
 
 		if ( ! $this->use_new_design ) {
-			$this->register_legacy_styles();
+			$this->enqueue_legacy_styles();
 			return;
 		}
 
-		$this->register_styles();
+		$this->enqueue_styles();
 		$this->dequeue_unwanted_assets();
 	}
 
@@ -51,7 +51,7 @@ class Assets {
 		}
 	}
 
-	private function register_styles(): void {
+	private function enqueue_styles(): void {
 		add_action(
 			'wp_head',
 			function (): void {
@@ -66,7 +66,7 @@ class Assets {
 		);
 	}
 
-	private function register_legacy_styles(): void {
+	private function enqueue_legacy_styles(): void {
 		wp_register_style(
 			'translation-events-css',
 			plugins_url( 'assets/css/translation-events.css', $this->base_dir ),
@@ -76,7 +76,7 @@ class Assets {
 		wp_enqueue_style( 'translation-events-css' );
 	}
 
-	private function register_scripts(): void {
+	private function enqueue_scripts(): void {
 		wp_register_script(
 			'translation-events-js',
 			plugins_url( 'assets/js/translation-events.js', $this->base_dir ),

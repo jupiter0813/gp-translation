@@ -11,7 +11,7 @@ abstract class Route extends GP_Route {
 		$this->set_notices_and_errors();
 		$this->header( 'Content-Type: text/html; charset=utf-8' );
 
-		Translation_Events::get_assets()->register();
+		Translation_Events::get_assets()->enqueue();
 		Templates::render( $template, $args );
 	}
 }
