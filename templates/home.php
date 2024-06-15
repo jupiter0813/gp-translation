@@ -19,8 +19,9 @@ Templates::header(
 	),
 );
 ?>
-
 <div class="event-page-wrapper">
+	<div class="notice">
+		<p><?php echo wp_kses( sprintf( __( 'Do you want to host your own event? <a href="%s">Find more information here</a>.', 'gp-translation-events' ), 'https://make.wordpress.org/polyglots/2024/05/29/translation-events-inviting-gtes-to-create-and-manage-events/' ), array( 'a' => array( 'href' => array() ) ) ); ?></p>
 <div class="event-left-col">
 <?php
 if ( empty( $current_events_query->events ) && empty( $upcoming_events_query->events ) && empty( $past_events_query->post_count ) ) :
