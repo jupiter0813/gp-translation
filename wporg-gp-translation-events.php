@@ -90,6 +90,8 @@ class Translation_Events {
 	}
 
 	public function __construct() {
+		register_theme_directory( __DIR__ . '/themes' );
+
 		add_action( 'wp_ajax_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
 		add_action( 'wp_ajax_nopriv_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
 		add_action( 'init', array( $this, 'register_event_post_type' ) );
