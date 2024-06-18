@@ -16,8 +16,6 @@ class Assets {
 	}
 
 	public function enqueue(): void {
-		$this->enqueue_scripts();
-
 		if ( ! $this->use_new_design ) {
 			$this->enqueue_legacy_styles();
 		}
@@ -31,24 +29,5 @@ class Assets {
 			filemtime( $this->base_dir . '/css/translation-events.css' )
 		);
 		wp_enqueue_style( 'translation-events-css' );
-	}
-
-	private function enqueue_scripts(): void {
-		wp_register_script(
-			'translation-events-js',
-			plugins_url( 'assets/js/translation-events.js', $this->base_dir ),
-			array( 'jquery', 'gp-common' ),
-			filemtime( $this->base_dir . '/js/translation-events.js' ),
-			false
-		);
-		wp_enqueue_script( 'translation-events-js' );
-		wp_localize_script(
-			'translation-events-js',
-			'$translation_event',
-			array(
-				'url'          => admin_url( 'admin-ajax.php' ),
-				'_event_nonce' => wp_create_nonce( Translation_Events::CPT ),
-			)
-		);
 	}
 }

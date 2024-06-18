@@ -94,6 +94,7 @@ class Translation_Events {
 
 		add_action( 'wp_ajax_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
 		add_action( 'wp_ajax_nopriv_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_translation_event_js' ) );
 		add_action( 'init', array( $this, 'register_event_post_type' ) );
 		add_action( 'init', array( $this, 'send_notifications' ) );
 		add_action( 'add_meta_boxes', array( $this, 'event_meta_boxes' ) );
@@ -143,6 +144,25 @@ class Translation_Events {
 
 		$stats_listener = new Stats_Listener( self::get_event_repository() );
 		$stats_listener->start();
+	}
+
+	public function register_translation_event_js() {
+		wp_register_script(
+			'translation-events-js',
+			plugins_url( 'assets/js/translation-events.js', __FILE__ ),
+			array( 'jquery', 'gp-common' ),
+			filemtime( __DIR__ . '/assets/js/translation-events.js' ),
+			false
+		);
+		gp_enqueue_script( 'translation-events-js' );
+		wp_localize_script(
+			'translation-events-js',
+			'$translation_event',
+			array(
+				'url'          => admin_url( 'admin-ajax.php' ),
+				'_event_nonce' => wp_create_nonce( self::CPT ),
+			)
+		);
 	}
 
 	/**
