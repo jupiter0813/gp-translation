@@ -19,7 +19,6 @@ class Templates {
 		}
 
 		if ( self::$use_new_design ) {
-			self::register_blocks();
 			self::register_patterns();
 			Translation_Events::get_assets()->use_new_design();
 		}
@@ -148,9 +147,5 @@ class Templates {
 
 			register_block_pattern( $pattern_data['slug'], $pattern_data );
 		}
-	}
-
-	private static function register_blocks(): void {
-		include_once self::NEW_DESIGN_PATH . '/blocks/breadcrumbs.php';
 	}
 }
