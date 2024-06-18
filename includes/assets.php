@@ -27,31 +27,6 @@ class Assets {
 
 		$this->theme_loader->load();
 		$this->enqueue_styles();
-		$this->dequeue_unwanted_assets();
-	}
-
-	private function dequeue_unwanted_assets(): void {
-		// Dequeue styles and scripts from glotpress and from the pub/wporg theme.
-		// The WordPress.org theme enqueues styles in wp_enqueue_scripts so we need to dequeue in both styles and scripts.
-		foreach ( array( 'wp_enqueue_styles', 'wp_enqueue_scripts' ) as $action ) {
-			add_action(
-				$action,
-				function (): void {
-					wp_styles()->remove(
-						array(
-							'wporg-style',
-						)
-					);
-					wp_scripts()->remove(
-						array(
-							'gp-common',
-							'wporg-plugins-skip-link-focus-fix',
-						)
-					);
-				},
-				9999 // Run as late as possible to make sure the styles/scripts are not enqueued after we dequeue them.
-			);
-		}
 	}
 
 	private function enqueue_styles(): void {
