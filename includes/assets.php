@@ -23,19 +23,42 @@ class Assets {
 			return;
 		}
 
-		// Make it so that it appears that the active theme is wporg-parent-2021,
-		// and call the functions.php of that theme.
+		$this->set_theme();
+		$this->enqueue_styles();
+		$this->dequeue_unwanted_assets();
+	}
+
+	/**
+	 * Make it so that it appears that the active theme is wporg-translate-events-2024.
+	 */
+	private function set_theme(): void {
+		if ( str_ends_with( get_stylesheet_directory(), 'wporg-translate-events-2024' ) ) {
+			// Our theme is already the active theme, there's nothing to do here.
+			return;
+		}
+
 		add_filter(
 			'template',
 			function (): string {
 				return 'wporg-parent-2021';
 			}
 		);
-		$parent_theme_path = get_template_directory();
-		include $parent_theme_path . '/functions.php';
+		add_filter(
+			'stylesheet',
+			function (): string {
+				return 'wporg-translate-events-2024';
+			}
+		);
 
-		$this->enqueue_styles();
-		$this->dequeue_unwanted_assets();
+		global $wp_stylesheet_path, $wp_template_path;
+		$wp_stylesheet_path = get_stylesheet_directory();
+		$wp_template_path   = get_template_directory();
+
+		foreach ( wp_get_active_and_valid_themes() as $theme ) {
+			if ( file_exists( $theme . '/functions.php' ) ) {
+				include $theme . '/functions.php';
+			}
+		}
 	}
 
 	private function dequeue_unwanted_assets(): void {
