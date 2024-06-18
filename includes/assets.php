@@ -16,18 +16,5 @@ class Assets {
 	}
 
 	public function enqueue(): void {
-		if ( ! $this->use_new_design ) {
-			$this->enqueue_legacy_styles();
-		}
-	}
-
-	private function enqueue_legacy_styles(): void {
-		wp_register_style(
-			'translation-events-css',
-			plugins_url( 'assets/css/translation-events.css', $this->base_dir ),
-			array( 'dashicons' ),
-			filemtime( $this->base_dir . '/css/translation-events.css' )
-		);
-		wp_enqueue_style( 'translation-events-css' );
 	}
 }

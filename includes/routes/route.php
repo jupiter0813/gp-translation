@@ -9,6 +9,7 @@ use Wporg\TranslationEvents\Translation_Events;
 
 abstract class Route extends GP_Route {
 	private Theme_Loader $theme_loader;
+	private bool $use_theme = false;
 
 	public function __construct() {
 		parent::__construct();
@@ -19,24 +20,37 @@ abstract class Route extends GP_Route {
 		$this->set_notices_and_errors();
 		$this->header( 'Content-Type: text/html; charset=utf-8' );
 
-		Translation_Events::get_assets()->enqueue();
+		if ( ! $this->use_theme ) {
+			$this->enqueue_legacy_styles();
+		}
+
 		Templates::render( $template, $args );
 	}
 
 	protected function use_theme( bool $also_in_production = false ): void {
 		if ( $also_in_production ) {
-			$use_theme = true;
+			$this->use_theme = true;
 		} else {
 			// Only enable if new design has been explicitly enabled.
-			$use_theme = defined( 'TRANSLATION_EVENTS_NEW_DESIGN' ) && TRANSLATION_EVENTS_NEW_DESIGN;
+			$this->use_theme = defined( 'TRANSLATION_EVENTS_NEW_DESIGN' ) && TRANSLATION_EVENTS_NEW_DESIGN;
 		}
 
-		if ( ! $use_theme ) {
+		if ( ! $this->use_theme ) {
 			return;
 		}
 
 		$this->theme_loader->load();
 		Templates::set_template_directory( $this->theme_loader->get_theme_root() );
 		Translation_Events::get_assets()->use_new_design();
+	}
+
+	private function enqueue_legacy_styles(): void {
+		wp_register_style(
+			'translation-events-css',
+			plugins_url( 'assets/css/translation-events.css', __FILE__ ),
+			array( 'dashicons' ),
+			filemtime( __DIR__ . '/assets/css/translation-events.css' )
+		);
+		wp_enqueue_style( 'translation-events-css' );
 	}
 }
