@@ -81,14 +81,6 @@ class Translation_Events {
 		return $attendee_adder;
 	}
 
-	public static function get_assets(): Assets {
-		static $assets = null;
-		if ( null === $assets ) {
-			$assets = new Assets();
-		}
-		return $assets;
-	}
-
 	public function __construct() {
 		register_theme_directory( __DIR__ . '/themes' );
 

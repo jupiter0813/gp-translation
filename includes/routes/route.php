@@ -5,7 +5,6 @@ namespace Wporg\TranslationEvents\Routes;
 use GP_Route;
 use Wporg\TranslationEvents\Templates;
 use Wporg\TranslationEvents\Theme_Loader;
-use Wporg\TranslationEvents\Translation_Events;
 
 abstract class Route extends GP_Route {
 	private Theme_Loader $theme_loader;
@@ -41,7 +40,6 @@ abstract class Route extends GP_Route {
 
 		$this->theme_loader->load();
 		Templates::set_template_directory( $this->theme_loader->get_theme_root() );
-		Translation_Events::get_assets()->use_new_design();
 	}
 
 	private function enqueue_legacy_styles(): void {
