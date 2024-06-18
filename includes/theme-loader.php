@@ -9,7 +9,7 @@ class Theme_Loader {
 		$this->theme = $theme;
 	}
 
-	public function get_theme_root(): string {
+	public function get_theme_root_dir(): string {
 		return get_theme_root( $this->theme ) . "/$this->theme";
 	}
 

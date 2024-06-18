@@ -40,7 +40,7 @@ abstract class Route extends GP_Route {
 		}
 
 		$this->theme_loader->load();
-		Templates::set_template_directory( $this->theme_loader->get_theme_root() );
+		Templates::set_template_directory( $this->theme_loader->get_theme_root_dir() );
 	}
 
 	private function enqueue_legacy_styles(): void {
