@@ -45,9 +45,9 @@ abstract class Route extends GP_Route {
 	private function enqueue_legacy_styles(): void {
 		wp_register_style(
 			'translation-events-css',
-			plugins_url( 'assets/css/translation-events.css', __FILE__ ),
+			plugins_url( '/assets/css/translation-events.css', realpath( __DIR__ . '/../' ) ),
 			array( 'dashicons' ),
-			filemtime( __DIR__ . '/assets/css/translation-events.css' )
+			filemtime( __DIR__ . '/../assets/css/translation-events.css' )
 		);
 		wp_enqueue_style( 'translation-events-css' );
 	}
