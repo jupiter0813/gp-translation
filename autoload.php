@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/includes/upgrade.php';
 require_once __DIR__ . '/includes/urls.php';
+require_once __DIR__ . '/includes/theme-loader.php';
 require_once __DIR__ . '/includes/templates.php';
 require_once __DIR__ . '/includes/assets.php';
 require_once __DIR__ . '/includes/routes/route.php';
