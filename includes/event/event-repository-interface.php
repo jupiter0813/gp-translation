@@ -89,7 +89,7 @@ interface Event_Repository_Interface {
 	public function get_past_events( int $page = -1, int $page_size = -1 ): Events_Query_Result;
 
 	/**
-	 * Get events that are trashed.
+	 * Get all events.
 	 *
 	 * @param int $page      Index of the page to return.
 	 * @param int $page_size Page size.
@@ -97,6 +97,17 @@ interface Event_Repository_Interface {
 	 * @return Events_Query_Result
 	 * @throws Exception
 	 */
+	public function get_all_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result;
+
+		/**
+		 * Get events that are trashed.
+		 *
+		 * @param int $page      Index of the page to return.
+		 * @param int $page_size Page size.
+		 *
+		 * @return Events_Query_Result
+		 * @throws Exception
+		 */
 	public function get_trashed_events( int $page = -1, int $page_size = -1 ): Events_Query_Result;
 
 	/**
