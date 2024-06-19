@@ -30,7 +30,11 @@ class Templates {
 			// Using a theme.
 			// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 			extract( $data, EXTR_SKIP );
-			include self::$template_directory . "/$template.php";
+			if ( str_ends_with( $template, '.html' ) ) {
+				include self::$template_directory . "/$template";
+			} else {
+				include self::$template_directory . "/$template.php";
+			}
 		}
 	}
 

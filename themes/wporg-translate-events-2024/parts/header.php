@@ -14,27 +14,29 @@ $url              = $url ?? Urls::events_home();
 $html_description = $html_description ?? esc_html__( 'WordPress Translation Events', 'gp-translation-events' );
 $image_url        = $image_url ?? Urls::event_default_image();
 
+add_filter( 'wporg_block_navigation_menus', __NAMESPACE__ . '\add_site_navigation_menus' );
+
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 	<head>
 		<meta charset="<?php bloginfo( 'charset' ); ?>" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title><?php echo esc_html( $html_title ); ?></title>
-		<?php wp_head(); ?>
+		<?php
+		wp_head();
+		add_social_tags( $html_title, $url, $html_description, $image_url );
+		?>
 	</head>
 
-	<body <?php body_class( 'is-classic-theme' ); ?>>
+	<body <?php body_class(); ?>>
 	<?php
+
 	wp_body_open();
-
-	Templates::block( 'wporg/global-header' );
-	add_social_tags( $html_title, $url, $html_description, $image_url );
-	add_filter( 'wporg_block_navigation_menus', __NAMESPACE__ . '\add_site_navigation_menus' );
-
-	Templates::pattern( 'wporg-translate-events/local-nav' );
-	Templates::block( 'wporg/site-breadcrumbs' );
+	ob_start();
+	Templates::part( 'header.html', array() );
+	$content = ob_get_clean();
+	echo do_blocks( $content );
 	?>
-
 <?php
 /**
  * Provide a list with a navigation menu.
