@@ -28,7 +28,7 @@ class Rss_Route extends Route {
 	 */
 	public function handle(): void {
 		$current_events_query = $this->event_repository->get_all_events( 1, 10 );
-		$rss_feed             = $this->get_rss_20_header();
+		$rss_feed             = $this->get_rss_20_header( $current_events_query->events );
 
 		foreach ( $current_events_query->events as $event ) {
 			$rss_feed .= $this->get_item( $event );
@@ -46,14 +46,14 @@ class Rss_Route extends Route {
 	 *
 	 * @return string
 	 */
-	private function get_rss_20_header(): string {
+	private function get_rss_20_header( array $events ): string {
 		$header  = '<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">';
 		$header .= '	<channel>';
 		$header .= '		<title>' . esc_html__( 'WordPress.org Global Translation Events', 'gp-translation-events' ) . '</title>';
 		$header .= '		<link>' . home_url( gp_url( '/events' ) ) . '</link>';
 		$header .= '		<description>' . esc_html__( 'WordPress.org Global Translation Events', 'gp-translation-events' ) . '</description>';
 		$header .= '		<language>en-us</language>';
-		$header .= '	 	<pubDate>' . gmdate( 'r' ) . '</pubDate>';
+		$header .= '	 	<pubDate>' . $this->get_pub_date( $events ) . '</pubDate>';
 		$header .= '		<lastBuildDate>' . gmdate( 'r' ) . '</lastBuildDate>';
 		$header .= '		<docs>https://www.rssboard.org/rss-specification</docs>';
 		$header .= '		<generator>Translation Events</generator>';
@@ -79,5 +79,28 @@ class Rss_Route extends Route {
 		$item .= '			<guid isPermaLink="false">' . esc_url( $event->slug() ) . '</guid>';
 		$item .= '		</item>';
 		return $item;
+	}
+
+	/**
+	 * Get the most recent event's pub date.
+	 *
+	 * @param Event[] $events Array of events to use for the pub date.
+	 *
+	 * @return string|null
+	 */
+	private function get_pub_date( array $events ): ?string {
+		if ( empty( $events ) ) {
+			return null;
+		}
+
+		$pub_date = $events[0]->created_at()->format( DATE_RSS );
+
+		foreach ( $events as $event ) {
+			if ( strtotime( $event->created_at()->format( DATE_RSS ) ) > strtotime( $pub_date ) ) {
+				$pub_date = $event->created_at()->format( DATE_RSS );
+			}
+		}
+
+		return gmdate( DATE_RSS, strtotime( $pub_date ) );
 	}
 }
