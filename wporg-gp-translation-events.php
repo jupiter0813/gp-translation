@@ -118,9 +118,6 @@ class Translation_Events {
 		$status = '(waiting)';
 		$id     = '(\d+)';
 
-		// TODO: Remove this, it's for testing purposes only.
-		GP::$router->add( '/events-my-events', array( 'Wporg\TranslationEvents\Routes\User\My_Events_Route', 'handle' ) );
-
 		GP::$router->add( '/events?', array( 'Wporg\TranslationEvents\Routes\Event\List_Route', 'handle' ) );
 		GP::$router->add( '/events/trashed?', array( 'Wporg\TranslationEvents\Routes\Event\List_Trashed_Route', 'handle' ) );
 		GP::$router->add( '/events/new', array( 'Wporg\TranslationEvents\Routes\Event\Create_Route', 'handle' ) );
