@@ -14,15 +14,28 @@ $url              = $url ?? Urls::events_home();
 $html_description = $html_description ?? esc_html__( 'WordPress Translation Events', 'gp-translation-events' );
 $image_url        = $image_url ?? Urls::event_default_image();
 
-gp_title( $html_title );
+?><!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+	<head>
+		<meta charset="<?php bloginfo( 'charset' ); ?>" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title><?php echo esc_html( $html_title ); ?></title>
+		<?php wp_head(); ?>
+	</head>
 
-Templates::block( 'wporg/global-header' );
-add_social_tags( $html_title, $url, $html_description, $image_url );
-add_filter( 'wporg_block_navigation_menus', __NAMESPACE__ . '\add_site_navigation_menus' );
+	<body <?php body_class( 'is-classic-theme' ); ?>>
+	<?php
+	wp_body_open();
 
-Templates::pattern( 'wporg-translate-events/local-nav' );
-Templates::block( 'wporg/site-breadcrumbs' );
+	Templates::block( 'wporg/global-header' );
+	add_social_tags( $html_title, $url, $html_description, $image_url );
+	add_filter( 'wporg_block_navigation_menus', __NAMESPACE__ . '\add_site_navigation_menus' );
 
+	Templates::pattern( 'wporg-translate-events/local-nav' );
+	Templates::block( 'wporg/site-breadcrumbs' );
+	?>
+
+<?php
 /**
  * Provide a list with a navigation menu.
  *
