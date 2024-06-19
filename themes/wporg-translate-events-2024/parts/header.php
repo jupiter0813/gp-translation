@@ -30,7 +30,6 @@ add_filter( 'wporg_block_navigation_menus', __NAMESPACE__ . '\add_site_navigatio
 
 	<body <?php body_class(); ?>>
 	<?php
-
 	wp_body_open();
 	ob_start();
 	Templates::part( 'header.html', array() );
