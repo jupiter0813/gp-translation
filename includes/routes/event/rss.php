@@ -54,7 +54,7 @@ class Rss_Route extends Route {
 		$header .= '		<description>' . esc_html__( 'WordPress.org Global Translation Events', 'gp-translation-events' ) . '</description>';
 		$header .= '		<language>en-us</language>';
 		$header .= '	 	<pubDate>' . $this->get_pub_date( $events ) . '</pubDate>';
-		$header .= '		<lastBuildDate>' . gmdate( 'r' ) . '</lastBuildDate>';
+		$header .= '		<lastBuildDate>' . $this->get_last_build_date( $events ) . '</lastBuildDate>';
 		$header .= '		<docs>https://www.rssboard.org/rss-specification</docs>';
 		$header .= '		<generator>Translation Events</generator>';
 		return $header;
@@ -102,5 +102,22 @@ class Rss_Route extends Route {
 		}
 
 		return gmdate( DATE_RSS, strtotime( $pub_date ) );
+	}
+
+
+	private function get_last_build_date( $events ) {
+		if ( empty( $events ) ) {
+			return null;
+		}
+
+		$last_build_date = $events[0]->created_at()->format( DATE_RSS );
+
+		foreach ( $events as $event ) {
+			if ( strtotime( $event->created_at()->format( DATE_RSS ) ) > strtotime( $last_build_date ) ) {
+				$last_build_date = $event->created_at()->format( DATE_RSS );
+			}
+		}
+
+		return gmdate( DATE_RSS, strtotime( $last_build_date ) );
 	}
 }
