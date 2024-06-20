@@ -6,6 +6,7 @@ use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Translation_Events;
+use Wporg\TranslationEvents\Urls;
 
 /**
  * Displays the RSS page.
@@ -77,7 +78,9 @@ class Rss_Route extends Route {
 		$item .= '			<title>' . esc_html( $event->title() ) . '</title>';
 		$item .= '			<link>' . home_url( gp_url( gp_url_join( 'events', $event->slug() ) ) ) . '</link>';
 		$item .= '			<description>' . esc_html( $event->description() ) . '</description>';
-		$item .= '			<guid isPermaLink="false">' . esc_url( $event->slug() ) . '</guid>';
+		$item .= '          <enclosure url="' . Urls::event_image( $event->id() ) . '" type="image/png" />';
+		$item .= '			<pubDate>' . $event->created_at()->format( DATE_RSS ) . '</pubDate>';
+		$item .= '			<guid>' . home_url( gp_url( gp_url_join( 'events', $event->slug() ) ) ) . '</guid>';
 		$item .= '		</item>';
 		return $item;
 	}
