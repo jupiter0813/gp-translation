@@ -57,6 +57,7 @@ class Rss_Route extends Route {
 		$header .= '		<lastBuildDate>' . $this->get_last_build_date( $events ) . '</lastBuildDate>';
 		$header .= '		<docs>https://www.rssboard.org/rss-specification</docs>';
 		$header .= '		<generator>Translation Events</generator>';
+		$header .= '		<atom:link href="' . home_url( gp_url( '/events/rss' ) ) . '" rel="self" type="application/rss+xml" />';
 		return $header;
 	}
 
