@@ -19,6 +19,11 @@ class Theme_Loader {
 			return;
 		}
 
+		if ( class_exists( 'WP_Theme_JSON_Resolver_Gutenberg' ) ) {
+			// We must clean cached theme.json data to force a new parse of theme.json of the child and parent themes.
+			\WP_Theme_JSON_Resolver_Gutenberg::clean_cached_data();
+		}
+
 		add_filter(
 			'template',
 			function (): string {
