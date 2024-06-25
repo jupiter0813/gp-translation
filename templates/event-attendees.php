@@ -42,7 +42,7 @@ Templates::header(
 						<a class="attendee-avatar" href="<?php echo esc_url( get_author_posts_url( $attendee->user_id() ) ); ?>" class="avatar"><?php echo get_avatar( $attendee->user_id(), 48 ); ?></a>
 						<a href="<?php echo esc_url( get_author_posts_url( $attendee->user_id() ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $attendee->user_id() ) ); ?></a>
 						<?php if ( $attendee->is_new_contributor() ) : ?>
-							<span class="first-time-contributor-tada" title="<?php esc_html_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
+							<span class="first-time-contributor-tada" title="<?php esc_attr_e( 'New Translation Contributor', 'gp-translation-events' ); ?>"></span>
 						<?php endif; ?>
 					</td>
 					<td>
