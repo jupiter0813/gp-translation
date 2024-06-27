@@ -43,7 +43,10 @@ class Attendee_Repository {
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->update(
 			"{$gp_table_prefix}event_attendees",
-			array( 'is_host' => $attendee->is_host() ? 1 : 0 ),
+			array(
+				'is_host'   => $attendee->is_host() ? 1 : 0,
+				'is_remote' => $attendee->is_remote() ? 1 : 0,
+			),
 			array(
 				'event_id' => $attendee->event_id(),
 				'user_id'  => $attendee->user_id(),
@@ -159,7 +162,7 @@ class Attendee_Repository {
 					$row->user_id,
 					'1' === $row->is_host,
 					'1' === $row->is_new_contributor,
-					'1' === $row->remote,
+					'1' === $row->is_remote,
 					null === $row->locales ? array() : explode( ',', $row->locales ),
 				);
 			},

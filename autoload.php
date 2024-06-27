@@ -35,3 +35,4 @@ require_once __DIR__ . '/includes/project/project-repository.php';
 require_once __DIR__ . '/includes/event-text-snippet.php';
 require_once __DIR__ . '/includes/routes/attendee/list.php';
 require_once __DIR__ . '/includes/routes/attendee/remove.php';
+require_once __DIR__ . '/includes/routes/user/attendance-mode.php';
