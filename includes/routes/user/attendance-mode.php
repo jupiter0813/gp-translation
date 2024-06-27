@@ -38,11 +38,11 @@ class Attendance_Mode_Route extends Route {
 
 		$current_user = wp_get_current_user();
 		if ( ! $current_user->exists() ) {
-			$this->die_with_error( esc_html__( "Only logged-in users can manage the attendance mode of an attendee", 'gp-translation-events' ), 403 );
+			$this->die_with_error( esc_html__( 'Only logged-in users can manage the attendance mode of an attendee', 'gp-translation-events' ), 403 );
 		}
 
 		if ( ! current_user_can( 'edit_translation_event', $event_id ) ) {
-			$this->die_with_error( esc_html__( "You do not have permissions to manage the attendance mode of an attendee", 'gp-translation-events' ), 403 );
+			$this->die_with_error( esc_html__( 'You do not have permissions to manage the attendance mode of an attendee', 'gp-translation-events' ), 403 );
 		}
 		$event = $this->event_repository->get_event( $event_id );
 		if ( ! $event ) {

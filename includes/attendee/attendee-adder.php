@@ -93,6 +93,4 @@ class Attendee_Adder {
 
 		return intval( $translation_count ) <= 10;
 	}
-
-
 }
