@@ -31,6 +31,13 @@ class Attend_Event_Route extends Route {
 	}
 
 	public function handle( int $event_id ): void {
+		$nonce_name = '_attendee_nonce';
+		if ( isset( $_POST['_attendee_nonce'] ) ) {
+			$nonce_value = sanitize_text_field( wp_unslash( $_POST['_attendee_nonce'] ) );
+			if ( ! wp_verify_nonce( $nonce_value, $nonce_name ) ) {
+				$this->die_with_error( esc_html__( 'You are not authorized to change the attendance mode of this attendee', 'gp-translation-events' ), 403 );
+			}
+		}
 		$user = wp_get_current_user();
 		if ( ! $user ) {
 			$this->die_with_error( esc_html__( 'Only logged-in users can attend events', 'gp-translation-events' ), 403 );
