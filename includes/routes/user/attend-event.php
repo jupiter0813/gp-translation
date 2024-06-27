@@ -46,7 +46,9 @@ class Attend_Event_Route extends Route {
 			$this->die_with_error( esc_html__( 'Cannot attend or un-attend a past event', 'gp-translation-events' ), 403 );
 		}
 
-		$attendee = $this->attendee_repository->get_attendee_for_event_for_user( $event->id(), $user_id );
+		$attendee           = $this->attendee_repository->get_attendee_for_event_for_user( $event->id(), $user_id );
+		$is_remote_attendee = isset( $_POST['attend_remotely'] );
+
 		if ( $attendee instanceof Attendee ) {
 			if ( $attendee->is_contributor() ) {
 				$this->die_with_error( esc_html__( 'Contributors cannot un-attend the event', 'gp-translation-events' ), 403 );
@@ -54,7 +56,7 @@ class Attend_Event_Route extends Route {
 			$this->attendee_repository->remove_attendee( $event->id(), $user_id );
 		} else {
 			$attendee = new Attendee( $event->id(), $user_id );
-			$this->attendee_adder->add_to_event( $event, $attendee );
+			$this->attendee_adder->add_to_event( $event, $attendee, $is_remote_attendee );
 		}
 
 		wp_safe_redirect( Urls::event_details( $event->id() ) );

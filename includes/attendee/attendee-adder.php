@@ -21,9 +21,13 @@ class Attendee_Adder {
 	 *
 	 * @throws Exception
 	 */
-	public function add_to_event( Event $event, Attendee $attendee ): void {
+	public function add_to_event( Event $event, Attendee $attendee, $is_remote_attendee = false ): void {
 		if ( $this->check_is_new_contributor( $event, $attendee->user_id() ) ) {
 			$attendee->mark_as_new_contributor();
+		}
+
+		if ( $is_remote_attendee ) {
+			$attendee->mark_as_remote_attendee();
 		}
 
 		$this->attendee_repository->insert_attendee( $attendee );
@@ -89,4 +93,6 @@ class Attendee_Adder {
 
 		return intval( $translation_count ) <= 10;
 	}
+
+
 }
