@@ -19,7 +19,7 @@ class Attendee {
 	/**
 	 * @throws Exception
 	 */
-	public function __construct( int $event_id, int $user_id, bool $is_host = false, $is_new_contributor = false, $is_remote = false, array $contributed_locales = array() ) {
+	public function __construct( int $event_id, int $user_id, bool $is_host = false, $is_new_contributor = false, array $contributed_locales = array(), $is_remote = false ) {
 		if ( $event_id < 1 ) {
 			throw new Exception( 'invalid event id' );
 		}

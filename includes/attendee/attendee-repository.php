@@ -162,8 +162,8 @@ class Attendee_Repository {
 					$row->user_id,
 					'1' === $row->is_host,
 					'1' === $row->is_new_contributor,
-					'1' === $row->is_remote,
 					null === $row->locales ? array() : explode( ',', $row->locales ),
+					'1' === $row->is_remote,
 				);
 			},
 			$rows,
@@ -214,8 +214,8 @@ class Attendee_Repository {
 					$row->user_id,
 					'1' === $row->is_host,
 					'1' === $row->is_new_contributor,
-					'1' === $row->is_remote,
 					null === $row->locales ? array() : explode( ',', $row->locales ),
+					'1' === $row->is_remote,
 				);
 			},
 			$rows,
