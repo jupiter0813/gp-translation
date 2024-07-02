@@ -1,5 +1,5 @@
 <?php
-namespace Wporg\TranslationEvents\Templates\NewDesign\Blocks;
+namespace Wporg\TranslationEvents\Theme_2024;
 
 register_block_type(
 	'wporg-translate-events/example',

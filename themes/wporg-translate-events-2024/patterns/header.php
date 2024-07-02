@@ -3,7 +3,7 @@
  * Title: Header
  * Slug: wporg-translation-events-2024/header
  */
-namespace Wporg\TranslationEvents\Templates\NewDesign\Parts;
+namespace Wporg\TranslationEvents\Theme_2024;
 
 use Wporg\TranslationEvents\Templates;
 use Wporg\TranslationEvents\Urls;

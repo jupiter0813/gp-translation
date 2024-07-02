@@ -1,11 +1,9 @@
 <?php
-
 namespace Wporg\TranslationEvents\Theme_2024;
 
 use Wporg\TranslationEvents\Templates;
-
-Templates::header();
 ?>
+
+<?php Templates::header(); ?>
 <span>My Events</span>
-<?php
-Templates::footer();
+<?php Templates::footer(); ?>

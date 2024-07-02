@@ -1,6 +1,6 @@
 <?php
 
-namespace Wporg\TranslationEvents\Theme;
+namespace Wporg\TranslationEvents\Theme_2024;
 
 use WP_Block_Patterns_Registry;
 
