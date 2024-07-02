@@ -11,6 +11,27 @@ class Templates {
 	}
 
 	public static function header( array $data = array() ) {
+		$breadcrumbs = array(
+			array(
+				'url'   => home_url(),
+				'title' => __( 'Home', 'wporg-translate-events-2024' ),
+			),
+			array(
+				'url'   => Urls::events_home(),
+				'title' => __( 'Events', 'wporg-translate-events-2024' ),
+			),
+		);
+
+		if ( ! empty( $data['breadcrumbs'] ) ) {
+			$breadcrumbs = array_merge( $breadcrumbs, $data['breadcrumbs'] );
+		}
+
+		add_filter(
+			'wporg_block_site_breadcrumbs',
+			function () use ( $breadcrumbs ): array {
+				return $breadcrumbs;
+			}
+		);
 		self::pattern( 'wporg-translation-events-2024/header', $data );
 	}
 
