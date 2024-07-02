@@ -8,9 +8,13 @@ class Renderer {
 	private static string $theme_dir = __DIR__ . '/../';
 
 	public static function page( string $name, array $data = array() ) {
+		ob_start();
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $data, EXTR_SKIP );
 		include self::$theme_dir . "/pages/$name.php";
+		$content = ob_get_clean();
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo do_blocks( $content );
 	}
 
 	public static function header( array $data = array() ) {

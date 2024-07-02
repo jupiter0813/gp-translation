@@ -13,5 +13,7 @@ Renderer::header(
 	)
 );
 ?>
+
 <span>My Events</span>
+
 <?php Renderer::footer(); ?>

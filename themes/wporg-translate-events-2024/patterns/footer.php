@@ -5,8 +5,7 @@
  */
 namespace Wporg\TranslationEvents\Theme_2024; ?>
 
-	<!-- wp:wporg/global-footer /-->
-	</div> <?php // End of wp-site-blocks. ?>
+	<?php Renderer::part( 'footer' ); ?>
 	<?php wp_footer(); ?>
 </body>
 </html>
