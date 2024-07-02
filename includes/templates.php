@@ -11,7 +11,7 @@ class Templates {
 	}
 
 	public static function header( array $data = array() ) {
-		self::part( 'header', $data );
+		self::pattern( 'wporg-translation-events-2024/header', $data );
 	}
 
 	public static function footer( array $data = array() ) {
