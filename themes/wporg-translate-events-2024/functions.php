@@ -20,7 +20,7 @@ add_action(
 );
 
 function register_blocks(): void {
-	include_once __DIR__ . '/blocks/breadcrumbs.php';
+	include_once __DIR__ . '/blocks/example.php';
 }
 
 function register_patterns(): void {
