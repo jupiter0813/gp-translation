@@ -19,12 +19,13 @@ abstract class Route extends GP_Route {
 		$this->set_notices_and_errors();
 		$this->header( 'Content-Type: text/html; charset=utf-8' );
 
-		if ( $this->use_theme ) {
-			Templates::render( "pages/$template", $args );
-		} else {
+		if ( ! $this->use_theme ) {
 			$this->enqueue_legacy_styles();
 			Templates::render( $template, $args );
+			return;
 		}
+
+		Templates::render( "pages/$template", $args );
 	}
 
 	protected function use_theme( bool $also_in_production = false ): void {
