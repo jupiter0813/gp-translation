@@ -28,5 +28,6 @@
         <exclude name="Generic.Files.OneObjectStructurePerFile.MultipleFound"/>
         <exclude name="Universal.Operators.DisallowShortTernary.Found"/>
         <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+        <exclude name="PSR2.Namespaces.NamespaceDeclaration.BlankLineAfter"/>
     </rule>
 </ruleset>
