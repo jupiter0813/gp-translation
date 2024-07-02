@@ -29,10 +29,9 @@ add_filter( 'wporg_block_navigation_menus', __NAMESPACE__ . '\add_site_navigatio
 	</head>
 
 	<body <?php body_class(); ?>>
-	<?php
-	wp_body_open();
-	Templates::part( 'header.html', array() );
-	?>
+	<?php wp_body_open(); ?>
+	<div class="wp-site-blocks">
+		<?php Templates::part( 'header.html', array() ); ?>
 <?php
 /**
  * Provide a list with a navigation menu.
