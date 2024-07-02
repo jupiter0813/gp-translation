@@ -4,12 +4,12 @@ namespace Wporg\TranslationEvents\Theme;
 
 use WP_Block_Patterns_Registry;
 
+add_action( 'init', __NAMESPACE__ . '\register_patterns' );
+add_action( 'init', __NAMESPACE__ . '\register_blocks' );
+
 add_action(
 	'wp_head',
 	function (): void {
-		register_blocks();
-		register_patterns();
-
 		wp_enqueue_style(
 			'wporg-translate-events-2024-style',
 			get_stylesheet_uri(),
