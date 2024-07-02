@@ -18,7 +18,7 @@ class Templates {
 		self::part( 'footer', $data );
 	}
 
-	public static function part( string $template, array $data ) {
+	public static function part( string $template, array $data = array() ) {
 		self::render( "parts/$template", $data );
 	}
 
