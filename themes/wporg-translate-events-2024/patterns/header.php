@@ -5,7 +5,6 @@
  */
 namespace Wporg\TranslationEvents\Theme_2024;
 
-use Wporg\TranslationEvents\Templates;
 use Wporg\TranslationEvents\Urls;
 
 /** @var string $url */
@@ -33,7 +32,7 @@ $image_url        = $image_url ?? Urls::event_default_image();
 	<body <?php body_class(); ?>>
 	<?php wp_body_open(); ?>
 	<div class="wp-site-blocks">
-		<?php Templates::part( 'header.html' ); ?>
+		<?php Renderer::part( 'header' ); ?>
 <?php
 
 /**
