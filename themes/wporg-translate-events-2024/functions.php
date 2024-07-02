@@ -4,6 +4,8 @@ namespace Wporg\TranslationEvents\Theme_2024;
 
 use WP_Block_Patterns_Registry;
 
+require_once __DIR__ . '/autoload.php';
+
 add_action( 'init', __NAMESPACE__ . '\register_patterns' );
 add_action( 'init', __NAMESPACE__ . '\register_blocks' );
 
