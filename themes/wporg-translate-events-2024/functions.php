@@ -80,7 +80,7 @@ function register_patterns(): void {
 				esc_html(
 					sprintf(
 					/* translators: %s: file name. */
-						__( 'Could not register file "%s" as a block pattern ("Slug" field missing)', 'gp-translation-events' ),
+						__( 'Could not register file "%s" as a block pattern ("Slug" field missing)', 'wporg-translate-events-2024' ),
 						$file
 					)
 				),
@@ -95,7 +95,7 @@ function register_patterns(): void {
 				esc_html(
 					sprintf(
 					/* translators: %1s: file name; %2s: slug value found. */
-						__( 'Could not register file "%1$s" as a block pattern (invalid slug "%2$s")', 'gp-translation-events' ),
+						__( 'Could not register file "%1$s" as a block pattern (invalid slug "%2$s")', 'wporg-translate-events-2024' ),
 						$file,
 						$pattern_data['slug']
 					)
@@ -115,7 +115,7 @@ function register_patterns(): void {
 				esc_html(
 					sprintf(
 					/* translators: %1s: file name; %2s: slug value found. */
-						__( 'Could not register file "%s" as a block pattern ("Title" field missing)', 'gp-translation-events' ),
+						__( 'Could not register file "%s" as a block pattern ("Title" field missing)', 'wporg-translate-events-2024' ),
 						$file
 					)
 				),
@@ -126,9 +126,9 @@ function register_patterns(): void {
 
 		// phpcs:disable WordPress.WP.I18n.LowLevelTranslationFunction
 		// phpcs:disable WordPress.WP.I18n.NonSingularStringLiteralText
-		$pattern_data['title'] = translate_with_gettext_context( $pattern_data['title'], 'Pattern title', 'gp-translation-events' );
+		$pattern_data['title'] = translate_with_gettext_context( $pattern_data['title'], 'Pattern title', 'wporg-translate-events-2024' );
 		if ( ! empty( $pattern_data['description'] ) ) {
-			$pattern_data['description'] = translate_with_gettext_context( $pattern_data['description'], 'Pattern description', 'gp-translation-events' );
+			$pattern_data['description'] = translate_with_gettext_context( $pattern_data['description'], 'Pattern description', 'wporg-translate-events-2024' );
 		}
 		// phpcs:enable
 

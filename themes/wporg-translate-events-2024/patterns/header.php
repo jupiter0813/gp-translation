@@ -13,9 +13,9 @@ use Wporg\TranslationEvents\Urls;
 /** @var string $html_description */
 /** @var string $image_url */
 
-$html_title       = $html_title ?? esc_html__( 'Translation Events', 'gp-translation-events' );
+$html_title       = $html_title ?? esc_html__( 'Translation Events', 'wporg-translate-events-2024' );
 $url              = $url ?? Urls::events_home();
-$html_description = $html_description ?? esc_html__( 'WordPress Translation Events', 'gp-translation-events' );
+$html_description = $html_description ?? esc_html__( 'WordPress Translation Events', 'wporg-translate-events-2024' );
 $image_url        = $image_url ?? Urls::event_default_image();
 
 ?><!DOCTYPE html>
