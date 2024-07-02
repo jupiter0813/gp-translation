@@ -14,6 +14,14 @@ class Renderer {
 	}
 
 	public static function header( array $data = array() ) {
+		add_filter(
+			'wp_title',
+			function () use ( $data ): string {
+				$title = $data['title'] ?? '';
+				return implode( ' | ', array( $title, __( 'Translation Events', 'wporg-translate-events-2024' ) ) );
+			}
+		);
+
 		$breadcrumbs = array(
 			array(
 				'url'   => home_url(),
