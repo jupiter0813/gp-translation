@@ -3,6 +3,7 @@
 namespace Wporg\TranslationEvents\Theme_2024;
 
 use WP_Block_Patterns_Registry;
+use Wporg\TranslationEvents\Urls;
 
 require_once __DIR__ . '/autoload.php';
 
@@ -12,6 +13,13 @@ add_action( 'init', __NAMESPACE__ . '\register_blocks' );
 add_action(
 	'wp_head',
 	function (): void {
+		add_social_tags(
+			esc_html__( 'Translation Events', 'wporg-translate-events-2024' ),
+			Urls::events_home(),
+			esc_html__( 'WordPress Translation Events', 'wporg-translate-events-2024' ),
+			Urls::event_default_image()
+		);
+
 		wp_enqueue_style(
 			'wporg-translate-events-2024-style',
 			get_stylesheet_uri(),
@@ -143,5 +151,48 @@ function register_patterns(): void {
 		}
 
 		register_block_pattern( $pattern_data['slug'], $pattern_data );
+	}
+}
+
+/**
+ * Add social tags to the head of the page.
+ *
+ * @param string $html_title       The title of the page.
+ * @param string $url              The URL of the page.
+ * @param string $html_description The description of the page.
+ * @param string $image_url        The URL of the image to use.
+ *
+ * @return void
+ */
+function add_social_tags( string $html_title, string $url, string $html_description, string $image_url ) {
+	$meta_tags = array(
+		'name'     => array(
+			'twitter:card'        => 'summary',
+			'twitter:site'        => '@WordPress',
+			'twitter:title'       => esc_attr( $html_title ),
+			'twitter:description' => esc_attr( $html_description ),
+			'twitter:creator'     => '@WordPress',
+			'twitter:image'       => esc_url( $image_url ),
+			'twitter:image:alt'   => esc_attr( $html_title ),
+		),
+		'property' => array(
+			'og:url'              => esc_url( $url ),
+			'og:title'            => esc_attr( $html_title ),
+			'og:description'      => esc_attr( $html_description ),
+			'og:site_name'        => esc_attr( get_bloginfo() ),
+			'og:image:url'        => esc_url( $image_url ),
+			'og:image:secure_url' => esc_url( $image_url ),
+			'og:image:type'       => 'image/png',
+			'og:image:width'      => '1200',
+			'og:image:height'     => '675',
+			'og:image:alt'        => esc_attr( $html_title ),
+		),
+	);
+
+	foreach ( $meta_tags as $name => $content ) {
+		foreach ( $content as $key => $value ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<meta ' . esc_attr( $name ) . '="' . esc_attr( $key ) . '" content="' . esc_attr( $value ) . '" />' . "\n";
+		}
 	}
 }
