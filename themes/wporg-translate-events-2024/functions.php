@@ -19,6 +19,40 @@ add_action(
 	}
 );
 
+add_filter(
+	'wporg_block_navigation_menus',
+	function (): array {
+		return array(
+			'site-header-menu' => array(
+				array(
+					'label' => esc_html__( 'Events', 'wporg-plugins' ),
+					'url'   => 'https://translate.wordpress.org/events/',
+				),
+				array(
+					'label' => esc_html__( 'Team', 'wporg-plugins' ),
+					'url'   => 'https://make.wordpress.org/polyglots/teams/',
+				),
+				array(
+					'label' => esc_html__( 'Requests', 'wporg-plugins' ),
+					'url'   => 'https://make.wordpress.org/polyglots/?resolved=unresolved',
+				),
+				array(
+					'label' => esc_html__( 'Weekly Chats', 'wporg-plugins' ),
+					'url'   => 'https://make.wordpress.org/polyglots/category/weekly-chats/',
+				),
+				array(
+					'label' => esc_html__( 'Translate', 'wporg-plugins' ),
+					'url'   => 'https://translate.wordpress.org/',
+				),
+				array(
+					'label' => esc_html__( 'Handbook', 'wporg-plugins' ),
+					'url'   => 'https://make.wordpress.org/polyglots/handbook/',
+				),
+			),
+		);
+	}
+);
+
 function register_blocks(): void {
 	include_once __DIR__ . '/blocks/example.php';
 }

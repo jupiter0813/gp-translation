@@ -14,8 +14,6 @@ $url              = $url ?? Urls::events_home();
 $html_description = $html_description ?? esc_html__( 'WordPress Translation Events', 'gp-translation-events' );
 $image_url        = $image_url ?? Urls::event_default_image();
 
-add_filter( 'wporg_block_navigation_menus', __NAMESPACE__ . '\add_site_navigation_menus' );
-
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 	<head>
@@ -33,41 +31,6 @@ add_filter( 'wporg_block_navigation_menus', __NAMESPACE__ . '\add_site_navigatio
 	<div class="wp-site-blocks">
 		<?php Templates::part( 'header.html' ); ?>
 <?php
-/**
- * Provide a list with a navigation menu.
- *
- * @return array
- */
-function add_site_navigation_menus(): array {
-	return array(
-		'site-header-menu' => array(
-			array(
-				'label' => esc_html__( 'Events', 'wporg-plugins' ),
-				'url'   => 'https://translate.wordpress.org/events/',
-			),
-			array(
-				'label' => esc_html__( 'Team', 'wporg-plugins' ),
-				'url'   => 'https://make.wordpress.org/polyglots/teams/',
-			),
-			array(
-				'label' => esc_html__( 'Requests', 'wporg-plugins' ),
-				'url'   => 'https://make.wordpress.org/polyglots/?resolved=unresolved',
-			),
-			array(
-				'label' => esc_html__( 'Weekly Chats', 'wporg-plugins' ),
-				'url'   => 'https://make.wordpress.org/polyglots/category/weekly-chats/',
-			),
-			array(
-				'label' => esc_html__( 'Translate', 'wporg-plugins' ),
-				'url'   => 'https://translate.wordpress.org/',
-			),
-			array(
-				'label' => esc_html__( 'Handbook', 'wporg-plugins' ),
-				'url'   => 'https://make.wordpress.org/polyglots/handbook/',
-			),
-		),
-	);
-}
 
 /**
  * Add social tags to the head of the page.
