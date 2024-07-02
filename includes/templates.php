@@ -31,7 +31,11 @@ class Templates {
 			// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 			extract( $data, EXTR_SKIP );
 			if ( str_ends_with( $template, '.html' ) ) {
+				ob_start();
 				include self::$template_directory . "/$template";
+				$content = ob_get_clean();
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo do_blocks( $content );
 			} else {
 				include self::$template_directory . "/$template.php";
 			}
