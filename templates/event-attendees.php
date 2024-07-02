@@ -31,6 +31,7 @@ Templates::header(
 		<thead>
 			<tr>
 				<th scope="col"><?php esc_html_e( 'Name', 'gp-translation-events' ); ?></th>
+				<th><?php esc_html_e( 'Remote', 'gp-translation-events' ); ?></th>
 				<th><?php esc_html_e( 'Host', 'gp-translation-events' ); ?></th>
 				<th><?php esc_html_e( 'Action', 'gp-translation-events' ); ?></th>
 			</tr>
@@ -41,6 +42,11 @@ Templates::header(
 					<td>
 						<a class="attendee-avatar" href="<?php echo esc_url( get_author_posts_url( $attendee->user_id() ) ); ?>" class="avatar"><?php echo get_avatar( $attendee->user_id(), 48 ); ?></a>
 						<a href="<?php echo esc_url( get_author_posts_url( $attendee->user_id() ) ); ?>" class="name"><?php echo esc_html( get_the_author_meta( 'display_name', $attendee->user_id() ) ); ?></a>
+					</td>
+					<td>
+						<?php if ( $attendee->is_remote() ) : ?>
+							<span><?php esc_html_e( 'Yes', 'gp-translation-events' ); ?></span>
+							<?php endif; ?>
 					</td>
 					<td>
 						<?php if ( $attendee->is_host() ) : ?>
