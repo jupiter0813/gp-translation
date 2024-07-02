@@ -14,6 +14,8 @@ Renderer::header(
 );
 ?>
 
-<span>My Events</span>
+<!-- wp:heading -->
+<h2 class="wp-block-heading"><?php echo esc_html__( 'My Events', 'wporg-translate-events-2024' ); ?></h2>
+<!-- /wp:heading -->
 
 <?php Renderer::footer(); ?>
