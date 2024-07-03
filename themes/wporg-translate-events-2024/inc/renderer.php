@@ -8,16 +8,39 @@ class Renderer {
 	private static string $theme_dir = __DIR__ . '/../';
 
 	public static function page( string $name, array $data = array() ) {
+		// The block for the page must be rendered before the header, because the block sets wp_title and the breadcrumbs.
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $data, EXTR_SKIP );
 		include self::$theme_dir . "/pages/$name.php";
-		$content = ob_get_clean();
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo do_blocks( $content );
+		$page_content = ob_get_clean();
+
+		ob_start();
+		self::header(
+			array(
+				'title'       => __( 'My Events', 'wporg-translate-events-2024' ),
+				'breadcrumbs' => array(
+					array(
+						'title' => __( 'My Events', 'wporg-translate-events-2024' ),
+						'url'   => null,
+					),
+				),
+			)
+		);
+		$header_content = ob_get_clean();
+
+		ob_start();
+		self::footer();
+		$footer_content = ob_get_clean();
+
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo do_blocks( $header_content );
+		echo do_blocks( $page_content );
+		echo do_blocks( $footer_content );
+		// phpcs:enable
 	}
 
-	public static function header( array $data = array() ) {
+	private static function header( array $data = array() ) {
 		add_filter(
 			'wp_title',
 			function () use ( $data ): string {
@@ -51,7 +74,7 @@ class Renderer {
 		self::pattern( 'wporg-translation-events-2024/header', $data );
 	}
 
-	public static function footer( array $data = array() ) {
+	private static function footer( array $data = array() ) {
 		self::pattern( 'wporg-translation-events-2024/footer', $data );
 	}
 
