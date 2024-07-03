@@ -71,6 +71,17 @@ use Wporg\TranslationEvents\Urls;
 				?>
 			</select>
 		</div>
+		<div>
+			<label for="event-attendance-mode"><?php esc_html_e( 'Attendance Mode', 'gp-translation-events' ); ?></label>
+				<input type="radio" id="event-attendance-mode-hybrid" name="event_attendance_mode" checked value="hybrid" required>
+				<span title="Attendees can attend remotely and onsite"><?php esc_html_e( 'Hybrid (Remote and Onsite)', 'gp-translation-events' ); ?></span>
+
+				<input type="radio" id="event-attendance-mode-remote" name="event_attendance_mode" value="remote" required>
+				<span title="Attendees can only attend remotely"><?php esc_html_e( 'Remote', 'gp-translation-events' ); ?></span>
+
+				<input type="radio" id="event-attendance-mode-onsite" name="event_attendance_mode" value="onsite" required>
+				<span title="Attendees can only attend onsite"><?php esc_html_e( 'Onsite', 'gp-translation-events' ); ?></span>
+		</div>
 		<div class="submit-btn-group">
 			<label for="event-status"></label>
 			<?php if ( $event->id() ) : ?>
