@@ -64,7 +64,7 @@ add_filter(
 );
 
 function register_blocks(): void {
-	include_once __DIR__ . '/blocks/example.php';
+	include_once __DIR__ . '/blocks/events/pages/my-events/index.php';
 }
 
 function register_patterns(): void {
