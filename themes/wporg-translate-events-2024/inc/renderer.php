@@ -16,6 +16,10 @@ class Renderer {
 		$page_content = ob_get_clean();
 
 		ob_start();
+		self::block( 'wporg-translate-events-2024/page-title' );
+		$page_title_content = ob_get_clean();
+
+		ob_start();
 		self::header(
 			array(
 				'title'       => __( 'My Events', 'wporg-translate-events-2024' ),
@@ -35,20 +39,13 @@ class Renderer {
 
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo do_blocks( $header_content );
+		echo do_blocks( $page_title_content );
 		echo do_blocks( $page_content );
 		echo do_blocks( $footer_content );
 		// phpcs:enable
 	}
 
 	private static function header( array $data = array() ) {
-		add_filter(
-			'wp_title',
-			function () use ( $data ): string {
-				$title = $data['title'] ?? '';
-				return implode( ' | ', array( $title, __( 'Translation Events', 'wporg-translate-events-2024' ) ) );
-			}
-		);
-
 		$breadcrumbs = array(
 			array(
 				'url'   => home_url(),
