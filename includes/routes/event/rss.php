@@ -28,7 +28,7 @@ class Rss_Route extends Route {
 	 * @return void
 	 */
 	public function handle(): void {
-		$current_events_query = $this->event_repository->get_all_events( 1, 10 );
+		$current_events_query = $this->event_repository->get_all_events( 1, 20 );
 		$rss_feed             = $this->get_rss_20_header( $current_events_query->events );
 
 		foreach ( $current_events_query->events as $event ) {
@@ -48,7 +48,7 @@ class Rss_Route extends Route {
 	 * @return string
 	 */
 	private function get_rss_20_header( array $events ): string {
-		$header  = '<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">';
+		$header  = '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">';
 		$header .= '	<channel>';
 		$header .= '		<title>' . esc_html__( 'WordPress.org Global Translation Events', 'gp-translation-events' ) . '</title>';
 		$header .= '		<link>' . home_url( gp_url( '/events' ) ) . '</link>';
@@ -58,7 +58,7 @@ class Rss_Route extends Route {
 		$header .= '		<lastBuildDate>' . $this->get_last_build_date( $events ) . '</lastBuildDate>';
 		$header .= '		<docs>https://www.rssboard.org/rss-specification</docs>';
 		$header .= '		<generator>Translation Events</generator>';
-		$header .= '		<atom:link href="' . home_url( gp_url( '/events/rss' ) ) . '" rel="self" type="application/rss+xml" />';
+		$header .= '		<atom:link href="' . home_url( gp_url( '/events/rss' ) ) . '" rel="self" type="application/rss+xml"/>';
 		return $header;
 	}
 
@@ -78,7 +78,7 @@ class Rss_Route extends Route {
 		$item .= '			<title>' . esc_html( $event->title() ) . '</title>';
 		$item .= '			<link>' . home_url( gp_url( gp_url_join( 'events', $event->slug() ) ) ) . '</link>';
 		$item .= '			<description>' . esc_html( $event->description() ) . '</description>';
-		$item .= '          <enclosure url="' . Urls::event_image( $event->id() ) . '" type="image/png" />';
+		$item .= '          <enclosure url="' . Urls::event_image( $event->id() ) . '" type="image/png" length="1200" />';
 		$item .= '			<pubDate>' . $event->created_at()->format( DATE_RSS ) . '</pubDate>';
 		$item .= '			<guid>' . home_url( gp_url( gp_url_join( 'events', $event->slug() ) ) ) . '</guid>';
 		$item .= '		</item>';
