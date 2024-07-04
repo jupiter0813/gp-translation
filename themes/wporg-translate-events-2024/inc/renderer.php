@@ -8,29 +8,21 @@ class Renderer {
 	private static string $theme_dir = __DIR__ . '/../';
 
 	public static function page( string $name, array $attributes = array() ) {
-		$breadcrumbs = array(
-			array(
-				'url'   => home_url(),
-				'title' => __( 'Home', 'wporg-translate-events-2024' ),
-			),
-			array(
-				'url'   => Urls::events_home(),
-				'title' => __( 'Events', 'wporg-translate-events-2024' ),
-			),
-			array(
-				'title' => __( 'My Events', 'wporg-translate-events-2024' ),
-				'url'   => null,
-			),
-		);
-
-		if ( ! empty( $data['breadcrumbs'] ) ) {
-			$breadcrumbs = array_merge( $breadcrumbs, $data['breadcrumbs'] );
-		}
-
+		// Declare the base breadcrumbs, which apply to all pages.
+		// Pages can add additional levels of breadcrumbs, if needed.
 		add_filter(
 			'wporg_block_site_breadcrumbs',
-			function () use ( $breadcrumbs ): array {
-				return $breadcrumbs;
+			function (): array {
+				return array(
+					array(
+						'url'   => home_url(),
+						'title' => __( 'Home', 'wporg-translate-events-2024' ),
+					),
+					array(
+						'url'   => Urls::events_home(),
+						'title' => __( 'Events', 'wporg-translate-events-2024' ),
+					),
+				);
 			}
 		);
 
