@@ -69,9 +69,8 @@ class Renderer {
 		echo do_blocks( $content );
 	}
 
-	public static function pattern( string $name, array $data = array() ): void {
-		$data['slug'] = $name;
-		$json         = wp_json_encode( $data );
+	public static function pattern( string $name ): void {
+		$json = wp_json_encode( array( 'slug' => $name ) );
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo do_blocks( "<!-- wp:pattern $json /-->" );
