@@ -31,7 +31,7 @@ class Renderer {
 		$page_content       = self::block( "wporg-translate-events-2024/events-pages-$name", $attributes );
 		$page_title_content = self::block( 'wporg-translate-events-2024/page-title' );
 		$header_content     = self::pattern( 'wporg-translation-events-2024/header' );
-		$footer_content     = self::pattern( 'wporg-translation-events-2024/footer' );
+		$footer_content     = self::block( 'wporg-translate-events-2024/footer' );
 
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $header_content;

@@ -76,6 +76,7 @@ add_filter(
 );
 
 function register_blocks(): void {
+	include_once __DIR__ . '/blocks/footer/index.php';
 	include_once __DIR__ . '/blocks/page-title/index.php';
 	include_once __DIR__ . '/blocks/events/pages/my-events/index.php';
 }
