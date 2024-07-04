@@ -19,4 +19,5 @@ $html_title         = implode( ' | ', array( $current_page_title, __( 'Translati
 	<body <?php body_class(); ?>>
 		<?php wp_body_open(); ?>
 		<div class="wp-site-blocks">
-			<?php Renderer::part( 'header' ); ?>
+			<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo Renderer::part( 'header' ); ?>

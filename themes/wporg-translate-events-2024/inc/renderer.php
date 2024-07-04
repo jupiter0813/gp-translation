@@ -28,49 +28,33 @@ class Renderer {
 
 		// The block for the page must be rendered before the header,
 		// because the page block sets the page title and the breadcrumbs.
-		ob_start();
-		self::block( "wporg-translate-events-2024/events-pages-$name", $attributes );
-		$page_content = ob_get_clean();
-
-		ob_start();
-		self::block( 'wporg-translate-events-2024/page-title' );
-		$page_title_content = ob_get_clean();
-
-		ob_start();
-		self::pattern( 'wporg-translation-events-2024/header' );
-		$header_content = ob_get_clean();
-
-		ob_start();
-		self::pattern( 'wporg-translation-events-2024/footer' );
-		$footer_content = ob_get_clean();
+		$page_content       = self::block( "wporg-translate-events-2024/events-pages-$name", $attributes );
+		$page_title_content = self::block( 'wporg-translate-events-2024/page-title' );
+		$header_content     = self::pattern( 'wporg-translation-events-2024/header' );
+		$footer_content     = self::pattern( 'wporg-translation-events-2024/footer' );
 
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo do_blocks( $header_content );
-		echo do_blocks( $page_title_content );
-		echo do_blocks( $page_content );
-		echo do_blocks( $footer_content );
+		echo $header_content;
+		echo $page_title_content;
+		echo $page_content;
+		echo $footer_content;
 		// phpcs:enable
 	}
 
-	public static function part( string $name ) {
+	public static function part( string $name ): string {
 		ob_start();
 		include self::$theme_dir . "/parts/$name.html";
 		$content = ob_get_clean();
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo do_blocks( $content );
+		return do_blocks( $content );
 	}
 
-	public static function pattern( string $name ): void {
+	public static function pattern( string $name ): string {
 		$json = wp_json_encode( array( 'slug' => $name ) );
-
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo do_blocks( "<!-- wp:pattern $json /-->" );
+		return do_blocks( "<!-- wp:pattern $json /-->" );
 	}
 
-	public static function block( string $name, array $data = array() ): void {
+	public static function block( string $name, array $data = array() ): string {
 		$json = empty( $data ) ? '{}' : wp_json_encode( $data );
-
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo do_blocks( "<!-- wp:$name $json /-->" );
+		return do_blocks( "<!-- wp:$name $json /-->" );
 	}
 }

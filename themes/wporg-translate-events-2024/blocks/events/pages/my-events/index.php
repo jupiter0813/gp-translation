@@ -27,7 +27,9 @@ register_block_type(
 				}
 			);
 
-			return include_once __DIR__ . '/render.php';
+			ob_start();
+			include_once __DIR__ . '/render.php';
+			return ob_get_clean();
 		},
 	)
 );
