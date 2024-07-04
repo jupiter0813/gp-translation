@@ -288,8 +288,12 @@ Templates::header(
 					<?php if ( $user_is_attending ) : ?>
 						<input type="submit" class="button is-secondary attending-btn" value="<?php esc_attr_e( "You're attending", 'gp-translation-events' ); ?>" />
 					<?php else : ?>
-						<input type="submit" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event Onsite', 'gp-translation-events' ); ?>"/>
-						<input type="submit" name="attend_remotely" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event Remotely', 'gp-translation-events' ); ?>"/>
+						<?php if ( ! $event->is_remote() ) : ?>
+							<input type="submit" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event Onsite', 'gp-translation-events' ); ?>"/>
+						<?php endif; ?>
+						<?php if ( $event->is_remote() || $event->is_hybrid() ) : ?>
+							<input type="submit" name="attend_remotely" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event Remotely', 'gp-translation-events' ); ?>"/>
+						<?php endif; ?>
 					<?php endif; ?>
 				</form>
 			<?php endif; ?>
