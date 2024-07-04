@@ -107,6 +107,14 @@ class Event {
 		return $this->end->is_in_the_past();
 	}
 
+	public function is_remote(): bool {
+		return 'remote' === $this->attendance_mode;
+	}
+
+	public function is_hybrid(): bool {
+		return 'hybrid' === $this->attendance_mode;
+	}
+
 	public function timezone(): DateTimeZone {
 		return $this->timezone;
 	}
