@@ -7,24 +7,36 @@ use Wporg\TranslationEvents\Urls;
 
 require_once __DIR__ . '/autoload.php';
 
-add_action( 'init', __NAMESPACE__ . '\register_patterns' );
-add_action( 'init', __NAMESPACE__ . '\register_blocks' );
+add_action(
+	'init',
+	function (): void {
+		do_action( 'wporg_translate_events_theme_init' );
+	}
+);
 
 add_action(
-	'wp_head',
+	'wporg_translate_events_theme_init',
 	function (): void {
-		add_social_tags(
-			esc_html__( 'Translation Events', 'wporg-translate-events-2024' ),
-			Urls::events_home(),
-			esc_html__( 'WordPress Translation Events', 'wporg-translate-events-2024' ),
-			Urls::event_default_image()
-		);
+		register_patterns();
+		register_blocks();
 
-		wp_enqueue_style(
-			'wporg-translate-events-2024-style',
-			get_stylesheet_uri(),
-			array(),
-			filemtime( __DIR__ . '/style.css' )
+		add_action(
+			'wp_head',
+			function (): void {
+				add_social_tags(
+					esc_html__( 'Translation Events', 'wporg-translate-events-2024' ),
+					Urls::events_home(),
+					esc_html__( 'WordPress Translation Events', 'wporg-translate-events-2024' ),
+					Urls::event_default_image()
+				);
+
+				wp_enqueue_style(
+					'wporg-translate-events-2024-style',
+					get_stylesheet_uri(),
+					array(),
+					filemtime( __DIR__ . '/style.css' )
+				);
+			}
 		);
 	}
 );

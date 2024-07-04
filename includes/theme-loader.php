@@ -48,6 +48,8 @@ class Theme_Loader {
 			}
 		}
 
+		do_action( 'wporg_translate_events_theme_init' );
+
 		$this->dequeue_unwanted_assets();
 	}
 
