@@ -51,14 +51,14 @@ class Rss_Route extends Route {
 		$header  = '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">';
 		$header .= '	<channel>';
 		$header .= '		<title>' . esc_html__( 'WordPress.org Global Translation Events', 'gp-translation-events' ) . '</title>';
-		$header .= '		<link>' . home_url( gp_url( '/events' ) ) . '</link>';
+		$header .= '		<link>' . esc_url( home_url( gp_url( '/events' ) ) ) . '</link>';
 		$header .= '		<description>' . esc_html__( 'WordPress.org Global Translation Events', 'gp-translation-events' ) . '</description>';
 		$header .= '		<language>en-us</language>';
-		$header .= '	 	<pubDate>' . $this->get_pub_date( $events ) . '</pubDate>';
-		$header .= '		<lastBuildDate>' . $this->get_last_build_date( $events ) . '</lastBuildDate>';
+		$header .= '	 	<pubDate>' . esc_html( $this->get_pub_date( $events ) ) . '</pubDate>';
+		$header .= '		<lastBuildDate>' . esc_html( $this->get_last_build_date( $events ) ) . '</lastBuildDate>';
 		$header .= '		<docs>https://www.rssboard.org/rss-specification</docs>';
-		$header .= '		<generator>Translation Events</generator>';
-		$header .= '		<atom:link href="' . home_url( gp_url( '/events/rss' ) ) . '" rel="self" type="application/rss+xml"/>';
+		$header .= '		<generator>' . esc_html__( 'Translation Events', 'gp-translation-events' ) . '</generator>';
+		$header .= '		<atom:link href="' . esc_url( home_url( gp_url( '/events/rss' ) ) ) . '" rel="self" type="application/rss+xml"/>';
 		return $header;
 	}
 
@@ -76,11 +76,11 @@ class Rss_Route extends Route {
 	private function get_item( Event $event ) {
 		$item  = '		<item>';
 		$item .= '			<title>' . esc_html( $event->title() ) . '</title>';
-		$item .= '			<link>' . home_url( gp_url( gp_url_join( 'events', $event->slug() ) ) ) . '</link>';
+		$item .= '			<link>' . esc_url( home_url( gp_url( gp_url_join( 'events', $event->slug() ) ) ) ) . '</link>';
 		$item .= '			<description>' . esc_html( $event->description() ) . '</description>';
-		$item .= '          <enclosure url="' . Urls::event_image( $event->id() ) . '" type="image/png" length="1200" />';
-		$item .= '			<pubDate>' . $event->created_at()->format( DATE_RSS ) . '</pubDate>';
-		$item .= '			<guid>' . home_url( gp_url( gp_url_join( 'events', $event->slug() ) ) ) . '</guid>';
+		$item .= '          <enclosure url="' . esc_url( Urls::event_image( $event->id() ) ) . '" type="image/png" length="1200" />';
+		$item .= '			<pubDate>' . esc_html( $event->created_at()->format( DATE_RSS ) ) . '</pubDate>';
+		$item .= '			<guid>' . esc_url( home_url( gp_url( gp_url_join( 'events', $event->slug() ) ) ) ) . '</guid>';
 		$item .= '		</item>';
 		return $item;
 	}
