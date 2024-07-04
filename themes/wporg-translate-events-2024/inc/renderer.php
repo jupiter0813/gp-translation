@@ -7,12 +7,10 @@ use Wporg\TranslationEvents\Urls;
 class Renderer {
 	private static string $theme_dir = __DIR__ . '/../';
 
-	public static function page( string $name, array $data = array() ) {
+	public static function page( string $name, array $attributes = array() ) {
 		// The block for the page must be rendered before the header, because the block sets wp_title and the breadcrumbs.
 		ob_start();
-		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
-		extract( $data, EXTR_SKIP );
-		include self::$theme_dir . "/pages/$name.php";
+		self::block( "wporg-translate-events-2024/events-pages-$name", $attributes );
 		$page_content = ob_get_clean();
 
 		ob_start();
