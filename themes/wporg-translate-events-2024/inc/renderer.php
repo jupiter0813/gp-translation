@@ -8,19 +8,6 @@ class Renderer {
 	private static string $theme_dir = __DIR__ . '/../';
 
 	public static function page( string $name, array $attributes = array() ) {
-
-
-
-		// The block for the page must be rendered before the header, because the block sets wp_title and the breadcrumbs.
-		ob_start();
-		self::block( "wporg-translate-events-2024/events-pages-$name", $attributes );
-		$page_content = ob_get_clean();
-
-		ob_start();
-		self::block( 'wporg-translate-events-2024/page-title' );
-		$page_title_content = ob_get_clean();
-
-		ob_start();
 		$breadcrumbs = array(
 			array(
 				'url'   => home_url(),
@@ -46,6 +33,18 @@ class Renderer {
 				return $breadcrumbs;
 			}
 		);
+
+		// The block for the page must be rendered before the header,
+		// because the page block sets the page title and the breadcrumbs.
+		ob_start();
+		self::block( "wporg-translate-events-2024/events-pages-$name", $attributes );
+		$page_content = ob_get_clean();
+
+		ob_start();
+		self::block( 'wporg-translate-events-2024/page-title' );
+		$page_title_content = ob_get_clean();
+
+		ob_start();
 		self::pattern( 'wporg-translation-events-2024/header' );
 		$header_content = ob_get_clean();
 
