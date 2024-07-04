@@ -8,6 +8,9 @@ class Renderer {
 	private static string $theme_dir = __DIR__ . '/../';
 
 	public static function page( string $name, array $attributes = array() ) {
+
+
+
 		// The block for the page must be rendered before the header, because the block sets wp_title and the breadcrumbs.
 		ob_start();
 		self::block( "wporg-translate-events-2024/events-pages-$name", $attributes );
@@ -18,32 +21,6 @@ class Renderer {
 		$page_title_content = ob_get_clean();
 
 		ob_start();
-		self::header(
-			array(
-				'title'       => __( 'My Events', 'wporg-translate-events-2024' ),
-				'breadcrumbs' => array(
-					array(
-						'title' => __( 'My Events', 'wporg-translate-events-2024' ),
-						'url'   => null,
-					),
-				),
-			)
-		);
-		$header_content = ob_get_clean();
-
-		ob_start();
-		self::footer();
-		$footer_content = ob_get_clean();
-
-		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo do_blocks( $header_content );
-		echo do_blocks( $page_title_content );
-		echo do_blocks( $page_content );
-		echo do_blocks( $footer_content );
-		// phpcs:enable
-	}
-
-	private static function header( array $data = array() ) {
 		$breadcrumbs = array(
 			array(
 				'url'   => home_url(),
@@ -52,6 +29,10 @@ class Renderer {
 			array(
 				'url'   => Urls::events_home(),
 				'title' => __( 'Events', 'wporg-translate-events-2024' ),
+			),
+			array(
+				'title' => __( 'My Events', 'wporg-translate-events-2024' ),
+				'url'   => null,
 			),
 		);
 
@@ -65,12 +46,19 @@ class Renderer {
 				return $breadcrumbs;
 			}
 		);
+		self::pattern( 'wporg-translation-events-2024/header' );
+		$header_content = ob_get_clean();
 
-		self::pattern( 'wporg-translation-events-2024/header', $data );
-	}
+		ob_start();
+		self::pattern( 'wporg-translation-events-2024/footer' );
+		$footer_content = ob_get_clean();
 
-	private static function footer( array $data = array() ) {
-		self::pattern( 'wporg-translation-events-2024/footer', $data );
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo do_blocks( $header_content );
+		echo do_blocks( $page_title_content );
+		echo do_blocks( $page_content );
+		echo do_blocks( $footer_content );
+		// phpcs:enable
 	}
 
 	public static function part( string $name ) {
