@@ -6,10 +6,9 @@ register_block_type(
 	array(
 		'render_callback' => function ( array $attributes ) {
 			add_filter(
-				'wp_title',
+				'wporg_translate_page_title',
 				function (): string {
-					$title = __( 'My Events', 'wporg-translate-events-2024' );
-					return implode( ' | ', array( $title, __( 'Translation Events', 'wporg-translate-events-2024' ) ) );
+					return __( 'My Events', 'wporg-translate-events-2024' );
 				}
 			);
 
