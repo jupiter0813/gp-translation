@@ -91,22 +91,6 @@ add_filter(
 	}
 );
 
-add_action(
-	'wporg_gp_translation_events_render_page',
-	function ( string $name, array $data ): void {
-		$json = wp_json_encode(
-			array(
-				'name' => $name,
-				'data' => $data,
-			)
-		);
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo do_blocks( "<!-- wp:wporg-translate-events-2024/page $json /-->" );
-	},
-	10,
-	2
-);
-
 function register_blocks(): void {
 	include_once __DIR__ . '/blocks/header/index.php';
 	include_once __DIR__ . '/blocks/footer/index.php';
