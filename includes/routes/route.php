@@ -4,7 +4,6 @@ namespace Wporg\TranslationEvents\Routes;
 
 use GP_Route;
 use Wporg\TranslationEvents\Templates;
-use Wporg\TranslationEvents\Theme_2024\Renderer;
 use Wporg\TranslationEvents\Theme_Loader;
 
 abstract class Route extends GP_Route {
@@ -26,7 +25,7 @@ abstract class Route extends GP_Route {
 			return;
 		}
 
-		Renderer::page( $template, $args );
+		do_action( 'wporg_gp_translation_events_render_page', $template, $args );
 	}
 
 	protected function use_theme( bool $also_in_production = false ): void {

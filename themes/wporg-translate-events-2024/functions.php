@@ -8,6 +8,15 @@ use Wporg\TranslationEvents\Urls;
 require_once __DIR__ . '/autoload.php';
 
 add_action(
+	'wporg_gp_translation_events_render_page',
+	function ( string $template, array $data ): void {
+		Renderer::page( $template, $data );
+	},
+	10,
+	2
+);
+
+add_action(
 	'init',
 	function (): void {
 		do_action( 'wporg_translate_events_theme_init' );
