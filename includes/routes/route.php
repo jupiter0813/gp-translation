@@ -27,7 +27,7 @@ abstract class Route extends GP_Route {
 
 		$json = wp_json_encode(
 			array(
-				'page_name'       => $template,
+				'page_name'       => "events-$template",
 				'page_attributes' => $args,
 			)
 		);
