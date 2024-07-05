@@ -27,8 +27,8 @@ abstract class Route extends GP_Route {
 
 		$json = wp_json_encode(
 			array(
-				'name' => $template,
-				'data' => $args,
+				'page_name'       => $template,
+				'page_attributes' => $args,
 			)
 		);
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

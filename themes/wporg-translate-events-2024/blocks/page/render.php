@@ -2,8 +2,8 @@
 
 /** @var array $attributes */
 
-$page_name       = $attributes['name'];
-$page_attributes = $attributes['data'];
+$page_name       = $attributes['page_name'];
+$page_attributes = $attributes['page_attributes'];
 $page_block      = "wporg-translate-events-2024/pages-$page_name";
 
 $page_content = do_blocks( "<!-- wp:$page_block " . wp_json_encode( $page_attributes ) . ' /-->' );
