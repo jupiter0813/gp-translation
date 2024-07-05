@@ -4,8 +4,6 @@ namespace Wporg\TranslationEvents\Theme_2024;
 
 use Wporg\TranslationEvents\Urls;
 
-require_once __DIR__ . '/autoload.php';
-
 add_action(
 	'init',
 	function (): void {
