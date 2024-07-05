@@ -216,7 +216,7 @@ class Event_Repository implements Event_Repository_Interface {
 		);
 		// phpcs:enable
 	}
-	public function get_all_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
+	public function get_current_and_upcoming_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
@@ -224,12 +224,20 @@ class Event_Repository implements Event_Repository_Interface {
 			$page,
 			$page_size,
 			array(
-				'meta_key' => '_event_start',
-				'orderby'  => array(
-					'meta_value' => 'DESC',
-					'ID'         => 'DESC',
+				'meta_query' => array(
+					array(
+						'key'     => '_event_end',
+						'value'   => $this->now->format( 'Y-m-d H:i:s' ),
+						'compare' => '>',
+						'type'    => 'DATETIME',
+					),
 				),
-			)
+				'meta_key'   => '_event_start',
+				'orderby'    => array(
+					'meta_value' => 'ASC',
+					'ID'         => 'ASC',
+				),
+			),
 		);
 		// phpcs:enable
 	}
