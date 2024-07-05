@@ -11,7 +11,13 @@ $page_content = do_blocks( "<!-- wp:$page_block " . wp_json_encode( $page_attrib
 // The header and footer blocks must be rendered last, because other blocks may register styles or scripts,
 // or modify the page title, or add breadcrumbs.
 $header_content = do_blocks( '<!-- wp:wporg-translate-events-2024/header /-->' );
-$footer_content = do_blocks( '<!-- wp:wporg-translate-events-2024/footer /-->' );
 
 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-echo $header_content . $page_content . $footer_content;
+echo $header_content . $page_content;
+?>
+		</div> <?php // Close wp-site-blocks div, opened in header block. ?>
+		<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		<?php echo do_blocks( '<!-- wp:wporg/global-footer /-->' ); ?>
+		<?php wp_footer(); ?>
+	</body>
+</html>
