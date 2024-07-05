@@ -26,12 +26,13 @@ class Renderer {
 			}
 		);
 
-		// The block for the page must be rendered before the header,
-		// because the page block sets the page title and the breadcrumbs.
 		$page_content       = self::block( "wporg-translate-events-2024/events-pages-$name", $attributes );
 		$page_title_content = self::block( 'wporg-translate-events-2024/page-title' );
-		$header_content     = self::pattern( 'wporg-translation-events-2024/header' );
-		$footer_content     = self::block( 'wporg-translate-events-2024/footer' );
+
+		// The header and footer blocks must be rendered last, because other blocks may register styles or scripts,
+		// or modify the page title, or add breadcrumbs.
+		$header_content = self::block( 'wporg-translate-events-2024/header' );
+		$footer_content = self::block( 'wporg-translate-events-2024/footer' );
 
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $header_content;
