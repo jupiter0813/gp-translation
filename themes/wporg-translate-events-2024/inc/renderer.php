@@ -7,7 +7,7 @@ use Wporg\TranslationEvents\Urls;
 class Renderer {
 	private static string $theme_dir = __DIR__ . '/../';
 
-	public static function page( string $name, array $attributes = array() ) {
+	public static function page( string $name, array $attributes = array() ): string {
 		// Declare the base breadcrumbs, which apply to all pages.
 		// Pages can add additional levels of breadcrumbs, if needed.
 		add_filter(
@@ -34,12 +34,7 @@ class Renderer {
 		$header_content = self::block( 'wporg-translate-events-2024/header' );
 		$footer_content = self::block( 'wporg-translate-events-2024/footer' );
 
-		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo $header_content;
-		echo $page_title_content;
-		echo $page_content;
-		echo $footer_content;
-		// phpcs:enable
+		return $header_content . $page_title_content . $page_content . $footer_content;
 	}
 
 	public static function part( string $name ): string {

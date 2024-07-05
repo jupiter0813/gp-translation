@@ -10,7 +10,8 @@ require_once __DIR__ . '/autoload.php';
 add_action(
 	'wporg_gp_translation_events_render_page',
 	function ( string $template, array $data ): void {
-		Renderer::page( $template, $data );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo Renderer::page( $template, $data );
 	},
 	10,
 	2
