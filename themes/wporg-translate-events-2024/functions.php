@@ -11,7 +11,7 @@ add_action(
 	'wporg_gp_translation_events_render_page',
 	function ( string $template, array $data ): void {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo Renderer::page( $template, $data );
+		echo Templates::page( $template, $data );
 	},
 	10,
 	2

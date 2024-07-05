@@ -4,7 +4,7 @@ namespace Wporg\TranslationEvents\Theme_2024;
 
 use Wporg\TranslationEvents\Urls;
 
-class Renderer {
+class Templates {
 	private static string $theme_dir = __DIR__ . '/../';
 
 	public static function page( string $name, array $attributes = array() ): string {
