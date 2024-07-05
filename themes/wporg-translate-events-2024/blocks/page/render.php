@@ -45,11 +45,11 @@ $html_title         = implode( ' | ', array( $current_page_title, __( 'Translati
 			<?php echo $header; ?>
 			<div class="wp-block-group alignfull has-white-background-color has-background" style="padding-right:var(--wp--preset--spacing--edge-space);padding-bottom:18px;padding-left:var(--wp--preset--spacing--edge-space)">
 				<h2 class="wp-block-heading"><?php echo esc_html( $current_page_title ); ?></h2>
-
-			<?php echo $page_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		</div> <?php // Close wp-site-blocks div, opened in header block. ?>
-		<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		<?php echo do_blocks( '<!-- wp:wporg/global-footer /-->' ); ?>
-		<?php wp_footer(); ?>
+				<?php echo $page_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</div>
+			<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo do_blocks( '<!-- wp:wporg/global-footer /-->' ); ?>
+			<?php wp_footer(); ?>
+		</div>
 	</body>
 </html>
