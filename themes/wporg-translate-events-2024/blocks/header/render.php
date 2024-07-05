@@ -36,3 +36,4 @@ $html_title         = implode( ' | ', array( $current_page_title, __( 'Translati
 	<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	<?php echo $header; ?>
 	<div class="wp-block-group alignfull has-white-background-color has-background" style="padding-right:var(--wp--preset--spacing--edge-space);padding-bottom:18px;padding-left:var(--wp--preset--spacing--edge-space)">
+		<h2 class="wp-block-heading"><?php echo esc_html( $current_page_title ); ?></h2>
