@@ -152,6 +152,9 @@ class Event_Form_Handler {
 					if ( current_user_can( 'edit_translation_event_end', $event->id() ) ) {
 						$event->set_end( $new_event->end() );
 					}
+					if ( current_user_can( 'edit_translation_event_start', $event->id() ) ) {
+						$event->set_attendance_mode( $new_event->attendance_mode() );
+					}
 				} catch ( Exception $e ) {
 					wp_send_json_error( esc_html__( 'Failed to update event.', 'gp-translation-events' ), 422 );
 					return;
