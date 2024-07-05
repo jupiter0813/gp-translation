@@ -8,16 +8,6 @@ use Wporg\TranslationEvents\Urls;
 require_once __DIR__ . '/autoload.php';
 
 add_action(
-	'wporg_gp_translation_events_render_page',
-	function ( string $template, array $data ): void {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo Templates::page( $template, $data );
-	},
-	10,
-	2
-);
-
-add_action(
 	'init',
 	function (): void {
 		do_action( 'wporg_translate_events_theme_init' );
@@ -83,6 +73,34 @@ add_filter(
 			),
 		);
 	}
+);
+
+// Declare the base breadcrumbs, which apply to all pages.
+// Pages can add additional levels of breadcrumbs.
+add_filter(
+	'wporg_block_site_breadcrumbs',
+	function (): array {
+		return array(
+			array(
+				'url'   => home_url(),
+				'title' => __( 'Home', 'wporg-translate-events-2024' ),
+			),
+			array(
+				'url'   => Urls::events_home(),
+				'title' => __( 'Events', 'wporg-translate-events-2024' ),
+			),
+		);
+	}
+);
+
+add_action(
+	'wporg_gp_translation_events_render_page',
+	function ( string $template, array $data ): void {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo Templates::page( $template, $data );
+	},
+	10,
+	2
 );
 
 function register_blocks(): void {

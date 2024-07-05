@@ -2,30 +2,10 @@
 
 namespace Wporg\TranslationEvents\Theme_2024;
 
-use Wporg\TranslationEvents\Urls;
-
 class Templates {
 	private static string $theme_dir = __DIR__ . '/../';
 
 	public static function page( string $name, array $attributes = array() ): string {
-		// Declare the base breadcrumbs, which apply to all pages.
-		// Pages can add additional levels of breadcrumbs, if needed.
-		add_filter(
-			'wporg_block_site_breadcrumbs',
-			function (): array {
-				return array(
-					array(
-						'url'   => home_url(),
-						'title' => __( 'Home', 'wporg-translate-events-2024' ),
-					),
-					array(
-						'url'   => Urls::events_home(),
-						'title' => __( 'Events', 'wporg-translate-events-2024' ),
-					),
-				);
-			}
-		);
-
 		$page_content       = self::block( "wporg-translate-events-2024/events-pages-$name", $attributes );
 		$page_title_content = self::block( 'wporg-translate-events-2024/page-title' );
 
