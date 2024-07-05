@@ -6,7 +6,12 @@ $page_name       = $attributes['page_name'];
 $page_attributes = $attributes['page_attributes'];
 $page_block      = "wporg-translate-events-2024/pages-$page_name";
 
+// First render the block of the given page, so that it modifies title, breadcrumbs, etc.
 $page_content = do_blocks( "<!-- wp:$page_block " . wp_json_encode( $page_attributes ) . ' /-->' );
+
+// We now have the title of the actual page being rendered.
+$current_page_title = apply_filters( 'wporg_translate_page_title', '' );
+$html_title         = implode( ' | ', array( $current_page_title, __( 'Translation Events', 'wporg-translate-events-2024' ) ) );
 
 // The header content must be rendered before the call to wp_head() below,
 // so that styles and scripts of the referenced blocks are registered.
@@ -26,9 +31,6 @@ $header = do_blocks(
 	<!-- /wp:group -->
 BLOCKS
 );
-
-$current_page_title = apply_filters( 'wporg_translate_page_title', '' );
-$html_title         = implode( ' | ', array( $current_page_title, __( 'Translation Events', 'wporg-translate-events-2024' ) ) );
 
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
