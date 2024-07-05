@@ -11,6 +11,9 @@
     <file>./tests/</file>
     <file>./wporg-gp-translation-events.php</file>
 
+    <file>./themes/</file>
+    <exclude-pattern>^.*/themes/*/style.css</exclude-pattern>
+
     <rule ref="WordPress">
         <properties>
             <property name="custom_capabilities[]" value="manage_translation_events,create_translation_event,view_translation_event,edit_translation_event,trash_translation_event,delete_translation_event,edit_translation_event_attendees,edit_translation_event_title,edit_translation_event_description,edit_translation_event_start,edit_translation_event_end,edit_translation_event_timezone"/>
