@@ -107,7 +107,7 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/header/index.php';
 	include_once __DIR__ . '/blocks/footer/index.php';
 	include_once __DIR__ . '/blocks/page-title/index.php';
-	include_once __DIR__ . '/blocks/events/pages/my-events/index.php';
+	include_once __DIR__ . '/blocks/pages/events/my-events/index.php';
 }
 
 function register_patterns(): void {
