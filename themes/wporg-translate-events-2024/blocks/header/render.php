@@ -1,6 +1,6 @@
 <?php namespace Wporg\TranslationEvents\Theme_2024;
 
-// The header content must be rendered before the call to wp_head(),
+// The header content must be rendered before the call to wp_head() below,
 // so that styles and scripts of the referenced blocks are registered.
 $header = do_blocks(
 <<<BLOCKS
@@ -16,8 +16,6 @@ $header = do_blocks(
 		<!-- wp:wporg/site-breadcrumbs {"fontSize":"small"} /-->
 	</div>
 	<!-- /wp:group -->
-
-	<div class="wp-block-group alignfull has-white-background-color has-background" style="padding-right:var(--wp--preset--spacing--edge-space);padding-bottom:18px;padding-left:var(--wp--preset--spacing--edge-space)">
 BLOCKS
 );
 
@@ -37,3 +35,4 @@ $html_title         = implode( ' | ', array( $current_page_title, __( 'Translati
 <div class="wp-site-blocks">
 	<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	<?php echo $header; ?>
+	<div class="wp-block-group alignfull has-white-background-color has-background" style="padding-right:var(--wp--preset--spacing--edge-space);padding-bottom:18px;padding-left:var(--wp--preset--spacing--edge-space)">
