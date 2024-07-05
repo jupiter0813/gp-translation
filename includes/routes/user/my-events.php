@@ -53,7 +53,7 @@ class My_Events_Route extends Route {
 
 		$this->use_theme();
 		$this->tmpl(
-			'my-events',
+			'events-my-events',
 			compact(
 				'events',
 				'current_user_attendee_per_event'

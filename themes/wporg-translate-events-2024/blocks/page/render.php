@@ -4,7 +4,7 @@
 
 $page_name       = $attributes['name'];
 $page_attributes = $attributes['data'];
-$page_block      = "wporg-translate-events-2024/events-pages-$page_name";
+$page_block      = "wporg-translate-events-2024/pages-$page_name";
 
 $page_content = do_blocks( "<!-- wp:$page_block " . wp_json_encode( $page_attributes ) . ' /-->' );
 
