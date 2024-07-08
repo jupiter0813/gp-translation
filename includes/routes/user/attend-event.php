@@ -62,8 +62,8 @@ class Attend_Event_Route extends Route {
 			}
 			$this->attendee_repository->remove_attendee( $event->id(), $user_id );
 		} else {
-			$attendee = new Attendee( $event->id(), $user_id );
-			$this->attendee_adder->add_to_event( $event, $attendee, $is_remote_attendee );
+			$attendee = new Attendee( $event->id(), $user_id, false, false, array(), $is_remote_attendee );
+			$this->attendee_adder->add_to_event( $event, $attendee );
 		}
 
 		wp_safe_redirect( Urls::event_details( $event->id() ) );
