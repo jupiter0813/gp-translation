@@ -471,6 +471,9 @@ a.remove-attendee.button:hover {
 	color: var(--gp-color-btn-danger-hover-text);
 	border-color: var(----gp-color-btn-danger-hover-border);
 }
+form.add-remove-user-as-host .button {
+	margin-bottom: 4px;
+}
 
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {

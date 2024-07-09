@@ -284,10 +284,12 @@ Templates::header(
 				<?php // Contributors can't un-attend so don't show anything. ?>
 			<?php else : ?>
 				<form class="event-details-attend" method="post" action="<?php echo esc_url( Urls::event_toggle_attendee( $event->id() ) ); ?>">
+					<?php wp_nonce_field( '_attendee_nonce', '_attendee_nonce' ); ?>
 					<?php if ( $user_is_attending ) : ?>
 						<input type="submit" class="button is-secondary attending-btn" value="<?php esc_attr_e( "You're attending", 'gp-translation-events' ); ?>" />
 					<?php else : ?>
-						<input type="submit" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event', 'gp-translation-events' ); ?>"/>
+						<input type="submit" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event Onsite', 'gp-translation-events' ); ?>"/>
+						<input type="submit" name="attend_remotely" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event Remotely', 'gp-translation-events' ); ?>"/>
 					<?php endif; ?>
 				</form>
 			<?php endif; ?>
