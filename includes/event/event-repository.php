@@ -533,7 +533,7 @@ class Event_Repository implements Event_Repository_Interface {
 				$title = ' ';
 			}
 			if ( empty( $meta['attendance_mode'] ) ) {
-				$meta['attendance_mode'] = 'hybrid';
+				$meta['attendance_mode'] = 'onsite';
 			}
 
 			$event = new Event(
@@ -584,7 +584,7 @@ class Event_Repository implements Event_Repository_Interface {
 			'start'           => new Event_Start_Date( $meta['_event_start'][0], $utc ),
 			'end'             => new Event_End_Date( $meta['_event_end'][0], $utc ),
 			'timezone'        => new DateTimeZone( $meta['_event_timezone'][0] ),
-			'attendance_mode' => ! isset( $meta['_event_attendance_mode'][0] ) ? 'hybrid' : $meta['_event_attendance_mode'][0],
+			'attendance_mode' => ! isset( $meta['_event_attendance_mode'][0] ) ? 'onsite' : $meta['_event_attendance_mode'][0],
 		);
 	}
 

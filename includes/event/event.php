@@ -57,7 +57,7 @@ class Event {
 		string $status,
 		string $title,
 		string $description,
-		string $attendance_mode
+		string $attendance_mode = 'onsite'
 	) {
 		$this->author_id = $author_id;
 		$this->validate_times( $start, $end );

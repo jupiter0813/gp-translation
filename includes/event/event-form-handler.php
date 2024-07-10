@@ -204,7 +204,7 @@ class Event_Form_Handler {
 		$event_start     = isset( $data['event_start'] ) ? sanitize_text_field( wp_unslash( $data['event_start'] ) ) : '';
 		$event_end       = isset( $data['event_end'] ) ? sanitize_text_field( wp_unslash( $data['event_end'] ) ) : '';
 		$event_timezone  = isset( $data['event_timezone'] ) ? sanitize_text_field( wp_unslash( $data['event_timezone'] ) ) : '';
-		$attendance_mode = isset( $data['event_attendance_mode'] ) ? sanitize_text_field( wp_unslash( $data['event_attendance_mode'] ) ) : 'hybrid';
+		$attendance_mode = isset( $data['event_attendance_mode'] ) ? sanitize_text_field( wp_unslash( $data['event_attendance_mode'] ) ) : 'onsite';
 
 		$event_status = '';
 		if ( isset( $data['event_form_action'] ) && in_array( $data['event_form_action'], array( 'draft', 'publish', 'trash' ), true ) ) {

@@ -35,7 +35,6 @@ class Create_Route extends Route {
 			'draft',
 			'',
 			'',
-			'hybrid'
 		);
 
 		$this->tmpl(
