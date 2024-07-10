@@ -236,7 +236,6 @@ class Event_Capabilities_Test extends Base_Test {
 		$this->assertTrue( current_user_can( 'edit_translation_event_end', $event_id ) );
 		$this->assertTrue( current_user_can( 'edit_translation_event_timezone', $event_id ) );
 		$this->assertTrue( current_user_can( 'edit_translation_event_attendance_mode', $event_id ) );
-
 	}
 
 	public function test_editable_fields_after_event_start_no_stats() {
