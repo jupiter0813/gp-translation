@@ -9,10 +9,6 @@ class Theme_Loader {
 		$this->theme = $theme;
 	}
 
-	public function get_theme_root_dir(): string {
-		return get_theme_root( $this->theme ) . "/$this->theme";
-	}
-
 	public function load(): void {
 		if ( str_ends_with( get_stylesheet_directory(), $this->theme ) ) {
 			// Our theme is already the active theme, there's nothing to do here.
