@@ -475,6 +475,11 @@ form.add-remove-user-as-host .button {
 	margin-bottom: 4px;
 }
 
+p.onsite-btn-note {
+	font-size: .8em;
+
+}
+
 /* show the event-details-right below instead of on the right on mobile */
 @media (max-width: 768px) {
 
