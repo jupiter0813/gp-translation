@@ -11,4 +11,4 @@ $events = $attributes['events'] ?? array();
 
 <span>my-events</span>
 
-<?php render_footer(); ?>
+<!-- wp:wporg-translate-events-2024/footer /-->

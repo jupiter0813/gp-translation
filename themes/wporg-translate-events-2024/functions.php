@@ -143,7 +143,3 @@ function render_header( string $title ): void {
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo "<!-- wp:wporg-translate-events-2024/header $json /-->";
 }
-
-function render_footer() {
-	echo '<!-- wp:wporg-translate-events-2024/footer /-->';
-}
