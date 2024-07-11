@@ -137,3 +137,13 @@ function add_social_tags( string $html_title, string $url, string $html_descript
 		}
 	}
 }
+
+function render_header( string $title ): void {
+	$json = wp_json_encode( array( 'title' => $title ) );
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo "<!-- wp:wporg-translate-events-2024/header $json /-->";
+}
+
+function render_footer() {
+	echo '<!-- wp:wporg-translate-events-2024/footer /-->';
+}
