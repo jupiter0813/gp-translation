@@ -28,23 +28,8 @@ The templates and styles are provided by the following plugins:
 ### How it works now, with this theme
 This new behaviour is enabled for a given page when the developer adds a call to `$this->use_theme()` in the `Route` of said page. This results in this theme being "faked" as the currently-active theme for only the ongoing request (see [`Theme_Loader` in `wporg-gp-translation-events`](https://github.com/WordPress/wporg-gp-translation-events/blob/trunk/includes/theme-loader.php)).
 
-In this case, when the `Route` intercepts the request, instead of calling the PHP template file, it instead renders a block provided by this theme (`wporg-translate-events-2024/page`). The identifier of the page being rendered and the data computed by the `Route` are passed to the block as block attributes:
-
-```php
-array(
-    'page_name'       => 'my-page',
-    'page_attributes' => array(
-        'foo' => 'bar'
-    ),
-)
-```
-
-The `wporg-translate-events-2024/page` block is a "wrapper" (aka layout) block, which renders:
+In this case, when the `Route` intercepts the request, instead of calling the PHP template file, it instead renders a block provided by this theme, that is specific to the page to render ( e.g. `wporg-translate-events-2024/page-events-my-events`). This block renders:
 
 - The header that is common to all pages.
-  - It can be customised with filters, for example `wporg_translate_page_title` will set the value to be used for `<title>`.
-- The block of the specific page being rendered.
-  - Each page is itself a block.
-  - In the case of the example above it would be `wporg-translate-events-2024/page-my-page`.
-  - Page blocks can use filters to modify the header, for example `wporg_translate_page_title`.
+- The content of the specific page being rendered.
 - The footer.
