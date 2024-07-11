@@ -9,7 +9,8 @@ $page_block      = "wporg-translate-events-2024/pages-$page_name";
 // First render the block of the given page, so that it modifies title, breadcrumbs, etc.
 $page_content = do_blocks( "<!-- wp:$page_block " . wp_json_encode( $page_attributes ) . ' /-->' );
 
-?><?php echo do_blocks( '<!-- wp:wporg-translate-events-2024/header /-->' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-	<?php echo $page_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-<?php echo do_blocks( '<!-- wp:wporg-translate-events-2024/footer /-->' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-<?php
+// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+?><?php echo do_blocks( '<!-- wp:wporg-translate-events-2024/header /-->' ); ?>
+	<?php echo $page_content; ?>
+<?php echo do_blocks( '<!-- wp:wporg-translate-events-2024/footer /-->' ); ?>
+<?php // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped ?>
