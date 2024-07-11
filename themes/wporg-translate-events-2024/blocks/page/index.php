@@ -15,7 +15,7 @@ register_block_type(
 
 			ob_start();
 			include_once __DIR__ . '/render.php';
-			return ob_get_clean();
+			return do_blocks( ob_get_clean() );
 		},
 	)
 );
