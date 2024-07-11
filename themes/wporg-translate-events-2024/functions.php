@@ -7,7 +7,6 @@ use Wporg\TranslationEvents\Urls;
 function register_blocks(): void {
 	include_once __DIR__ . '/blocks/header/index.php';
 	include_once __DIR__ . '/blocks/footer/index.php';
-	include_once __DIR__ . '/blocks/page/index.php';
 	include_once __DIR__ . '/blocks/pages/events/my-events/index.php';
 }
 

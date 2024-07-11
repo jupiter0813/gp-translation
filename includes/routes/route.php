@@ -25,14 +25,9 @@ abstract class Route extends GP_Route {
 			return;
 		}
 
-		$json = wp_json_encode(
-			array(
-				'page_name'       => "events-$template",
-				'page_attributes' => $args,
-			)
-		);
+		$json = wp_json_encode( $args );
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo do_blocks( "<!-- wp:wporg-translate-events-2024/page $json /-->" );
+		echo do_blocks( "<!-- wp:wporg-translate-events-2024/page-events-$template $json /-->" );
 	}
 
 	protected function use_theme( bool $also_in_production = false ): void {
