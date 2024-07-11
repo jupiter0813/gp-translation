@@ -290,9 +290,11 @@ Templates::header(
 					<?php else : ?>
 						<?php if ( ! $event->is_remote() ) : ?>
 							<input type="submit" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event On-site', 'gp-translation-events' ); ?>"/>
-							<p class="onsite-btn-note">
-								<?php echo wp_kses_post( __( '<strong>Note:</strong> This is an onsite-only event. Please only click attend if you are at the event. The host might otherwise remove you.', 'gp-translation-events' ) ); ?>
-							</p>	
+							<?php if ( ! $event->is_hybrid() ) : ?>
+								<p class="onsite-btn-note">
+									<?php echo wp_kses_post( __( '<strong>Note:</strong> This is an onsite-only event. Please only click attend if you are at the event. The host might otherwise remove you.', 'gp-translation-events' ) ); ?>
+								</p>	
+							<?php endif; ?>
 						<?php endif; ?>
 						<?php if ( $event->is_remote() || $event->is_hybrid() ) : ?>
 							<input type="submit" name="attend_remotely" class="button is-primary attend-btn" value="<?php esc_attr_e( 'Attend Event Remotely', 'gp-translation-events' ); ?>"/>
