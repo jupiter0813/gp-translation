@@ -4,6 +4,11 @@ namespace Wporg\TranslationEvents\Theme_2024;
 
 use Wporg\TranslationEvents\Urls;
 
+function register_blocks(): void {
+	include_once __DIR__ . '/blocks/page/index.php';
+	include_once __DIR__ . '/blocks/pages/events/my-events/index.php';
+}
+
 add_action(
 	'init',
 	function (): void {
@@ -88,11 +93,6 @@ add_filter(
 		);
 	}
 );
-
-function register_blocks(): void {
-	include_once __DIR__ . '/blocks/page/index.php';
-	include_once __DIR__ . '/blocks/pages/events/my-events/index.php';
-}
 
 /**
  * Add social tags to the head of the page.
