@@ -477,7 +477,10 @@ form.add-remove-user-as-host .button {
 
 p.onsite-btn-note {
 	font-size: .8em;
+}
 
+label.event-radio-label {
+	width: auto;
 }
 
 /* show the event-details-right below instead of on the right on mobile */
