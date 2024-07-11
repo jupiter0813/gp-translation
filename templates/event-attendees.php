@@ -64,7 +64,7 @@ Templates::header(
 									<input type="submit" class="button is-secondary convert-to-host" value="<?php echo esc_attr__( 'Make co-host', 'gp-translation-events' ); ?>"/>
 							<?php endif; ?>
 							<?php if ( $event->is_hybrid() ) : ?>
-								<a href="<?php echo esc_url( Urls::event_toggle_attendance_mode( $event->id(), $attendee->user_id() ) ); ?>" class="button set-attendance-mode"><?php $attendee->is_remote() ? esc_html_e( 'Set as onsite', 'gp-translation-events' ) : esc_html_e( 'Set as remote', 'gp-translation-events' ); ?></a>
+								<a href="<?php echo esc_url( Urls::event_toggle_attendance_mode( $event->id(), $attendee->user_id() ) ); ?>" class="button set-attendance-mode"><?php $attendee->is_remote() ? esc_html_e( 'Set as on-site', 'gp-translation-events' ) : esc_html_e( 'Set as remote', 'gp-translation-events' ); ?></a>
 							<?php endif; ?>
 							<?php if ( ! $attendee->is_host() ) : ?>
 								<a href="<?php echo esc_url( Urls::event_remove_attendee( $event->id(), $attendee->user_id() ) ); ?>" class="button remove-attendee"><?php esc_html_e( 'Remove', 'gp-translation-events' ); ?></a>
