@@ -9,13 +9,6 @@ register_block_type(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
 			add_filter(
-				'wporg_translate_page_title',
-				function (): string {
-					return __( 'My Events', 'wporg-translate-events-2024' );
-				}
-			);
-
-			add_filter(
 				'wporg_block_site_breadcrumbs',
 				function ( $breadcrumbs ): array {
 					return array_merge(
