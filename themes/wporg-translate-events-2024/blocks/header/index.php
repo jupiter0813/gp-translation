@@ -7,8 +7,14 @@ register_block_type(
 		// because otherwise it won't be available in render.php.
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
+			// The site header must be rendered before the call to wp_head() in render.php, so that styles and
+			// scripts of the referenced blocks are registered.
 			ob_start();
-			include_once __DIR__ . '/render.php';
+			require __DIR__ . '/site-header.php';
+			$site_header = do_blocks( ob_get_clean() );
+
+			ob_start();
+			require __DIR__ . '/render.php';
 			return ob_get_clean();
 		},
 	)
