@@ -3,6 +3,11 @@
 register_block_type(
 	'wporg-translate-events-2024/header',
 	array(
+		'attributes'      => array(
+			'title' => array(
+				'type' => 'string',
+			),
+		),
 		// The $attributes argument cannot be removed despite not being used in this function,
 		// because otherwise it won't be available in render.php.
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found

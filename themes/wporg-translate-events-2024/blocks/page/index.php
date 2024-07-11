@@ -13,6 +13,7 @@ register_block_type(
 			// First render the block of the given page, so that it modifies title, breadcrumbs, etc.
 			$page_content = do_blocks( "<!-- wp:wporg-translate-events-2024/pages-$page_name " . wp_json_encode( $page_attributes ) . ' /-->' );
 
+			$header_attributes = array( 'title' => apply_filters( 'wporg_translate_page_title', '' ) );
 			ob_start();
 			include_once __DIR__ . '/render.php';
 			return do_blocks( ob_get_clean() );
