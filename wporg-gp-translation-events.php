@@ -82,6 +82,8 @@ class Translation_Events {
 	}
 
 	public function __construct() {
+		register_theme_directory( __DIR__ . '/themes' );
+
 		add_action( 'wp_ajax_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
 		add_action( 'wp_ajax_nopriv_submit_event_ajax', array( $this, 'submit_event_ajax' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_translation_event_js' ) );
@@ -135,6 +137,25 @@ class Translation_Events {
 
 		$stats_listener = new Stats_Listener( self::get_event_repository() );
 		$stats_listener->start();
+	}
+
+	public function register_translation_event_js() {
+		wp_register_script(
+			'translation-events-js',
+			plugins_url( 'assets/js/translation-events.js', __FILE__ ),
+			array( 'jquery', 'gp-common' ),
+			filemtime( __DIR__ . '/assets/js/translation-events.js' ),
+			false
+		);
+		gp_enqueue_script( 'translation-events-js' );
+		wp_localize_script(
+			'translation-events-js',
+			'$translation_event',
+			array(
+				'url'          => admin_url( 'admin-ajax.php' ),
+				'_event_nonce' => wp_create_nonce( self::CPT ),
+			)
+		);
 	}
 
 	/**
@@ -264,21 +285,6 @@ class Translation_Events {
 		// Nonce verification is done by the form handler.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$form_handler->handle( $_POST );
-	}
-
-	public function register_translation_event_js() {
-		wp_register_style( 'translation-events-css', plugins_url( 'assets/css/translation-events.css', __FILE__ ), array( 'dashicons' ), filemtime( __DIR__ . '/assets/css/translation-events.css' ) );
-		gp_enqueue_styles( 'translation-events-css' );
-		wp_register_script( 'translation-events-js', plugins_url( 'assets/js/translation-events.js', __FILE__ ), array( 'jquery', 'gp-common' ), filemtime( __DIR__ . '/assets/js/translation-events.js' ), false );
-		gp_enqueue_script( 'translation-events-js' );
-		wp_localize_script(
-			'translation-events-js',
-			'$translation_event',
-			array(
-				'url'          => admin_url( 'admin-ajax.php' ),
-				'_event_nonce' => wp_create_nonce( self::CPT ),
-			)
-		);
 	}
 
 	/**
