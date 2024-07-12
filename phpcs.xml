@@ -13,7 +13,7 @@
 
     <rule ref="WordPress">
         <properties>
-            <property name="custom_capabilities[]" value="manage_translation_events,create_translation_event,view_translation_event,edit_translation_event,trash_translation_event,delete_translation_event,edit_translation_event_attendees,edit_translation_event_title,edit_translation_event_description,edit_translation_event_start,edit_translation_event_end,edit_translation_event_timezone"/>
+            <property name="custom_capabilities[]" value="manage_translation_events,create_translation_event,view_translation_event,edit_translation_event,trash_translation_event,delete_translation_event,edit_translation_event_attendees,edit_translation_event_title,edit_translation_event_description,edit_translation_event_start,edit_translation_event_end,edit_translation_event_timezone,edit_translation_event_attendance_mode"/>
         </properties>
         <exclude name="Squiz.Commenting.FileComment.SpacingAfterOpen"/>
         <exclude name="Squiz.Commenting.FileComment.SpacingAfterComment"/>
