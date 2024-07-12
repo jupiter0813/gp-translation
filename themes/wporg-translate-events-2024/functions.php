@@ -155,10 +155,25 @@ function render_page( string $template_path, string $title, array $attributes ):
 	echo do_blocks(
 		<<<BLOCKS
 		<!-- wp:wporg-translate-events-2024/header $header_json /-->
-		<div class="wp-block-group alignfull has-white-background-color has-background" style="padding-right:var(--wp--preset--spacing--edge-space);padding-bottom:18px;padding-left:var(--wp--preset--spacing--edge-space)">
-			<h2 class="wp-block-heading">$page_title</h2>
-			$page_content
-		</div>
+
+		<!-- wp:group {"tagName":"main","style":{"spacing":{"blockGap":"0px"}},"className":"entry-content","layout":{"type":"constrained"}} -->
+		<main class="wp-block-group entry-content">
+			<!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"var:preset|spacing|20","left":"var:preset|spacing|edge-space","right":"var:preset|spacing|edge-space","bottom":"var:preset|spacing|50"}}},"layout":{"type":"default"}} -->
+			<div class="wp-block-group alignwide" style="padding-top:var(--wp--preset--spacing--20);padding-right:var(--wp--preset--spacing--edge-space);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--edge-space)">
+				<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
+				<div class="wp-block-group page-upcoming-title-past-wrapper">
+					<!-- wp:heading --><h2 class="wp-block-heading">$page_title</h2><!-- /wp:heading -->
+				</div>
+				<!-- /wp:group -->
+
+				<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
+				<div class="wp-block-group">$page_content</div>
+				<!-- /wp:group -->
+			</div>
+			<!-- /wp:group -->
+		</main>
+		<!-- /wp:group -->
+
 		<!-- wp:wporg-translate-events-2024/footer /-->
 		BLOCKS
 	);
