@@ -149,12 +149,16 @@ function render_page( string $template_path, string $title, array $attributes ):
 	$page_content = do_blocks( ob_get_clean() );
 
 	$header_json = wp_json_encode( array( 'title' => $title ) );
+	$page_title  = esc_html( $title );
 
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo do_blocks(
 		<<<BLOCKS
 		<!-- wp:wporg-translate-events-2024/header $header_json /-->
+		<div class="wp-block-group alignfull has-white-background-color has-background" style="padding-right:var(--wp--preset--spacing--edge-space);padding-bottom:18px;padding-left:var(--wp--preset--spacing--edge-space)">
+			<h2 class="wp-block-heading">$page_title</h2>
 			$page_content
+		</div>
 		<!-- wp:wporg-translate-events-2024/footer /-->
 		BLOCKS
 	);
