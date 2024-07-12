@@ -138,8 +138,24 @@ function add_social_tags( string $html_title, string $url, string $html_descript
 	}
 }
 
-function render_header( string $title ): void {
-	$json = wp_json_encode( array( 'title' => $title ) );
+// The $attributes argument cannot be removed despite not being used in the function, because otherwise it won't be
+// in scope for the rendered template.
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+function render_page( string $template_path, string $title, array $attributes ): void {
+	// The page content must be rendered before the header block, so that styles and scripts of the referenced blocks
+	// are registered.
+	ob_start();
+	require $template_path;
+	$page_content = do_blocks( ob_get_clean() );
+
+	$header_json = wp_json_encode( array( 'title' => $title ) );
+
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	echo "<!-- wp:wporg-translate-events-2024/header $json /-->";
+	echo do_blocks(
+		<<<BLOCKS
+		<!-- wp:wporg-translate-events-2024/header $header_json /-->
+			$page_content
+		<!-- wp:wporg-translate-events-2024/footer /-->
+		BLOCKS
+	);
 }
