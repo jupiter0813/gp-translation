@@ -146,16 +146,10 @@ function render_page( string $template_path, string $title, array $attributes ):
 	// are registered.
 	ob_start();
 	require $template_path;
-	$page_content = do_blocks( ob_get_clean() );
-
-	$header_json = wp_json_encode( array( 'title' => $title ) );
-	$page_title  = esc_html( $title );
-
-	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	echo do_blocks(
+	$rendered_template = ob_get_clean();
+	$page_title        = esc_html( $title );
+	$page_content      = do_blocks(
 		<<<BLOCKS
-		<!-- wp:wporg-translate-events-2024/header $header_json /-->
-
 		<!-- wp:group {"tagName":"main","style":{"spacing":{"blockGap":"0px"}},"className":"entry-content","layout":{"type":"constrained"}} -->
 		<main class="wp-block-group entry-content">
 			<!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"var:preset|spacing|20","left":"var:preset|spacing|edge-space","right":"var:preset|spacing|edge-space","bottom":"var:preset|spacing|50"}}},"layout":{"type":"default"}} -->
@@ -167,13 +161,20 @@ function render_page( string $template_path, string $title, array $attributes ):
 				<!-- /wp:group -->
 
 				<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
-				<div class="wp-block-group">$page_content</div>
+				<div class="wp-block-group">$rendered_template</div>
 				<!-- /wp:group -->
 			</div>
 			<!-- /wp:group -->
 		</main>
 		<!-- /wp:group -->
+		BLOCKS
+	);
 
+	$header_json = wp_json_encode( array( 'title' => $title ) );
+	echo do_blocks( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		<<<BLOCKS
+		<!-- wp:wporg-translate-events-2024/header $header_json /-->
+		$page_content
 		<!-- wp:wporg-translate-events-2024/footer /-->
 		BLOCKS
 	);
