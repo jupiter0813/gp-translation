@@ -188,6 +188,7 @@ class Translation_Events {
 			'menu_icon'    => 'dashicons-calendar',
 			'supports'     => array( 'title', 'editor', 'thumbnail', 'revisions', 'page-attributes' ),
 			'rewrite'      => array( 'slug' => 'events' ),
+			'show_in_rest' => true,
 		);
 
 		register_post_type( self::CPT, $args );
