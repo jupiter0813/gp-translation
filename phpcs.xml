@@ -3,10 +3,11 @@
     <description>Coding standards</description>
 
     <arg name="colors"/>
-    <arg name="extensions" value="php,js,css"/>
+    <arg name="extensions" value="php,css"/>
 
     <file>./assets/</file>
     <file>./includes/</file>
+    <file>./src/</file>
     <file>./templates/</file>
     <file>./tests/</file>
     <file>./wporg-gp-translation-events.php</file>
