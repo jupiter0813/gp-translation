@@ -4,7 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
-
+import ServerSideRender from '@wordpress/server-side-render';
 /**
  * React hook that is used to mark the block wrapper element.
  * It provides all the necessary props like the class name.
@@ -31,8 +31,10 @@ import './editor.scss';
  */
 export default function Edit() {
 	return (
-		<p { ...useBlockProps() }>
-			{ __( 'Start Date – hello from the editor!', 'start-date' ) }
-		</p>
+		<div { ...useBlockProps() }>
+			<ServerSideRender
+				block="wporg-translate-events/start-date"
+			/>
+		</div>
 	);
 }
