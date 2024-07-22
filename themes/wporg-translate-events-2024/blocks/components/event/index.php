@@ -8,7 +8,7 @@ register_block_type(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
 			global $translation_events_lookup;
-			return '<div>'.esc_html( $translation_events_lookup[$attributes['id']]->start() ).'</div>';
+			return '<div>' . esc_html( $translation_events_lookup[ $attributes['id'] ]->start()->format( 'F j, Y' ) ) . '</div>';
 		},
 	)
 );
@@ -20,7 +20,7 @@ register_block_type(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
 			global $translation_events_lookup;
-			return  '<h1>'.esc_html( $translation_events_lookup[$attributes['id']]->title() ).'</h1>';
+			return '<h1>' . esc_html( $translation_events_lookup[ $attributes['id'] ]->title() ) . '</h1>';
 		},
 	)
 );
