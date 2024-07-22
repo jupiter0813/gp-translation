@@ -22,7 +22,7 @@ class My_Events_Route extends Route {
 	}
 
 	public function handle(): void {
-		global $wp;
+		global $wp, $translation_events;
 		if ( ! is_user_logged_in() ) {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
 			exit;
