@@ -8,7 +8,7 @@ register_block_type(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
 			global $translation_events_lookup;
-			return '<div>' . esc_html( $translation_events_lookup[ $attributes['id'] ]->start()->format( 'F j, Y' ) ) . '</div>';
+			return '<time class="wporg-marker-list-item__date-time">' . esc_html( $translation_events_lookup[ $attributes['id'] ]->start()->format( 'F j, Y' ) ) . '</time>';
 		},
 	)
 );
@@ -20,7 +20,11 @@ register_block_type(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
 			global $translation_events_lookup;
-			return '<h1>' . esc_html( $translation_events_lookup[ $attributes['id'] ]->title() ) . '</h1>';
+			return '<h3 class="wporg-marker-list-item__title">
+					<a href="">' .
+						esc_html( $translation_events_lookup[ $attributes['id'] ]->title() ) .
+					'</a>
+				</h3>';
 		},
 	)
 );
@@ -32,7 +36,8 @@ register_block_type(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
 			global $translation_events_lookup;
-			return '<div>' . esc_html( $translation_events_lookup[ $attributes['id'] ]->attendance_mode() ) . '</div>';
+			return '<div class="wporg-marker-list-item__location">
+' . esc_html( $translation_events_lookup[ $attributes['id'] ]->attendance_mode() ) . '</div>';
 		},
 	)
 );
