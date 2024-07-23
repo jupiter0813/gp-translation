@@ -17,9 +17,9 @@ global $translation_events_lookup;
 		?>
 	
 	<li class="wporg-marker-list-item">
-		<!-- wp:wporg-translate-events-2024/components-event-title <?php echo json_encode( array( 'id' => $event->id() ) ); ?> /-->
-		<!-- wp:wporg-translate-events-2024/components-event-attendance-mode <?php echo json_encode( array( 'id' => $event->id() ) ); ?> /-->
-		<!-- wp:wporg-translate-events-2024/components-event-start <?php echo json_encode( array( 'id' => $event->id() ) ); ?> /-->
+		<!-- wp:wporg-translate-events-2024/components-event-title <?php echo wp_json_encode( array( 'id' => $event->id() ) ); ?> /-->
+		<!-- wp:wporg-translate-events-2024/components-event-attendance-mode <?php echo wp_json_encode( array( 'id' => $event->id() ) ); ?> /-->
+		<!-- wp:wporg-translate-events-2024/components-event-start <?php echo wp_json_encode( array( 'id' => $event->id() ) ); ?> /-->
 	</li>
 	
 		<?php
