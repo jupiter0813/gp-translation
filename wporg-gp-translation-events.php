@@ -3,7 +3,7 @@
  * Plugin Name: Translation Events
  * Plugin URI: https://github.com/WordPress/wporg-gp-translation-events/
  * Description: A WordPress plugin for creating translation events.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Requires at least: 6.4
  * Tested up to: 6.4
  * Requires PHP: 7.4
@@ -34,6 +34,9 @@ use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Notifications\Notifications_Send;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Listener;
+
+// Register blocks.
+require_once __DIR__ . '/src/blocks/example/index.php';
 
 class Translation_Events {
 	public const CPT = 'translation_event';
