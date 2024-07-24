@@ -21,7 +21,7 @@ register_block_type(
 		'render_callback' => function ( array $attributes ) {
 			global $translation_events_lookup;
 			return '<h3 class="wporg-marker-list-item__title">
-					<a href="">' .
+					<a href="' . esc_url( \Wporg\TranslationEvents\Urls::event_details( $attributes['id'] ) ) . '">' .
 						esc_html( $translation_events_lookup[ $attributes['id'] ]->title() ) .
 					'</a>
 				</h3>';
