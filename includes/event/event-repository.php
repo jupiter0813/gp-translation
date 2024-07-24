@@ -144,6 +144,9 @@ class Event_Repository implements Event_Repository_Interface {
 				$post->post_status,
 				$post->post_title,
 				$post->post_content,
+				$post->post_date_gmt ? new DateTimeImmutable( $post->post_date_gmt ) : null,
+				$post->post_modified_gmt ? new DateTimeImmutable( $post->post_modified_gmt ) : null,
+				$meta['attendance_mode'],
 			);
 			$event->set_id( $post->ID );
 			$event->set_slug( $post->post_name );
@@ -556,6 +559,9 @@ class Event_Repository implements Event_Repository_Interface {
 				// that do not have a title. To work around that, we set the title of those events to a single space.
 				$title = ' ';
 			}
+			if ( empty( $meta['attendance_mode'] ) ) {
+				$meta['attendance_mode'] = 'onsite';
+			}
 
 			$event = new Event(
 				intval( $post->post_author ),
@@ -566,7 +572,8 @@ class Event_Repository implements Event_Repository_Interface {
 				$title,
 				$post->post_content,
 				$post->post_date_gmt ? new DateTimeImmutable( $post->post_date_gmt ) : null,
-				$post->post_modified_gmt ? new DateTimeImmutable( $post->post_modified_gmt ) : null
+				$post->post_modified_gmt ? new DateTimeImmutable( $post->post_modified_gmt ) : null,
+				$meta['attendance_mode'],
 			);
 			$event->set_id( $post->ID );
 			$event->set_slug( $post->post_name );
@@ -603,9 +610,10 @@ class Event_Repository implements Event_Repository_Interface {
 		}
 
 		return array(
-			'start'    => new Event_Start_Date( $meta['_event_start'][0], $utc ),
-			'end'      => new Event_End_Date( $meta['_event_end'][0], $utc ),
-			'timezone' => new DateTimeZone( $meta['_event_timezone'][0] ),
+			'start'           => new Event_Start_Date( $meta['_event_start'][0], $utc ),
+			'end'             => new Event_End_Date( $meta['_event_end'][0], $utc ),
+			'timezone'        => new DateTimeZone( $meta['_event_timezone'][0] ),
+			'attendance_mode' => ! isset( $meta['_event_attendance_mode'][0] ) ? 'onsite' : $meta['_event_attendance_mode'][0],
 		);
 	}
 
@@ -622,6 +630,7 @@ class Event_Repository implements Event_Repository_Interface {
 		update_post_meta( $event->id(), '_event_end', $event->end()->utc()->format( 'Y-m-d H:i:s' ) );
 		update_post_meta( $event->id(), '_event_timezone', $event->timezone()->getName() );
 		update_post_meta( $event->id(), '_hosts', $hosts_ids );
+		update_post_meta( $event->id(), '_event_attendance_mode', $event->attendance_mode() );
 	}
 }
 
