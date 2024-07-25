@@ -44,6 +44,17 @@ body {
 			border-bottom: 1px solid var(--wp--preset--color--light-grey-1);
 		}
 
+.wporg-marker-list__container span.my-event-flag {
+    width: 43px;
+    height: 28px;
+    padding: 4px 8px;
+    gap: 10px;
+    border-radius: 2px 0 0 0;
+    background: #EFF2FF;
+    margin-left: 4px; 
+    font-size: .8em; 
+}
+
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {

@@ -41,3 +41,16 @@ register_block_type(
 		},
 	)
 );
+
+register_block_type(
+	'wporg-translate-events-2024/components-event-my-event-flag',
+	array(
+		// The $attributes argument cannot be removed despite not being used in this function,
+		// because otherwise it won't be available in render.php.
+		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		'render_callback' => function ( array $attributes ) {
+			global $translation_events_lookup;
+			return '<span class="my-event-flag">' . $attributes['my_event_flag'] . '</span>';
+		},
+	)
+);
