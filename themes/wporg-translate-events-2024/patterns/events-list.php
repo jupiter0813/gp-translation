@@ -1,6 +1,8 @@
 <?php
 global $translation_events;
 global $translation_events_lookup;
+global $translation_event_current_user_attendee;
+
 ob_start();
 ?>
 <div class="wp-block-wporg-event-list">
@@ -9,13 +11,12 @@ ob_start();
 	foreach ( $translation_events->events as $event ) {
 		$translation_events_lookup[ $event->id() ] = $event;
 		?>
-	
+
 	<li class="wporg-marker-list-item">
 		<!-- wp:wporg-translate-events-2024/components-event-title <?php echo wp_json_encode( array( 'id' => $event->id() ) ); ?> /-->
 		<!-- wp:wporg-translate-events-2024/components-event-attendance-mode <?php echo wp_json_encode( array( 'id' => $event->id() ) ); ?> /-->
 		<!-- wp:wporg-translate-events-2024/components-event-start <?php echo wp_json_encode( array( 'id' => $event->id() ) ); ?> /-->
 	</li>
-	
 		<?php
 	}
 	?>

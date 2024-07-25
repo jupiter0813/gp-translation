@@ -22,7 +22,7 @@ class My_Events_Route extends Route {
 	}
 
 	public function handle(): void {
-		global $wp, $translation_events;
+		global $wp, $translation_events, $translation_event_current_user_attendee;
 		if ( ! is_user_logged_in() ) {
 			wp_safe_redirect( wp_login_url( home_url( $wp->request ) ) );
 			exit;
@@ -49,8 +49,9 @@ class My_Events_Route extends Route {
 			$events->events,
 		);
 
-		$current_user_attendee_per_event = $this->attendee_repository->get_attendees_for_events_for_user( $event_ids, $user_id );
-		$translation_events              = $events;
+		$current_user_attendee_per_event         = $this->attendee_repository->get_attendees_for_events_for_user( $event_ids, $user_id );
+		$translation_events                      = $events;
+		$translation_event_current_user_attendee = $current_user_attendee_per_event;
 
 		$event_ids = array_map(
 			function ( $event ) {
