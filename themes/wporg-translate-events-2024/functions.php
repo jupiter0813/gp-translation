@@ -12,6 +12,11 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/footer/index.php';
 	include_once __DIR__ . '/blocks/pages/events/my-events/index.php';
 	include_once __DIR__ . '/blocks/components/event/index.php';
+
+}
+
+function register_patterns(): void {
+	include_once __DIR__ . '/patterns/events-list.php';
 }
 
 add_action(
@@ -25,6 +30,7 @@ add_action(
 	'wporg_translate_events_theme_init',
 	function (): void {
 		register_blocks();
+		register_patterns();
 
 		add_action(
 			'wp_head',
