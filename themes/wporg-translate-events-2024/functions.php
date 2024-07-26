@@ -17,6 +17,11 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/event-flag/index.php';
 }
 
+function register_patterns(): void {
+	include_once __DIR__ . '/patterns/events-list.php';
+	include_once __DIR__ . '/patterns/front-cover.php';
+}
+
 add_action(
 	'init',
 	function (): void {
