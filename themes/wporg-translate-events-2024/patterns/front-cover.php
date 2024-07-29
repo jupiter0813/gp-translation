@@ -3,7 +3,9 @@ namespace Wporg\TranslationEvents\Theme_2024;
 
 ob_start();
 ?>
-
+<!-- wp:heading {"level":4} -->
+<h4 class="wp-block-heading">Get involved</h4>
+<!-- /wp:heading -->
 <div class="wp-block-columns alignwide"><!-- wp:column {"width":"100%","fontSize":"medium","fontFamily":"eb-garamond"} -->
 <div class="wp-block-column has-eb-garamond-font-family has-medium-font-size" style="flex-basis:100%"><!-- wp:group {"style":{"border":{"radius":"2px","width":"1px"},"spacing":{"padding":{"top":"var:preset|spacing|20","bottom":"var:preset|spacing|20","left":"var:preset|spacing|30"}}},"borderColor":"light-grey-1","layout":{"type":"constrained"}} -->
 <div class="wp-block-group has-border-color has-light-grey-1-border-color" style="border-width:1px;border-radius:2px;padding-top:var(--wp--preset--spacing--20);padding-bottom:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--30)"><!-- wp:paragraph {"style":{"elements":{"link":{"color":{"text":"var:preset|color|charcoal-0"}}}},"textColor":"charcoal-0","fontSize":"heading-6"} -->
@@ -12,7 +14,7 @@ ob_start();
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:column -->
-`
+		
 <!-- wp:column {"width":"100%","fontSize":"medium","fontFamily":"eb-garamond"} -->
 <div class="wp-block-column has-eb-garamond-font-family has-medium-font-size" style="flex-basis:100%"><!-- wp:group {"style":{"border":{"radius":"2px","width":"1px"},"spacing":{"padding":{"top":"var:preset|spacing|20","bottom":"var:preset|spacing|20","left":"var:preset|spacing|30"}}},"borderColor":"light-grey-1","layout":{"type":"constrained"}} -->
 <div class="wp-block-group has-border-color has-light-grey-1-border-color" style="border-width:1px;border-radius:2px;padding-top:var(--wp--preset--spacing--20);padding-bottom:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--30)"><!-- wp:paragraph {"style":{"layout":{"selfStretch":"fit","flexSize":null},"elements":{"link":{"color":{"text":"var:preset|color|charcoal-0"}}}},"textColor":"charcoal-0","fontSize":"heading-6"} -->
