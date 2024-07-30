@@ -42,6 +42,8 @@ class Event {
 	private string $status;
 	private string $title;
 	private string $description;
+	private DateTimeImmutable $created_at;
+	private DateTimeImmutable $updated_at;
 	private string $attendance_mode;
 
 	/**
@@ -57,6 +59,8 @@ class Event {
 		string $status,
 		string $title,
 		string $description,
+		DatetimeImmutable $created_at = null,
+		DatetimeImmutable $updated_at = null,
 		string $attendance_mode = 'onsite'
 	) {
 		$this->author_id = $author_id;
@@ -67,6 +71,8 @@ class Event {
 		$this->set_status( $status );
 		$this->set_title( $title );
 		$this->set_description( $description );
+		$this->set_created_at( $created_at );
+		$this->set_updated_at( $updated_at );
 		$this->set_attendance_mode( $attendance_mode );
 	}
 
@@ -135,6 +141,14 @@ class Event {
 		return $this->description;
 	}
 
+	public function created_at(): DateTimeImmutable {
+		return $this->created_at;
+	}
+
+	public function updated_at(): DateTimeImmutable {
+		return $this->updated_at;
+	}
+
 	public function set_id( int $id ): void {
 		$this->id = $id;
 	}
@@ -175,6 +189,14 @@ class Event {
 
 	public function set_description( string $description ): void {
 		$this->description = $description;
+	}
+
+	public function set_created_at( DateTimeImmutable $created_at = null ): void {
+		$this->created_at = $created_at ?? Translation_Events::now();
+	}
+
+	public function set_updated_at( DateTimeImmutable $updated_at = null ): void {
+		$this->updated_at = $updated_at ?? Translation_Events::now();
 	}
 
 	public function set_attendance_mode( string $attendance_mode ): void {
