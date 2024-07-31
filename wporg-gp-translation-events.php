@@ -35,8 +35,6 @@ use Wporg\TranslationEvents\Notifications\Notifications_Send;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Listener;
 
-// Register blocks.
-
 class Translation_Events {
 	public const CPT = 'translation_event';
 
@@ -184,7 +182,7 @@ class Translation_Events {
 		$args = array(
 			'labels'       => $labels,
 			'public'       => true,
-			'show_in_rest'       => true,
+			'show_in_rest' => true,
 			'has_archive'  => true,
 			'hierarchical' => true,
 			'menu_icon'    => 'dashicons-calendar',
