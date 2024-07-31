@@ -16,6 +16,7 @@ class Event_Repository implements Event_Repository_Interface {
 
 	protected DateTimeImmutable $now;
 	private Attendee_Repository $attendee_repository;
+	private $cache = array();
 
 	public function __construct( DateTimeImmutable $now, Attendee_Repository $attendee_repository ) {
 		$this->now                 = $now;
@@ -126,6 +127,10 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function get_event( int $id ): ?Event {
+		if ( isset( $this->cache[ $id ] ) ) {
+			return $this->cache[ $id ];
+		}
+
 		$post = $this->get_event_post( $id );
 		if ( ! $post ) {
 			return null;
@@ -149,6 +154,8 @@ class Event_Repository implements Event_Repository_Interface {
 			);
 			$event->set_id( $post->ID );
 			$event->set_slug( $post->post_name );
+			$this->cache[ $event->id() ] = $event;
+
 			return $event;
 		} catch ( Exception $e ) {
 			// This should not be possible as it means data in the database is invalid.
@@ -576,6 +583,8 @@ class Event_Repository implements Event_Repository_Interface {
 			$event->set_id( $post->ID );
 			$event->set_slug( $post->post_name );
 			$events[] = $event;
+
+			$this->cache[ $event->id() ] = $event;
 		}
 
 		return new Events_Query_Result( $events, $page, $query->max_num_pages );

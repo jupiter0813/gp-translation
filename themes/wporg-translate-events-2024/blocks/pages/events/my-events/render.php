@@ -1,10 +1,12 @@
 <?php
 namespace Wporg\TranslationEvents\Theme_2024;
 
-use Wporg\TranslationEvents\Event\Events_Query_Result;
+$event_ids = $attributes['event_ids'] ?? array();
 
-/** @var Events_Query_Result $events */
-$events = $attributes['events'] ?? array();
+foreach ( $event_ids as $event_id ) {
+	?>
+	<!-- wp:wporg-translate-events-2024/title <?php echo json_encode( array( 'id' => $event_id ) ); ?> /-->
+	<!-- wp:wporg-translate-events-2024/start-date <?php echo json_encode( array( 'id' => $event_id ) ); ?> /-->
+	<?php
+}
 ?>
-
-<span>my-events</span>
