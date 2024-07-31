@@ -1,4 +1,5 @@
 <?php namespace Wporg\TranslationEvents\Theme_2024;
+use Wporg\TranslationEvents\Translation_Events;
 
 register_block_type(
 	'wporg-translate-events-2024/components-event-title',
@@ -7,8 +8,8 @@ register_block_type(
 		// because otherwise it won't be available in render.php.
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
-			global $translation_events_lookup, $translation_event_current_user_attendee;
-			$current_user_attendee = $translation_event_current_user_attendee[ $attributes['id'] ] ?? null;
+			$event = Translation_Events::get_event_repository()->get_event( $attributes['id'] );
+			$current_user_attendee = $translation_event_current_user_attendee[ $event->id() ] ?? null;
 			if ( $current_user_attendee ) {
 				$event_flag = 'Attending';
 				if ( $current_user_attendee->is_host() ) {
@@ -20,7 +21,7 @@ register_block_type(
 	
 			<h3 class="wporg-marker-list-item__title">
 					<a href="<?php echo esc_url( \Wporg\TranslationEvents\Urls::event_details( $attributes['id'] ) ); ?>">
-						<?php echo esc_html( $translation_events_lookup[ $attributes['id'] ]->title() ); ?>
+						<?php echo esc_html( $event->title() ); ?>
 					</a>
 					<?php
 					if ( isset( $event_flag ) ) :
@@ -43,8 +44,8 @@ register_block_type(
 		// because otherwise it won't be available in render.php.
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
-			global $translation_events_lookup;
-			return '<time class="wporg-marker-list-item__date-time">' . esc_html( $translation_events_lookup[ $attributes['id'] ]->start()->format( 'F j, Y' ) ) . '</time>';
+			$event = Translation_Events::get_event_repository()->get_event( $attributes['id'] );
+			return '<time class="wporg-marker-list-item__date-time">' . esc_html( $event->start()->format( 'F j, Y' ) ) . '</time>';
 		},
 	)
 );
@@ -56,9 +57,9 @@ register_block_type(
 		// because otherwise it won't be available in render.php.
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
-			global $translation_events_lookup;
+			$event = Translation_Events::get_event_repository()->get_event( $attributes['id'] );
 			return '<div class="wporg-marker-list-item__location">
-' . esc_html( $translation_events_lookup[ $attributes['id'] ]->attendance_mode() ) . '</div>';
+' . esc_html( $event->attendance_mode() ) . '</div>';
 		},
 	)
 );
@@ -70,7 +71,6 @@ register_block_type(
 		// because otherwise it won't be available in render.php.
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
-			global $translation_events_lookup;
 			return '<span class="my-event-flag">' . esc_html( $attributes['my_event_flag'] ) . '</span>';
 		},
 	)
