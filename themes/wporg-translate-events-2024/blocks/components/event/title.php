@@ -1,5 +1,6 @@
 <?php namespace Wporg\TranslationEvents\Theme_2024;
 use Wporg\TranslationEvents\Translation_Events;
+use Wporg\TranslationEvents\Urls;
 
 register_block_type(
 	'wporg-translate-events-2024/title',
@@ -9,7 +10,7 @@ register_block_type(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
 			$event = Translation_Events::get_event_repository()->get_event( $attributes['id'] );
-			return '<h3>' . esc_html( $event->title() ) . '</h3>';
+			return '<h3><a href="' . esc_url( Urls::event_details( $event->id() ) ) . '">' . esc_html( $event->title() ) . '</a></h3>';
 		},
 	)
 );
