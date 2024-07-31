@@ -23,7 +23,7 @@ register_block_type(
 						<?php echo esc_html( $translation_events_lookup[ $attributes['id'] ]->title() ); ?>
 					</a>
 					<?php
-					if ( $event_flag ) :
+					if ( isset( $event_flag ) ) :
 						?>
 						<!-- wp:wporg-translate-events-2024/components-event-my-event-flag <?php echo wp_json_encode( array( 'my_event_flag' => $event_flag ) ); ?> /-->
 						<?php
