@@ -92,6 +92,7 @@ class Translation_Events {
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_translation_event_js' ) );
 		add_action( 'init', array( $this, 'register_event_post_type' ) );
 		add_action( 'init', array( $this, 'send_notifications' ) );
+		add_action( 'init', array( $this, 'remove_incorrect_rss_feed' ) );
 		add_action( 'add_meta_boxes', array( $this, 'event_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_event_meta_boxes' ) );
 		add_action( 'transition_post_status', array( $this, 'event_status_transition' ), 10, 3 );
@@ -432,6 +433,13 @@ class Translation_Events {
 	 */
 	public function send_notifications() {
 		new Notifications_Send( self::now(), self::get_event_repository(), self::get_attendee_repository() );
+	}
+
+	/**
+	 * Remove the incorrect RSS feed.
+	 */
+	public function remove_incorrect_rss_feed() {
+		remove_action( 'wp_head', 'feed_links', 2 );
 	}
 
 	/**
