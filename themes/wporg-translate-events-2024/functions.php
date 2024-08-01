@@ -26,8 +26,6 @@ add_action(
 	'wporg_translate_events_theme_init',
 	function (): void {
 		register_blocks();
-		register_patterns();
-
 		add_action(
 			'wp_head',
 			function (): void {
