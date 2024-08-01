@@ -15,10 +15,6 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/components/event/index.php';
 }
 
-function register_patterns(): void {
-	include_once __DIR__ . '/patterns/events-list.php';
-}
-
 add_action(
 	'init',
 	function (): void {
