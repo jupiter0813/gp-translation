@@ -29,7 +29,8 @@ register_block_type(
 					<?php
 					echo wp_json_encode(
 						array(
-							'id' => $event->id(),
+							'id'        => $event->id(),
+							'event_ids' => $event_ids,
 							'current_user_attendee_per_event' => $current_user_attendee_per_event,
 						)
 					);

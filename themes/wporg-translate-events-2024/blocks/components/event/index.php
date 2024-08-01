@@ -9,7 +9,11 @@ register_block_type(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
 			$event = Translation_Events::get_event_repository()->get_event( $attributes['id'] );
-			$current_user_attendee = $translation_event_current_user_attendee[ $event->id() ] ?? null;
+			$event_ids = $attributes['event_ids'] ?? array();
+			$user_id = get_current_user_id();
+			$current_user_attendee_per_event = Translation_Events::get_attendee_repository()->get_attendees_for_events_for_user( $event_ids, $user_id );
+			$current_user_attendee = $current_user_attendee_per_event[ $event->id() ] ?? null;
+
 			if ( $current_user_attendee ) {
 				$event_flag = 'Attending';
 				if ( $current_user_attendee->is_host() ) {
@@ -18,7 +22,6 @@ register_block_type(
 			}
 			ob_start();
 			?>
-	
 			<h3 class="wporg-marker-list-item__title">
 					<a href="<?php echo esc_url( \Wporg\TranslationEvents\Urls::event_details( $attributes['id'] ) ); ?>">
 						<?php echo esc_html( $event->title() ); ?>
@@ -26,7 +29,7 @@ register_block_type(
 					<?php
 					if ( isset( $event_flag ) ) :
 						?>
-						<!-- wp:wporg-translate-events-2024/components-event-my-event-flag <?php echo wp_json_encode( array( 'my_event_flag' => $event_flag ) ); ?> /-->
+						<span class="my-event-flag"><?php echo esc_html( $event_flag ); ?></span>
 						<?php
 						endif;
 					?>
@@ -60,18 +63,6 @@ register_block_type(
 			$event = Translation_Events::get_event_repository()->get_event( $attributes['id'] );
 			return '<div class="wporg-marker-list-item__location">
 ' . esc_html( $event->attendance_mode() ) . '</div>';
-		},
-	)
-);
-
-register_block_type(
-	'wporg-translate-events-2024/components-event-my-event-flag',
-	array(
-		// The $attributes argument cannot be removed despite not being used in this function,
-		// because otherwise it won't be available in render.php.
-		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		'render_callback' => function ( array $attributes ) {
-			return '<span class="my-event-flag">' . esc_html( $attributes['my_event_flag'] ) . '</span>';
 		},
 	)
 );
