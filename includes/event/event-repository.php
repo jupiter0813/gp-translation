@@ -97,6 +97,8 @@ class Event_Repository implements Event_Repository_Interface {
 		if ( ! $result ) {
 			return false;
 		}
+		unset( $this->cache[ $event->id() ] );
+
 		return $event;
 	}
 
@@ -123,6 +125,7 @@ class Event_Repository implements Event_Repository_Interface {
 		);
 		// phpcs:enable
 
+		unset( $this->cache[ $event->id() ] );
 		return $event;
 	}
 
