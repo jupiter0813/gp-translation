@@ -49,7 +49,7 @@ class My_Events_Route extends Route {
 			$events->events,
 		);
 
-		$current_user_attendee_per_event         = $this->attendee_repository->get_attendees_for_events_for_user( $event_ids, $user_id );
+		$current_user_attendee_per_event = $this->attendee_repository->get_attendees_for_events_for_user( $event_ids, $user_id );
 
 		$event_ids = array_map(
 			function ( $event ) {

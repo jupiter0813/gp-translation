@@ -26,16 +26,16 @@ register_block_type(
 					?>
 				<li class="wporg-marker-list-item">
 					<!-- wp:wporg-translate-events-2024/components-event-title 
-					<?php
-					echo wp_json_encode(
-						array(
-							'id'        => $event->id(),
-							'event_ids' => $event_ids,
-							'current_user_attendee_per_event' => $current_user_attendee_per_event,
-						)
-					);
-					?>
-																				 /-->
+						<?php
+						echo wp_json_encode(
+							array(
+								'id'        => $event->id(),
+								'event_ids' => $event_ids,
+								'current_user_attendee_per_event' => $current_user_attendee_per_event,
+							)
+						);
+						?>
+					/-->
 					<!-- wp:wporg-translate-events-2024/components-event-attendance-mode <?php echo wp_json_encode( array( 'id' => $event->id() ) ); ?> /-->
 					<!-- wp:wporg-translate-events-2024/components-event-start <?php echo wp_json_encode( array( 'id' => $event->id() ) ); ?> /-->
 				</li>
