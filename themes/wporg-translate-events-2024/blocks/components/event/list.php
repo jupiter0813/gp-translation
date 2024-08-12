@@ -10,9 +10,17 @@ register_block_type(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
 			$event_ids = $attributes['event_ids'] ?? array();
+
 			if ( empty( $event_ids ) ) {
 				return;
 			}
+
+			$user_id = get_current_user_id();
+			$current_user_attendee_per_event = array();
+			if ( isset( $attributes['show_flag'] ) && $attributes['show_flag'] ) {
+				$current_user_attendee_per_event = Translation_Events::get_attendee_repository()->get_attendees_for_events_for_user( $event_ids, $user_id );
+			}
+
 			ob_start();
 			?>
 			<div class="wp-block-wporg-event-list">
@@ -20,7 +28,14 @@ register_block_type(
 				<?php
 				foreach ( $event_ids as $event_id ) {
 					$event = Translation_Events::get_event_repository()->get_event( $event_id );
-					$current_user_attendee_per_event = $attributes['current_user_attendee_per_event'] ?? null;
+					$current_user_attendee = $current_user_attendee_per_event[ $event_id ] ?? null;
+
+					if ( $current_user_attendee ) {
+						$event_flag = 'Attending';
+						if ( $current_user_attendee->is_host() ) {
+							$event_flag = 'Host';
+						}
+					}
 
 					?>
 				<li class="wporg-marker-list-item">
@@ -30,6 +45,7 @@ register_block_type(
 							array(
 								'url'   => Urls::event_details( $event->id() ),
 								'title' => $event->title(),
+								'flag'  => $event_flag,
 							)
 						);
 						?>
