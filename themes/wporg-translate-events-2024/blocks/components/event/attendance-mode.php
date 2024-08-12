@@ -6,7 +6,7 @@ register_block_type(
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
-			return '<div class="wporg-marker-list-item__location">
+			return '<div class="wporg-marker-list-item__attendance-mode">
 ' . esc_html( $attributes['attendance_mode'] ) . '</div>';
 		},
 	)
