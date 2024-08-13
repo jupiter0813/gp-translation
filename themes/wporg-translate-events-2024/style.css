@@ -34,6 +34,10 @@ body {
 		list-style: none;
 		font-size: var(--wp--preset--font-size--small);
 	}
+	
+.wporg-marker-list__container .wporg-marker-list-item .wporg-marker-list-item__title {
+	float: left;
+}
 
  .wporg-marker-list__container .wporg-marker-list-item:first-child {
 			border-radius: 2px 2px 0 0;

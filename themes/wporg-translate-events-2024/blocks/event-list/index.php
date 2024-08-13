@@ -39,17 +39,21 @@ register_block_type(
 
 					?>
 				<li class="wporg-marker-list-item">
-					<!-- wp:wporg-translate-events-2024/event-title 
-						<?php
-						echo wp_json_encode(
-							array(
-								'url'   => Urls::event_details( $event->id() ),
-								'title' => $event->title(),
-								'flag'  => $event_flag,
-							)
-						);
-						?>
-					/-->
+					<div>
+						<!-- wp:wporg-translate-events-2024/event-title 
+							<?php
+								echo wp_json_encode(
+									array(
+										'url'   => Urls::event_details( $event->id() ),
+										'title' => $event->title(),
+									)
+								);
+							?>
+						/-->
+						<?php if ( isset( $event_flag ) ) : ?>
+							<!-- wp:wporg-translate-events-2024/event-flag <?php echo wp_json_encode( array( 'flag' => $event_flag ) ); ?> /-->
+						<?php endif; ?>
+					</div>
 					<!-- wp:wporg-translate-events-2024/event-attendance-mode <?php echo wp_json_encode( array( 'attendance_mode' => $event->attendance_mode() ) ); ?> /-->
 					<!-- wp:wporg-translate-events-2024/event-start <?php echo wp_json_encode( array( 'date' => $event->start()->format( 'F j, Y' ) ) ); ?> /-->
 				</li>
