@@ -2,7 +2,7 @@
 namespace Wporg\TranslationEvents\Theme_2024;
 
 register_block_type(
-	'wporg-translate-events-2024/components-event-start',
+	'wporg-translate-events-2024/event-start',
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
@@ -12,7 +12,7 @@ register_block_type(
 );
 
 register_block_type(
-	'wporg-translate-events-2024/components-event-end',
+	'wporg-translate-events-2024/event-end',
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {

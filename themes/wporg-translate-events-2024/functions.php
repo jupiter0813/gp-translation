@@ -6,14 +6,14 @@ use Wporg\TranslationEvents\Urls;
 
 function register_blocks(): void {
 	include_once __DIR__ . '/blocks/header/index.php';
-	include_once __DIR__ . '/blocks/components/event/excerpt.php';
-	include_once __DIR__ . '/blocks/components/event/date.php';
-	include_once __DIR__ . '/blocks/components/event/title.php';
-	include_once __DIR__ . '/blocks/components/event/list.php';
+	include_once __DIR__ . '/blocks/event-excerpt/index.php';
+	include_once __DIR__ . '/blocks/event-date/index.php';
+	include_once __DIR__ . '/blocks/event-title/index.php';
+	include_once __DIR__ . '/blocks/event-list/index.php';
 	include_once __DIR__ . '/blocks/footer/index.php';
 	include_once __DIR__ . '/blocks/pages/events/my-events/index.php';
-	include_once __DIR__ . '/blocks/components/event/attendance-mode.php';
-	include_once __DIR__ . '/blocks/components/event/flag.php';
+	include_once __DIR__ . '/blocks/event-attendance-mode/index.php';
+	include_once __DIR__ . '/blocks/event-flag/index.php';
 }
 
 add_action(

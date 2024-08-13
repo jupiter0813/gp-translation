@@ -8,4 +8,4 @@ $data = array(
 	'show_flag' => true,
 );
 ?>
-<!-- wp:wporg-translate-events-2024/component-event-list <?php echo wp_json_encode( $data ); ?>  /-->
+<!-- wp:wporg-translate-events-2024/event-list <?php echo wp_json_encode( $data ); ?>  /-->

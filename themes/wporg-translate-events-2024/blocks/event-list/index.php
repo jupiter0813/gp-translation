@@ -5,7 +5,7 @@ use Wporg\TranslationEvents\Urls;
 
 
 register_block_type(
-	'wporg-translate-events-2024/component-event-list',
+	'wporg-translate-events-2024/event-list',
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
@@ -39,7 +39,7 @@ register_block_type(
 
 					?>
 				<li class="wporg-marker-list-item">
-					<!-- wp:wporg-translate-events-2024/components-event-title 
+					<!-- wp:wporg-translate-events-2024/event-title 
 						<?php
 						echo wp_json_encode(
 							array(
@@ -50,8 +50,8 @@ register_block_type(
 						);
 						?>
 					/-->
-					<!-- wp:wporg-translate-events-2024/components-event-attendance-mode <?php echo wp_json_encode( array( 'attendance_mode' => $event->attendance_mode() ) ); ?> /-->
-					<!-- wp:wporg-translate-events-2024/components-event-start <?php echo wp_json_encode( array( 'date' => $event->start()->format( 'F j, Y' ) ) ); ?> /-->
+					<!-- wp:wporg-translate-events-2024/event-attendance-mode <?php echo wp_json_encode( array( 'attendance_mode' => $event->attendance_mode() ) ); ?> /-->
+					<!-- wp:wporg-translate-events-2024/event-start <?php echo wp_json_encode( array( 'date' => $event->start()->format( 'F j, Y' ) ) ); ?> /-->
 				</li>
 					<?php
 				}

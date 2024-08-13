@@ -1,7 +1,7 @@
 <?php namespace Wporg\TranslationEvents\Theme_2024;
 
 register_block_type(
-	'wporg-translate-events-2024/components-event-title',
+	'wporg-translate-events-2024/event-title',
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
@@ -17,7 +17,7 @@ register_block_type(
 						$json = wp_json_encode( array( 'flag' => $attributes['flag'] ) );
 						echo do_blocks( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							<<<BLOCKS
-							<!-- wp:wporg-translate-events-2024/components-event-flag $json /-->
+							<!-- wp:wporg-translate-events-2024/event-flag $json /-->
 							BLOCKS
 						);
 					}
