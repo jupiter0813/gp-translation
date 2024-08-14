@@ -9,3 +9,17 @@ License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: wporg-translate-events-2024
 Template: wporg-parent-2021
+*/
+
+/*
+ * Layout
+ */
+body {
+	--wp--custom--layout--wide-size: 1600px;
+}
+.wp-site-blocks .is-layout-constrained,
+.wp-block-post-content-is-layout-constrained {
+	& .alignwide {
+		max-width: var(--wp--custom--layout--wide-size) !important;
+	}
+}
