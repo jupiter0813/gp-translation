@@ -165,7 +165,7 @@ function render_page( string $template_path, string $title, array $attributes ):
 				</div>
 				<!-- /wp:group -->
 
-				<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
+				<!-- wp:group {"layout":{"type":"inherit","flexWrap":"nowrap","justifyContent":"space-between"}} -->
 				<div class="wp-block-group">$rendered_template</div>
 				<!-- /wp:group -->
 			</div>
