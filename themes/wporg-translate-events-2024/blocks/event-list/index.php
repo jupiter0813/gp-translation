@@ -1,7 +1,6 @@
 <?php
 namespace Wporg\TranslationEvents\Theme_2024;
 use Wporg\TranslationEvents\Translation_Events;
-use Wporg\TranslationEvents\Urls;
 
 
 register_block_type(
@@ -36,26 +35,16 @@ register_block_type(
 							$event_flag = 'Host';
 						}
 					}
-
 					?>
 				<li class="wporg-marker-list-item">
 					<div>
-						<!-- wp:wporg-translate-events-2024/event-title 
-							<?php
-								echo wp_json_encode(
-									array(
-										'url'   => Urls::event_details( $event->id() ),
-										'title' => $event->title(),
-									)
-								);
-							?>
-						/-->
+						<!-- wp:wporg-translate-events-2024/event-title <?php echo wp_json_encode( array( 'id' => $event_id ) ); ?> /-->
 						<?php if ( isset( $event_flag ) ) : ?>
 							<!-- wp:wporg-translate-events-2024/event-flag <?php echo wp_json_encode( array( 'flag' => $event_flag ) ); ?> /-->
-						<?php endif; ?>
+						<?php endif; ?> 
 					</div>
-					<!-- wp:wporg-translate-events-2024/event-attendance-mode <?php echo wp_json_encode( array( 'attendance_mode' => $event->attendance_mode() ) ); ?> /-->
-					<!-- wp:wporg-translate-events-2024/event-start <?php echo wp_json_encode( array( 'date' => $event->start()->format( 'F j, Y' ) ) ); ?> /-->
+					<!-- wp:wporg-translate-events-2024/event-attendance-mode <?php echo wp_json_encode( array( 'id' => $event_id ) ); ?> /-->
+					<!-- wp:wporg-translate-events-2024/event-start <?php echo wp_json_encode( array( 'id' => $event_id ) ); ?> /-->
 				</li>
 					<?php
 				}
