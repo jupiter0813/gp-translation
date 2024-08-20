@@ -35,10 +35,23 @@ register_block_type(
 							$event_flag = 'Host';
 						}
 					}
+					
+					$filter_block_context = static function ( $context ) use ( $event_id ) {
+						$context['postId']   = $event_id;
+						return $context;
+					};
+
+					// Use an early priority to so that other 'render_block_context' filters have access to the values.
+					add_filter( 'render_block_context', $filter_block_context, 1 );
+					// Render the inner blocks of the Post Template block with `dynamic` set to `false` to prevent calling
+					// `render_callback` and ensure that no wrapper markup is included.
+					
+
+
 					?>
 				<li class="wporg-marker-list-item">
 					<div>
-						<!-- wp:wporg-translate-events-2024/event-title <?php echo wp_json_encode( array( 'id' => $event_id ) ); ?> /-->
+						<!-- wp:wporg-translate-events-2024/event-title /-->
 						<?php if ( isset( $event_flag ) ) : ?>
 							<!-- wp:wporg-translate-events-2024/event-flag <?php echo wp_json_encode( array( 'flag' => $event_flag ) ); ?> /-->
 						<?php endif; ?> 
@@ -47,6 +60,7 @@ register_block_type(
 					<!-- wp:wporg-translate-events-2024/event-start <?php echo wp_json_encode( array( 'id' => $event_id ) ); ?> /-->
 				</li>
 					<?php
+					remove_filter( 'render_block_context', $filter_block_context, 1 );
 				}
 				?>
 			</ul>

@@ -7,8 +7,13 @@ register_block_type(
 	'wporg-translate-events-2024/event-title',
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		'render_callback' => function ( array $attributes ) {
-			$event_id = $attributes['id'] ?? 0;
+		'render_callback' => function ( array $attributes, $content, $block ) {
+
+			if ( ! isset( $block->context['postId'] ) ) {
+				return '';
+			}
+			$event_id = get_the_ID();
+			
 			ob_start();
 			$event = Translation_Events::get_event_repository()->get_event( $event_id );
 			$url = Urls::event_details( $event->id() );
