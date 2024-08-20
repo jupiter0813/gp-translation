@@ -15,6 +15,7 @@ register_block_type(
 			}
 
 			$user_id = get_current_user_id();
+			global $current_user_attendee_per_event;
 			$current_user_attendee_per_event = array();
 			if ( isset( $attributes['show_flag'] ) && $attributes['show_flag'] ) {
 				$current_user_attendee_per_event = Translation_Events::get_attendee_repository()->get_attendees_for_events_for_user( $event_ids, $user_id );
@@ -27,40 +28,18 @@ register_block_type(
 				<?php
 				foreach ( $event_ids as $event_id ) {
 					$event = Translation_Events::get_event_repository()->get_event( $event_id );
-					$current_user_attendee = $current_user_attendee_per_event[ $event_id ] ?? null;
-
-					if ( $current_user_attendee ) {
-						$event_flag = 'Attending';
-						if ( $current_user_attendee->is_host() ) {
-							$event_flag = 'Host';
-						}
-					}
-					
-					$filter_block_context = static function ( $context ) use ( $event_id ) {
-						$context['postId']   = $event_id;
-						return $context;
-					};
-
-					// Use an early priority to so that other 'render_block_context' filters have access to the values.
-					add_filter( 'render_block_context', $filter_block_context, 1 );
-					// Render the inner blocks of the Post Template block with `dynamic` set to `false` to prevent calling
-					// `render_callback` and ensure that no wrapper markup is included.
-					
-
-
-					?>
+				?>
 				<li class="wporg-marker-list-item">
+					<!-- wp:wporg-translate-events-2024/event-template <?php echo wp_json_encode( array( 'id' => $event_id ) ); ?> -->
 					<div>
 						<!-- wp:wporg-translate-events-2024/event-title /-->
-						<?php if ( isset( $event_flag ) ) : ?>
-							<!-- wp:wporg-translate-events-2024/event-flag <?php echo wp_json_encode( array( 'flag' => $event_flag ) ); ?> /-->
-						<?php endif; ?> 
+						<!-- wp:wporg-translate-events-2024/event-flag /-->
 					</div>
-					<!-- wp:wporg-translate-events-2024/event-attendance-mode <?php echo wp_json_encode( array( 'id' => $event_id ) ); ?> /-->
-					<!-- wp:wporg-translate-events-2024/event-start <?php echo wp_json_encode( array( 'id' => $event_id ) ); ?> /-->
+					<!-- wp:wporg-translate-events-2024/event-attendance-mode /-->
+					<!-- wp:wporg-translate-events-2024/event-start /-->
+					<!-- /wp:wporg-translate-events-2024/event-template -->
 				</li>
 					<?php
-					remove_filter( 'render_block_context', $filter_block_context, 1 );
 				}
 				?>
 			</ul>

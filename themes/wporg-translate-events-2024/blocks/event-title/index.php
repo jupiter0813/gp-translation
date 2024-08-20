@@ -8,14 +8,15 @@ register_block_type(
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes, $content, $block ) {
-
 			if ( ! isset( $block->context['postId'] ) ) {
 				return '';
 			}
 			$event_id = get_the_ID();
-			
 			ob_start();
 			$event = Translation_Events::get_event_repository()->get_event( $event_id );
+			if ( ! $event ) {
+				return $event_id;
+			}
 			$url = Urls::event_details( $event->id() );
 			?>
 			<h3 class="wporg-marker-list-item__title">

@@ -8,6 +8,7 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/header/index.php';
 	include_once __DIR__ . '/blocks/event-excerpt/index.php';
 	include_once __DIR__ . '/blocks/event-date/index.php';
+	include_once __DIR__ . '/blocks/event-template/index.php';
 	include_once __DIR__ . '/blocks/event-title/index.php';
 	include_once __DIR__ . '/blocks/event-list/index.php';
 	include_once __DIR__ . '/blocks/footer/index.php';
