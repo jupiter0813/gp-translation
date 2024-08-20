@@ -11,7 +11,12 @@ register_block_type(
 				return '';
 			}
 
-			$query = new \WP_Query( array( 'p' => intval( $attributes['id'] ), 'post_type' => Translation_Events::CPT ) );
+			$query = new \WP_Query(
+				array(
+					'p'         => intval( $attributes['id'] ),
+					'post_type' => Translation_Events::CPT,
+				)
+			);
 			$block_content = '';
 			while ( $query->have_posts() ) {
 				$query->the_post();
