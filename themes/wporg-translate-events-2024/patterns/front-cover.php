@@ -26,7 +26,6 @@ ob_start();
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:column --></div>
-<!-- /wp:columns --></div>
 
 <?php
 $content = ob_get_clean();
