@@ -59,8 +59,8 @@ class Event {
 		string $status,
 		string $title,
 		string $description,
-		DatetimeImmutable $created_at = null,
-		DatetimeImmutable $updated_at = null,
+		DateTimeImmutable $created_at = null,
+		DateTimeImmutable $updated_at = null,
 		string $attendance_mode = 'onsite'
 	) {
 		$this->author_id = $author_id;
