@@ -144,7 +144,6 @@ class Event_Repository implements Event_Repository_Interface {
 				$post->post_status,
 				$post->post_title,
 				$post->post_content,
-				$post->post_date_gmt ? new DateTimeImmutable( $post->post_date_gmt ) : null,
 				$post->post_modified_gmt ? new DateTimeImmutable( $post->post_modified_gmt ) : null,
 				$meta['attendance_mode'],
 			);
@@ -571,7 +570,6 @@ class Event_Repository implements Event_Repository_Interface {
 				$post->post_status,
 				$title,
 				$post->post_content,
-				$post->post_date_gmt ? new DateTimeImmutable( $post->post_date_gmt ) : null,
 				$post->post_modified_gmt ? new DateTimeImmutable( $post->post_modified_gmt ) : null,
 				$meta['attendance_mode'],
 			);
