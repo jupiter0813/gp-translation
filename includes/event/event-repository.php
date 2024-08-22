@@ -12,9 +12,10 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Repository implements Event_Repository_Interface {
-	private const POST_TYPE         = Translation_Events::CPT;
-	private const CACHE_DURATION    = DAY_IN_SECONDS;
-	private const ACTIVE_EVENTS_KEY = 'translation-events-active-events';
+	private const POST_TYPE           = Translation_Events::CPT;
+	private const CACHE_DURATION      = DAY_IN_SECONDS;
+	private const ACTIVE_EVENTS_KEY   = 'translation-events-active-events';
+	private const UPCOMING_EVENTS_KEY = 'translation-events-upcoming-events';
 
 	protected DateTimeImmutable $now;
 	private Attendee_Repository $attendee_repository;
@@ -212,28 +213,35 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function get_upcoming_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
-		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-		return $this->execute_events_query(
-			$page,
-			$page_size,
-			array(
-				'meta_query' => array(
-					array(
-						'key'     => '_event_start',
-						'value'   => $this->now->format( 'Y-m-d H:i:s' ),
-						'compare' => '>=',
-						'type'    => 'DATETIME',
+		$events = wp_cache_get( self::UPCOMING_EVENTS_KEY, '', false, $found );
+		if ( ! $found ) {
+			// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			$events = $this->execute_events_query(
+				$page,
+				$page_size,
+				array(
+					'meta_query' => array(
+						array(
+							'key'     => '_event_start',
+							'value'   => $this->now->format( 'Y-m-d H:i:s' ),
+							'compare' => '>=',
+							'type'    => 'DATETIME',
+						),
 					),
-				),
-				'meta_key'   => '_event_start',
-				'orderby'    => array(
-					'meta_value' => 'ASC',
-					'ID'         => 'ASC',
-				),
-			)
-		);
+					'meta_key'   => '_event_start',
+					'orderby'    => array(
+						'meta_value' => 'ASC',
+						'ID'         => 'ASC',
+					),
+				)
+			);
+			wp_cache_set( self::UPCOMING_EVENTS_KEY, $events, '', self::CACHE_DURATION );
+		} elseif ( ! is_array( $events ) ) {
+			throw new Exception( 'Cached events is not an array, something is wrong' );
+		}
+		return $events;
 		// phpcs:enable
 	}
 
