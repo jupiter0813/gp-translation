@@ -12,7 +12,9 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Repository implements Event_Repository_Interface {
-	private const POST_TYPE = Translation_Events::CPT;
+	private const POST_TYPE         = Translation_Events::CPT;
+	private const CACHE_DURATION    = DAY_IN_SECONDS;
+	private const ACTIVE_EVENTS_KEY = 'translation-events-active-events';
 
 	protected DateTimeImmutable $now;
 	private Attendee_Repository $attendee_repository;
@@ -158,13 +160,55 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function get_current_events( int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		return $this->get_events_active_between(
-			$this->now,
-			$this->now,
-			array(),
-			$page,
-			$page_size
+		$this->assert_pagination_arguments( $page, $page_size );
+
+		$cache_duration = self::CACHE_DURATION;
+		$boundary_start = $this->now;
+		$boundary_end   = $this->now->modify( "+$cache_duration seconds" );
+
+		$events = wp_cache_get( self::ACTIVE_EVENTS_KEY, '', false, $found );
+		if ( ! $found ) {
+			$events = $this->get_events_active_between( $boundary_start, $boundary_end )->events;
+			wp_cache_set( self::ACTIVE_EVENTS_KEY, $events, '', self::CACHE_DURATION );
+		} elseif ( ! is_array( $events ) ) {
+			throw new Exception( 'Cached events is not an array, something is wrong' );
+		}
+
+		// Filter out events that aren't actually active at $at.
+		$events = array_values(
+			array_filter(
+				$events,
+				function ( $event ) {
+					return $event->start() <= $this->now && $this->now <= $event->end();
+				}
+			)
 		);
+
+		if ( empty( $events ) ) {
+			return new Events_Query_Result( $events, $page, 0 );
+		}
+
+		// Split the list of all current events into pages.
+		// If no pagination parameters were supplied, we return the full list of events as a single page.
+
+		if ( $page >= 1 ) {
+			// Pagination parameters were supplied.
+			// Convert from 1-indexed to 0-indexed.
+			--$page;
+		} else {
+			// No pagination parameters were supplied.
+			$page      = 0;
+			$page_size = count( $events );
+		}
+
+		$pages = array_chunk( $events, $page_size );
+		if ( ! empty( $pages ) && isset( $pages[ $page ] ) ) {
+			$events = $pages[ $page ];
+		} else {
+			$events = array();
+		}
+
+		return new Events_Query_Result( $events, $page, count( $pages ) );
 	}
 
 	public function get_upcoming_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
