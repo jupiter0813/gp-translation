@@ -26,7 +26,6 @@ require_once __DIR__ . '/includes/event/event-date.php';
 require_once __DIR__ . '/includes/event/event.php';
 require_once __DIR__ . '/includes/event/event-repository-interface.php';
 require_once __DIR__ . '/includes/event/event-repository.php';
-require_once __DIR__ . '/includes/event/event-repository-cached.php';
 require_once __DIR__ . '/includes/event/event-form-handler.php';
 require_once __DIR__ . '/includes/notifications/notifications-schedule.php';
 require_once __DIR__ . '/includes/notifications/notifications-send.php';
