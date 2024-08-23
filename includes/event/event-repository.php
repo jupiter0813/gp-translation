@@ -128,7 +128,6 @@ class Event_Repository {
 	}
 
 	public function get_event( int $id ): ?Event {
-		// var_dump( wp_cache_get( 'translation_event_' . $id ) );
 		if ( wp_cache_get( 'translation_event_' . $id ) ) {
 			return wp_cache_get( 'translation_event_' . $id );
 		}
@@ -157,7 +156,6 @@ class Event_Repository {
 			$event->set_id( $post->ID );
 			$event->set_slug( $post->post_name );
 			wp_cache_set( 'translation_event_' . $post->ID, $event, '', self::CACHE_DURATION );
-			var_dump('kkikii');
 			return $event;
 		} catch ( Exception $e ) {
 			// This should not be possible as it means data in the database is invalid.
