@@ -25,6 +25,7 @@ require_once __DIR__ . '/includes/attendee/attendee-adder.php';
 require_once __DIR__ . '/includes/event/event-date.php';
 require_once __DIR__ . '/includes/event/event.php';
 require_once __DIR__ . '/includes/event/event-repository-interface.php';
+require_once __DIR__ . '/includes/event/event-query-result.php';
 require_once __DIR__ . '/includes/event/event-repository.php';
 require_once __DIR__ . '/includes/event/event-form-handler.php';
 require_once __DIR__ . '/includes/notifications/notifications-schedule.php';
