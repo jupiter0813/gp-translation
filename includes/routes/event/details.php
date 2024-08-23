@@ -5,8 +5,8 @@ namespace Wporg\TranslationEvents\Routes\Event;
 use Exception;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
-use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Project\Project_Repository;
+use Wporg\TranslationEvents\Event\Event_Repository;
 use Wporg\TranslationEvents\Routes\Route;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Translation_Events;
@@ -15,7 +15,7 @@ use Wporg\TranslationEvents\Translation_Events;
  * Displays the event details page.
  */
 class Details_Route extends Route {
-	private Event_Repository_Interface $event_repository;
+	private Event_Repository $event_repository;
 	private Attendee_Repository $attendee_repository;
 	private Project_Repository $project_repository;
 	private Stats_Calculator $stats_calculator;

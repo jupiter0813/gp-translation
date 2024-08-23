@@ -30,7 +30,6 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event_Capabilities;
 use Wporg\TranslationEvents\Event\Event_Form_Handler;
 use Wporg\TranslationEvents\Event\Event_Repository;
-use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Notifications\Notifications_Send;
 use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Stats\Stats_Listener;
@@ -60,7 +59,7 @@ class Translation_Events {
 		return $now;
 	}
 
-	public static function get_event_repository(): Event_Repository_Interface {
+	public static function get_event_repository(): Event_Repository {
 		static $event_repository = null;
 		if ( null === $event_repository ) {
 			$event_repository = new Event_Repository( self::now(), self::get_attendee_repository() );

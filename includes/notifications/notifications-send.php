@@ -9,26 +9,26 @@ use Exception;
 use Wporg\TranslationEvents\Attendee\Attendee;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Event\Event;
-use Wporg\TranslationEvents\Event\Event_Repository_Interface;
+use Wporg\TranslationEvents\Event\Event_Repository;
 use WP_User;
 use Wporg\TranslationEvents\Event\Event_Start_Date;
 
 class Notifications_Send {
 
 	private Attendee_Repository $attendee_repository;
-	private Event_Repository_Interface $event_repository;
+	private Event_Repository $event_repository;
 	private DateTimeImmutable $now;
 
 	/**
 	 * Notifications_Send constructor.
 	 *
 	 * @param DateTimeImmutable          $now                 The value of "now".
-	 * @param Event_Repository_Interface $event_repository    Event repository.
+	 * @param Event_Repository $event_repository    Event repository.
 	 * @param Attendee_Repository        $attendee_repository Attendee repository.
 	 */
 	public function __construct(
 		DateTimeImmutable $now,
-		Event_Repository_Interface $event_repository,
+		Event_Repository $event_repository,
 		Attendee_Repository $attendee_repository
 	) {
 		$this->now                 = $now;

@@ -11,7 +11,7 @@ use WP_Query;
 use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Translation_Events;
 
-class Event_Repository implements Event_Repository_Interface {
+class Event_Repository {
 	private const POST_TYPE           = Translation_Events::CPT;
 	private const CACHE_DURATION      = DAY_IN_SECONDS;
 	private const ACTIVE_EVENTS_KEY   = 'translation-events-active-events';
@@ -128,6 +128,11 @@ class Event_Repository implements Event_Repository_Interface {
 	}
 
 	public function get_event( int $id ): ?Event {
+		// var_dump( wp_cache_get( 'translation_event_' . $id ) );
+		if ( wp_cache_get( 'translation_event_' . $id ) ) {
+			return wp_cache_get( 'translation_event_' . $id );
+		}
+
 		$post = $this->get_event_post( $id );
 		if ( ! $post ) {
 			return null;
@@ -151,7 +156,8 @@ class Event_Repository implements Event_Repository_Interface {
 			);
 			$event->set_id( $post->ID );
 			$event->set_slug( $post->post_name );
-
+			wp_cache_set( 'translation_event_' . $post->ID, $event, '', self::CACHE_DURATION );
+			var_dump('kkikii');
 			return $event;
 		} catch ( Exception $e ) {
 			// This should not be possible as it means data in the database is invalid.

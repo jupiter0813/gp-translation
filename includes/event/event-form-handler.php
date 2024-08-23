@@ -12,10 +12,10 @@ use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Urls;
 
 class Event_Form_Handler {
-	private Event_Repository_Interface $event_repository;
+	private Event_Repository $event_repository;
 	private Notifications_Schedule $notifications_schedule;
 
-	public function __construct( DateTimeImmutable $now, Event_Repository_Interface $event_repository ) {
+	public function __construct( DateTimeImmutable $now, Event_Repository $event_repository ) {
 		$this->event_repository       = $event_repository;
 		$this->notifications_schedule = new Notifications_Schedule( $now, $this->event_repository );
 	}
