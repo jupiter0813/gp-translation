@@ -13,7 +13,7 @@ register_block_type(
 			$event_id = get_the_ID();
 			$event = Translation_Events::get_event_repository()->get_event( $event_id );
 			if ( ! $event ) {
-				return $event_id;
+				return '';
 			}
 
 			return '<div class="wporg-marker-list-item__attendance-mode">

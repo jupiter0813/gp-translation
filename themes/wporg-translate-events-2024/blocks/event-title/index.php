@@ -15,7 +15,7 @@ register_block_type(
 			ob_start();
 			$event = Translation_Events::get_event_repository()->get_event( $event_id );
 			if ( ! $event ) {
-				return $event_id;
+				return '';
 			}
 			$url = Urls::event_details( $event->id() );
 			?>
