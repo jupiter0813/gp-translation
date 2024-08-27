@@ -29,7 +29,7 @@ register_block_type(
 			if ( ! isset( $block->context['postId'] ) ) {
 				return '';
 			}
-			$event_id = get_the_ID();
+			$event_id = $block->context['postId'];
 			$event = Translation_Events::get_event_repository()->get_event( $event_id );
 			if ( ! $event ) {
 				return '';
