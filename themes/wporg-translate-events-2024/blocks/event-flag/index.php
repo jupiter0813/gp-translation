@@ -15,9 +15,7 @@ register_block_type(
 			if ( ! $event ) {
 				return '';
 			}
-
-			global $current_user_attendee_per_event;
-			$current_user_attendee = $current_user_attendee_per_event[ $event_id ] ?? null;
+			$current_user_attendee = $block->context['is_user_attending'];
 			$event_flag = false;
 			if ( $current_user_attendee ) {
 				$event_flag = 'Attending';

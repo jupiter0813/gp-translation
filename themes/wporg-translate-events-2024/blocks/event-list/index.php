@@ -13,12 +13,8 @@ register_block_type(
 			if ( empty( $event_ids ) ) {
 				return;
 			}
-
-			$user_id = get_current_user_id();
-			global $current_user_attendee_per_event;
-			$current_user_attendee_per_event = array();
+	
 			if ( isset( $attributes['show_flag'] ) && $attributes['show_flag'] ) {
-				$current_user_attendee_per_event = Translation_Events::get_attendee_repository()->get_attendees_for_events_for_user( $event_ids, $user_id );
 			}
 
 			ob_start();
@@ -29,7 +25,7 @@ register_block_type(
 				foreach ( $event_ids as $event_id ) {
 					?>
 				<li class="wporg-marker-list-item">
-					<!-- wp:wporg-translate-events-2024/event-template <?php echo wp_json_encode( array( 'id' => $event_id ) ); ?> -->
+					<!-- wp:wporg-translate-events-2024/event-template <?php echo wp_json_encode( array( 'id' => $event_id, 'event_ids' => $event_ids  ) ); ?> -->
 					<div>
 						<!-- wp:wporg-translate-events-2024/event-title /-->
 						<!-- wp:wporg-translate-events-2024/event-flag /-->
