@@ -99,7 +99,7 @@ class Attendee_Repository_Test extends Base_Test {
 		$this->assertNull( $this->repository->get_attendee_for_event_for_user( $event2_id, $user2_id ) );
 	}
 
-	public function test_get_attendees_for_events_for_user() {
+	public function test_get_attendees_for_user_for_events() {
 		$event1_id = 1;
 		$event2_id = 2;
 		$event3_id = 3;
@@ -129,7 +129,7 @@ class Attendee_Repository_Test extends Base_Test {
 		$this->repository->insert_attendee( new Attendee( $event2_id, 84 ) );
 		$this->repository->insert_attendee( new Attendee( $event2_id, $user1_id ) );
 
-		$retrieved_attendees_1 = $this->repository->get_attendees_for_events_for_user( array( $event1_id, $event2_id ), $user1_id );
+		$retrieved_attendees_1 = $this->repository->get_attendees_for_user_for_events( $user1_id, array( $event1_id, $event2_id ) );
 		$this->assertCount( 2, $retrieved_attendees_1 );
 		$this->assertEquals( $attendee11, $retrieved_attendees_1[ $event1_id ] );
 		$this->assertTrue( $retrieved_attendees_1[ $event1_id ]->is_host() );
@@ -141,7 +141,7 @@ class Attendee_Repository_Test extends Base_Test {
 		$this->assertFalse( $retrieved_attendees_1[ $event2_id ]->is_new_contributor() );
 		$this->assertFalse( $retrieved_attendees_1[ $event2_id ]->is_contributor() );
 
-		$retrieved_attendees_2 = $this->repository->get_attendees_for_events_for_user( array( $event1_id, $event2_id ), $user2_id );
+		$retrieved_attendees_2 = $this->repository->get_attendees_for_user_for_events( $user2_id, array( $event1_id, $event2_id ) );
 		$this->assertCount( 2, $retrieved_attendees_2 );
 		$this->assertEquals( $attendee12, $retrieved_attendees_2[ $event1_id ] );
 		$this->assertFalse( $retrieved_attendees_2[ $event1_id ]->is_host() );
@@ -153,7 +153,7 @@ class Attendee_Repository_Test extends Base_Test {
 		$this->assertFalse( $retrieved_attendees_2[ $event2_id ]->is_new_contributor() );
 		$this->assertTrue( $retrieved_attendees_2[ $event2_id ]->is_contributor() );
 
-		$this->assertEmpty( $this->repository->get_attendees_for_events_for_user( array( $event3_id ), $user2_id ) );
+		$this->assertEmpty( $this->repository->get_attendees_for_user_for_events( $user2_id, array( $event3_id ) ) );
 	}
 
 	public function test_get_hosts() {

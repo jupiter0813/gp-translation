@@ -15,7 +15,7 @@ register_block_type(
 			if ( ! $event ) {
 				return '';
 			}
-			$current_user_attendee = $block->context['is_user_attending'];
+			$current_user_attendee = Translation_Events::get_attendee_repository()->is_user_attending( $event_id, get_current_user_id() );
 			$event_flag = false;
 			if ( $current_user_attendee ) {
 				$event_flag = 'Attending';
