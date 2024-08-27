@@ -5,6 +5,9 @@ namespace Wporg\TranslationEvents\Attendee;
 use Exception;
 
 class Attendee_Repository {
+
+	private array $cached_current_user_attendee = array();
+
 	/**
 	 * @throws Exception
 	 */
@@ -102,11 +105,10 @@ class Attendee_Repository {
 	}
 
 	public function is_user_attending( int $event_id, int $user_id ): ?Attendee {
-		static $cached_current_user_attendee = array();
-		if ( ! isset( $cached_current_user_attendee[ $user_id ] ) ) {
-			$cached_current_user_attendee[ $user_id ] = $this->get_attendees_for_user_for_events( $user_id );
+		if ( ! isset( $this->cached_current_user_attendee[ $user_id ] ) ) {
+			$this->cached_current_user_attendee[ $user_id ] = $this->get_attendees_for_user_for_events( $user_id );
 		}
-		$is_attending = $cached_current_user_attendee[ $user_id ][ $event_id ] ?? null;
+		$is_attending = $this->cached_current_user_attendee[ $user_id ][ $event_id ] ?? null;
 
 		return $is_attending;
 	}
