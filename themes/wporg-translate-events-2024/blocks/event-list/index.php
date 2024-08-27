@@ -13,9 +13,6 @@ register_block_type(
 			if ( empty( $event_ids ) ) {
 				return;
 			}
-	
-			if ( isset( $attributes['show_flag'] ) && $attributes['show_flag'] ) {
-			}
 
 			ob_start();
 			?>
@@ -25,11 +22,8 @@ register_block_type(
 				foreach ( $event_ids as $event_id ) {
 					?>
 				<li class="wporg-marker-list-item">
-					<!-- wp:wporg-translate-events-2024/event-template <?php echo wp_json_encode( array( 'id' => $event_id, 'event_ids' => $event_ids  ) ); ?> -->
-					<div>
-						<!-- wp:wporg-translate-events-2024/event-title /-->
-						<!-- wp:wporg-translate-events-2024/event-flag /-->
-					</div>
+					<!-- wp:wporg-translate-events-2024/event-template <?php echo wp_json_encode( array( 'id' => $event_id ) ); ?> -->
+					<!-- wp:wporg-translate-events-2024/event-title /-->
 					<!-- wp:wporg-translate-events-2024/event-attendance-mode /-->
 					<!-- wp:wporg-translate-events-2024/event-start /-->
 					<!-- /wp:wporg-translate-events-2024/event-template -->

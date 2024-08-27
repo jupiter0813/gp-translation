@@ -3,10 +3,6 @@ namespace Wporg\TranslationEvents\Theme_2024;
 
 $event_ids = $attributes['event_ids'] ?? array();
 
-$data = array(
-	'event_ids' => $event_ids,
-	'show_flag' => true,
-);
 ?>
 <div class="wp-block-wporg-event-list">
 	<ul class="wporg-marker-list__container">
