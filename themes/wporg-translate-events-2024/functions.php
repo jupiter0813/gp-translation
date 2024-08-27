@@ -6,8 +6,15 @@ use Wporg\TranslationEvents\Urls;
 
 function register_blocks(): void {
 	include_once __DIR__ . '/blocks/header/index.php';
+	include_once __DIR__ . '/blocks/event-excerpt/index.php';
+	include_once __DIR__ . '/blocks/event-date/index.php';
+	include_once __DIR__ . '/blocks/event-template/index.php';
+	include_once __DIR__ . '/blocks/event-title/index.php';
+	include_once __DIR__ . '/blocks/event-list/index.php';
 	include_once __DIR__ . '/blocks/footer/index.php';
 	include_once __DIR__ . '/blocks/pages/events/my-events/index.php';
+	include_once __DIR__ . '/blocks/event-attendance-mode/index.php';
+	include_once __DIR__ . '/blocks/event-flag/index.php';
 }
 
 add_action(
@@ -21,7 +28,6 @@ add_action(
 	'wporg_translate_events_theme_init',
 	function (): void {
 		register_blocks();
-
 		add_action(
 			'wp_head',
 			function (): void {
@@ -160,7 +166,7 @@ function render_page( string $template_path, string $title, array $attributes ):
 				</div>
 				<!-- /wp:group -->
 
-				<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
+				<!-- wp:group {"layout":{"type":"inherit","flexWrap":"nowrap","justifyContent":"space-between"}} -->
 				<div class="wp-block-group">$rendered_template</div>
 				<!-- /wp:group -->
 			</div>

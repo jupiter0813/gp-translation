@@ -196,9 +196,16 @@ class Events_Query_Result {
 	 */
 	public int $current_page;
 
-	public function __construct( array $events, int $current_page, int $page_count ) {
-		$this->events = $events;
+	public array $event_ids;
 
+	public function __construct( array $events, int $current_page, int $page_count ) {
+		$this->events    = $events;
+		$this->event_ids = array_map(
+			function ( $event ) {
+				return $event->id();
+			},
+			$events,
+		);
 		// The call to intval() is required because WP_Query::max_num_pages is sometimes a float, despite being type-hinted as int.
 		$this->page_count   = intval( $page_count );
 		$this->current_page = intval( $current_page );

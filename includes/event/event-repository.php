@@ -121,7 +121,6 @@ class Event_Repository implements Event_Repository_Interface {
 			array( '%d' ),
 		);
 		// phpcs:enable
-
 		return $event;
 	}
 
@@ -149,6 +148,7 @@ class Event_Repository implements Event_Repository_Interface {
 			);
 			$event->set_id( $post->ID );
 			$event->set_slug( $post->post_name );
+
 			return $event;
 		} catch ( Exception $e ) {
 			// This should not be possible as it means data in the database is invalid.
@@ -576,6 +576,7 @@ class Event_Repository implements Event_Repository_Interface {
 			$event->set_id( $post->ID );
 			$event->set_slug( $post->post_name );
 			$events[] = $event;
+
 		}
 
 		return new Events_Query_Result( $events, $page, $query->max_num_pages );
