@@ -20,15 +20,15 @@ $past_events_data = array(
 
 ?>
 <!-- wp:pattern {"slug":"wporg-translate-events-2024/front-cover"} /-->
-<!-- wp:heading {"level":4} -->
-<h4 class="wp-block-heading">Your next events</h4>
+<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"medium","fontFamily":"inter"} -->
+<h2 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700">Your next events</h2>
 <!-- /wp:heading -->
 <!-- wp:wporg-translate-events-2024/event-list <?php echo wp_json_encode( $current_events_data ); ?>  /-->
-<!-- wp:heading {"level":4} -->
-<h4 class="wp-block-heading">Upcoming events</h4>
+<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"medium","fontFamily":"inter"} -->
+<h2 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700">Upcoming events</h2>
 <!-- /wp:heading -->
 <!-- wp:wporg-translate-events-2024/event-list <?php echo wp_json_encode( $upcoming_events_data ); ?>  /-->
-<!-- wp:heading {"level":4} -->
-<h4 class="wp-block-heading">Past events</h4>
+<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"medium","fontFamily":"inter"} -->
+<h2 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700">Past events</h2>
 <!-- /wp:heading -->
 <!-- wp:wporg-translate-events-2024/event-list <?php echo wp_json_encode( $past_events_data ); ?>  /-->
