@@ -3,8 +3,8 @@ namespace Wporg\TranslationEvents\Theme_2024;
 
 ob_start();
 ?>
-<!-- wp:heading {"level":4} -->
-<h4 class="wp-block-heading">Get involved</h4>
+<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"medium","fontFamily":"inter"} -->
+<h4 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700">Get involved</h4>
 <!-- /wp:heading -->
  <!-- wp:paragraph -->
 <p>Start your journey to contribute to localization.</p>
