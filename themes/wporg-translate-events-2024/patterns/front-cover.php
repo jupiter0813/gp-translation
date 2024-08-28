@@ -6,7 +6,7 @@ ob_start();
 <!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"medium","fontFamily":"inter"} -->
 <h4 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700">Get involved</h4>
 <!-- /wp:heading -->
- <!-- wp:paragraph -->
+<!-- wp:paragraph -->
 <p>Start your journey to contribute to localization.</p>
 <!-- /wp:paragraph -->
 <div class="wp-block-columns alignwide" style="gap:10px;"><!-- wp:column {"width":"100%","fontSize":"medium","fontFamily":"inter"} -->
