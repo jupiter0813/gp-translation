@@ -59,6 +59,13 @@ body {
     font-size: .8em; 
 }
 
+a.blue-bolded-link {
+	font-weight: 700;
+	color: #3858E9;
+	text-decoration: none;
+	-webkit-text-decoration: none;
+}
+
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
