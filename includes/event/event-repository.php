@@ -12,11 +12,8 @@ use Wporg\TranslationEvents\Attendee\Attendee_Repository;
 use Wporg\TranslationEvents\Translation_Events;
 
 class Event_Repository {
-	private const POST_TYPE           = Translation_Events::CPT;
-	private const CACHE_DURATION      = DAY_IN_SECONDS;
-	private const ACTIVE_EVENTS_KEY   = 'translation-events-active-events';
-	private const UPCOMING_EVENTS_KEY = 'translation-events-upcoming-events';
-
+	private const POST_TYPE      = Translation_Events::CPT;
+	private const CACHE_DURATION = DAY_IN_SECONDS;
 	protected DateTimeImmutable $now;
 	private Attendee_Repository $attendee_repository;
 
@@ -168,87 +165,38 @@ class Event_Repository {
 	}
 
 	public function get_current_events( int $page = -1, int $page_size = -1 ): Events_Query_Result {
-		$this->assert_pagination_arguments( $page, $page_size );
-
-		$cache_duration = self::CACHE_DURATION;
-		$boundary_start = $this->now;
-		$boundary_end   = $this->now->modify( "+$cache_duration seconds" );
-
-		$events = wp_cache_get( self::ACTIVE_EVENTS_KEY, '', false, $found );
-		if ( ! $found ) {
-			$events = $this->get_events_active_between( $boundary_start, $boundary_end )->events;
-			wp_cache_set( self::ACTIVE_EVENTS_KEY, $events, '', self::CACHE_DURATION );
-		} elseif ( ! is_array( $events ) ) {
-			throw new Exception( 'Cached events is not an array, something is wrong' );
-		}
-
-		// Filter out events that aren't actually active at $at.
-		$events = array_values(
-			array_filter(
-				$events,
-				function ( $event ) {
-					return $event->start() <= $this->now && $this->now <= $event->end();
-				}
-			)
+		return $this->get_events_active_between(
+			$this->now,
+			$this->now,
+			array(),
+			$page,
+			$page_size
 		);
-
-		if ( empty( $events ) ) {
-			return new Events_Query_Result( $events, $page, 0 );
-		}
-
-		// Split the list of all current events into pages.
-		// If no pagination parameters were supplied, we return the full list of events as a single page.
-
-		if ( $page >= 1 ) {
-			// Pagination parameters were supplied.
-			// Convert from 1-indexed to 0-indexed.
-			--$page;
-		} else {
-			// No pagination parameters were supplied.
-			$page      = 0;
-			$page_size = count( $events );
-		}
-
-		$pages = array_chunk( $events, $page_size );
-		if ( ! empty( $pages ) && isset( $pages[ $page ] ) ) {
-			$events = $pages[ $page ];
-		} else {
-			$events = array();
-		}
-
-		return new Events_Query_Result( $events, $page, count( $pages ) );
 	}
 
 	public function get_upcoming_events( int $page = - 1, int $page_size = - 1 ): Events_Query_Result {
-		$events = wp_cache_get( self::UPCOMING_EVENTS_KEY, '', false, $found );
-		if ( ! $found ) {
-			// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-			// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-			$events = $this->execute_events_query(
-				$page,
-				$page_size,
-				array(
-					'meta_query' => array(
-						array(
-							'key'     => '_event_start',
-							'value'   => $this->now->format( 'Y-m-d H:i:s' ),
-							'compare' => '>=',
-							'type'    => 'DATETIME',
-						),
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+		return $this->execute_events_query(
+			$page,
+			$page_size,
+			array(
+				'meta_query' => array(
+					array(
+						'key'     => '_event_start',
+						'value'   => $this->now->format( 'Y-m-d H:i:s' ),
+						'compare' => '>=',
+						'type'    => 'DATETIME',
 					),
-					'meta_key'   => '_event_start',
-					'orderby'    => array(
-						'meta_value' => 'ASC',
-						'ID'         => 'ASC',
-					),
-				)
-			);
-			wp_cache_set( self::UPCOMING_EVENTS_KEY, $events, '', self::CACHE_DURATION );
-		} elseif ( ! is_array( $events ) ) {
-			throw new Exception( 'Cached events is not an array, something is wrong' );
-		}
-		return $events;
+				),
+				'meta_key'   => '_event_start',
+				'orderby'    => array(
+					'meta_value' => 'ASC',
+					'ID'         => 'ASC',
+				),
+			)
+		);
 		// phpcs:enable
 	}
 
@@ -637,8 +585,11 @@ class Event_Repository {
 			$events[] = $event;
 
 		}
-
-		return new Events_Query_Result( $events, $page, $query->max_num_pages );
+		$num_of_pages = $query->max_num_pages;
+		if ( -1 === $page_size ) {
+			$num_of_pages = empty( $events ) ? 0 : 1;
+		}
+		return new Events_Query_Result( $events, $page, $num_of_pages );
 	}
 
 	private function get_event_post( int $event_id ): ?WP_Post {
