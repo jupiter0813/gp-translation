@@ -92,17 +92,30 @@ class Rss_Route extends Route {
 	/**
 	 * Get the most recent event's pub date.
 	 *
-	 * @param Event[] $events Array of events to use for the pub date.
+	 * Returns the last updated_at date if there are any current and upcoming events.
+	 * Otherwise, returns the last end date of the past events.
+	 * If there are no events at all, returns the date of the Unix epoch.
+	 *
+	 * @param Event[] $events Array of current and upcoming events to use for the pub date.
 	 *
 	 * @return string|null
 	 */
 	private function document_pub_and_build_date( array $events ): ?string {
 		if ( empty( $events ) ) {
 			$events = $this->event_repository->get_past_events()->events;
-		}
-		if ( empty( $events ) ) {
-			$zero_date = new DateTimeImmutable( '@0' );
-			return $zero_date->format( DATE_RSS );
+			if ( empty( $events ) ) {
+				$zero_date = new DateTimeImmutable( '@0' );
+				return $zero_date->format( DATE_RSS );
+			}
+
+			$end_date = $events[0]->end();
+			foreach ( $events as $event ) {
+				if ( $event->end() > $end_date ) {
+					$end_date = $event->end();
+				}
+			}
+
+			return $end_date->format( DATE_RSS );
 		}
 
 		$pub_date = $events[0]->updated_at();
