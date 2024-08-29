@@ -91,6 +91,7 @@ class Event_Repository {
 		}
 
 		$this->update_event_meta( $event );
+		$this->invalidate_cache( $event->id() );
 		return $event->id();
 	}
 
@@ -99,6 +100,7 @@ class Event_Repository {
 		if ( ! $result ) {
 			return false;
 		}
+		$this->invalidate_cache( $event->id() );
 		return $event;
 	}
 
@@ -124,6 +126,7 @@ class Event_Repository {
 			array( '%d' ),
 		);
 		// phpcs:enable
+		$this->invalidate_cache( $event->id() );
 		return $event;
 	}
 
@@ -686,6 +689,10 @@ class Event_Repository {
 		update_post_meta( $event->id(), '_event_timezone', $event->timezone()->getName() );
 		update_post_meta( $event->id(), '_hosts', $hosts_ids );
 		update_post_meta( $event->id(), '_event_attendance_mode', $event->attendance_mode() );
+	}
+
+	private function invalidate_cache( $event_id ) {
+		wp_cache_delete( 'translation_event_' . $event_id );
 	}
 }
 
