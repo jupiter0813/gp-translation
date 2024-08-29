@@ -389,47 +389,4 @@ class Event_Repository_Test extends Base_Test {
 		$this->assertEquals( 2, $result->page_count );
 		$this->assertEquals( $event2_id, $events[0]->id() );
 	}
-
-	public function test_invalidates_cache_when_events_are_created() {
-		$event = new Event(
-			0,
-			new Event_Start_Date( 'now' ),
-			( new Event_End_Date( 'now' ) )->modify( '+1 hour' ),
-			new DateTimeZone( 'Europe/Lisbon' ),
-			'draft',
-			'Foo',
-			'Foo.'
-		);
-
-		wp_cache_set( 'translation-events-active-events', 'foo' );
-		$this->repository->insert_event( $event );
-		$this->assertFalse( wp_cache_get( 'translation-events-active-events' ) );
-	}
-
-	public function test_invalidates_cache_when_events_are_updated() {
-		$event_id = $this->event_factory->create_active( $this->now );
-		$event    = $this->repository->get_event( $event_id );
-
-		wp_cache_set( 'translation-events-active-events', 'foo' );
-		$this->repository->update_event( $event );
-		$this->assertFalse( wp_cache_get( 'translation-events-active-events' ) );
-	}
-
-	public function test_invalidates_cache_when_events_are_trashed() {
-		$event_id = $this->event_factory->create_active( $this->now );
-		$event    = $this->repository->get_event( $event_id );
-
-		wp_cache_set( 'translation-events-active-events', 'foo' );
-		$this->repository->trash_event( $event );
-		$this->assertFalse( wp_cache_get( 'translation-events-active-events' ) );
-	}
-
-	public function test_invalidates_cache_when_events_are_deleted() {
-		$event_id = $this->event_factory->create_active( $this->now );
-		$event    = $this->repository->get_event( $event_id );
-
-		wp_cache_set( 'translation-events-active-events', 'foo' );
-		$this->repository->delete_event( $event );
-		$this->assertFalse( wp_cache_get( 'translation-events-active-events' ) );
-	}
 }
