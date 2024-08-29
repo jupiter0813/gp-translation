@@ -2,6 +2,7 @@
 
 namespace Wporg\TranslationEvents\Routes\Event;
 
+use DateTimeImmutable;
 use DateTimeInterface;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
@@ -97,7 +98,11 @@ class Rss_Route extends Route {
 	 */
 	private function document_pub_and_build_date( array $events ): ?string {
 		if ( empty( $events ) ) {
-			return null;
+			$events = $this->event_repository->get_past_events()->events;
+		}
+		if ( empty( $events ) ) {
+			$zero_date = new DateTimeImmutable( '@0' );
+			return $zero_date->format( DATE_RSS );
 		}
 
 		$pub_date = $events[0]->updated_at();
