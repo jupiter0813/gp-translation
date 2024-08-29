@@ -22,9 +22,9 @@ class Notifications_Send {
 	/**
 	 * Notifications_Send constructor.
 	 *
-	 * @param DateTimeImmutable          $now                 The value of "now".
-	 * @param Event_Repository $event_repository    Event repository.
-	 * @param Attendee_Repository        $attendee_repository Attendee repository.
+	 * @param DateTimeImmutable   $now                 The value of "now".
+	 * @param Event_Repository    $event_repository    Event repository.
+	 * @param Attendee_Repository $attendee_repository Attendee repository.
 	 */
 	public function __construct(
 		DateTimeImmutable $now,

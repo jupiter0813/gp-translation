@@ -12,8 +12,8 @@ class Notifications_Schedule {
 	/**
 	 * Notifications_Schedule constructor.
 	 *
-	 * @param DateTimeImmutable          $now              The value of "now".
-	 * @param Event_Repository $event_repository Event repository.
+	 * @param DateTimeImmutable $now              The value of "now".
+	 * @param Event_Repository  $event_repository Event repository.
 	 */
 	public function __construct( DateTimeImmutable $now, Event_Repository $event_repository ) {
 		$this->now              = $now;
