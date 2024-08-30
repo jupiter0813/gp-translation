@@ -348,4 +348,45 @@ class Event_Repository_Test extends Base_Test {
 		$this->assertEquals( $event2_id, $events[2]->id() );
 		$this->assertEquals( $event1_id, $events[3]->id() );
 	}
+
+	public function test_get_current_events_when_no_current_events_exist() {
+		$result = $this->repository->get_current_events();
+		$this->assertIsArray( $result->events );
+		$this->assertEmpty( $result->events );
+
+		$result = $this->repository->get_current_events( 1, 1 );
+		$this->assertIsArray( $result->events );
+		$this->assertEmpty( $result->events );
+
+		$result = $this->repository->get_current_events( 2, 1 );
+		$this->assertIsArray( $result->events );
+		$this->assertEmpty( $result->events );
+	}
+
+	public function test_get_current_events() {
+		$event1_id = $this->event_factory->create_active( $this->now );
+		$event2_id = $this->event_factory->create_active( $this->now );
+		$this->event_factory->create_active( $this->now->modify( '+2 hours' ) );
+		$this->event_factory->create_inactive_future( $this->now );
+		$this->event_factory->create_inactive_past( $this->now );
+
+		$result = $this->repository->get_current_events();
+		$events = $result->events;
+		$this->assertCount( 2, $events );
+		$this->assertEquals( 1, $result->page_count );
+		$this->assertEquals( $event1_id, $events[0]->id() );
+		$this->assertEquals( $event2_id, $events[1]->id() );
+
+		$result = $this->repository->get_current_events( 1, 1 );
+		$events = $result->events;
+		$this->assertCount( 1, $events );
+		$this->assertEquals( 2, $result->page_count );
+		$this->assertEquals( $event1_id, $events[0]->id() );
+
+		$result = $this->repository->get_current_events( 2, 1 );
+		$events = $result->events;
+		$this->assertCount( 1, $events );
+		$this->assertEquals( 2, $result->page_count );
+		$this->assertEquals( $event2_id, $events[0]->id() );
+	}
 }
