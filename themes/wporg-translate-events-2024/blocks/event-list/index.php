@@ -29,8 +29,6 @@ register_block_type(
 						</div>
 						<!-- wp:wporg-translate-events-2024/event-attendance-mode /-->
 						<!-- wp:wporg-translate-events-2024/event-start /-->
-						<!-- /wp:wporg-translate-events-2024/event-list-->
-
 						<!-- /wp:wporg-translate-events-2024/event-template -->
 					</li>
 					<?php
