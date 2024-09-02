@@ -16,6 +16,7 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/pages/events/home/index.php';
 	include_once __DIR__ . '/blocks/event-attendance-mode/index.php';
 	include_once __DIR__ . '/blocks/event-flag/index.php';
+	include_once __DIR__ . '/blocks/pages/events/event-details/index.php';
 }
 
 function register_patterns(): void {

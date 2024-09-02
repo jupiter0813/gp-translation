@@ -85,6 +85,7 @@ class Details_Route extends Route {
 			$this->die_with_error( esc_html__( 'Failed to calculate event stats', 'gp-translation-events' ) );
 		}
 
+		$this->use_theme();
 		$this->tmpl(
 			'event-details',
 			array(
