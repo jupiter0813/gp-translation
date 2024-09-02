@@ -13,7 +13,8 @@ register_block_type(
 			if ( empty( $event_ids ) ) {
 				return get_no_result_view();
 			}
-			$show_flag = $attributes['show_flag'] ?? false;
+			$show_flag = ! empty( $attributes['show_flag'] ) && true === $attributes['show_flag'];
+
 			ob_start();
 			?>
 			<div class="wp-block-wporg-event-list">
