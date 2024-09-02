@@ -99,6 +99,7 @@ class Details_Route extends Route {
 				'event_stats'                => $event_stats,
 				'projects'                   => $projects,
 				'user'                       => $user,
+				'event_id'                   => $event->id(),
 			),
 		);
 	}
