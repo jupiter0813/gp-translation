@@ -30,7 +30,7 @@ register_block_type(
 
 			render_page(
 				__DIR__ . '/render.php',
-				__( $event->title(), 'wporg-translate-events-2024' ),
+				esc_html( $event->title() ),
 				$attributes
 			);
 		},
