@@ -13,7 +13,7 @@ register_block_type(
 			if ( empty( $event_ids ) ) {
 				return get_no_result_view();
 			}
-
+			$show_flag = $attributes['show_flag'] ?? false;
 			ob_start();
 			?>
 			<div class="wp-block-wporg-event-list">
@@ -25,7 +25,13 @@ register_block_type(
 						<!-- wp:wporg-translate-events-2024/event-template <?php echo wp_json_encode( array( 'id' => $event_id ) ); ?> -->
 						<div>
 							<!-- wp:wporg-translate-events-2024/event-title /-->
+							<?php
+							if ( $show_flag ) :
+								?>
 							<!-- wp:wporg-translate-events-2024/event-flag /-->
+								<?php
+							endif;
+							?>
 						</div>
 						<!-- wp:wporg-translate-events-2024/event-attendance-mode /-->
 						<!-- wp:wporg-translate-events-2024/event-start /-->
