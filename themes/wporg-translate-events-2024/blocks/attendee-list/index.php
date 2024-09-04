@@ -6,7 +6,7 @@ use Wporg\TranslationEvents\Attendee\Attendee;
 
 
 register_block_type(
-	'wporg-translate-events-2024/event-attendees',
+	'wporg-translate-events-2024/attendee-list',
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes, $content, $block ) {
