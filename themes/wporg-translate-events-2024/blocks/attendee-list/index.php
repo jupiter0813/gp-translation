@@ -26,13 +26,39 @@ register_block_type(
 			);
 
 			ob_start();
-
 			?>
 			<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"medium","fontFamily":"inter"} -->
 			<h4 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700"><?php echo esc_html( sprintf( __( 'Attendees (%d)', 'wporg-translate-events-2024' ), number_format_i18n( count( $attendees ) ) ) ); ?></h4>
 			<!-- /wp:heading -->
+			<!-- wp:group {"align":"full"} -->
+			<div class="wp-block-group alignfull">
+				<!-- wp:columns {"columns":3} -->
+				<div class="wp-block-columns has-3-columns">
 			<?php
-			return ob_get_clean();
+			$columns = 3;
+			$counter = 0;
+
+			foreach ( $attendees as $attendee ) :
+				if ( $columns === $counter ) :
+					?>
+					</div><!-- /wp:columns -->
+					<!-- wp:columns {"columns":3} --><div class="wp-block-columns has-3-columns">
+					<?php
+				endif;
+				?>
+				<!-- wp:wporg-translate-events-2024/attendee-avatar-name <?php echo wp_json_encode( array( 'user_id' => $attendee->user_id() ) ); ?> /-->
+				<!-- wp:column -->
+				<div class="wp-block-column">
+				</div>
+				<!-- /wp:column -->
+				<?php
+				$counter++;
+			endforeach;
+			?>
+			</div><!-- /wp:columns -->
+			</div><!-- /wp:group -->
+				<?php
+				return ob_get_clean();
 		},
 	)
 );
