@@ -66,6 +66,11 @@ a.blue-bolded-link {
 	-webkit-text-decoration: none;
 }
 
+.attendee-avatar img {
+	border-radius: 50%;
+    vertical-align: middle;
+}
+
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
