@@ -42,12 +42,4 @@ echo wp_kses(
 <!-- wp:paragraph -->
 <?php echo wp_kses_post( wpautop( make_clickable( $event->description() ) ) ); ?>
 <!-- /wp:paragraph -->
-<?php if ( ! empty( $contributors ) ) : ?>
-<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"medium","fontFamily":"inter"} -->
-<h4 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700"><?php echo esc_html( sprintf( __( 'Contributors (%d)', 'wporg-translate-events-2024' ), number_format_i18n( count( $contributors ) ) ) ); ?></h4>
-	<?php
-	// translators: %d is the number of contributors.
-	echo esc_html( sprintf( __( 'Contributors (%d)', 'gp-translation-events' ), number_format_i18n( count( $contributors ) ) ) );
-	?>
-<!-- /wp:heading -->
-<?php endif; ?>
+<!-- wp:wporg-translate-events-2024/event-attendees <?php echo wp_json_encode( array( 'id' => $event->id() ) ); ?> /-->
