@@ -13,8 +13,13 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/event-list/index.php';
 	include_once __DIR__ . '/blocks/footer/index.php';
 	include_once __DIR__ . '/blocks/pages/events/my-events/index.php';
+	include_once __DIR__ . '/blocks/pages/events/home/index.php';
 	include_once __DIR__ . '/blocks/event-attendance-mode/index.php';
 	include_once __DIR__ . '/blocks/event-flag/index.php';
+}
+
+function register_patterns(): void {
+	include_once __DIR__ . '/patterns/front-cover.php';
 }
 
 add_action(
@@ -28,6 +33,7 @@ add_action(
 	'wporg_translate_events_theme_init',
 	function (): void {
 		register_blocks();
+		register_patterns();
 		add_action(
 			'wp_head',
 			function (): void {

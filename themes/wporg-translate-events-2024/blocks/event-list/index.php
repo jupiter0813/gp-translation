@@ -11,8 +11,9 @@ register_block_type(
 			$event_ids = $attributes['event_ids'] ?? array();
 
 			if ( empty( $event_ids ) ) {
-				return;
+				return get_no_result_view();
 			}
+			$show_flag = ! empty( $attributes['show_flag'] ) && true === $attributes['show_flag'];
 
 			ob_start();
 			?>
@@ -25,12 +26,16 @@ register_block_type(
 						<!-- wp:wporg-translate-events-2024/event-template <?php echo wp_json_encode( array( 'id' => $event_id ) ); ?> -->
 						<div>
 							<!-- wp:wporg-translate-events-2024/event-title /-->
+							<?php
+							if ( $show_flag ) :
+								?>
 							<!-- wp:wporg-translate-events-2024/event-flag /-->
+								<?php
+							endif;
+							?>
 						</div>
 						<!-- wp:wporg-translate-events-2024/event-attendance-mode /-->
 						<!-- wp:wporg-translate-events-2024/event-start /-->
-						<!-- /wp:wporg-translate-events-2024/event-list-->
-
 						<!-- /wp:wporg-translate-events-2024/event-template -->
 					</li>
 					<?php
@@ -43,3 +48,21 @@ register_block_type(
 		},
 	)
 );
+
+/**
+ * Returns a block driven view when no results are found.
+ *
+ * @return string
+ */
+function get_no_result_view() {
+	$content  = '<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|10","bottom":"var:preset|spacing|10"}}},"layout":{"type":"constrained"}} -->';
+	$content .= '<div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--10);padding-bottom:var(--wp--preset--spacing--10)">';
+	$content .= sprintf(
+		'<!-- wp:paragraph {"align":"center"} --><p class="has-text-align-center">%s</p><!-- /wp:paragraph -->',
+		esc_attr__( 'No events found in this category.', 'wporg-translate-events-2024' )
+	);
+	$content .= '</div><!-- /wp:group -->';
+
+	return do_blocks( $content );
+}
+
