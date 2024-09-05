@@ -71,6 +71,10 @@ a.blue-bolded-link {
     vertical-align: middle;
 }
 
+.first-time-contributor-tada::after {
+	content: ' 🎉';
+}
+
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {

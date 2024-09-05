@@ -46,7 +46,7 @@ register_block_type(
 					<?php
 				endif;
 				?>
-				<!-- wp:wporg-translate-events-2024/attendee-avatar-name <?php echo wp_json_encode( array( 'user_id' => $attendee->user_id() ) ); ?> /-->
+				<!-- wp:wporg-translate-events-2024/attendee-avatar-name <?php echo wp_json_encode( array( 'user_id' => $attendee->user_id(), 'is_new_contributor' => $attendee->is_new_contributor() ) ); ?> /-->
 				<!-- wp:column -->
 				<div class="wp-block-column">
 				</div>
