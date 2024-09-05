@@ -19,6 +19,7 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/pages/events/event-details/index.php';
 	include_once __DIR__ . '/blocks/attendee-list/index.php';
 	include_once __DIR__ . '/blocks/attendee-avatar-name/index.php';
+	include_once __DIR__ . '/blocks/contributor-list/index.php';
 }
 
 function register_patterns(): void {

@@ -43,3 +43,4 @@ echo wp_kses(
 <?php echo wp_kses_post( wpautop( make_clickable( $event->description() ) ) ); ?>
 <!-- /wp:paragraph -->
 <!-- wp:wporg-translate-events-2024/attendee-list <?php echo wp_json_encode( array( 'id' => $event->id() ) ); ?> /-->
+<!-- wp:wporg-translate-events-2024/contributor-list <?php echo wp_json_encode( array( 'id' => $event->id() ) ); ?> /-->
