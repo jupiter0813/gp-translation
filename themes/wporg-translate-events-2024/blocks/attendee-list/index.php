@@ -38,7 +38,7 @@ register_block_type(
 			$columns = 3;
 			$counter = 0;
 
-			foreach ( $attendees as $attendee ) :
+			foreach ( $attendees_not_contributing as $attendee ) :
 				if ( $columns === $counter ) :
 					?>
 					</div><!-- /wp:columns -->
