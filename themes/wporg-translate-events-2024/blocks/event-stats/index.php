@@ -21,7 +21,7 @@ register_block_type(
 
 			<!-- wp:table -->
 				<figure class="wp-block-table">
-					<table>
+					<table class="event-stats">
 						<thead>
 							<tr>
 								<th><?php esc_html_e( 'Translations', 'wporg-translate-events-2024' ); ?></th>
