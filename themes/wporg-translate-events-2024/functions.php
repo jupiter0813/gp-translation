@@ -20,6 +20,7 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/attendee-list/index.php';
 	include_once __DIR__ . '/blocks/attendee-avatar-name/index.php';
 	include_once __DIR__ . '/blocks/contributor-list/index.php';
+	include_once __DIR__ . '/blocks/event-stats/index.php';
 }
 
 function register_patterns(): void {
