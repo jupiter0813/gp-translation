@@ -75,6 +75,10 @@ a.blue-bolded-link {
 	content: ' 🎉';
 }
 
+.event-details-stats-totals td {
+	font-weight: bold;
+}
+
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
