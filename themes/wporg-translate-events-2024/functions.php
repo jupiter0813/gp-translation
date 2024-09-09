@@ -22,6 +22,7 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/contributor-list/index.php';
 	include_once __DIR__ . '/blocks/event-stats/index.php';
 	include_once __DIR__ . '/blocks/event-projects/index.php';
+	include_once __DIR__ . '/blocks/event-contribution-summary/index.php';
 }
 
 function register_patterns(): void {
