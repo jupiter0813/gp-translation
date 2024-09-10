@@ -551,6 +551,10 @@ class Event_Repository implements Event_Repository_Interface {
 		$events = array();
 		foreach ( $posts as $post ) {
 			$meta = $this->get_event_meta( $post->ID );
+			if ( empty( $meta['start'] ) || empty( $meta['end'] ) || empty( $meta['timezone'] ) ) {
+				// If the event is missing any of the required meta fields, we skip it.
+				continue;
+			}
 
 			$title = $post->post_title;
 			if ( empty( $title ) ) {
