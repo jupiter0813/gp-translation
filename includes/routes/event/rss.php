@@ -4,6 +4,7 @@ namespace Wporg\TranslationEvents\Routes\Event;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use WP_Post;
 use Wporg\TranslationEvents\Event\Event;
 use Wporg\TranslationEvents\Event\Event_Repository_Interface;
 use Wporg\TranslationEvents\Routes\Route;
@@ -30,11 +31,19 @@ class Rss_Route extends Route {
 	 * @return void
 	 */
 	public function handle(): void {
-		$current_events_query = $this->event_repository->get_current_and_upcoming_events( 1, 20 );
-		$rss_feed             = $this->get_rss_20_header( $current_events_query->events );
-
-		foreach ( $current_events_query->events as $event ) {
-			$rss_feed .= $this->get_item( $event );
+		$args                = array(
+			'posts_per_page' => 20,
+			'post_type'      => Translation_Events::CPT,
+			'post_status'    => 'publish',
+			'post_parent'    => '>0',
+		);
+		$last_20_events_post = wp_get_recent_posts( $args );
+		$rss_feed            = $this->get_rss_20_header( $last_20_events_post );
+		foreach ( $last_20_events_post as $event_post ) {
+			$event = $this->event_repository->get_event( $event_post['ID'] );
+			if ( $event ) {
+				$rss_feed .= $this->get_item( $event );
+			}
 		}
 		$rss_feed .= $this->get_rss_20_footer();
 
@@ -92,36 +101,29 @@ class Rss_Route extends Route {
 	/**
 	 * Get the most recent event's pub date.
 	 *
-	 * Returns the last updated_at date if there are any current and upcoming events.
-	 * Otherwise, returns the last end date of the past events.
 	 * If there are no events at all, returns the date of the Unix epoch.
 	 *
-	 * @param Event[] $events Array of current and upcoming events to use for the pub date.
+	 * @param WP_Post[] $events_post Array of last events, as WP_Post objects.
 	 *
 	 * @return string|null
 	 */
-	private function document_pub_and_build_date( array $events ): ?string {
-		if ( empty( $events ) ) {
-			$events = $this->event_repository->get_past_events()->events;
-			if ( empty( $events ) ) {
-				$zero_date = new DateTimeImmutable( '@0' );
-				return $zero_date->format( DATE_RSS );
-			}
-
-			$end_date = $events[0]->end();
-			foreach ( $events as $event ) {
-				if ( $event->end() > $end_date ) {
-					$end_date = $event->end();
-				}
-			}
-
-			return $end_date->format( DATE_RSS );
+	private function document_pub_and_build_date( array $events_post ): ?string {
+		$pub_date = null;
+		if ( empty( $events_post ) ) {
+			$zero_date = new DateTimeImmutable( '@0' );
+			return $zero_date->format( DATE_RSS );
 		}
 
-		$pub_date = $events[0]->updated_at();
-		foreach ( $events as $event ) {
-			if ( $event->updated_at() > $pub_date ) {
-				$pub_date = $event->updated_at();
+		$first_event = $this->event_repository->get_event( $events_post[0]['ID'] );
+		if ( $first_event ) {
+			$pub_date = $first_event->updated_at();
+		}
+		foreach ( $events_post as $event_post ) {
+			$event = $this->event_repository->get_event( $event_post['ID'] );
+			if ( $event ) {
+				if ( $event->updated_at() > $pub_date ) {
+					$pub_date = $event->updated_at();
+				}
 			}
 		}
 
