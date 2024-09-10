@@ -120,10 +120,8 @@ class Rss_Route extends Route {
 		}
 		foreach ( $events_post as $event_post ) {
 			$event = $this->event_repository->get_event( $event_post['ID'] );
-			if ( $event ) {
-				if ( $event->updated_at() > $pub_date ) {
-					$pub_date = $event->updated_at();
-				}
+			if ( $event && ( $event->updated_at() > $pub_date ) ) {
+				$pub_date = $event->updated_at();
 			}
 		}
 
