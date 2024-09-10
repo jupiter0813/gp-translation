@@ -20,6 +20,9 @@ register_block_type(
 				return '';
 			}
 			$event_stats = ( new Stats_Calculator() )->for_event( $event_id );
+			if ( empty( $event_stats->rows() ) ) {
+				return '';
+			}
 
 			$attendees             = Translation_Events::get_attendee_repository()->get_attendees( $event_id );
 			$contributors = array_filter(
