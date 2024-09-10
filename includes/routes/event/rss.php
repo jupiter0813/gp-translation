@@ -32,10 +32,10 @@ class Rss_Route extends Route {
 	 */
 	public function handle(): void {
 		$args                = array(
-			'posts_per_page' => 20,
-			'post_type'      => Translation_Events::CPT,
-			'post_status'    => 'publish',
-			'post_parent'    => '>0',
+			'posts_per_page'      => 20,
+			'post_type'           => Translation_Events::CPT,
+			'post_status'         => 'publish',
+			'post_parent__not_in' => array( 0 ),
 		);
 		$last_20_events_post = wp_get_recent_posts( $args );
 		$rss_feed            = $this->get_rss_20_header( $last_20_events_post );
