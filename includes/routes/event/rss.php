@@ -108,10 +108,9 @@ class Rss_Route extends Route {
 	 * @return string|null
 	 */
 	private function document_pub_and_build_date( array $events_post ): ?string {
-		$pub_date = null;
+		$pub_date = new DateTimeImmutable( '@0' );
 		if ( empty( $events_post ) ) {
-			$zero_date = new DateTimeImmutable( '@0' );
-			return $zero_date->format( DATE_RSS );
+			return $pub_date->format( DATE_RSS );
 		}
 
 		$first_event = $this->event_repository->get_event( $events_post[0]['ID'] );
