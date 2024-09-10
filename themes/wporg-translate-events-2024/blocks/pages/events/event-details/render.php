@@ -3,7 +3,10 @@ namespace Wporg\TranslationEvents\Theme_2024;
 
 use Wporg\TranslationEvents\Attendee\Attendee;
 
-$event     = $attributes['event'];
+$event               = $attributes['event'];
+$user_is_attending   = $attributes['user_is_attending'];
+$user_is_contributor = $attributes['user_is_contributor'];
+
 $has_hosts = count( $hosts ) > 0;
 
 if ( ! $has_hosts ) {
@@ -26,7 +29,7 @@ if ( ! $has_hosts ) {
 	$hosts_string = _n( 'Host: %s', 'Hosts: %s', count( $hosts ), 'gp-translation-events' );
 }
 ?>
-<button type="submit" class="wp-block-button__link">Pledge to attend</button>
+<!-- wp:wporg-translate-events-2024/event-attend-button <?php echo wp_json_encode( array( 'id' => $event->id(), 'user_is_attending' => $user_is_attending, 'user_is_contributor' => $user_is_contributor ) ); ?> /-->
 
 <!-- wp:paragraph -->
 <p>
