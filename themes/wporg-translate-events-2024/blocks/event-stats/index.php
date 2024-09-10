@@ -19,6 +19,10 @@ register_block_type(
 			?>
 			<?php if ( ! empty( $event_stats->rows() ) ) : ?>
 
+			<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"medium","fontFamily":"inter"} -->
+			<h4 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700"><?php echo esc_html( __( 'Stats', 'wporg-translate-events-2024' ) ); ?></h4>
+			<!-- /wp:heading -->
+
 			<!-- wp:table -->
 				<figure class="wp-block-table">
 					<table class="event-stats">
