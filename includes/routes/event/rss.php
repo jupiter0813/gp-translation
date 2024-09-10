@@ -38,7 +38,12 @@ class Rss_Route extends Route {
 			'post_parent__not_in' => array( 0 ),
 		);
 		$last_20_events_post = wp_get_recent_posts( $args );
-		$rss_feed            = $this->get_rss_20_header( $last_20_events_post );
+
+		if ( isset( $last_20_events_post[0]['post_modified_gmt'] ) ) {
+			$this->send_headers( $last_20_events_post[0]['post_modified_gmt'] );
+		}
+
+		$rss_feed = $this->get_rss_20_header( $last_20_events_post );
 		foreach ( $last_20_events_post as $event_post ) {
 			$event = $this->event_repository->get_event( $event_post['ID'] );
 			if ( $event ) {
@@ -51,6 +56,74 @@ class Rss_Route extends Route {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $rss_feed;
 		exit();
+	}
+
+	/**
+	 * Sends headers, Based on send_headers() in the WP Class.
+	 *
+	 * @param      string $post_modified_gmt   The post modified GMT date.
+	 */
+	private function send_headers( $post_modified_gmt ) {
+		$headers       = array();
+		$status        = null;
+		$exit_required = false;
+		$date_format   = 'D, d M Y H:i:s';
+
+		$wp_last_modified = mysql2date( $date_format, $post_modified_gmt, false ) . ' GMT';
+		$wp_etag          = '"' . md5( $wp_last_modified ) . '"';
+
+		$headers['Last-Modified'] = $wp_last_modified;
+		$headers['ETag']          = $wp_etag;
+
+		// Support for conditional GET.
+		if ( isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) ) {
+			$client_etag = wp_unslash( $_SERVER['HTTP_IF_NONE_MATCH'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		} else {
+			$client_etag = '';
+		}
+
+		if ( isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ) {
+			$client_last_modified = trim( wp_unslash( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		} else {
+			$client_last_modified = '';
+		}
+
+		// If string is empty, return 0. If not, attempt to parse into a timestamp.
+		$client_modified_timestamp = $client_last_modified ? strtotime( $client_last_modified ) : 0;
+
+		// Make a timestamp for our most recent modification.
+		$wp_modified_timestamp = strtotime( $wp_last_modified );
+
+		if ( ( $client_last_modified && $client_etag )
+			? ( ( $client_modified_timestamp >= $wp_modified_timestamp ) && ( $client_etag === $wp_etag ) )
+			: ( ( $client_modified_timestamp >= $wp_modified_timestamp ) || ( $client_etag === $wp_etag ) )
+		) {
+			$status        = 304;
+			$exit_required = true;
+		}
+
+		if ( ! empty( $status ) ) {
+			status_header( $status );
+		}
+
+		// If Last-Modified is set to false, it should not be sent (no-cache situation).
+		if ( isset( $headers['Last-Modified'] ) && false === $headers['Last-Modified'] ) {
+			unset( $headers['Last-Modified'] );
+
+			if ( ! headers_sent() ) {
+				header_remove( 'Last-Modified' );
+			}
+		}
+
+		if ( ! headers_sent() ) {
+			foreach ( (array) $headers as $name => $field_value ) {
+				header( "{$name}: {$field_value}" );
+			}
+		}
+
+		if ( $exit_required ) {
+			exit;
+		}
 	}
 
 	/**
