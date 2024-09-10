@@ -24,13 +24,13 @@ register_block_type(
 				}
 			);
 			ob_start();
-			if( $view_type === 'table' ) {
-				include_once 'render-list.php';
-			} else {
+			if ( 'table' === $view_type ) {
 				include_once 'render-table.php';
+			} else {
+				include_once 'render-list.php';
 			}
 			return ob_get_clean();
-	
+
 		},
 	)
 );
