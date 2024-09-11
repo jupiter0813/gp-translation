@@ -37,12 +37,12 @@ class Rss_Route extends Route {
 			'post_status'         => 'publish',
 			'post_parent__not_in' => array( 0 ),
 		);
-		$last_20_events_post = wp_get_recent_posts( $args );
+		$last_20_events_post = get_posts( $args );
 
 		$this->send_headers( $this->document_pub_and_build_date( $last_20_events_post, 'Y-m-d H:i:s' ) );
 		$rss_feed = $this->get_rss_20_header( $last_20_events_post );
 		foreach ( $last_20_events_post as $event_post ) {
-			$event = $this->event_repository->get_event( $event_post['ID'] );
+			$event = $this->event_repository->get_event( $event_post->ID );
 			if ( $event ) {
 				$rss_feed .= $this->get_item( $event );
 			}
@@ -130,6 +130,8 @@ class Rss_Route extends Route {
 	/**
 	 * Get the RSS 2.0 header.
 	 *
+	 * @param WP_Post[] $events Array of last events, as WP_Post objects.
+	 *
 	 * @return string
 	 */
 	private function get_rss_20_header( array $events ): string {
@@ -158,7 +160,14 @@ class Rss_Route extends Route {
 		return $footer;
 	}
 
-	private function get_item( Event $event ) {
+	/**
+	 * Get a RSS 2.0 item from an event.
+	 *
+	 * @param Event $event The event.
+	 *
+	 * @return string The item.
+	 */
+	private function get_item( Event $event ): string {
 		$item  = '      <item>';
 		$item .= '          <title>' . esc_html( $event->title() ) . '</title>';
 		$item .= '          <link>' . esc_url( home_url( gp_url( gp_url_join( 'events', $event->slug() ) ) ) ) . '</link>';
@@ -178,22 +187,22 @@ class Rss_Route extends Route {
 	 * If there are no events at all, returns the date of the Unix epoch.
 	 *
 	 * @param WP_Post[] $events_post Array of last events, as WP_Post objects.
+	 * @param string    $format      Date format.
 	 *
 	 * @return string|null
 	 */
-	private function document_pub_and_build_date( array $events_post, $format = DATE_RSS ): ?string {
+	private function document_pub_and_build_date( array $events_post, string $format = DATE_RSS ): ?string {
 		// Default to the Unix epoch.
 		$pub_date = new DateTimeImmutable( '@0' );
 		if ( empty( $events_post ) ) {
 			return $pub_date->format( DATE_RSS );
 		}
-
-		$first_event = $this->event_repository->get_event( $events_post[0]['ID'] );
+		$first_event = $this->event_repository->get_event( $events_post[0]->ID );
 		if ( $first_event ) {
 			$pub_date = $first_event->updated_at();
 		}
 		foreach ( $events_post as $event_post ) {
-			$event = $this->event_repository->get_event( $event_post['ID'] );
+			$event = $this->event_repository->get_event( $event_post->ID );
 			if ( $event && ( $event->updated_at() > $pub_date ) ) {
 				$pub_date = $event->updated_at();
 			}
