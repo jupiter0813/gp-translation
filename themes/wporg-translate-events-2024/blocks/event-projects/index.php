@@ -18,6 +18,10 @@ register_block_type(
 			}
 			$event_id = $attributes['id'];
 			$projects = ( new Project_Repository() )->get_for_event( $event_id );
+			if ( empty( $projects ) ) {
+				return '';
+			}
+
 			ob_start();
 			?>
 			<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"medium","fontFamily":"inter"} -->

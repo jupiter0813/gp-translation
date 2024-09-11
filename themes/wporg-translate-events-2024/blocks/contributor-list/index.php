@@ -21,6 +21,9 @@ register_block_type(
 					return $attendee->is_contributor();
 				}
 			);
+			if ( empty( $contributors ) ) {
+				return '';
+			}
 
 			ob_start();
 			?>
