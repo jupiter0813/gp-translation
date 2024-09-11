@@ -6,7 +6,13 @@ if ( empty( $attendees_not_contributing ) || ! current_user_can( 'edit_translati
 
 ?>
 <!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"medium","fontFamily":"inter"} -->
-<h4 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700"><?php echo esc_html( sprintf( __( 'Attendees (%d)', 'wporg-translate-events-2024' ), number_format_i18n( count( $attendees ) ) ) ); ?></h4>
+<?php // translators: %d is the number of contributors. ?>
+<h4 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700">
+	<?php
+		// translators: %d is the number of contributors.
+		echo esc_html( sprintf( __( 'Attendees (%d)', 'wporg-translate-events-2024' ), number_format_i18n( count( $attendees ) ) ) );
+	?>
+</h4>
 <!-- /wp:heading -->
 <!-- wp:group {"align":"full"} -->
 <div class="wp-block-group alignfull">
@@ -39,7 +45,7 @@ foreach ( $attendees_not_contributing as $attendee ) :
 	</div>
 	<!-- /wp:column -->
 	<?php
-	$counter++;
+	++$counter;
 endforeach;
 ?>
 </div><!-- /wp:columns -->

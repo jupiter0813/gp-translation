@@ -9,7 +9,7 @@ register_block_type(
 	'wporg-translate-events-2024/contributor-list',
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		'render_callback' => function ( array $attributes, $content, $block ) {
+		'render_callback' => function ( array $attributes ) {
 			if ( ! isset( $attributes['id'] ) ) {
 				return '';
 			}
@@ -28,7 +28,12 @@ register_block_type(
 			ob_start();
 			?>
 			<!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"medium","fontFamily":"inter"} -->
-			<h4 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700"><?php echo esc_html( sprintf( __( 'Contributors (%d)', 'wporg-translate-events-2024' ), number_format_i18n( count( $contributors ) ) ) ); ?></h4>
+			<h4 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700">
+				<?php
+					// translators: %d: number of contributors .
+					echo esc_html( sprintf( __( 'Contributors (%d)', 'wporg-translate-events-2024' ), number_format_i18n( count( $contributors ) ) ) );
+				?>
+			</h4>
 			<!-- /wp:heading -->
 			<!-- wp:group {"align":"full"} -->
 			<div class="wp-block-group alignfull">

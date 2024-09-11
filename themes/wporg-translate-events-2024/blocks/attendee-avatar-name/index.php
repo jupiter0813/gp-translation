@@ -4,7 +4,7 @@ register_block_type(
 	'wporg-translate-events-2024/attendee-avatar-name',
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		'render_callback' => function ( array $attributes, $content, $block ) {
+		'render_callback' => function ( array $attributes ) {
 			if ( ! isset( $attributes['user_id'] ) ) {
 				return '';
 			}

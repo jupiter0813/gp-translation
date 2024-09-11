@@ -10,7 +10,7 @@ register_block_type(
 	'wporg-translate-events-2024/event-contribution-summary',
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		'render_callback' => function ( array $attributes, $content, $block ) {
+		'render_callback' => function ( array $attributes ) {
 			if ( ! isset( $attributes['id'] ) ) {
 				return '';
 			}
