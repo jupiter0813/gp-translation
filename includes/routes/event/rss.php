@@ -39,10 +39,7 @@ class Rss_Route extends Route {
 		);
 		$last_20_events_post = wp_get_recent_posts( $args );
 
-		if ( isset( $last_20_events_post[0]['post_modified_gmt'] ) ) {
-			$this->send_headers( $last_20_events_post[0]['post_modified_gmt'] );
-		}
-
+		$this->send_headers( $this->document_pub_and_build_date( $last_20_events_post, 'Y-m-d H:i:s' ) );
 		$rss_feed = $this->get_rss_20_header( $last_20_events_post );
 		foreach ( $last_20_events_post as $event_post ) {
 			$event = $this->event_repository->get_event( $event_post['ID'] );
@@ -61,9 +58,9 @@ class Rss_Route extends Route {
 	/**
 	 * Sends headers, Based on send_headers() in the WP Class.
 	 *
-	 * @param      string $post_modified_gmt   The post modified GMT date.
+	 * @param string $post_modified_gmt   The post modified GMT date.
 	 */
-	private function send_headers( $post_modified_gmt ) {
+	private function send_headers( string $post_modified_gmt ) {
 		$headers       = array();
 		$status        = null;
 		$exit_required = false;
@@ -78,6 +75,10 @@ class Rss_Route extends Route {
 		// Support for conditional GET.
 		if ( isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) ) {
 			$client_etag = wp_unslash( $_SERVER['HTTP_IF_NONE_MATCH'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			// Remove the "W/" if the client has sent it (weak validation).
+			if ( 0 === strpos( $client_etag, 'W/' ) ) {
+				$client_etag = substr( $client_etag, 2 );
+			}
 		} else {
 			$client_etag = '';
 		}
@@ -180,7 +181,8 @@ class Rss_Route extends Route {
 	 *
 	 * @return string|null
 	 */
-	private function document_pub_and_build_date( array $events_post ): ?string {
+	private function document_pub_and_build_date( array $events_post, $format = DATE_RSS ): ?string {
+		// Default to the Unix epoch.
 		$pub_date = new DateTimeImmutable( '@0' );
 		if ( empty( $events_post ) ) {
 			return $pub_date->format( DATE_RSS );
@@ -197,6 +199,6 @@ class Rss_Route extends Route {
 			}
 		}
 
-		return $pub_date->format( DATE_RSS );
+		return $pub_date->format( $format );
 	}
 }
