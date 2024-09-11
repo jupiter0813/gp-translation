@@ -25,6 +25,7 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/event-contribution-summary/index.php';
 	include_once __DIR__ . '/blocks/event-description/index.php';
 	include_once __DIR__ . '/blocks/event-attend-button/index.php';
+	include_once __DIR__ . '/blocks/event-host-list/index.php';
 }
 
 function register_patterns(): void {
