@@ -1,4 +1,10 @@
+<?php
 
+if ( empty( $attendees_not_contributing ) || ! current_user_can( 'edit_translation_event', $event_id ) ) {
+    return;
+ }
+
+?>
 <!-- wp:heading {"style":{"typography":{"fontStyle":"normal","fontWeight":"700"}},"fontSize":"medium","fontFamily":"inter"} -->
 <h4 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700"><?php echo esc_html( sprintf( __( 'Attendees (%d)', 'wporg-translate-events-2024' ), number_format_i18n( count( $attendees ) ) ) ); ?></h4>
 <!-- /wp:heading -->
