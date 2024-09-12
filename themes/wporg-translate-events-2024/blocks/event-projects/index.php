@@ -2,7 +2,6 @@
 namespace Wporg\TranslationEvents\Theme_2024;
 
 use GP_Locales;
-use Wporg\TranslationEvents\Stats\Stats_Calculator;
 use Wporg\TranslationEvents\Project\Project_Repository;
 
 

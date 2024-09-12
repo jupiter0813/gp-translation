@@ -15,8 +15,6 @@ register_block_type(
 			$view_type = $attributes['view_type'] ?? 'list';
 			$user_id = get_current_user_id();
 			$attendees             = Translation_Events::get_attendee_repository()->get_attendees( $event_id );
-			$current_user_attendee = $attendees[ $user_id ] ?? null;
-			$user_is_attending     = $current_user_attendee instanceof Attendee;
 			$attendees_not_contributing = array_filter(
 				$attendees,
 				function ( Attendee $attendee ) {
