@@ -10,7 +10,7 @@ if ( empty( $attendees_not_contributing ) || ! current_user_can( 'edit_translati
 <h4 class="wp-block-heading has-inter-font-family has-medium-font-size" style="font-style:normal;font-weight:700">
 	<?php
 		// translators: %d is the number of contributors.
-		echo esc_html( sprintf( __( 'Attendees (%d)', 'wporg-translate-events-2024' ), number_format_i18n( count( $attendees ) ) ) );
+		echo esc_html( sprintf( __( 'Attendees (%d)', 'wporg-translate-events-2024' ), number_format_i18n( count( $attendees_not_contributing ) ) ) );
 	?>
 </h4>
 <!-- /wp:heading -->
