@@ -57,6 +57,7 @@ class List_Route extends Route {
 				'event'            => $event,
 				'attendees'        => $attendees,
 				'is_active_filter' => $is_active_filter,
+				'event_id'         => $event->id(),
 			),
 		);
 	}
