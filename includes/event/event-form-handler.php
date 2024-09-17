@@ -218,21 +218,25 @@ class Event_Form_Handler {
 		}
 
 		try {
-			$start = new Event_Start_Date( $event_start, $timezone );
+			$start_utc = new DateTime( $event_start, $timezone );
+			$start_utc = $start_utc->setTimezone( new DateTimeZone( 'UTC' ) );
+			$start = new Event_Start_Date( $start_utc->format( 'Y-m-d H:i:s' ), $timezone );
 		} catch ( Exception $e ) {
 			throw new InvalidStart();
 		}
 
 		try {
-			$end = new Event_End_Date( $event_end, $timezone );
+			$end_utc = new DateTime( $event_end, $timezone );
+			$end_utc = $end_utc->setTimezone( new DateTimeZone( 'UTC' ) );
+			$end = new Event_End_Date( $end_utc->format( 'Y-m-d H:i:s' ), $timezone );
 		} catch ( Exception $e ) {
 			throw new InvalidEnd();
 		}
 
 		$event = new Event(
 			get_current_user_id(),
-			$start->setTimezone( new DateTimeZone( 'UTC' ) ),
-			$end->setTimezone( new DateTimeZone( 'UTC' ) ),
+			$start_utc,
+			$end_utc,
 			$timezone,
 			$event_status,
 			$title,
