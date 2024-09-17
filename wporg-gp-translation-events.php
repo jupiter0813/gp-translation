@@ -376,7 +376,6 @@ class Translation_Events {
 	 *
 	 * @throws Exception
 	 */
-
 	public function add_active_events_current_user(): void {
 		if ( ! is_user_logged_in() ) {
 			return;
