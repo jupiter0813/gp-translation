@@ -23,6 +23,10 @@ register_block_type(
 			);
 			ob_start();
 			if ( 'table' === $view_type ) {
+				$event    = Translation_Events::get_event_repository()->get_event( $event_id );
+				if ( ! $event ) {
+					return '';
+				}
 				include_once 'render-table.php';
 			} else {
 				include_once 'render-list.php';
