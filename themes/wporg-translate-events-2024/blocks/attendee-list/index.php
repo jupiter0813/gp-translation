@@ -15,6 +15,9 @@ register_block_type(
 			$view_type = $attributes['view_type'] ?? 'list';
 			$user_id = get_current_user_id();
 			$attendees             = Translation_Events::get_attendee_repository()->get_attendees( $event_id );
+			if ( empty( $attendees ) ) {
+				return '';
+			}
 			$attendees_not_contributing = array_filter(
 				$attendees,
 				function ( Attendee $attendee ) {
@@ -24,9 +27,6 @@ register_block_type(
 			ob_start();
 			if ( 'table' === $view_type ) {
 				$event    = Translation_Events::get_event_repository()->get_event( $event_id );
-				if ( ! $event ) {
-					return '';
-				}
 				include_once 'render-table.php';
 			} else {
 				include_once 'render-list.php';
