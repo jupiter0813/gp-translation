@@ -235,8 +235,8 @@ class Event_Form_Handler {
 
 		$event = new Event(
 			get_current_user_id(),
-			$start_utc,
-			$end_utc,
+			$start->setTimezone( new DateTimeZone( 'UTC' ) ),
+			$end->setTimezone( new DateTimeZone( 'UTC' ) ),
 			$timezone,
 			$event_status,
 			$title,
