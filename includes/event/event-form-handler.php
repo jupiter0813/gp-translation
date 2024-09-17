@@ -220,7 +220,7 @@ class Event_Form_Handler {
 		try {
 			$start_utc = new DateTime( $event_start, $timezone );
 			$start_utc = $start_utc->setTimezone( new DateTimeZone( 'UTC' ) );
-			$start = new Event_Start_Date( $start_utc->format( 'Y-m-d H:i:s' ), $timezone );
+			$start     = new Event_Start_Date( $start_utc->format( 'Y-m-d H:i:s' ), $timezone );
 		} catch ( Exception $e ) {
 			throw new InvalidStart();
 		}
@@ -228,7 +228,7 @@ class Event_Form_Handler {
 		try {
 			$end_utc = new DateTime( $event_end, $timezone );
 			$end_utc = $end_utc->setTimezone( new DateTimeZone( 'UTC' ) );
-			$end = new Event_End_Date( $end_utc->format( 'Y-m-d H:i:s' ), $timezone );
+			$end     = new Event_End_Date( $end_utc->format( 'Y-m-d H:i:s' ), $timezone );
 		} catch ( Exception $e ) {
 			throw new InvalidEnd();
 		}
