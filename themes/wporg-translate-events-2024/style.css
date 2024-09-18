@@ -83,6 +83,15 @@ table.event-stats thead {
 	background-color: #D9D9D9;
 	border-bottom: none;
 }
+a.remove-attendee {
+	color: var(--wp--preset--color--vivid-red) !important;
+}
+a.remove-attendee:hover{
+	background-color: var(--wp--preset--color--vivid-red) !important;
+	color: var(--wp--custom--button--color--text) !important;
+	border-color: var(--wp--custom--button--color--text) !important;
+
+}
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
