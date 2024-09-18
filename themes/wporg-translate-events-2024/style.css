@@ -88,8 +88,8 @@ a.remove-attendee {
 }
 a.remove-attendee:hover{
 	background-color: var(--wp--preset--color--vivid-red) !important;
-	color: var(--wp--custom--button--color--text) !important;
-	border-color: var(--wp--custom--button--color--text) !important;
+	color: var(--wp--preset--color--white) !important;
+	border-color: var(--wp--preset--color--vivid-red) !important;
 
 }
  @media (min-width: 960px) {
