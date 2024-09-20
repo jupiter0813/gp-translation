@@ -14,7 +14,7 @@ use Wporg\TranslationEvents\Event_Text_Snippet;
 
 $now = Translation_Events::now();
 
-$event = new Event(
+$event          = new Event(
 	get_current_user_id(),
 	new Event_Start_Date( $now->format( 'Y-m-d H:i:s' ) ),
 	new Event_End_Date( $now->modify( '+1 hour' )->format( 'Y-m-d H:i:s' ) ),
@@ -25,6 +25,11 @@ $event = new Event(
 );
 $is_create_form = true;
 ?>
+<!-- wp:columns -->
+<div class="wp-block-columns">
+	
+	<!-- wp:column {"width":"64%"} -->
+	<div class="wp-block-column" style="flex-basis:64%">
 <!-- wp:form -->
 <form class="translation-event-form" action="" method="post">
 	
@@ -152,4 +157,9 @@ $is_create_form = true;
 		</span>
 		</div>
 </form>
-	<!-- /wp:form -->
+<!-- /wp:form -->
+</div>
+	<!-- /wp:column -->
+
+</div>
+<!-- /wp:columns -->
