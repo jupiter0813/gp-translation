@@ -92,6 +92,21 @@ a.remove-attendee:hover{
 	border-color: var(--wp--preset--color--vivid-red) !important;
 
 }
+textarea.wp-block-form-input__input {
+	border: 1px solid #949494;
+    font-family: inherit;
+    font-size: var(--wp--custom--form--typography--font-size);
+}
+
+select.wp-block-form-input__input {
+	border: 1px solid;
+    line-height: 2;
+    min-height: 3em;
+	padding-inline: var(--wp--custom--form--padding--inline);
+    padding-block: var(--wp--custom--form--padding--block);
+	line-height: var(--wp--custom--form--typography--line-height);
+}
+
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
