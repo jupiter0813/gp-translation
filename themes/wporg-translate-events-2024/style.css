@@ -66,15 +66,32 @@ a.blue-bolded-link {
 	-webkit-text-decoration: none;
 }
 
+.attendee-avatar img {
+	border-radius: 50%;
+    vertical-align: middle;
+}
+
+.first-time-contributor-tada::after {
+	content: ' 🎉';
+}
+
+.event-details-stats-totals td {
+	font-weight: bold;
+}
+
+table.event-stats thead {
+	background-color: #D9D9D9;
+	border-bottom: none;
+}
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
-			display: grid;
-			align-items: start;
-			gap: var(--wp--preset--spacing--20);
-			grid-template-columns: 45% 1fr 2fr;
+	display: grid;
+	align-items: start;
+	gap: var(--wp--preset--spacing--20);
+	grid-template-columns: 45% 1fr 2fr;
 	}
-		}
+}
 
 @media (min-width: 1080px) {
 

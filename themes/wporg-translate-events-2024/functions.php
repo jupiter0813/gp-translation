@@ -16,6 +16,16 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/pages/events/home/index.php';
 	include_once __DIR__ . '/blocks/event-attendance-mode/index.php';
 	include_once __DIR__ . '/blocks/event-flag/index.php';
+	include_once __DIR__ . '/blocks/pages/events/event-details/index.php';
+	include_once __DIR__ . '/blocks/attendee-list/index.php';
+	include_once __DIR__ . '/blocks/attendee-avatar-name/index.php';
+	include_once __DIR__ . '/blocks/contributor-list/index.php';
+	include_once __DIR__ . '/blocks/event-stats/index.php';
+	include_once __DIR__ . '/blocks/event-projects/index.php';
+	include_once __DIR__ . '/blocks/event-contribution-summary/index.php';
+	include_once __DIR__ . '/blocks/event-description/index.php';
+	include_once __DIR__ . '/blocks/event-attend-button/index.php';
+	include_once __DIR__ . '/blocks/event-host-list/index.php';
 }
 
 function register_patterns(): void {
