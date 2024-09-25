@@ -28,6 +28,7 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/event-host-list/index.php';
 	include_once __DIR__ . '/blocks/pages/events/event-attendees/index.php';
 	include_once __DIR__ . '/blocks/pages/events/event-create/index.php';
+	include_once __DIR__ . '/blocks/event-form/index.php';
 }
 
 function register_patterns(): void {
