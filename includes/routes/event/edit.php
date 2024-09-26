@@ -39,7 +39,7 @@ class Edit_Route extends Route {
 		$this->tmpl(
 			'event-edit',
 			array(
-				'event' => $event,
+				'event'    => $event,
 				'event_id' => $event->id(),
 			),
 		);
