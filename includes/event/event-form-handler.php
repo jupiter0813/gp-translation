@@ -88,9 +88,6 @@ class Event_Form_Handler {
 			// Create or update event.
 
 			try {
-				if ( 'edit_event' === $action && $event ) {
-					$form_data['event_timezone'] = $event->timezone()->getName();
-				}
 				$new_event = $this->parse_form_data( $form_data );
 			} catch ( InvalidTimeZone $e ) {
 				wp_send_json_error( esc_html__( 'Invalid time zone.', 'gp-translation-events' ), 422 );
