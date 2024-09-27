@@ -1,7 +1,7 @@
 <?php
 namespace Wporg\TranslationEvents\Theme_2024;
 $data = array(
-	'id' => $attributes['event_id'] ?? null,
+	'id'              => $attributes['event_id'] ?? null,
 	'is_create_event' => false,
 );
 ?>
