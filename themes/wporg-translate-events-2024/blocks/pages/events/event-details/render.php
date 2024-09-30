@@ -20,6 +20,20 @@ echo wp_json_encode(
 ?>
 
 /-->
+<?php
+if ( $event->is_past() ) :
+	?>
+<!-- wp:wporg/notice {"type":"alert", "style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}}} -->
+<div class="wp-block-wporg-notice is-alert-notice" style="margin-top:var(--wp--preset--spacing--20)">
+	<div class="wp-block-wporg-notice__icon"></div>
+	<div class="wp-block-wporg-notice__content">
+		<p>
+		<?php echo esc_html__( 'This event has ended.', 'wporg-translate-events-2024' ); ?>
+		</p>
+	</div>
+</div>
+<!-- /wp:wporg/notice -->
+<?php endif; ?>
 
 <!-- wp:paragraph -->
 <p>
