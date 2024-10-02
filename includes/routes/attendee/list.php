@@ -50,12 +50,14 @@ class List_Route extends Route {
 			$attendees = $this->attendee_repository->get_attendees( $event->id() );
 		}
 
+		$this->use_theme();
 		$this->tmpl(
 			'event-attendees',
 			array(
 				'event'            => $event,
 				'attendees'        => $attendees,
 				'is_active_filter' => $is_active_filter,
+				'event_id'         => $event->id(),
 			),
 		);
 	}
