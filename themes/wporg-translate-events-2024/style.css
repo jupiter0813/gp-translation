@@ -111,6 +111,57 @@ select.wp-block-form-input__input {
 	display: none;
 }
 
+#gp-js-message {
+	top: 50px;
+	left: auto !important;
+	right: 20px;
+	font-size: 100%;
+	padding: 1em 1.5em;
+	border-radius: 5px;
+	max-width: 300px;
+}
+.gp-js-message {
+	position: fixed;
+	top: 50px;
+	padding: 1em;
+	display: none;
+	z-index: 1001;
+}
+
+#gp-js-message:empty {
+	display: none;
+}
+@media screen and (max-width: 500px) {
+	div#gp-js-message {
+		top: 5px;
+		right: 5px;
+		left: 5px !important;
+		max-width: 100%;
+		z-index: 99999;
+	}
+}
+
+@media screen and (min-width: 1025px) {
+	div#gp-js-message {
+		right: 50px;
+	}
+}
+
+.gp-js-error {
+	color: #fff;
+	background-color: #dc3232;
+}
+
+.gp-js-notice {
+	color: #333;
+	background-color: #ffb900;
+}
+
+.gp-js-success {
+	color: #fff;
+	background-color: #46b450;
+}
+
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
