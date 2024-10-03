@@ -161,6 +161,13 @@ select.wp-block-form-input__input {
 	color: #fff;
 	background-color: #46b450;
 }
+a.event-list-item-button:any-link {
+	text-decoration: none;
+	vertical-align: text-top;
+}
+.event-list-item-button.is-destructive {
+	color: var(--wp--preset--color--vivid-red);
+}
 
 span.user-remote-icon.dashicons-video-alt2 {
 	margin-left: -8.8%;
