@@ -33,6 +33,8 @@ register_block_type(
 								<?php
 							endif;
 							?>
+						<!-- wp:wporg-translate-events-2024/event-edit-link /-->
+						<!-- wp:wporg-translate-events-2024/event-trash-link /-->
 						</div>
 						<!-- wp:wporg-translate-events-2024/event-attendance-mode /-->
 						<!-- wp:wporg-translate-events-2024/event-start /-->
