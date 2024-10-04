@@ -11,4 +11,5 @@
 	<!-- wp:wporg/site-breadcrumbs {"fontSize":"small"} /-->
 </div>
 <!-- /wp:group -->
+<!-- wp:wporg-translate-events-2024/event-nav-links /-->
 <div id="gp-js-message" class="gp-js-message"></div>
