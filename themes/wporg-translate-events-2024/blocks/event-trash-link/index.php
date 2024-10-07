@@ -23,7 +23,7 @@ register_block_type(
 				return '';
 			}
 			if ( $event->is_trashed() ) :
-			?>
+				?>
 					<a href="<?php echo esc_url( Urls::event_trash( $event->id() ) ); ?>"
 						class="button is-small"
 						title="<?php echo esc_attr__( 'Restore', 'gp-translation-events' ); ?>">
@@ -35,9 +35,9 @@ register_block_type(
 						title="<?php echo esc_attr__( 'Move to trash', 'gp-translation-events' ); ?>">
 						<span class="dashicons dashicons-trash"></span>
 					</a>
-			<?php
+					<?php
 			endif;
-			return ob_get_clean();
+				return ob_get_clean();
 		},
 	)
 );
