@@ -25,7 +25,6 @@ register_block_type(
 								<a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( Urls::event_create() ); ?>">Create Event</a>
 							</div>
 							<!-- /wp:button -->
-						<!-- <a class="button is-primary" href="">Create Event</a> -->
 					<?php endif; ?>
 				<?php endif; ?>
 				</div>
