@@ -40,6 +40,9 @@ foreach ( $attendees_not_contributing as $attendee ) :
 	);
 	?>
 	/-->
+	<?php if ( $attendee->is_remote() ) : ?>
+		<!-- wp:wporg-translate-events-2024/user-remote-attendance-mode /-->
+	<?php endif; ?>
 	<!-- wp:column -->
 	<div class="wp-block-column">
 	</div>
