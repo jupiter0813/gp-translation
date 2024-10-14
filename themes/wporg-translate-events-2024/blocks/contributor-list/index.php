@@ -62,7 +62,7 @@ register_block_type(
 				?>
 				/-->
 				<?php if ( $contributor->is_remote() ) : ?>
-					<!-- wp:wporg-translate-events-2024/user-remote-attendance-mode /-->
+					<!-- wp:wporg-translate-events-2024/remote-attendance-icon /-->
 				<?php endif; ?>
 				<!-- wp:column -->
 				<div class="wp-block-column">
