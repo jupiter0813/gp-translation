@@ -41,7 +41,7 @@ foreach ( $attendees_not_contributing as $attendee ) :
 	?>
 	/-->
 	<?php if ( $attendee->is_remote() ) : ?>
-		<!-- wp:wporg-translate-events-2024/remote-attendance-icon /-->
+		<!-- wp:wporg-translate-events-2024/remote-attendance-icon <?php echo wp_json_encode( array( 'inline_css' => 'margin-left: -8.8%; margin-top: 32px; color: var(--wp--preset--color--blueberry-1);' ) ); ?> /-->
 	<?php endif; ?>
 	<!-- wp:column -->
 	<div class="wp-block-column">
