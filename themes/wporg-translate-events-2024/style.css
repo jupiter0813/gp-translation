@@ -162,6 +162,12 @@ select.wp-block-form-input__input {
 	background-color: #46b450;
 }
 
+span.user-remote-icon.dashicons-video-alt2 {
+	margin-left: -8.8%;
+    margin-top: 32px;
+	color: var(--wp--preset--color--blueberry-1);
+}
+
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {

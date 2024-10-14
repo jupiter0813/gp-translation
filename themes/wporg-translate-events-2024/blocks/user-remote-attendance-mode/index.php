@@ -6,7 +6,7 @@ register_block_type(
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function () {
-			return '<span class="dashicons dashicons-video-alt2"></span>';
+			return '<span class="user-remote-icon dashicons dashicons-video-alt2"></span>';
 		},
 	)
 );
