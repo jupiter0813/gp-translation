@@ -40,6 +40,7 @@ add_action(
 		echo '<meta property="og:image:width" content="1200" />' . "\n";
 		echo '<meta property="og:image:height" content="675" />' . "\n";
 		echo '<meta property="og:image:alt" content="' . esc_attr( $html_title ) . '" />' . "\n";
+		echo '<meta property="og:type" content="event" />' . "\n";
 	}
 );
 gp_title( $html_title );
