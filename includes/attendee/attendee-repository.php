@@ -3,6 +3,10 @@
 namespace Wporg\TranslationEvents\Attendee;
 
 use Exception;
+use Wporg\TranslationEvents\Attendee\Attendee_Adder;
+use Wporg\TranslationEvents\Event\Event_Repository;
+use DateTimeImmutable;
+use DateTimeZone;
 
 class Attendee_Repository {
 
@@ -49,6 +53,7 @@ class Attendee_Repository {
 			array(
 				'is_host'   => $attendee->is_host() ? 1 : 0,
 				'is_remote' => $attendee->is_remote() ? 1 : 0,
+				'is_new_contributor' => $attendee->is_new_contributor() ? 1 : 0,
 			),
 			array(
 				'event_id' => $attendee->event_id(),
@@ -290,5 +295,36 @@ class Attendee_Repository {
 				return $attendee->is_host();
 			}
 		);
+	}
+
+	/**
+	 * Check the attendees if they are no longer new contributors and update
+	 */
+	public function recheck_new_contributor_status( int $event_id ) {
+		// Get all attendees marked as new contributors.
+		$new_contributors = array_filter(
+			$this->get_attendees( $event_id ),
+			function ( Attendee $attendee ) {
+				return $attendee->is_new_contributor();
+			}
+		);
+
+		if ( empty( $new_contributors ) ) {
+			return;
+		}
+
+		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$attendee_adder = new Attendee_Adder( $this );
+		$event = ( new Event_Repository( $now, new Attendee_Repository() ) )->get_event( $event_id );
+
+		if ( ! $event ) {
+			return;
+		}
+		foreach ( $new_contributors as $attendee ) {
+			if ( $attendee_adder->check_is_new_contributor( $event, $attendee->user_id() ) ) {
+				$attendee->mark_as_active_contributor();
+				$this->update_attendee( $attendee );
+			}
+		}
 	}
 }
