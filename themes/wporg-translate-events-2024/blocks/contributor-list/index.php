@@ -45,6 +45,7 @@ register_block_type(
 
 			foreach ( $contributors as $contributor ) :
 				if ( $columns === $counter ) :
+					$counter = 0;
 					?>
 					</div><!-- /wp:columns -->
 					<!-- wp:columns {"columns":3} --><div class="wp-block-columns has-3-columns">

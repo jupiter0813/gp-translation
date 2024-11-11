@@ -24,6 +24,7 @@ $counter = 0;
 
 foreach ( $attendees_not_contributing as $attendee ) :
 	if ( $columns === $counter ) :
+		$counter = 0;
 		?>
 		</div><!-- /wp:columns -->
 		<!-- wp:columns {"columns":3} --><div class="wp-block-columns has-3-columns">
