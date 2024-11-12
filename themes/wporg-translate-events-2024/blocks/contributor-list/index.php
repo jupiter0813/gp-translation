@@ -35,46 +35,35 @@ register_block_type(
 				?>
 			</h4>
 			<!-- /wp:heading -->
-			<!-- wp:group {"align":"full"} -->
-			<div class="wp-block-group alignfull">
-				<!-- wp:columns {"columns":3} -->
-				<div class="wp-block-columns has-3-columns">
-			<?php
-			$columns = 3;
-			$counter = 0;
-
-			foreach ( $contributors as $contributor ) :
-				if ( $columns === $counter ) :
-					$counter = 0;
+			
+			<!-- wp:group {"layout":{"type":"grid","columnCount":3,"minimumColumnWidth":null}} -->
+			<div class="wp-block-group">
+				<?php
+				foreach ( $contributors as $contributor ) :
 					?>
-					</div><!-- /wp:columns -->
-					<!-- wp:columns {"columns":3} --><div class="wp-block-columns has-3-columns">
-					<?php
-				endif;
+					<!-- wp:group -->
+					<div class="wp-block-group">
+						<!-- wp:wporg-translate-events-2024/attendee-avatar-name 
+						<?php
+						echo wp_json_encode(
+							array(
+								'user_id'            => $contributor->user_id(),
+								'is_new_contributor' => $contributor->is_new_contributor(),
+							)
+						);
+						?>
+						/-->
+						<?php if ( $contributor->is_remote() ) : ?>
+							<!-- wp:wporg-translate-events-2024/remote-attendance-icon /-->
+						<?php endif; ?>
+						</div>
+					<!-- /wp:group -->
+					
+						<?php
+				endforeach;
 				?>
-				<!-- wp:wporg-translate-events-2024/attendee-avatar-name 
-				<?php
-				echo wp_json_encode(
-					array(
-						'user_id'            => $contributor->user_id(),
-						'is_new_contributor' => $contributor->is_new_contributor(),
-					)
-				);
-				?>
-				/-->
-				<?php if ( $contributor->is_remote() ) : ?>
-					<!-- wp:wporg-translate-events-2024/remote-attendance-icon <?php echo wp_json_encode( array( 'inline_css' => 'margin-left: -8.8%; margin-top: 32px; color: var(--wp--preset--color--blueberry-1);' ) ); ?> /-->
-				<?php endif; ?>
-				<!-- wp:column -->
-				<div class="wp-block-column">
-				</div>
-				<!-- /wp:column -->
-				<?php
-				$counter++;
-			endforeach;
-			?>
-			</div><!-- /wp:columns -->
-			</div><!-- /wp:group -->
+			</div>
+			<!-- /wp:group -->
 				<?php
 				return ob_get_clean();
 		},

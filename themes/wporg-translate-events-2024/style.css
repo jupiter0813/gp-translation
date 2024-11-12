@@ -168,6 +168,12 @@ span.user-remote-icon.dashicons-video-alt2 {
 	color: var(--wp--preset--color--blueberry-1);
 }
 
+.wp-block-group.is-layout-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
