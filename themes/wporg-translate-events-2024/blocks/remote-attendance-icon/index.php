@@ -6,9 +6,9 @@ register_block_type(
 	array(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( $attributes ) {
-			$inline_css = isset( $attributes['inline_css'] ) ? esc_attr( $attributes['inline_css'] ) : '';
+			$css_class = isset( $attributes['css_class'] ) ? esc_attr( $attributes['css_class'] ) : '';
 
-			return sprintf( '<span class="dashicons dashicons-video-alt2" style="%s"></span>', $inline_css );
+			return sprintf( '<span class="dashicons dashicons-video-alt2 %s"></span>', $css_class );
 		},
 	)
 );

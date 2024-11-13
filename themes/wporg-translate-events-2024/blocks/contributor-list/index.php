@@ -54,7 +54,7 @@ register_block_type(
 						?>
 						/-->
 						<?php if ( $contributor->is_remote() ) : ?>
-							<!-- wp:wporg-translate-events-2024/remote-attendance-icon /-->
+							<!-- wp:wporg-translate-events-2024/remote-attendance-icon <?php echo wp_json_encode( array( 'css_class' => 'show-on-gravatar' ) ); ?> /-->
 						<?php endif; ?>
 						</div>
 					<!-- /wp:group -->
