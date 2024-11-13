@@ -189,6 +189,11 @@ span.user-remote-icon.dashicons-video-alt2 {
     margin-left: 14px;
 }
 
+.remote-icon-on-list {
+	float: left;
+    margin: 5px 3px 0 0;
+}
+
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {
