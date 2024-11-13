@@ -174,7 +174,7 @@ span.user-remote-icon.dashicons-video-alt2 {
     gap: 20px;
 }
 
-.show-on-gravatar{
+.video-icon-on-gravatar {
 	display: inline-flex;
     align-items: center;
     justify-content: center;
