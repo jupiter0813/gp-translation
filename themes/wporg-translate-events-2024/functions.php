@@ -199,9 +199,9 @@ function render_page( string $template_path, string $title, array $attributes ):
 		<!-- /wp:group -->
 		BLOCKS
 	);
-	// get block name from template path
-	$page_block_name   = basename( dirname( $template_path ) ) === 'events' ? pathinfo( $template_path, PATHINFO_FILENAME ) : basename( dirname( $template_path ) );
-	$header_json       = wp_json_encode(
+	// get block name from template path.
+	$page_block_name = basename( dirname( $template_path ) ) === 'events' ? pathinfo( $template_path, PATHINFO_FILENAME ) : basename( dirname( $template_path ) );
+	$header_json     = wp_json_encode(
 		array(
 			'title'           => $title,
 			'page_block_name' => $page_block_name,
