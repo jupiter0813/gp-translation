@@ -51,8 +51,8 @@ class Attendee_Repository {
 		$wpdb->update(
 			"{$gp_table_prefix}event_attendees",
 			array(
-				'is_host'   => $attendee->is_host() ? 1 : 0,
-				'is_remote' => $attendee->is_remote() ? 1 : 0,
+				'is_host'            => $attendee->is_host() ? 1 : 0,
+				'is_remote'          => $attendee->is_remote() ? 1 : 0,
 				'is_new_contributor' => $attendee->is_new_contributor() ? 1 : 0,
 			),
 			array(
@@ -313,9 +313,9 @@ class Attendee_Repository {
 			return;
 		}
 
-		$now = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$now            = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
 		$attendee_adder = new Attendee_Adder( $this );
-		$event = ( new Event_Repository( $now, new Attendee_Repository() ) )->get_event( $event_id );
+		$event          = ( new Event_Repository( $now, new Attendee_Repository() ) )->get_event( $event_id );
 
 		if ( ! $event ) {
 			return;
