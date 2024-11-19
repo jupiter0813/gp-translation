@@ -176,17 +176,17 @@ span.user-remote-icon.dashicons-video-alt2 {
 
 .video-icon-on-gravatar {
 	display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: white;
-    color: #555;
-    font-size: 14px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    margin-top: -14px;
-    margin-left: 14px;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background-color: white;
+	color: #555;
+	font-size: 14px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	margin-top: -14px;
+	margin-left: 14px;
 }
 
 .video-icon-on-title {
