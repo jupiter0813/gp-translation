@@ -31,6 +31,9 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/event-form/index.php';
 	include_once __DIR__ . '/blocks/pages/events/event-edit/index.php';
 	include_once __DIR__ . '/blocks/remote-attendance-icon/index.php';
+	include_once __DIR__ . '/blocks/event-edit-link/index.php';
+	include_once __DIR__ . '/blocks/event-trash-link/index.php';
+	include_once __DIR__ . '/blocks/event-nav-links/index.php';
 }
 
 function register_patterns(): void {
@@ -196,8 +199,14 @@ function render_page( string $template_path, string $title, array $attributes ):
 		<!-- /wp:group -->
 		BLOCKS
 	);
-
-	$header_json = wp_json_encode( array( 'title' => $title ) );
+	// get block name from template path.
+	$page_block_name = basename( dirname( $template_path ) ) === 'events' ? pathinfo( $template_path, PATHINFO_FILENAME ) : basename( dirname( $template_path ) );
+	$header_json     = wp_json_encode(
+		array(
+			'title'           => $title,
+			'page_block_name' => $page_block_name,
+		)
+	);
 	echo do_blocks( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		<<<BLOCKS
 		<!-- wp:wporg-translate-events-2024/header $header_json /-->

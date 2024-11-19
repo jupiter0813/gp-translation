@@ -43,7 +43,15 @@ register_block_type(
 
 			ob_start();
 			?>
-
+			<?php
+			if ( ! $is_create_form && current_user_can( 'edit_translation_event_attendees', $event->id() ) ) :
+				?>
+				<!-- wp:button {"align":"center"} -->
+				<div class="wp-block-button" style="text-align: right;">
+					<a class="wp-block-button__link"  href="<?php echo esc_url( Urls::event_attendees( $event->id() ) ); ?>">Manage Attendees</a>
+				</div>
+				<!-- /wp:button -->
+		<?php endif; ?>
 <!-- wp:columns -->
 <div class="wp-block-columns">
 	<!-- wp:column {"width":"64%"} -->

@@ -161,6 +161,16 @@ select.wp-block-form-input__input {
 	color: #fff;
 	background-color: #46b450;
 }
+a.event-list-item-button:any-link {
+	text-decoration: none;
+	vertical-align: text-top;
+}
+.event-list-item-button.is-destructive {
+	color: var(--wp--preset--color--vivid-red);
+}
+.event-nav-link {
+	text-decoration: none;
+}
 
 span.user-remote-icon.dashicons-video-alt2 {
 	margin-left: -8.8%;
@@ -194,6 +204,9 @@ span.user-remote-icon.dashicons-video-alt2 {
 	margin: 5px 3px 0 0;
 }
 
+.event-nav-link:hover {
+	text-decoration: underline;
+}
  @media (min-width: 960px) {
 
 .wporg-marker-list__container .wporg-marker-list-item {

@@ -11,4 +11,5 @@
 	<!-- wp:wporg/site-breadcrumbs {"fontSize":"small"} /-->
 </div>
 <!-- /wp:group -->
+<!-- wp:wporg-translate-events-2024/event-nav-links <?php echo wp_json_encode( array( 'page_block_name' => $attributes['page_block_name'] ) ); ?> /-->
 <div id="gp-js-message" class="gp-js-message"></div>
