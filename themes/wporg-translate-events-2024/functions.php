@@ -30,6 +30,7 @@ function register_blocks(): void {
 	include_once __DIR__ . '/blocks/pages/events/event-create/index.php';
 	include_once __DIR__ . '/blocks/event-form/index.php';
 	include_once __DIR__ . '/blocks/pages/events/event-edit/index.php';
+	include_once __DIR__ . '/blocks/remote-attendance-icon/index.php';
 }
 
 function register_patterns(): void {
