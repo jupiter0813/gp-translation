@@ -321,7 +321,7 @@ class Attendee_Repository {
 			return;
 		}
 		foreach ( $new_contributors as $attendee ) {
-			if ( $attendee_adder->check_is_new_contributor( $event, $attendee->user_id() ) ) {
+			if ( ! $attendee_adder->check_is_new_contributor( $event, $attendee->user_id() ) ) {
 				$attendee->mark_as_active_contributor();
 				$this->update_attendee( $attendee );
 			}
