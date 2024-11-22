@@ -45,6 +45,7 @@ register_block_type(
 				?>
 			</ul>
 			</div>
+			<!-- wp:wporg-translate-events-2024/event-load-more-button /-->
 			<?php
 			return ob_get_clean();
 		},
