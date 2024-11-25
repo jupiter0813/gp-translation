@@ -13,7 +13,7 @@ register_block_type(
 			?>
 			<!-- wp:button {"className":"is-style-outline"} -->
 			<div class="wp-block-button is-style-outline">
-				<button class="wp-block-button__link wp-element-button load-more-events-btn" data-event-type="<?php esc_html_e( $event_filter ); ?>" ><?php esc_html_e( 'Load more', 'gp-translation-events' ); ?></button>
+				<button class="wp-block-button__link wp-element-button load-more-events-btn" data-event-type="<?php echo esc_attr( $event_filter ); ?>" ><?php esc_html_e( 'Load more', 'gp-translation-events' ); ?></button>
 			</div>
 			<!-- /wp:button -->
 			<?php
