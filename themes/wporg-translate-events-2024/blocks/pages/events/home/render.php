@@ -5,14 +5,17 @@ $event_ids = $attributes['event_ids'] ?? array();
 
 $current_events_data = array(
 	'event_ids' => $attributes['current_events_query']['event_ids'] ?? array(),
+	'filter_by' => 'current',
 );
 
 $upcoming_events_data = array(
 	'event_ids' => $attributes['upcoming_events_query']['event_ids'] ?? array(),
+	'filter_by' => 'upcoming',
 );
 
 $past_events_data = array(
 	'event_ids' => $attributes['past_events_query']['event_ids'] ?? array(),
+	'filter_by' => 'past',
 );
 
 ?>

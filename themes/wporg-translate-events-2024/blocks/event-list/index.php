@@ -9,6 +9,7 @@ register_block_type(
 		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		'render_callback' => function ( array $attributes ) {
 			$event_ids = $attributes['event_ids'] ?? array();
+			$event_filter = $attributes['filter_by'] ?? '';
 
 			if ( empty( $event_ids ) ) {
 				return get_no_result_view();
@@ -45,7 +46,7 @@ register_block_type(
 				?>
 			</ul>
 			</div>
-			<!-- wp:wporg-translate-events-2024/event-load-more-button /-->
+			<!-- wp:wporg-translate-events-2024/event-load-more-button <?php echo wp_json_encode( array( 'filter' => $event_filter ) ); ?> /-->
 			<?php
 			return ob_get_clean();
 		},
