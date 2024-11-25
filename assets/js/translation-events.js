@@ -99,6 +99,15 @@
 
 					}
 				);
+				$( document ).on(
+					'click',
+					'.load-more-events-btn',
+					function ( e ) {
+						//load more events
+
+					}
+				);
+				
 
 			}
 		);
