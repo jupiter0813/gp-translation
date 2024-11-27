@@ -22,45 +22,59 @@ class List_Route extends Route {
 		$_upcoming_events_paged       = 1;
 		$_past_events_paged           = 1;
 		$_user_attending_events_paged = 1;
+		$filter_key                   = '';
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['current_events_paged'] ) ) {
 			$value = sanitize_text_field( wp_unslash( $_GET['current_events_paged'] ) );
 			if ( is_numeric( $value ) ) {
 				$_current_events_paged = (int) $value;
+				$filter_key            = 'current_events_query';
 			}
 		}
 		if ( isset( $_GET['upcoming_events_paged'] ) ) {
 			$value = sanitize_text_field( wp_unslash( $_GET['upcoming_events_paged'] ) );
 			if ( is_numeric( $value ) ) {
 				$_upcoming_events_paged = (int) $value;
+				$filter_key             = 'upcoming_events_query';
 			}
 		}
 		if ( isset( $_GET['past_events_paged'] ) ) {
 			$value = sanitize_text_field( wp_unslash( $_GET['past_events_paged'] ) );
 			if ( is_numeric( $value ) ) {
 				$_past_events_paged = (int) $value;
+				$filter_key         = 'past_events_query';
 			}
 		}
 		if ( isset( $_GET['user_attending_events_paged'] ) ) {
 			$value = sanitize_text_field( wp_unslash( $_GET['user_attending_events_paged'] ) );
 			if ( is_numeric( $value ) ) {
 				$_user_attending_events_paged = (int) $value;
+				$filter_key                   = 'user_attending_events_query';
 			}
 		}
 		// phpcs:enable
+		$tmpl_args = array(
+			'current_events_query'        => $this->event_repository->get_current_events( $_current_events_paged, 10 ),
+			'upcoming_events_query'       => $this->event_repository->get_upcoming_events( $_upcoming_events_paged, 10 ),
+			'past_events_query'           => $this->event_repository->get_past_events( $_past_events_paged, 10 ),
+			'user_attending_events_query' => $this->event_repository->get_current_and_upcoming_events_for_user( get_current_user_id(), $_user_attending_events_paged, 10 ),
+		);
 
-		$current_events_query        = $this->event_repository->get_current_events( $_current_events_paged, 10 );
-		$upcoming_events_query       = $this->event_repository->get_upcoming_events( $_upcoming_events_paged, 10 );
-		$past_events_query           = $this->event_repository->get_past_events( $_past_events_paged, 10 );
-		$user_attending_events_query = $this->event_repository->get_current_and_upcoming_events_for_user( get_current_user_id(), $_user_attending_events_paged, 10 );
 		$this->use_theme();
 
 		if ( isset( $_GET['format'] ) ) {
 			$value = sanitize_text_field( wp_unslash( $_GET['format'] ) );
-			if ( 'html' == $value ) {
-				$event_ids         = $past_events_query->event_ids;
-				$list_block_markup = '<!-- wp:wporg-translate-events-2024/event-list ' . wp_json_encode( array( 'event_ids' => $event_ids ) ) . ' /-->';
+			if ( 'html' == $value && ! empty( $filter_key ) ) {
+				$event_ids = $tmpl_args[ $filter_key ]->event_ids;
+				$page_left = $tmpl_args[ $filter_key ]->page_count - $tmpl_args[ $filter_key ]->current_page;
+
+				$list_block_markup = '<!-- wp:wporg-translate-events-2024/event-list ' . wp_json_encode(
+					array(
+						'event_ids' => $event_ids,
+						'page_left' => $page_left,
+					)
+				) . ' /-->';
 
 				$rendered_html = '';
 				$parsed_blocks = parse_blocks( do_blocks( $list_block_markup ) );
@@ -74,12 +88,7 @@ class List_Route extends Route {
 
 		$this->tmpl(
 			'home',
-			array(
-				'current_events_query'        => $current_events_query,
-				'upcoming_events_query'       => $upcoming_events_query,
-				'past_events_query'           => $past_events_query,
-				'user_attending_events_query' => $user_attending_events_query,
-			),
+			$tmpl_args,
 		);
 	}
 }
