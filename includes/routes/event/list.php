@@ -54,8 +54,24 @@ class List_Route extends Route {
 		$upcoming_events_query       = $this->event_repository->get_upcoming_events( $_upcoming_events_paged, 10 );
 		$past_events_query           = $this->event_repository->get_past_events( $_past_events_paged, 10 );
 		$user_attending_events_query = $this->event_repository->get_current_and_upcoming_events_for_user( get_current_user_id(), $_user_attending_events_paged, 10 );
-
 		$this->use_theme();
+
+		if ( isset( $_GET['format'] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_GET['format'] ) );
+			if ( 'html' == $value ) {
+				$event_ids         = $past_events_query->event_ids;
+				$list_block_markup = '<!-- wp:wporg-translate-events-2024/event-list ' . wp_json_encode( array( 'event_ids' => $event_ids ) ) . ' /-->';
+
+				$rendered_html = '';
+				$parsed_blocks = parse_blocks( do_blocks( $list_block_markup ) );
+				foreach ( $parsed_blocks as $block ) {
+					$rendered_html .= render_block( $block );
+				}
+					echo $rendered_html;
+					return;
+			}
+		}
+
 		$this->tmpl(
 			'home',
 			array(
