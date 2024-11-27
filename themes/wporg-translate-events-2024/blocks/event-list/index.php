@@ -10,11 +10,11 @@ register_block_type(
 		'render_callback' => function ( array $attributes ) {
 			$event_ids = $attributes['event_ids'] ?? array();
 			$event_filter = $attributes['filter_by'] ?? '';
-
 			if ( empty( $event_ids ) ) {
 				return get_no_result_view();
 			}
 			$show_flag = ! empty( $attributes['show_flag'] ) && true === $attributes['show_flag'];
+			$show_load_more_btn = ! empty( $attributes['page_left'] ) && $attributes['page_left'] > 0;
 
 			ob_start();
 			?>
@@ -46,8 +46,10 @@ register_block_type(
 				?>
 			</ul>
 			</div>
+			<?php if ( $show_load_more_btn ): ?>
 			<!-- wp:wporg-translate-events-2024/event-load-more-button <?php echo wp_json_encode( array( 'filter' => $event_filter ) ); ?> /-->
 			<?php
+			endif;
 			return ob_get_clean();
 		},
 	)
