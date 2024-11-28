@@ -14,8 +14,7 @@ register_block_type(
 				return get_no_result_view();
 			}
 			$show_flag = ! empty( $attributes['show_flag'] ) && true === $attributes['show_flag'];
-			$show_load_more_btn = ! empty( $attributes['page_left'] ) && $attributes['page_left'] > 0;
-
+			$next_page = ! empty( $attributes['next_page'] ) ? $attributes['next_page'] : 0;
 			ob_start();
 			?>
 			<div class="wp-block-wporg-event-list">
@@ -46,10 +45,8 @@ register_block_type(
 				?>
 			</ul>
 			</div>
-			<?php if ( $show_load_more_btn ): ?>
-			<!-- wp:wporg-translate-events-2024/event-load-more-button <?php echo wp_json_encode( array( 'filter' => $event_filter ) ); ?> /-->
+			<!-- wp:wporg-translate-events-2024/event-load-more-button <?php echo wp_json_encode( array( 'filter' => $event_filter, 'next_page' => $next_page ) ); ?> /-->
 			<?php
-			endif;
 			return ob_get_clean();
 		},
 	)
