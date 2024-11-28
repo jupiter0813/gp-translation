@@ -66,13 +66,15 @@ class List_Route extends Route {
 		if ( isset( $_GET['format'] ) ) {
 			$value = sanitize_text_field( wp_unslash( $_GET['format'] ) );
 			if ( 'html' == $value && ! empty( $filter_key ) ) {
-				$event_ids = $tmpl_args[ $filter_key ]->event_ids;
-				$page_left = $tmpl_args[ $filter_key ]->page_count - $tmpl_args[ $filter_key ]->current_page;
+				$event_ids    = $tmpl_args[ $filter_key ]->event_ids;
+				$current_page = $tmpl_args[ $filter_key ]->current_page;
+				$page_count   = $tmpl_args[ $filter_key ]->page_count;
+				$next_page    = ( ( $current_page + 1 ) <= $page_count ) ? $current_page + 1 : 0;
 
 				$list_block_markup = '<!-- wp:wporg-translate-events-2024/event-list ' . wp_json_encode(
 					array(
 						'event_ids' => $event_ids,
-						'page_left' => $page_left,
+						'next_page' => $next_page,
 					)
 				) . ' /-->';
 
