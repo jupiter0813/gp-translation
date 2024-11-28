@@ -103,7 +103,26 @@
 					'click',
 					'.load-more-events-btn',
 					function ( e ) {
-						//load more events
+						let eventType = $( this ).data('event-type');
+						let nextPage = $( this ).data('event-next-page');
+						const url = `http://translate.test/events/?${encodeURIComponent(eventType)}=${encodeURIComponent(nextPage)}&format=html`;
+
+						fetch(url)
+							.then(response => {
+								if (!response.ok) {
+									throw new Error(`HTTP error! Status: ${response.status}`);
+								}
+								return response.text();
+							})
+							.then(response => {
+								$(this).hide();
+								const $html = $(response);
+								const $listItems = $html.find('li');
+								$(this).parent().prev('.wp-block-wporg-event-list').find('ul').append($listItems);
+								})
+							.catch(error => {
+								console.error('Error fetching next page:', error);
+							});
 
 					}
 				);
