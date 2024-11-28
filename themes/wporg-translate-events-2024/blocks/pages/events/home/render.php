@@ -8,20 +8,20 @@ $past_events_query     = $attributes['past_events_query'];
 
 $current_events_data = array(
 	'event_ids' => $current_events_query['event_ids'] ?? array(),
-	'filter_by' => 'current',
+	'filter_by' => 'current_events_paged',
 	'next_page' => ( $current_events_query['page_count'] >= $current_events_query['current_page'] + 1 ) ? $current_events_query['current_page'] + 1 : 0,
 );
 
 $upcoming_events_data = array(
 	'event_ids' => $upcoming_events_query['event_ids'] ?? array(),
-	'filter_by' => 'upcoming',
+	'filter_by' => 'upcoming_events_paged',
 	'next_page' => ( $upcoming_events_query['page_count'] >= $upcoming_events_query['current_page'] + 1 ) ? $upcoming_events_query['current_page'] + 1 : 0,
 
 );
 
 $past_events_data = array(
 	'event_ids' => $attributes['past_events_query']['event_ids'] ?? array(),
-	'filter_by' => 'past',
+	'filter_by' => 'past_events_paged',
 	'next_page' => ( $past_events_query['page_count'] >= $past_events_query['current_page'] + 1 ) ? $past_events_query['current_page'] + 1 : 0,
 
 );
