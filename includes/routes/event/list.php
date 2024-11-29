@@ -64,6 +64,9 @@ class List_Route extends Route {
 		$this->use_theme();
 
 		if ( isset( $_GET['format'] ) ) {
+			if ( empty( $tmpl_args[ $filter_key ]->event_ids ) ) {
+				return;
+			}
 			$value = sanitize_text_field( wp_unslash( $_GET['format'] ) );
 			if ( 'html' == $value && ! empty( $filter_key ) ) {
 				$event_ids    = $tmpl_args[ $filter_key ]->event_ids;
@@ -84,8 +87,13 @@ class List_Route extends Route {
 				foreach ( $parsed_blocks as $block ) {
 					$rendered_html .= render_block( $block );
 				}
-					echo $rendered_html;
-					return;
+
+				wp_send_json_success(
+					array(
+						'nextPage' => $next_page,
+						'html'     => $rendered_html,
+					)
+				);
 			}
 		}
 
