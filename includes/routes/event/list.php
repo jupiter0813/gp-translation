@@ -63,12 +63,13 @@ class List_Route extends Route {
 
 		$this->use_theme();
 
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['format'] ) ) {
 			if ( empty( $tmpl_args[ $filter_key ]->event_ids ) ) {
 				return;
 			}
 			$value = sanitize_text_field( wp_unslash( $_GET['format'] ) );
-			if ( 'html' == $value && ! empty( $filter_key ) ) {
+			if ( 'html' === $value && ! empty( $filter_key ) ) {
 				$event_ids    = $tmpl_args[ $filter_key ]->event_ids;
 				$current_page = $tmpl_args[ $filter_key ]->current_page;
 				$page_count   = $tmpl_args[ $filter_key ]->page_count;

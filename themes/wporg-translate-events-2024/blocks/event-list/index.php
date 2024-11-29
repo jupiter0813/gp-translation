@@ -45,7 +45,16 @@ register_block_type(
 				?>
 			</ul>
 			</div>
-			<!-- wp:wporg-translate-events-2024/event-load-more-button <?php echo wp_json_encode( array( 'filter' => $event_filter, 'next_page' => $next_page ) ); ?> /-->
+			<!-- wp:wporg-translate-events-2024/event-load-more-button 
+				<?php
+				echo wp_json_encode(
+					array(
+						'filter'    => $event_filter,
+						'next_page' => $next_page,
+					)
+				);
+				?>
+			/-->
 			<?php
 			return ob_get_clean();
 		},
