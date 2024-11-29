@@ -55,9 +55,9 @@ class List_Route extends Route {
 		}
 		// phpcs:enable
 		$tmpl_args = array(
-			'current_events_query'        => $this->event_repository->get_current_events( $_current_events_paged, 2 ),
-			'upcoming_events_query'       => $this->event_repository->get_upcoming_events( $_upcoming_events_paged, 2 ),
-			'past_events_query'           => $this->event_repository->get_past_events( $_past_events_paged, 2 ),
+			'current_events_query'        => $this->event_repository->get_current_events( $_current_events_paged, 10 ),
+			'upcoming_events_query'       => $this->event_repository->get_upcoming_events( $_upcoming_events_paged, 10 ),
+			'past_events_query'           => $this->event_repository->get_past_events( $_past_events_paged, 10 ),
 			'user_attending_events_query' => $this->event_repository->get_current_and_upcoming_events_for_user( get_current_user_id(), $_user_attending_events_paged, 10 ),
 		);
 
