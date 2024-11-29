@@ -112,18 +112,21 @@
 								if (!response.ok) {
 									throw new Error(`HTTP error! Status: ${response.status}`);
 								}
-								return response.text();
+								return response.json();
 							})
 							.then(response => {
-								$(this).hide();
-								const $html = $(response);
+								const $html = $(response.data.html);
 								const $listItems = $html.find('li');
+								if ( 0 === response.data.nextPage ){
+									$(this).hide();
+								} else {
+									$(this).data('event-next-page', response.data.nextPage);
+								}
 								$(this).parent().prev('.wp-block-wporg-event-list').find('ul').append($listItems);
-								})
+							})
 							.catch(error => {
 								console.error('Error fetching next page:', error);
 							});
-
 					}
 				);
 				
