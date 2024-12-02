@@ -62,45 +62,51 @@ class List_Route extends Route {
 		);
 
 		$this->use_theme();
-
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['format'] ) ) {
-			if ( empty( $tmpl_args[ $filter_key ]->event_ids ) ) {
+
+			$format = sanitize_text_field( wp_unslash( $_GET['format'] ) );
+
+			if ( 'html' !== $format || empty( $filter_key ) ) {
 				return;
 			}
-			$value = sanitize_text_field( wp_unslash( $_GET['format'] ) );
-			if ( 'html' === $value && ! empty( $filter_key ) ) {
-				$event_ids    = $tmpl_args[ $filter_key ]->event_ids;
-				$current_page = $tmpl_args[ $filter_key ]->current_page;
-				$page_count   = $tmpl_args[ $filter_key ]->page_count;
-				$next_page    = ( ( $current_page + 1 ) <= $page_count ) ? $current_page + 1 : 0;
 
-				$list_block_markup = '<!-- wp:wporg-translate-events-2024/event-list ' . wp_json_encode(
-					array(
-						'event_ids' => $event_ids,
-						'next_page' => $next_page,
-						'filter_by' => $filter_key,
-					)
-				) . ' /-->';
-
-				$rendered_html = '';
-				$parsed_blocks = parse_blocks( do_blocks( $list_block_markup ) );
-				foreach ( $parsed_blocks as $block ) {
-					$rendered_html .= render_block( $block );
-				}
-
-				wp_send_json_success(
-					array(
-						'nextPage' => $next_page,
-						'html'     => $rendered_html,
-					)
-				);
+			if ( ! empty( $tmpl_args[ $filter_key ]->event_ids ) ) {
+				$this->handle_ajax( $format, $filter_key, $tmpl_args );
 			}
 		}
 
 		$this->tmpl(
 			'home',
 			$tmpl_args,
+		);
+	}
+
+	public function handle_ajax( $filter_key, $tmpl_args ) {
+		$event_ids    = $tmpl_args[ $filter_key ]->event_ids;
+		$current_page = $tmpl_args[ $filter_key ]->current_page;
+		$page_count   = $tmpl_args[ $filter_key ]->page_count;
+		$next_page    = ( ( $current_page + 1 ) <= $page_count ) ? $current_page + 1 : 0;
+
+		$list_block_markup = '<!-- wp:wporg-translate-events-2024/event-list ' . wp_json_encode(
+			array(
+				'event_ids' => $event_ids,
+				'next_page' => $next_page,
+				'filter_by' => $filter_key,
+			)
+		) . ' /-->';
+
+		$rendered_html = '';
+		$parsed_blocks = parse_blocks( do_blocks( $list_block_markup ) );
+		foreach ( $parsed_blocks as $block ) {
+			$rendered_html .= render_block( $block );
+		}
+
+		wp_send_json_success(
+			array(
+				'nextPage' => $next_page,
+				'html'     => $rendered_html,
+			)
 		);
 	}
 }
