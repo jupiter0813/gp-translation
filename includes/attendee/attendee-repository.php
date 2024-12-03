@@ -5,6 +5,7 @@ namespace Wporg\TranslationEvents\Attendee;
 use Exception;
 use Wporg\TranslationEvents\Attendee\Attendee_Adder;
 use Wporg\TranslationEvents\Event\Event_Repository;
+use Wporg\TranslationEvents\Translation_Events;
 use DateTimeImmutable;
 use DateTimeZone;
 
@@ -313,10 +314,9 @@ class Attendee_Repository {
 			return;
 		}
 
-		$now            = new DateTimeImmutable( 'now', new DateTimeZone( 'UTC' ) );
+		$now            = Translation_Events::now();
 		$attendee_adder = new Attendee_Adder( $this );
-		$event          = ( new Event_Repository( $now, new Attendee_Repository() ) )->get_event( $event_id );
-
+		$event          = ( new Event_Repository( $now, $this ) )->get_event( $event_id );
 		if ( ! $event ) {
 			return;
 		}
