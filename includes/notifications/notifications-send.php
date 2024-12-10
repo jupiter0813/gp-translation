@@ -35,7 +35,16 @@ class Notifications_Send {
 		$this->event_repository    = $event_repository;
 		$this->attendee_repository = $attendee_repository;
 		add_action( 'wporg_gp_translation_events_email_notifications_1h', array( $this, 'send_notifications' ), 10, 1 );
+		add_action( 'wporg_gp_translation_events_email_notifications_1h', array( $this, 'recalculate_new_contributor' ), 10, 1 );
 		add_action( 'wporg_gp_translation_events_email_notifications_24h', array( $this, 'send_notifications' ), 10, 1 );
+	}
+
+	public function recalculate_new_contributor( int $post_id ) {
+		$event = $this->event_repository->get_event( $post_id );
+		if ( null === $event ) {
+			return;
+		}
+		$this->attendee_repository->recheck_new_contributor_status( $event->id() );
 	}
 
 	/**
