@@ -103,6 +103,7 @@
 					'click',
 					'.load-more-events-btn',
 					function ( e ) {
+						$( this ).text('Loading...').prop('disabled', true);
 						let eventType = $( this ).data('event-type');
 						let nextPage = $( this ).data('event-next-page');
 						const url = `/events/?${encodeURIComponent(eventType)}=${encodeURIComponent(nextPage)}&format=html`;
@@ -123,6 +124,7 @@
 									$(this).data('event-next-page', response.data.nextPage);
 								}
 								$(this).parent().prev('.wp-block-wporg-event-list').find('ul').append($listItems);
+								$(this).text('Load more').prop('disabled', false);
 							})
 							.catch(error => {
 								console.error('Error fetching next page:', error);
