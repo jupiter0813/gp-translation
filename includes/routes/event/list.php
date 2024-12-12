@@ -72,7 +72,7 @@ class List_Route extends Route {
 			}
 
 			if ( ! empty( $tmpl_args[ $filter_key ]->event_ids ) ) {
-				$this->handle_ajax( $format, $filter_key, $tmpl_args );
+				$this->handle_ajax( $filter_key, $tmpl_args );
 			}
 		}
 
