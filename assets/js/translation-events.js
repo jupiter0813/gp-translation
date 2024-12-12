@@ -105,7 +105,7 @@
 					function ( e ) {
 						let eventType = $( this ).data('event-type');
 						let nextPage = $( this ).data('event-next-page');
-						const url = `http://translate.test/events/?${encodeURIComponent(eventType)}=${encodeURIComponent(nextPage)}&format=html`;
+						const url = `/events/?${encodeURIComponent(eventType)}=${encodeURIComponent(nextPage)}&format=html`;
 
 						fetch(url)
 							.then(response => {
